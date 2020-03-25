@@ -1,0 +1,61 @@
+<!--/* FRAGMENTO HEAD - ESTILOS Y SCRIPTS COMUNES */-->
+<head th:fragment="fragmentoHead">
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="cache-control" content="max-age=0" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+<meta http-equiv="pragma" content="no-cache" />
+
+
+<!-- bootstrap -->
+<link th:href="@{/css/bootstrap.min.css}"
+	href="static/css/bootstrap.min.css" rel="stylesheet" />
+
+<!--  font awesome -->
+<link th:href="@{/css/font-awesome.min.css}"
+	href="static/css/font-awesome.min.css" rel="stylesheet" />
+
+<link th:href="@{/css/pcr-ucm.css}" href="static/css/pcr-ucm.css"
+	rel="stylesheet" />
+
+<link rel="shortcut icon" th:href="@{/img/logoucm.ico}"
+	href="static/img/logoucm.ico" type="image/x-icon" />
+<link rel="icon" th:href="@{/img/logoucm.ico}"
+	href="static/img/logoucm.ico" type="image/x-icon" />
+
+<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
+<script src="static/js/bootstrap.min.js"
+	th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+
+
+
+<!--/* CABECERA GRÁFICA RESPONSIVE */-->
+<header th:fragment="header-responsive">
+	<div class="container cabecera-top-orange">
+		<div class="row align-items-center">
+			<div class="col ">
+				<span class="align-middle logo-covid">Covid19 TEST</span>
+			</div>
+			<div class="col"></div>
+			<div class="col align-items-center">
+				<img src="static/img/logo_ucm.png" th:src="@{/img/logo_ucm.png}"
+					class="float-right img-fluid" />
+			</div>
+		</div>
+	</div>
+</header>
+<!-- /* Pie de página */ -->
+<div th:fragment="footer-responsive" id="footer">
+	<div class="container">
+		<div class="row pie-orange mt-5">
+			<div class="col text-left" sec:authorize="isAuthenticated()"><span th:text="${@pcrTHExpressions.getEmailUsuario()}">pericopalotes@ucm.es</span></div>
+			<div class="col text-right" sec:authorize="isAuthenticated()"><span th:text="${@pcrTHExpressions.getCentro()}">Centro de prueba</span></div>
+		</div>
+	</div>
+</div>
