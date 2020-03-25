@@ -1,14 +1,13 @@
 package es.ucm.pcr.config.security;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,16 +25,17 @@ public class PcrUserDetailsService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<Usuario> usuario =  usuarioRepository.findByEmail(username);
+		Optional<Usuario> usuario =  usuarioRepository.findByEmailWithRoles(username);
 		if (!usuario.isPresent()) {
 			throw new UsernameNotFoundException("Autenticación incorrecta.");
 		}
+		Usuario miUser = usuario.get();
 		
-		return new User(username, usuario.get().getPassword(), getAuthorities(usuario.get()));
+		return new PcrUserDetails(miUser, getAuthorities(miUser), miUser.getCentro());
 	}
 	
-	private static Collection<? extends GrantedAuthority> getAuthorities(Usuario usuario) {
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+	private static Set<GrantedAuthority> getAuthorities(Usuario usuario) {
+		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
 		for (Rol rol : usuario.getRols()) {
 			authorities.add(new SimpleGrantedAuthority("ROLE_"+rol.getNombre()));
 		}

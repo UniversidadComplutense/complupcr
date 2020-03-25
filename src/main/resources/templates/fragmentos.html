@@ -43,9 +43,9 @@
 				<span class="align-middle logo-covid">Covid19 TEST</span>
 			</div>
 			<div class="col"></div>
-			<div class="col align-items-center">
-				<img src="static/img/logo_ucm.png" th:src="@{/img/logo_ucm.png}"
-					class="float-right img-fluid" />
+			<div class="col align-items-right">
+						<img src="static/img/logo_ucm.png" th:src="@{/img/logo_ucm.png}"
+							class="float-right img-fluid" />
 			</div>
 		</div>
 	</div>
@@ -54,8 +54,13 @@
 <div th:fragment="footer-responsive" id="footer">
 	<div class="container">
 		<div class="row pie-orange mt-5">
-			<div class="col text-left" sec:authorize="isAuthenticated()"><span th:text="${@pcrTHExpressions.getEmailUsuario()}">pericopalotes@ucm.es</span></div>
-			<div class="col text-right" sec:authorize="isAuthenticated()"><span th:text="${@pcrTHExpressions.getCentro()}">Centro de prueba</span></div>
+			<div class="col text-left" sec:authorize="isAuthenticated()">
+				<span th:text="${@pcrTHExpressions.getEmailUsuario()}">pericopalotes@ucm.es</span>
+			</div>
+			<div class="col text-right" sec:authorize="isAuthenticated()">
+				<span th:text="${@pcrTHExpressions.getCentro()}">Centro de
+					prueba</span>
+			</div>
 		</div>
 	</div>
 </div>
