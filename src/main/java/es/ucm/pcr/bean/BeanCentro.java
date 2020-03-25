@@ -5,6 +5,9 @@ public class BeanCentro {
 	public Integer idCentro;
 	public String codCentro;
 	public String desCentro;
+	public String telefonoCentro;
+	public String responsableCentro;
+	public String telefonoResponsableCentro;
 	
 	public BeanCentro() {
 		super();
@@ -28,9 +31,29 @@ public class BeanCentro {
 	public void setDesCentro(String desCentro) {
 		this.desCentro = desCentro;
 	}
+	public String getTelefonoCentro() {
+		return telefonoCentro;
+	}
+	public void setTelefonoCentro(String telefonoCentro) {
+		this.telefonoCentro = telefonoCentro;
+	}
+	public String getResponsableCentro() {
+		return responsableCentro;
+	}
+	public void setResponsableCentro(String responsableCentro) {
+		this.responsableCentro = responsableCentro;
+	}
+	public String getTelefonoResponsableCentro() {
+		return telefonoResponsableCentro;
+	}
+	public void setTelefonoResponsableCentro(String telefonoResponsableCentro) {
+		this.telefonoResponsableCentro = telefonoResponsableCentro;
+	}
 	@Override
 	public String toString() {
-		return "BeanCentro [idCentro=" + idCentro + ", codCentro=" + codCentro + ", desCentro=" + desCentro + "]";
+		return "BeanCentro [idCentro=" + idCentro + ", codCentro=" + codCentro + ", desCentro=" + desCentro
+				+ ", telefonoCentro=" + telefonoCentro + ", responsableCentro=" + responsableCentro
+				+ ", telefonoResponsableCentro=" + telefonoResponsableCentro + "]";
 	}
 
 }

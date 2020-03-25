@@ -19,7 +19,7 @@ public class CentroControlador {
 	
 	@RequestMapping(value="AltaCentro", method=RequestMethod.GET)
 	public ModelAndView AltaCentro(HttpSession session) throws Exception {
-		ModelAndView vista = new ModelAndView("VistaCentros");
+		ModelAndView vista = new ModelAndView("VistaCentro");
 	
 		BeanCentro beanCentro = new BeanCentro();
 		
@@ -27,16 +27,16 @@ public class CentroControlador {
 		return vista;
 	}
 	
-	   // Alta de centro 
-		@RequestMapping(value="AltaCentro", method=RequestMethod.POST)	
-		public ModelAndView grabarAltaCentro ( @ModelAttribute("formBeanCentro") BeanCentro beanCentro, HttpSession session) throws Exception {
-	
-			System.out.println("Centro a grabar: " + beanCentro.toString());
-			
-			// Volvemos a grabar mas centros
-			ModelAndView vista = new ModelAndView(new RedirectView("AltaCentro",true));	
-			return vista;
-			
-		}
+   // Alta de centro 
+	@RequestMapping(value="AltaCentro", method=RequestMethod.POST)	
+	public ModelAndView grabarAltaCentro ( @ModelAttribute("formBeanCentro") BeanCentro beanCentro, HttpSession session) throws Exception {
+
+		System.out.println("Centro a grabar: " + beanCentro.toString());
+		
+		// Volvemos a grabar mas centros
+		ModelAndView vista = new ModelAndView(new RedirectView("AltaCentro",true));	
+		return vista;
+		
+	}
 
 }
