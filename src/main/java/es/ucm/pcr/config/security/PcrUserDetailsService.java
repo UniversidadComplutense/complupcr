@@ -16,13 +16,13 @@ import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
-import es.ucm.pcr.repository.UsuarioRepository;
+import es.ucm.pcr.repositorio.UsuarioRepositorio;
 
 @Service
 public class PcrUserDetailsService implements UserDetailsService {
 
 	@Autowired
-	UsuarioRepository usuarioRepository;
+	UsuarioRepositorio usuarioRepository;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
