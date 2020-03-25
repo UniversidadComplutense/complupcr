@@ -3,11 +3,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>PCR-COVID19 - ALTA CENTRO</title>
-
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
 </head>
 <body>
 
-	
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<div class="container">	
 	
 	<form action="#" th:action="@{/AltaCentro}" method="post" th:object="${formBeanCentro}" id="ALTACENTRO" role="form">
 <!-- 	<div id="login-error" class="login-aviso"></div>
@@ -23,11 +24,21 @@
 	</div>
 
 	
-	<div class="form-group text-center">
+<!-- 	<div class="form-group text-center">
 	   	<input type="submit"  class="btn btn-default" value="Alta centro" />
-	</div>
+	</div> -->
+	
+	<div class="row align-content-center">
+		<div class="col-4 mx-auto">
+			<button type="submit"
+				class="btn btn-primary">Alta centro</button>
+		</div>
+	</div>	
+	
 	</form>
 
+	</div>
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
     
 </body>
 </html>
