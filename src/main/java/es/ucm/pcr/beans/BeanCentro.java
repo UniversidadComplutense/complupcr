@@ -1,4 +1,4 @@
-package es.ucm.pcr.bean;
+package es.ucm.pcr.beans;
 
 public class BeanCentro {
 	

@@ -1,9 +1,7 @@
-package es.ucm.pcr.config.security;
+package es.ucm.pcr.servicios;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import es.ucm.pcr.servicio.UsuarioServicio;
 
 /**
  * Componente para utilizar en thymeleaf con la notación @pcrTHExpressions.metodo(...) dentro de una expresión Thymeleaf ${...}

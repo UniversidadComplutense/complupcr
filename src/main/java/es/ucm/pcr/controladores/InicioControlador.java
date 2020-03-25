@@ -52,7 +52,7 @@ public class InicioControlador {
 	}
 	
 	@RequestMapping(value="/tecnico", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('TECNICO')")
+	@PreAuthorize("hasAnyRole('TECNICO','ADMIN')")
 	public String tecnico()
 	{
 		return "inicioTecnico";
