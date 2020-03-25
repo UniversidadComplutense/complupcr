@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - ALTA Analista</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<div class="container">	
+	
+	<form action="#" th:action="@{/AltaAnalista}" method="post" th:object="${formBeanAnalista}" id="ALTAAnalista" role="form">
+
+	<h4>ALTA DE ANALISTA</h4>
+	
+	<div class="form-group">
+		<label class="text_formulario">Nombre Analista</label>
+	 	<input  type="text" class="form-control" th:field="${formBeanAnalista.nom}"  th:value="${formBeanAnalista.nom}" required="required"/>
+	</div>
+	
+	<div class="form-group">
+		<label class="text_formulario">Primer Apellido Analista</label>
+	 	<input  type="text" class="form-control" th:field="${formBeanAnalista.ap1}"  th:value="${formBeanAnalista.ap1}" required="required"/>
+	</div>
+	
+	<div class="form-group">
+		<label class="text_formulario">Segundo Apellido Analista</label>
+	 	<input  type="text" class="form-control" th:field="${formBeanAnalista.ap2}"  th:value="${formBeanAnalista.ap2}" required="required"/>
+	</div>
+	
+	<div class="form-group">
+		<label class="text_formulario">Teléfono Fijo</label>
+	 	<input  type="text" class="form-control" th:field="${formBeanAnalista.telFijo}"  th:value="${formBeanAnalista.telFijo}" required="required"/>
+	</div>
+	
+	<div class="form-group">
+		<label class="text_formulario">Teléfono Móvil</label>
+	 	<input  type="text" class="form-control" th:field="${formBeanAnalista.telMovil}"  th:value="${formBeanAnalista.telMovil}" required="required"/>
+	</div>		
+	
+	<div class="form-group">
+		<label class="text_formulario">Mail</label>
+	 	<input  type="email" class="form-control" th:field="${formBeanAnalista.mail}"  th:value="${formBeanAnalista.mail}" required="required"/>
+	</div>	
+				
+    <div class="form-group">
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="option1" name="option1" class="custom-control-input" value="I" th:field="*{internoExterno}">
+            <label class="custom-control-label" for="option1">Personal UCM</label>
+        </div>
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="option2" name="option2" class="custom-control-input" value="E" th:field="*{internoExterno}">
+            <label class="custom-control-label" for="option2">Personal Externo</label>
+        </div>
+    </div>
+
+	<div class="row align-content-center">
+		<div class="col-4 mx-auto">
+			<button type="submit"
+				class="btn btn-primary">Alta Analista</button>
+		</div>
+	</div>	
+	
+	</form>
+
+	</div>
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+    
+</body>
+</html>

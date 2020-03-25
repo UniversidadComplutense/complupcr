@@ -11,8 +11,9 @@
 	<div class="container">	
 	
 	<form action="#" th:action="@{/AltaLaboratorio}" method="post" th:object="${formBeanLaboratorio}" id="ALTALABORATORIO" role="form">
-<!-- 	<div id="login-error" class="login-aviso"></div>
- -->	
+
+	<h4>ALTA DE LABORATORIOS</h4>
+
 	<div class="form-group">
 		<label class="text_formulario">Código Laboratorio</label>
 	 	<input  type="text" class="form-control" th:field="${formBeanLaboratorio.codLaboratorio}"  th:value="${formBeanLaboratorio.codLaboratorio}" required="required"/>

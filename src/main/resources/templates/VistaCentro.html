@@ -11,8 +11,9 @@
 	<div class="container">	
 	
 	<form action="#" th:action="@{/AltaCentro}" method="post" th:object="${formBeanCentro}" id="ALTACENTRO" role="form">
-<!-- 	<div id="login-error" class="login-aviso"></div>
- -->	
+
+	<h4>ALTA DE CENTROS</h4>
+	
 	<div class="form-group">
 		<label class="text_formulario">Código Centro</label>
 	 	<input  type="text" class="form-control" th:field="${formBeanCentro.codCentro}"  th:value="${formBeanCentro.codCentro}" required="required"/>
