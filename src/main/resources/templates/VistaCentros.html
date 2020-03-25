@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - ALTA CENTRO</title>
+
+</head>
+<body>
+
+	
+	
+	<form action="#" th:action="@{/AltaCentro}" method="post" th:object="${formBeanCentro}" id="ALTACENTRO" role="form">
+<!-- 	<div id="login-error" class="login-aviso"></div>
+ -->	
+	<div class="form-group">
+		<label class="text_formulario">Código Centro</label>
+	 	<input  type="text" class="form-control" th:field="${formBeanCentro.codCentro}"  th:value="${formBeanCentro.codCentro}" required="required"/>
+	</div>
+	
+		<div class="form-group">
+		<label class="text_formulario">Descripción Centro</label>
+	 	<input  type="text" class="form-control" th:field="${formBeanCentro.desCentro}"  th:value="${formBeanCentro.desCentro}" required="required"/>
+	</div>
+
+	
+	<div class="form-group text-center">
+	   	<input type="submit"  class="btn btn-default" value="Alta centro" />
+	</div>
+	</form>
+
+    
+</body>
+</html>
