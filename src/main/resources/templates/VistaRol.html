@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - ALTA ROLS</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<div class="container">	
+	
+	<form action="#" th:action="@{/AltaRol}" method="post" th:object="${formBeanRol}" id="ALTARol" role="form">
+
+	<h4>ALTA DE ROLS</h4>
+	
+	<div class="form-group">
+		<label class="text_formulario">Rol</label>
+	 	<input  type="text" class="form-control" th:field="${formBeanRol.rol}"  th:value="${formBeanRol.rol}" required="required"/>
+	</div>
+	
+	<div class="row align-content-center">
+		<div class="col-4 mx-auto">
+			<button type="submit"
+				class="btn btn-primary">Alta Rol</button>
+		</div>
+	</div>	
+	
+	</form>
+
+	</div>
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+    
+</body>
+</html>
