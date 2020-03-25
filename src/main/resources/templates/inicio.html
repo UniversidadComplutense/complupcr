@@ -1,1 +1,14 @@
-Bienvenido. Has entrado.
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-Covid19</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<div class="container">
+	Bienvenido. Has entrado.
+	</div>
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+</body>
+</html>
