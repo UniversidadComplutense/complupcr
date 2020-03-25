@@ -1,0 +1,45 @@
+stages:
+  - package
+  - integracion
+  - log
+package:
+  stage: package
+  tags: 
+    - maven
+    - jdk11
+  only:
+    - integracion
+    - produccion
+  artifacts:
+    paths:
+      - target/covid19.jar
+  script:
+    - echo "Construyendo proyecto covid19"
+    - mvn package -U
+integracion1:
+  stage: integracion
+  tags:
+    - ssh
+  only:
+    - integracion
+  dependencies:
+    - package
+  script:
+    - echo 'Desplegando covid19 en servidor de integración 1'
+    - scp target/covid19.jar ades@$SERVIDOR_INT_COVID19_1:/home/ades
+    - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo rm -f /opt/covid19/covid19.old.jar'
+    - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo mv /opt/covid19/covid19.jar /opt/covid19/covid19.old.jar'
+    - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo cp /home/ades/covid19.jar /opt/covid19/'
+    - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo systemctl restart covid19'
+logIntegracion1:
+  stage: log
+  tags:
+    - ssh
+  only:
+    - integracion
+  dependencies:
+    - integracion1
+  script:
+    - echo 'Visualizando log servidor integración 1'
+    - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo tail -n 300 /opt/covid19/logs/covid19.log'
+  when: manual 
