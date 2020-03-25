@@ -9,6 +9,10 @@ public class MuestraBean{
 	private Calendar fecha;
 	private String referenciaInterna;
 	private BeanEstado estado;
+	
+	private BeanAnalisis beanAnalisis; //proceso de analizar la muestra (asignación de analistas a las muestras por parte del jefe de servicio y su resolucion)  F6y F7
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -45,6 +49,14 @@ public class MuestraBean{
 	public void setEstado(BeanEstado estado) {
 		this.estado = estado;
 	}
+	public BeanAnalisis getBeanAnalisis() {
+		return beanAnalisis;
+	}
+	public void setBeanAnalisis(BeanAnalisis beanAnalisis) {
+		this.beanAnalisis = beanAnalisis;
+	}
+	
+	
 	
 	
 }
