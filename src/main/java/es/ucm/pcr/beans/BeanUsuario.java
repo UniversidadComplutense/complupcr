@@ -1,7 +1,7 @@
-package es.ucm.pcr.bean;
+package es.ucm.pcr.beans;
 
-public class BeanAnalista {
-	
+public class BeanUsuario {
+
 	public Integer idAnalista;
 	public String nom;
 	public String ap1;
@@ -12,7 +12,8 @@ public class BeanAnalista {
 	public String internoExterno;
 	public String rol;
 	
-	public BeanAnalista() {
+	
+	public BeanUsuario() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -95,9 +96,6 @@ public class BeanAnalista {
 				+ ", telFijo=" + telFijo + ", telMovil=" + telMovil + ", mail=" + mail + ", internoExterno="
 				+ internoExterno + ", rol=" + rol + "]";
 	}
-	
-	
-	
-	
+		
 
 }

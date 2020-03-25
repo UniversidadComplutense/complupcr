@@ -2,7 +2,7 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>PCR-COVID19 - ALTA Analista</title>
+<title>PCR-COVID19 - ALTA USUARIO</title>
 <object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
 </head>
 <body>
@@ -10,38 +10,38 @@
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<div class="container">	
 	
-	<form action="#" th:action="@{/AltaAnalista}" method="post" th:object="${formBeanAnalista}" id="ALTAAnalista" role="form">
+	<form action="#" th:action="@{/AltaUsuario}" method="post" th:object="${formBeanUsuario}" id="ALTAUsuario" role="form">
 
-	<h4>ALTA DE ANALISTA</h4>
+	<h4>ALTA DE USUARIO</h4>
 	
 	<div class="form-group">
-		<label class="text_formulario">Nombre Analista</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanAnalista.nom}"  th:value="${formBeanAnalista.nom}" required="required"/>
+		<label class="text_formulario">Nombre Usuario</label>
+	 	<input  type="text" class="form-control" th:field="${formBeanUsuario.nom}"  th:value="${formBeanUsuario.nom}" required="required"/>
 	</div>
 	
 	<div class="form-group">
-		<label class="text_formulario">Primer Apellido Analista</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanAnalista.ap1}"  th:value="${formBeanAnalista.ap1}" required="required"/>
+		<label class="text_formulario">Primer Apellido Usuario</label>
+	 	<input  type="text" class="form-control" th:field="${formBeanUsuario.ap1}"  th:value="${formBeanUsuario.ap1}" required="required"/>
 	</div>
 	
 	<div class="form-group">
-		<label class="text_formulario">Segundo Apellido Analista</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanAnalista.ap2}"  th:value="${formBeanAnalista.ap2}" required="required"/>
+		<label class="text_formulario">Segundo Apellido Usuario</label>
+	 	<input  type="text" class="form-control" th:field="${formBeanUsuario.ap2}"  th:value="${formBeanUsuario.ap2}" required="required"/>
 	</div>
 	
 	<div class="form-group">
 		<label class="text_formulario">Teléfono Fijo</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanAnalista.telFijo}"  th:value="${formBeanAnalista.telFijo}" required="required"/>
+	 	<input  type="text" class="form-control" th:field="${formBeanUsuario.telFijo}"  th:value="${formBeanUsuario.telFijo}" required="required"/>
 	</div>
 	
 	<div class="form-group">
 		<label class="text_formulario">Teléfono Móvil</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanAnalista.telMovil}"  th:value="${formBeanAnalista.telMovil}" required="required"/>
+	 	<input  type="text" class="form-control" th:field="${formBeanUsuario.telMovil}"  th:value="${formBeanUsuario.telMovil}" required="required"/>
 	</div>		
 	
 	<div class="form-group">
 		<label class="text_formulario">Mail</label>
-	 	<input  type="email" class="form-control" th:field="${formBeanAnalista.mail}"  th:value="${formBeanAnalista.mail}" required="required"/>
+	 	<input  type="email" class="form-control" th:field="${formBeanUsuario.mail}"  th:value="${formBeanUsuario.mail}" required="required"/>
 	</div>	
 				
     <div class="form-group">
@@ -58,7 +58,7 @@
 	<div class="row align-content-center">
 		<div class="col-4 mx-auto">
 			<button type="submit"
-				class="btn btn-primary">Alta Analista</button>
+				class="btn btn-primary">Alta Usuario</button>
 		</div>
 	</div>	
 	
