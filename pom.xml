@@ -76,7 +76,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<finalName>pcr-covid19</finalName>
+		<finalName>covid19</finalName>
 	</build>
 
 </project>
