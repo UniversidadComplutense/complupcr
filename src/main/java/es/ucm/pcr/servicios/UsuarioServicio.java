@@ -1,4 +1,4 @@
-package es.ucm.pcr.servicio;
+package es.ucm.pcr.servicios;
 
 import es.ucm.pcr.modelo.orm.Usuario;
 
