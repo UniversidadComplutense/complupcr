@@ -25,7 +25,7 @@ integracion1:
   dependencies:
     - package
   script:
-    - echo 'Desplegando covid19 en servidor de integración 1'
+    - echo 'Desplegando covid19 en servidor de integración'
     - scp target/covid19.jar ades@$SERVIDOR_INT_COVID19_1:/home/ades
     - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo rm -f /opt/covid19/covid19.old.jar'
     - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo mv /opt/covid19/covid19.jar /opt/covid19/covid19.old.jar'
