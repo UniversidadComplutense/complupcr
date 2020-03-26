@@ -26,8 +26,8 @@ import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanBusquedaLotes;
 import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanLote;
-import es.ucm.pcr.servicio.ServicioLaboratorioVisavetUCM;
-import es.ucm.pcr.servicio.ServicioLotes;
+import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
+import es.ucm.pcr.servicios.ServicioLotes;
 
 
 
