@@ -1,17 +1,12 @@
 package es.ucm.pcr.servicios;
 
-import es.ucm.pcr.modelo.orm.Usuario;
+import java.util.Set;
 
+import es.ucm.pcr.modelo.orm.Rol;
+import es.ucm.pcr.modelo.orm.Usuario;
 
 public interface UsuarioServicio {
 
-	/**
-	 * Método que me devuelve el usuario actual de la sesión
-	 * 
-	 * @return Usuario
-	 */
-	public  Usuario getUsuarioActual();
-	
 	/**
 	 * Buscar un usuario por email
 	 * 
@@ -19,4 +14,12 @@ public interface UsuarioServicio {
 	 * @return Usuario
 	 */
 	public Usuario buscarUsuarioPorEmail(String email);
+
+	/**
+	 * Obtener los roles que tiene asignado un usuario
+	 * 
+	 * @param Usuario
+	 * @return Set<Rol>
+	 */
+	public Set<Rol> getRoles(Usuario usuario);
 }
