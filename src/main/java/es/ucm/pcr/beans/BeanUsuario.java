@@ -1,6 +1,8 @@
 package es.ucm.pcr.beans;
 
-public class BeanUsuario {
+import es.uc.pcr.utilidades.Utilidades;
+
+public class BeanUsuario implements Comparable<BeanUsuario>{
 
 	public Integer id;
 	public String nom;
@@ -121,7 +123,13 @@ public class BeanUsuario {
 				+ "]";
 	}
 
-	
-		
+    @Override
+    public int compareTo(BeanUsuario o) {
+		String p1 = o.getAp1() + o.getAp2() + o.getNom();
+		String p2 = getAp1() + getAp2() + getNom();
+        String l1 = Utilidades.limpiarStringParaOrdenacion(p1);
+        String l2 = Utilidades.limpiarStringParaOrdenacion(p2);
+		return l2.compareTo(l1);
+    }		
 
 }
