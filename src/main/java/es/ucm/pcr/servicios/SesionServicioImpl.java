@@ -53,6 +53,11 @@ public class SesionServicioImpl implements SesionServicio {
 		}
 		return roles;
 	}
+	
+	@Override
+	public Boolean tieneRol(String rol) {
+		return this.getRoles().contains(rol);
+	}
 
 	@Override
 	public Centro getCentro() {
@@ -67,4 +72,5 @@ public class SesionServicioImpl implements SesionServicio {
 		return null;
 	}
 
+	
 }

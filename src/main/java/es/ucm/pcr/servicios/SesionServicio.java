@@ -34,6 +34,12 @@ public interface SesionServicio {
 	public List<String> getRoles();
 	
 	/**
+	 * Comprueba si el usuario tiene un rol determinado
+	 * @param rol
+	 * @return Boolean
+	 */
+	public Boolean tieneRol(String rol);
+	/**
 	 * Obtener Centro del usuario actual
 	 */
 	public Centro getCentro();
