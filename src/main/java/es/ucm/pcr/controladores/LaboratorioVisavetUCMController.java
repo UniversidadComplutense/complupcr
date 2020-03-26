@@ -1,5 +1,7 @@
 package es.ucm.pcr.controladores;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -20,32 +22,56 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import es.ucm.pcr.beans.BusquedaLotesBean;
-import es.ucm.pcr.beans.LoteBean;
-import es.ucm.pcr.servicios.ServicioLaboratorioUni;
+import es.ucm.pcr.beans.BeanEstado;
+import es.ucm.pcr.beans.BeanBusquedaLotes;
+import es.ucm.pcr.beans.BeanElemento;
+import es.ucm.pcr.beans.BeanLote;
+import es.ucm.pcr.servicio.ServicioLaboratorioVisavetUCM;
+import es.ucm.pcr.servicio.ServicioLotes;
+
 
 
 
 @Controller
-public class LaboratorioUniController {
+public class LaboratorioVisavetUCMController {
 	@Autowired
-	ServicioLaboratorioUni servicioLaboratorioUni;
+	ServicioLaboratorioVisavetUCM servicioLaboratorioUni;
+	@Autowired
+	ServicioLotes servicioLotes;
+	
 	@SuppressWarnings("unused")
-	private final static Logger log = LoggerFactory.getLogger(LaboratorioUniController.class);
-	
-	
+	private final static Logger log = LoggerFactory.getLogger(LaboratorioVisavetUCMController.class);
+	private List<BeanElemento> listaEstados = null;
+	private List<BeanElemento> rellenaListaEstados() throws Exception {
+		if (listaEstados == null) {
+			listaEstados = servicioLotes.buscarEstadosLotes();
+			BeanElemento estado = new BeanElemento();
+
+			/*estado.setCodigo(00);
+			estado.setDescripcion("- Seleccione estado preinscripción - ");
+			listaEstados.add(0, estado);*/
+		}
+		return listaEstados;
+	}
 	
 	// presenta la pagina con unos criterios de busqueda iniciales
-	@RequestMapping(value = "/laboratorioUni/buscar", method = RequestMethod.GET)
-	public ModelAndView buscarGet(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) {
+	@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.GET)
+	public ModelAndView buscarGet(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
          // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
-		BusquedaLotesBean busquedaLotes= new BusquedaLotesBean();
+		BeanBusquedaLotes busquedaLotes= new BeanBusquedaLotes();
 		// inicializamos a enviado para filtrar por estos
 		busquedaLotes.setCodNumEstadoSeleccionado("2");
+		busquedaLotes.setListaBeanEstado(this.rellenaListaEstados());
+		
+		// mas adelante necesito obtener Centros de un servicioCentros
+		
+		//busquedaLotes.setListaBeanCentro(servicioCentros.buscarCentros());
+		
+		
 		
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 		// invocar al servicio que dado id De laboratorio se obtiene la entidad laboratorioUni
-		Page<LoteBean> paginaLotes = null;
+		Page<BeanLote> paginaLotes = null;
 		paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, pageable);
 				
 		vista.addObject("busquedaLotes", busquedaLotes);
@@ -53,7 +79,7 @@ public class LaboratorioUniController {
 		return vista;
 	}
 	// buscar lotes segun los criterios de busqueda 
-	@RequestMapping(value = "/laboratorioUni/buscar", method = RequestMethod.POST)
+	@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.POST)
 	public ModelAndView buscarPost(Model model, HttpServletRequest request, HttpSession session) {
         // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
 		ModelAndView vista = new ModelAndView("listadoLotes");

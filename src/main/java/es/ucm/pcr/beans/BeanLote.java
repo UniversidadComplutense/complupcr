@@ -4,15 +4,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class LoteBean{
+public class BeanLote{
 	private String id;
 	private String numLote;
 	private int capacidad;
 	private int ocupacion;
 	private BeanEstado estado;
 	private Calendar fechaEntrada;
-	private List<MuestraBean>  listaMuestras;
-	private CentroBean centroProcedencia;
+	private List<BeanMuestra>  listaMuestras;
+	
 	private String test;
 	public String getId() {
 		return id;
@@ -50,18 +50,13 @@ public class LoteBean{
 	public void setFechaEntrada(Calendar fechaEntrada) {
 		this.fechaEntrada = fechaEntrada;
 	}
-	public List<MuestraBean> getListaMuestras() {
+	public List<BeanMuestra> getListaMuestras() {
 		return listaMuestras;
 	}
-	public void setListaMuestras(List<MuestraBean> listaMuestras) {
+	public void setListaMuestras(List<BeanMuestra> listaMuestras) {
 		this.listaMuestras = listaMuestras;
 	}
-	public CentroBean getCentroProcedencia() {
-		return centroProcedencia;
-	}
-	public void setCentroProcedencia(CentroBean centroProcedencia) {
-		this.centroProcedencia = centroProcedencia;
-	}
+	
 	public String getTest() {
 		return test;
 	}

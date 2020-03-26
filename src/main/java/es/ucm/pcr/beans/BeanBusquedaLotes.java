@@ -5,16 +5,17 @@ import java.util.List;
 
 
 
-public class BusquedaLotesBean {
+public class BeanBusquedaLotes {
 private String idLaboratorio;
 private String nombreLaboratorio;
 private  String numLote;
 private Calendar fechaEntrada;
 private String muestra;
-private List<BeanEstado> listaBeanEstado;
+private List<BeanElemento> listaBeanEstado;
 private String codNumEstadoSeleccionado;
 private List<CentroBean> listaCentros;
 private int idCentro;
+private String urlPaginada;
 public String getIdLaboratorio() {
 	return idLaboratorio;
 }
@@ -45,10 +46,10 @@ public String getMuestra() {
 public void setMuestra(String muestra) {
 	this.muestra = muestra;
 }
-public List<BeanEstado> getListaBeanEstado() {
+public List<BeanElemento> getListaBeanEstado() {
 	return listaBeanEstado;
 }
-public void setListaBeanEstado(List<BeanEstado> listaBeanEstado) {
+public void setListaBeanEstado(List<BeanElemento> listaBeanEstado) {
 	this.listaBeanEstado = listaBeanEstado;
 }
 public String getCodNumEstadoSeleccionado() {
@@ -68,6 +69,12 @@ public int getIdCentro() {
 }
 public void setIdCentro(int idCentro) {
 	this.idCentro = idCentro;
+}
+public String getUrlPaginada() {
+	return urlPaginada;
+}
+public void setUrlPaginada(String urlPaginada) {
+	this.urlPaginada = urlPaginada;
 }
 
 }

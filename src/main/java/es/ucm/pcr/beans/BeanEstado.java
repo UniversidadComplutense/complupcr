@@ -8,7 +8,7 @@ public class BeanEstado {
 	
 	public enum Estado {PendienteEnvio (1, "PendienteEnvio"), Enviado (2, "Enviado"), Recibido (3, "Recibido");
 
-		private int codNum;		
+		public int codNum;		
 		public String descripcion;
 		
 		

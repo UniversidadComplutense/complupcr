@@ -17,40 +17,24 @@
 	
 
 	<div id="fondo-nav-ini-non-responsive" class="container-fluid">&nbsp;</div>
-<!--  
+ 
 	<div th:fragment="botonera-herramientas-fondo"
 		id="botonera-herramientas-fondo" class="container-non-responsive">
 		<div class="row">
 			<div class="col-xs-2"></div>
 			<div id="botonera-herramientas" class="col-xs-10">
 				<ul>
-					<li th:if="${formUserSecretaria.rol== 'ROLE_SECCION'}"><a
-						href="/gestor/generarExcelTitulosConFechas.xls"><i
-							class="fa fa-file-o" aria-hidden="true"></i><span>Excel
-								fechas</span></a></li>
-					<li><a href="/gestor/nuevaPreinscripcionSecretaria"><i
-							class="fa fa-file-o" aria-hidden="true"></i><span>Nueva</span></a></li>
-					<li><a href="/coordinador/estadisticasTitulo"
+					<li><a href="/laboratorioUni/buscarLotes"><i
+							class="fa fa-file-o" aria-hidden="true"></i><span>Gestionar Lotes</span></a></li>
+					<li><a href="/laboratorioUni/buscarPlacas"
 						th:href="@{/coordinador/estadisticasTitulo}"><i
-							class="fa fa-bar-chart-o" aria-hidden="true"></i><span>Estadísticas</span></a></li>
-					<li th:if="${formUserSecretaria.rol== 'ROLE_SECCION'}"><a
-						href="/coordinador/plazoPreinscripcion"
-						th:href="@{/coordinador/plazoPreinscripcion}"><i
-							class="fa fa-calendar-check-o" aria-hidden="true"></i><span>Plazos</span></a></li>
-
-					<li th:if="${(beanListaPreinscripciones != null)}"><a
-						href="/gestor/generarExcelBusqueda.xls" target="_blank"><i
-							class="fa fa-file-excel-o" aria-hidden="true"></i><span>Excel</span></a></li>
-					<li th:if="${formUserSecretaria.rol== 'ROLE_SECCION'}"><a
-						href="/gestor/gestionAutExcepcional"><i
-							class="fa fa-exclamation" aria-hidden="true"></i><span>Gestión
-								Aut. Excepcional</span></a></li>
-
+							class="fa fa-bar-chart-o" aria-hidden="true"></i><span>Gestionar Placas</span></a></li>
+				
 				</ul>
 			</div>
 		</div>
 	</div>
--->
+
 
 
 
@@ -58,15 +42,14 @@
 	<div class="container-non-responsive" id="contenido-general">
 
 		
-		<h2 th:if="${formUserSecretaria.rol == 'ROLE_SECCION'}">Gestión de Lotes</h2>
+		<h2>Gestión de Lotes</h2>
 
-		<!-- Muestro mensaje si se ha borrado correctamente una preinscripcion (DIANA-FALTA COLOCAR ESTE DIV BIEN)-->
 		<div class="error">
-			<div th:if="${borradaPreins}">
+			<!-- <div th:if="${borradaPreins}">
 				<h3>Lote eliminado correctamente.</h3>
-			</div>
+			</div> -->
 		</div>
-	<form action="#" th:action="@{/laboratorioUni/buscar}"
+	<form action="#" th:action="@{/laboratorioUni/buscarLotes}"
 			id="formularioPrueba" method="post" th:object="${busquedaLotes}"
 			class="form-horizontal">
 			<div class="row formPnl1">
@@ -126,8 +109,8 @@
 							<select class="form-control" id="estado"
 								th:field="*{codNumEstadoSeleccionado}">
 
-								<option th:each="var: ${formListaEstados}"
-									th:value="${var.codigo}" th:text="${var.descripcion}"
+								<option th:each="var: ${busquedaLotes.listaBeanEstado}"
+									th:value="${var.codNum}" th:text="${var.descripcion}"
 									th:selected="${busquedaLotes.codNumEstadoSeleccionado}">Estado</option>
 							</select>
 						</div>
