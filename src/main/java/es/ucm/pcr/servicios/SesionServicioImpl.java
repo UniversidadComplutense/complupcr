@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import es.ucm.pcr.beans.MenuBean;
 import es.ucm.pcr.config.security.PcrUserDetails;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.Usuario;
@@ -52,6 +53,11 @@ public class SesionServicioImpl implements SesionServicio {
 		}
 		return roles;
 	}
+	
+	@Override
+	public Boolean tieneRol(String rol) {
+		return this.getRoles().contains(rol);
+	}
 
 	@Override
 	public Centro getCentro() {
@@ -60,4 +66,11 @@ public class SesionServicioImpl implements SesionServicio {
 		return ud.getCentro();
 	}
 
+	@Override
+	public List<MenuBean> getMenu() {
+		// TODO Auto-generated method stub -- AARON
+		return null;
+	}
+
+	
 }
