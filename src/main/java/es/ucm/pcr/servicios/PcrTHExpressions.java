@@ -3,6 +3,8 @@ package es.ucm.pcr.servicios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.ucm.pcr.modelo.orm.Centro;
+
 /**
  * Componente para utilizar en thymeleaf con la notación @pcrTHExpressions.metodo(...) dentro de una expresión Thymeleaf ${...}
  * 
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class PcrTHExpressions {
 	
 	@Autowired
-	UsuarioServicio usuServ;
+	SesionServicio sesionServicio;
 	
 	/**
 	 * Método que devuelve el eMail del usuario para ponerlo en el pie de página.
@@ -21,15 +23,20 @@ public class PcrTHExpressions {
 	 * @return String
 	 */
 	public String getEmailUsuario() {
-		return usuServ.getUsuarioActual().getEmail();
+		return sesionServicio.getEmail();
 	}
 	
 	/**
 	 * Método que devuelve el centro del usuario para ponerlo en el pie de página.
 	 */
 	public String getCentro() {
-		//TODO: Coger el centro o el rol si es administrador o similar y devolverlo aquí.
-		return "TODO: Poner el centro";
+		Centro centro = sesionServicio.getCentro();
+		if (centro != null) {
+			return centro.getNombre();
+		} else {
+			return null;
+		}
+		//TODO: Revisar esto. Habrá roles en los que hay que sacer el rol y roles donde hay que sacer el centro.
 	}
 
 }
