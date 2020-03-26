@@ -1,6 +1,8 @@
 package es.ucm.pcr.modelo.orm;
 // Generated 23 mar. 2020 23:59:07 by Hibernate Tools 5.2.12.Final
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,10 +10,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -26,6 +30,7 @@ public class Usuario implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 6469579734025056105L;
 	private int id;
+	private Centro centro;
 	private String nombre;
 	private String apellido1;
 	private String apellido2;
@@ -56,7 +61,7 @@ public class Usuario implements java.io.Serializable {
 	}
 
 	@Id
-
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	public int getId() {
 		return this.id;
@@ -64,6 +69,16 @@ public class Usuario implements java.io.Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name = "idCentro")
+	public Centro getCentro() {
+		return this.centro;
+	}
+
+	public void setCentro(Centro centro) {
+		this.centro = centro;
 	}
 
 	@Column(name = "nombre", nullable = false, length = 100)
@@ -111,7 +126,7 @@ public class Usuario implements java.io.Serializable {
 		this.password = password;
 	}
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "usuario_rol", 
 	    joinColumns = {@JoinColumn(name = "usuario_id", referencedColumnName="id",nullable = false) }, 
 	    inverseJoinColumns = {@JoinColumn(name = "rol_id", referencedColumnName="id", nullable = false) })

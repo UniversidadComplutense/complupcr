@@ -63,7 +63,7 @@ public class Rol implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "usuario_rol", 
 		joinColumns = {@JoinColumn(name = "rol_id", referencedColumnName="id", nullable = false) },
 		inverseJoinColumns = {@JoinColumn(name = "usuario_id", referencedColumnName="id", nullable = false) })
