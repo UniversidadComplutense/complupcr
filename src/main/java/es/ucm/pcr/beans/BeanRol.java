@@ -9,6 +9,16 @@ public class BeanRol {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+
+	public BeanRol(Integer id, String rol) {
+		super();
+		this.id = id;
+		this.rol = rol;
+	}
+
+
 
 	public Integer getId() {
 		return id;
