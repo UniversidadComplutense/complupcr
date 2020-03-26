@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import es.ucm.pcr.beans.MenuBean;
 import es.ucm.pcr.config.security.PcrUserDetails;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.Usuario;
@@ -58,6 +59,12 @@ public class SesionServicioImpl implements SesionServicio {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
 		return ud.getCentro();
+	}
+
+	@Override
+	public List<MenuBean> getMenu() {
+		// TODO Auto-generated method stub -- AARON
+		return null;
 	}
 
 }
