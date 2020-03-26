@@ -56,7 +56,7 @@ public class LaboratorioVisavetUCMController {
 	
 	// presenta la pagina con unos criterios de busqueda iniciales
 	@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.GET)
-	public ModelAndView buscarGet(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+	public ModelAndView buscarLotesGet(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
          // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
 		BeanBusquedaLotes busquedaLotes= new BeanBusquedaLotes();
 		// inicializamos a enviado para filtrar por estos
@@ -66,7 +66,6 @@ public class LaboratorioVisavetUCMController {
 		// mas adelante necesito obtener Centros de un servicioCentros
 		
 		//busquedaLotes.setListaBeanCentro(servicioCentros.buscarCentros());
-		
 		
 		
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
@@ -80,11 +79,23 @@ public class LaboratorioVisavetUCMController {
 	}
 	// buscar lotes segun los criterios de busqueda 
 	@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.POST)
-	public ModelAndView buscarPost(Model model, HttpServletRequest request, HttpSession session) {
+	public ModelAndView buscarLotesPost(Model model, HttpServletRequest request, HttpSession session) {
         // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
-		ModelAndView vista = new ModelAndView("listadoLotes");
+		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 		return vista;
 	}
-	
-	
+	// buscar placas segun los criterios de busqueda 
+		@RequestMapping(value = "/laboratorioUni/buscarPlacas", method = RequestMethod.GET)
+		public ModelAndView buscarPlacasGet(Model model, HttpServletRequest request, HttpSession session) {
+	        // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
+			ModelAndView vista = new ModelAndView("VistaBuscarPlacas");
+			return vista;
+		}
+		// buscar lotes segun los criterios de busqueda 
+		@RequestMapping(value = "/laboratorioUni/buscarPlacas", method = RequestMethod.POST)
+		public ModelAndView buscarPlacasPost(Model model, HttpServletRequest request, HttpSession session) {
+		    // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
+			ModelAndView vista = new ModelAndView("VistaBuscarPlacas");
+			return vista;
+		}
 }
