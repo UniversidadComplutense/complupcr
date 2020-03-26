@@ -1,4 +1,5 @@
 <!--/* FRAGMENTO HEAD - ESTILOS Y SCRIPTS COMUNES */-->
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="fragmentoHead">
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -27,10 +28,6 @@
 <link rel="icon" th:href="@{/img/logoucm.ico}"
 	href="static/img/logoucm.ico" type="image/x-icon" />
 
-<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
-<script src="static/js/bootstrap.min.js"
-	th:src="@{/js/bootstrap.min.js}"></script>
 </head>
 
 
@@ -44,12 +41,44 @@
 			</div>
 			<div class="col"></div>
 			<div class="col align-items-right">
-						<img src="static/img/logo_ucm.png" th:src="@{/img/logo_ucm.png}"
-							class="float-right img-fluid" />
+				<img src="static/img/logo_ucm.png" th:src="@{/img/logo_ucm.png}"
+					class="float-right img-fluid" />
 			</div>
 		</div>
 	</div>
 </header>
+
+<!-- /*Navbar/ -->
+<div th:fragment="navbar-responsive" id="nabvar">
+	<div class="container pie-orange">
+		<nav class="navbar navbar-expand-lg navbar-light ">
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavDropdown">
+				<ul class="navbar-nav">
+					<th:foreach th:each="menu:${@pcrTHExpressions.getMenu()}">
+						<li class="nav-item dropdown"><a
+							class="nav-link dropdown-toggle" href="#"
+							id="navbarDropdownMenuLink" data-toggle="dropdown"
+							aria-haspopup="true" aria-expanded="false"
+							th:text="${menu.textoMenu}"> Dropdown link </a>
+							<div class="dropdown-menu"
+								aria-labelledby="navbarDropdownMenuLink">
+								<th:foreach th:each="submenu:${menu.hijos}">
+									<a class="dropdown-item" th:href="${submenu.url}"
+										th:text="${submenu.textoMenu}">Action</a>
+								</th:foreach>
+							</div></li>
+					</th:foreach>
+				</ul>
+			</div>
+		</nav>
+	</div>
+</div>
+
 <!-- /* Pie de página */ -->
 <div th:fragment="footer-responsive" id="footer">
 	<div class="container">
@@ -63,4 +92,11 @@
 			</div>
 		</div>
 	</div>
+</div>
+<!--/* SCRIPTS - SIEMPRE FINAL DE PÁGINA */-->
+<div th:fragment="scripts" id="scripts">
+	<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+	<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
+	<script src="static/js/bootstrap.min.js"
+		th:src="@{/js/bootstrap.min.js}"></script>
 </div>

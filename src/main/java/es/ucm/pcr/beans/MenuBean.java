@@ -30,6 +30,14 @@ public class MenuBean implements Serializable {
 	}
 
 
+	public MenuBean(String textoMenu, String url, List<MenuBean> hijos) {
+		super();
+		this.textoMenu = textoMenu;
+		this.url = url;
+		this.hijos = hijos;
+	}
+
+
 	public String getTextoMenu() {
 		return textoMenu;
 	}

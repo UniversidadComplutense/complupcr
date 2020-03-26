@@ -16,7 +16,7 @@ import es.ucm.pcr.modelo.orm.Usuario;
 
 @Service
 public class SesionServicioImpl implements SesionServicio {
-	
+
 	@Autowired
 	UsuarioServicio usuarioServicio;
 
@@ -38,7 +38,7 @@ public class SesionServicioImpl implements SesionServicio {
 		String email = authentication.getName();
 		return email;
 	}
-	
+
 	@Override
 	public List<String> getRoles() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,7 +53,7 @@ public class SesionServicioImpl implements SesionServicio {
 		}
 		return roles;
 	}
-	
+
 	@Override
 	public Boolean tieneRol(String rol) {
 		return this.getRoles().contains(rol);
@@ -69,8 +69,34 @@ public class SesionServicioImpl implements SesionServicio {
 	@Override
 	public List<MenuBean> getMenu() {
 		// TODO Auto-generated method stub -- AARON
-		return null;
+		List<MenuBean> menuPrincipal = null;
+		List<MenuBean> menuSecundario = null;
+		MenuBean opcionSecundaria = null;
+		MenuBean opcionPrincipal = null;
+
+		menuPrincipal = new ArrayList<MenuBean>();
+//	OPCIONES A	
+		if (this.tieneRol("ROLE_ADMIN")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Opcion 1", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Opcion 2", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Menu ADMIN", "", menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
+
+//	OPCIONES B
+		if (this.tieneRol("ROLE_TECNICO")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Opcion 1", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Opcion 2", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Menu TECNICO", "", menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
+		return menuPrincipal;
 	}
 
-	
 }
