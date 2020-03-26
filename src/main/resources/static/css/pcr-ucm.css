@@ -18,3 +18,7 @@
 	font-size: xx-large;
 	background-color: orange;	
 }
+
+fieldset legend {
+	font-size: 18px;
+}

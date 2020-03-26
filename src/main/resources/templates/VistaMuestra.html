@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - MUESTRAS</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<div class="container">	
+	
+	<form action="#" th:action="@{/centroSalud/muestra/guardar}" method="post" th:object="${beanMuestra}" id="formGuardar" role="form">
+		<fieldset id="datosPaciente" class="form-group border p-2" th:disabled="${beanMuestra.id} != null">
+			<!-- DATOS PACIENTE -->
+			<legend class="w-auto">Paciente</legend>
+			<div class="row">
+				<div class="col-4 form-group">
+					<label>Nombre</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nombreApellidos}"  th:value="${beanMuestra.nombreApellidos}" required maxlength="50"/>
+				</div>					
+				<div class="col-4 form-group">
+					<label>Correo</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.correo}"  th:value="${beanMuestra.correo}" required maxlength="50"/>
+				</div>
+				
+				<div class="col-4 form-group">
+					<label>Teléfono</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.telefono}"  th:value="${beanMuestra.telefono}" pattern="[0-9]{9}" maxlength="9" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required />
+				</div>					
+			</div>
+			<div class="row">	
+				<div class="col-4 form-group">
+					<label>NHC</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nhc}"  th:value="${beanMuestra.nhc}" required maxlength="20"/>
+				</div>											
+			</div>
+			<div class="row">	
+				<div class="col-4 form-group">				
+					<label>Recoger datos para notificar</label><br>
+					<label><input type="radio" name="recogerDatosNotif" id="recogerDatosNotif1" th:field="${beanMuestra.recogerDatosNotif}" value="true">Sí</label>
+					<label><input type="radio" name="recogerDatosNotif" id="recogerDatosNotif2" th:field="${beanMuestra.recogerDatosNotif}" value="false"></input>No</label>					  
+				</div>	
+				<div class="col-4 form-group">
+					<label>Notificar paciente automáticamente</label><br>
+					<label><input type="radio" name="avisosAuto" id="avisosAuto1" th:field="${beanMuestra.avisosAuto}" value="true">Sí</label>
+					<label><input type="radio" name="avisosAuto" id="avisosAuto2" th:field="${beanMuestra.avisosAuto}" value="false"></input>No</label>	
+				</div>	
+				<div class="col-4 form-group">
+					<label>Avisar al paciente por sms</label><br>
+					<label><input type="radio" name="avisoSms" id="avisoSms1" th:field="${beanMuestra.avisoSms}" value="true">Sí</label>
+					<label><input type="radio" name="avisoSms" id="avisoSms2" th:field="${beanMuestra.avisoSms}" value="false"></input>No</label>	
+				</div>								
+			</div>			
+		</fieldset>
+		
+		<!-- DATOS MUESTRA -->
+		<fieldset id="datosMuestras" class="form-group border p-2" th:disabled="${beanMuestra.id} != null">
+			<legend class="w-auto">Muestra</legend>
+			<div class="row">
+				<div class="col-4 form-group">
+					<label>Etiqueta</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanMuestra.etiqueta}"  th:value="${beanMuestra.etiqueta}" required/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('etiqueta')}" th:errors="${beanMuestra.etiqueta}"></label>
+				</div>	
+				<div class="col-4 form-group">
+					<label>Tipo muestra</label><br>
+				 	<label><input type="radio" name="tipoMuestra" id="tipoMuestra1" th:field="${beanMuestra.tipoMuestra}" value="N" required>Nariz</label>
+					<label><input type="radio" name="tipoMuestra" id="tipoMuestra2" th:field="${beanMuestra.tipoMuestra}" value="B" required></input>Boca</label>
+				</div>	
+				<div class="col-4 form-group">
+					<label>Fecha</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${beanMuestra.fechaEntrada}"  th:value="${beanMuestra.fechaEntrada}" required/>
+				</div>										
+			</div>				
+			<div class="row">
+				<div class="col-3 form-group">
+					<label>Lote</label>
+				 	<select class="form-control form-control-sm" th:field="${beanMuestra.idLote}"  th:value="${beanMuestra.idLote}">
+				 		<option value="0">Seleccione</option>
+				 		<option value="1">Lote1</option>
+				 		<option value="2">Lote2</option>
+				 		<option value="3">Lote3</option>
+				 		<option value="4">Lote4</option>
+				 		<option value="5">Lote5</option>
+				 	</select>					
+				</div>	
+			</div>
+		</fieldset>
+
+		<!-- ACCCIONES -->
+		<div class="row justify-content-center mt-3">
+			<div class="col-1">
+				<a th:href="@{/centroSalud/muestra/}" class="btn btn-secondary">Volver</a>				
+			</div>
+			<div class="col-1">
+				<button th:disabled="${beanMuestra.id} != null" type="submit" class="btn btn-secondary">Guardar</button>
+			</div>
+		</div>					
+	</form>
+
+	</div>
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+    
+</body>
+</html>
