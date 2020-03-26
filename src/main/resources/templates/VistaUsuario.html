@@ -8,66 +8,80 @@
 <body>
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
-	<div class="container">	
-	
-	<form action="#" th:action="@{/AltaUsuario}" method="post" th:object="${formBeanUsuario}" id="ALTAUsuario" role="form">
 
-	<h4>ALTA DE USUARIO</h4>
-	
-	<div class="form-group">
-		<label class="text_formulario">Nombre Usuario</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanUsuario.nom}"  th:value="${formBeanUsuario.nom}" required="required"/>
-	</div>
-	
-	<div class="form-group">
-		<label class="text_formulario">Primer Apellido Usuario</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanUsuario.ap1}"  th:value="${formBeanUsuario.ap1}" required="required"/>
-	</div>
-	
-	<div class="form-group">
-		<label class="text_formulario">Segundo Apellido Usuario</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanUsuario.ap2}"  th:value="${formBeanUsuario.ap2}" required="required"/>
-	</div>
-	
-	<div class="form-group">
-		<label class="text_formulario">Teléfono Fijo</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanUsuario.telFijo}"  th:value="${formBeanUsuario.telFijo}" required="required"/>
-	</div>
-	
-	<div class="form-group">
-		<label class="text_formulario">Teléfono Móvil</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanUsuario.telMovil}"  th:value="${formBeanUsuario.telMovil}" required="required"/>
-	</div>		
-	
-	<div class="form-group">
-		<label class="text_formulario">Mail</label>
-	 	<input  type="email" class="form-control" th:field="${formBeanUsuario.mail}"  th:value="${formBeanUsuario.mail}" required="required"/>
-	</div>	
-				
-    <div class="form-group">
-        <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="option1" name="option1" class="custom-control-input" value="I" th:field="*{internoExterno}">
-            <label class="custom-control-label" for="option1">Personal UCM</label>
-        </div>
-        <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="option2" name="option2" class="custom-control-input" value="E" th:field="*{internoExterno}">
-            <label class="custom-control-label" for="option2">Personal Externo</label>
-        </div>
-    </div>
-    
- 
+	<div class="container">
 
-	<div class="row align-content-center">
-		<div class="col-4 mx-auto">
-			<button type="submit"
-				class="btn btn-primary">Alta Usuario</button>
-		</div>
-	</div>	
-	
-	</form>
+		<form action="#" th:action="@{/AltaUsuario}" method="post"
+			th:object="${formBeanUsuario}" id="ALTAUsuario" role="form">
+
+			<h4>GESTION DE USUARIO</h4>
+
+			<div class="form-group">
+				<label class="text_formulario">Nombre Usuario</label> <input
+					type="text" class="form-control" th:field="${formBeanUsuario.nom}"
+					th:value="${formBeanUsuario.nom}" required="required" />
+			</div>
+
+			<div class="form-group">
+				<label class="text_formulario">Primer Apellido Usuario</label> <input
+					type="text" class="form-control" th:field="${formBeanUsuario.ap1}"
+					th:value="${formBeanUsuario.ap1}" required="required" />
+			</div>
+
+			<div class="form-group">
+				<label class="text_formulario">Segundo Apellido Usuario</label> <input
+					type="text" class="form-control" th:field="${formBeanUsuario.ap2}"
+					th:value="${formBeanUsuario.ap2}" required="required" />
+			</div>
+
+			<div class="form-group">
+				<label class="text_formulario">Teléfono Fijo</label> <input
+					type="text" class="form-control"
+					th:field="${formBeanUsuario.telFijo}"
+					th:value="${formBeanUsuario.telFijo}" required="required" />
+			</div>
+
+			<div class="form-group">
+				<label class="text_formulario">Teléfono Móvil</label> <input
+					type="text" class="form-control"
+					th:field="${formBeanUsuario.telMovil}"
+					th:value="${formBeanUsuario.telMovil}" required="required" />
+			</div>
+
+			<div class="form-group">
+				<label class="text_formulario">Mail</label> <input type="email"
+					class="form-control" th:field="${formBeanUsuario.mail}"
+					th:value="${formBeanUsuario.mail}" required="required" />
+			</div>
+
+			<div class="form-group">
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="option1" name="option1"
+						class="custom-control-input" value="I"
+						th:field="*{internoExterno}"> <label
+						class="custom-control-label" for="option1">Personal UCM</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="option2" name="option2"
+						class="custom-control-input" value="E"
+						th:field="*{internoExterno}"> <label
+						class="custom-control-label" for="option2">Personal
+						Externo</label>
+				</div>
+			</div>
+
+
+
+			<div class="row align-content-center">
+				<div class="col-4 mx-auto">
+					<button type="submit" class="btn btn-primary">Guardar Usuario</button>
+				</div>
+			</div>
+
+		</form>
 
 	</div>
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
-    
+
 </body>
 </html>

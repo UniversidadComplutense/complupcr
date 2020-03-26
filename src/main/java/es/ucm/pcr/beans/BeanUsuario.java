@@ -2,7 +2,7 @@ package es.ucm.pcr.beans;
 
 public class BeanUsuario {
 
-	public Integer idAnalista;
+	public Integer id;
 	public String nom;
 	public String ap1;
 	public String ap2;
@@ -18,13 +18,35 @@ public class BeanUsuario {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Integer getIdAnalista() {
-		return idAnalista;
+
+
+	public BeanUsuario(Integer id, String nom, String ap1, String ap2, String telFijo, String telMovil, String mail,
+			String internoExterno, String rol) {
+		super();
+		this.id = id;
+		this.nom = nom;
+		this.ap1 = ap1;
+		this.ap2 = ap2;
+		this.telFijo = telFijo;
+		this.telMovil = telMovil;
+		this.mail = mail;
+		this.internoExterno = internoExterno;
+		this.rol = rol;
 	}
 
-	public void setIdAnalista(Integer idAnalista) {
-		this.idAnalista = idAnalista;
+
+
+	public Integer getId() {
+		return id;
 	}
+
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
 
 	public String getNom() {
 		return nom;
@@ -90,12 +112,16 @@ public class BeanUsuario {
 		this.rol = rol;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return "BeanAnalista [idAnalista=" + idAnalista + ", nom=" + nom + ", ap1=" + ap1 + ", ap2=" + ap2
-				+ ", telFijo=" + telFijo + ", telMovil=" + telMovil + ", mail=" + mail + ", internoExterno="
-				+ internoExterno + ", rol=" + rol + "]";
+		return "BeanUsuario [id=" + id + ", nom=" + nom + ", ap1=" + ap1 + ", ap2=" + ap2 + ", telFijo=" + telFijo
+				+ ", telMovil=" + telMovil + ", mail=" + mail + ", internoExterno=" + internoExterno + ", rol=" + rol
+				+ "]";
 	}
+
+	
 		
 
 }
