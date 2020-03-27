@@ -11,7 +11,7 @@
 
 	<div class="container">
 
-		<form action="#" th:action="@{/AltaUsuario}" method="post"
+		<form action="#" th:action="@{/gestor/altaUsuario}" method="post"
 			th:object="${formBeanUsuario}" id="ALTAUsuario" role="form">
 
 			<h4>GESTION DE USUARIO</h4>
@@ -48,9 +48,11 @@
 					th:value="${formBeanUsuario.telMovil}" required="required" />
 			</div>
 
-			<div class="form-group">
+			<!-- En modificacion no modificamos el mail, eso es cosa del alta de usuarios -->
+			<div class="form-group" >
 				<label class="text_formulario">Mail</label> <input type="email"
 					class="form-control" th:field="${formBeanUsuario.mail}"
+					th:disabled="${formBeanUsuario.accion=='M'}"
 					th:value="${formBeanUsuario.mail}" required="required" />
 			</div>
 
@@ -70,7 +72,22 @@
 				</div>
 			</div>
 
-
+			<!--  Los campos id y acción van ocultos en la pantalla 
+			-->
+			<div class="form-group">
+				<label class="text_formulario"></label> 
+				<input type="hidden" class="form-control"
+					th:field="${formBeanUsuario.accion}"
+					th:value="${formBeanUsuario.accion}"  />
+			</div>
+			<div class="form-group">
+				<label class="text_formulario"></label> 
+				<input type="hidden" class="form-control"
+					th:field="${formBeanUsuario.id}"
+					th:value="${formBeanUsuario.id}"  />
+			</div>
+			<!--  Los campos id y acción van ocultos en la pantalla 
+			-->
 
 			<div class="row align-content-center">
 				<div class="col-4 mx-auto">

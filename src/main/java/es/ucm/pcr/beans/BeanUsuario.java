@@ -13,6 +13,7 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 	public String mail;
 	public String internoExterno;
 	public String rol;
+	public String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA DE USUARIOS
 	
 	
 	public BeanUsuario() {
@@ -20,10 +21,8 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 		// TODO Auto-generated constructor stub
 	}
 
-
-
 	public BeanUsuario(Integer id, String nom, String ap1, String ap2, String telFijo, String telMovil, String mail,
-			String internoExterno, String rol) {
+			String internoExterno, String rol, String accion) {
 		super();
 		this.id = id;
 		this.nom = nom;
@@ -34,8 +33,8 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 		this.mail = mail;
 		this.internoExterno = internoExterno;
 		this.rol = rol;
+		this.accion = accion;
 	}
-
 
 
 	public Integer getId() {
@@ -114,16 +113,28 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 		this.rol = rol;
 	}
 
+	public String getAccion() {
+		return accion;
+	}
+
+	public void setAccion(String accion) {
+		this.accion = accion;
+	}
 
 
-	@Override
+
+    @Override
 	public String toString() {
 		return "BeanUsuario [id=" + id + ", nom=" + nom + ", ap1=" + ap1 + ", ap2=" + ap2 + ", telFijo=" + telFijo
 				+ ", telMovil=" + telMovil + ", mail=" + mail + ", internoExterno=" + internoExterno + ", rol=" + rol
-				+ "]";
+				+ ", accion=" + accion + "]";
 	}
 
-    @Override
+
+
+
+
+	@Override
     public int compareTo(BeanUsuario o) {
 		String p1 = o.getAp1() + o.getAp2() + o.getNom();
 		String p2 = getAp1() + getAp2() + getNom();

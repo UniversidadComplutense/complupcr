@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
@@ -42,4 +43,15 @@ public class UsuarioServicioImp implements UsuarioServicio {
 			return null;
 		}
 	}
+	
+//	@Override
+//	public BeanUsuario mapeoEntidadBeanUsuario (Usuario usuario) throws Exception
+//	{
+//		
+//	}
+//	
+//	@Override
+//	public Usuario mapeoEntidadBeanUsuario (BeanUsuario beanUsuario) throws Exception{
+//		
+//	}
 }
