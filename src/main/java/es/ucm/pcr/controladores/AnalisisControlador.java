@@ -91,11 +91,15 @@ public class AnalisisControlador {
 		@PreAuthorize("hasAnyRole('ADMIN')")
 		public ModelAndView asignarMuestra(HttpSession session, @RequestParam("idMuestra") Integer idMuestra) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAMuestra");
-			
-			//BeanMuestraCentro beanMuestra = getBeanCentro(id.intValue());
+						
 			MuestraBean beanMuestra = getBeanMuestra(idMuestra);
 			
+			List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
+			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();
+			
 			vista.addObject("beanMuestra", beanMuestra);
+			vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);
+			vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
 			return vista;
 		}
 		
@@ -161,6 +165,39 @@ public class AnalisisControlador {
 		}
 		
 		
+		
+		public List<BeanUsuario> getBeanListadoAnalistasLaboratorio() {
+			List<BeanUsuario> listaAnalistas = new ArrayList<BeanUsuario>();		
+			// 15 analistas 
+			for(int j=0;j<15; j++) {				
+				BeanUsuario ana = new BeanUsuario();
+				ana.setId(j);
+				ana.setNom("analista-" + j);
+				ana.setRol("ANALISTA_LAB");
+				//TODO aciertos y posibles				
+				listaAnalistas.add(ana);				
+			}
+			return listaAnalistas;
+		}
+		
+		public List<BeanUsuario> getBeanListadoAnalistasVoluntarios() {
+			List<BeanUsuario> listaVoluntarios = new ArrayList<BeanUsuario>();		
+			// 20 voluntarios 
+			for(int j=0;j<20; j++) {				
+				BeanUsuario vol = new BeanUsuario();
+				vol.setId(j);
+				vol.setNom("voluntario-" + j);
+				vol.setRol("ANALISTA_VOLUNTARIO");
+				//TODO aciertos y posibles				
+				listaVoluntarios.add(vol);				
+			}
+			return listaVoluntarios;
+		}
+		
+		
+		
+		
+		
 		public MuestraBean getBeanMuestra(int i) {
 			MuestraBean bean = new MuestraBean();
 			bean.setId(i);
@@ -182,17 +219,19 @@ public class AnalisisControlador {
 				ana.setNom("analista-" + j);
 				ana.setRol("ANALISTA_LAB");
 				beanAsigAna.setBeanUsuario(ana);				
-				beanAsigAna.setFechaAsignacion(cal);				
-				beanListaAsignaciones.getListaAsignaciones().add(beanAsigAna);
+				beanAsigAna.setFechaAsignacion(cal);
+				beanAsigAna.setValoracion("P");
+				beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);
 				
 				BeanAsignacion beanAsigVol = new BeanAsignacion();
 				BeanUsuario vol = new BeanUsuario();
 				vol.setId(j);
 				vol.setNom("voluntario-" + j);
 				vol.setRol("ANALISTA_VOLUNTARIO");
-				beanAsigVol.setBeanUsuario(ana);				
-				beanAsigVol.setFechaAsignacion(cal);				
-				beanListaAsignaciones.getListaAsignaciones().add(beanAsigVol);
+				beanAsigVol.setBeanUsuario(vol);				
+				beanAsigVol.setFechaAsignacion(cal);
+				beanAsigVol.setValoracion("N");
+				beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
 			}
 			beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
 			bean.setBeanAnalisis(beanAnalisis);					
