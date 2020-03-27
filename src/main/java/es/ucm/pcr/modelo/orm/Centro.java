@@ -81,7 +81,7 @@ public class Centro implements java.io.Serializable {
 	}
 
 	public void setTelefono(String telefono) {
-		this.telefono = telefono;laboratorioVisavetUcm
+		this.telefono = telefono;
 	}
 
 	@Column(name = "email", length = 100)

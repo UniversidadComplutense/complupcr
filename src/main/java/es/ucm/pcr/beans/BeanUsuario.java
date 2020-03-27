@@ -4,16 +4,16 @@ import es.uc.pcr.utilidades.Utilidades;
 
 public class BeanUsuario implements Comparable<BeanUsuario>{
 
-	public Integer id;
-	public String nom;
-	public String ap1;
-	public String ap2;
-	public String telFijo;
-	public String telMovil;
-	public String mail;
-	public String internoExterno;
-	public String rol;
-	public String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA DE USUARIOS
+	private Integer id;
+	private String nom;
+	private String ap1;
+	private String ap2;
+	private String telFijo;
+	private String telMovil;
+	private String mail;
+	private String internoExterno;
+	private String rol;
+	private String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA DE USUARIOS
 	
 	
 	public BeanUsuario() {

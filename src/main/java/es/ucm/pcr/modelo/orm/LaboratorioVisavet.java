@@ -1,6 +1,11 @@
 package es.ucm.pcr.modelo.orm;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
@@ -25,6 +30,9 @@ public class LaboratorioVisavet {
 		this.ocupacion = ocupacion;
 	}
 
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getId() {
 		return id;
 	}
@@ -33,6 +41,7 @@ public class LaboratorioVisavet {
 		this.id = id;
 	}
 
+	@Column(name = "nombre", nullable = false, length = 100)
 	public String getNombre() {
 		return nombre;
 	}
@@ -41,6 +50,7 @@ public class LaboratorioVisavet {
 		this.nombre = nombre;
 	}
 
+	@Column(name = "capacidad")
 	public String getCapacidad() {
 		return capacidad;
 	}
@@ -49,6 +59,7 @@ public class LaboratorioVisavet {
 		this.capacidad = capacidad;
 	}
 
+	@Column(name = "ocupacion")
 	public String getOcupacion() {
 		return ocupacion;
 	}

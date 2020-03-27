@@ -4,14 +4,14 @@ import es.uc.pcr.utilidades.Utilidades;
 
 public class BeanCentro implements Comparable<BeanCentro> {
 	
-	public Integer idCentro;
-	public String codCentro;
-	public String desCentro;
-	public String telefonoCentro;
-	public String responsableCentro;
-	public String telefonoResponsableCentro;
-	public String mailCentro;
-	public String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA
+	private Integer idCentro;
+	private String codCentro;
+	private String desCentro;
+	private String telefonoCentro;
+	private String responsableCentro;
+	private String telefonoResponsableCentro;
+	private String mailCentro;
+	private String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA
 	
 	public BeanCentro() {
 		super();

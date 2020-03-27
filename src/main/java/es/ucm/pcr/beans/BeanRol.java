@@ -4,9 +4,9 @@ import es.uc.pcr.utilidades.Utilidades;
 
 public class BeanRol implements Comparable<BeanRol>{
 	
-	public Integer id;
-	public String rol;
-	public String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA
+	private Integer id;
+	private String rol;
+	private String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA
 	
 	public BeanRol() {
 		super();
