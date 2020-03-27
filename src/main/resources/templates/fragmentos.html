@@ -62,7 +62,13 @@
 <div th:fragment="scriptsBootstrap" id="scriptsBootstrap">
 
 	<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-	<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
+	<!-- <script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>  -->
+	<!--  para arreglar error enconsola Uncaught SyntaxError: Unexpected token 'export' en popper.min.js
+	https://stackoverflow.com/questions/46459767/popper-js-in-bootstrap-4-gives-syntaxerror-unexpected-token-export -->
+	<!-- Check the readme.md "Usage". The lib is available in three version for three difference module loaders. 
+	In short: if you load it with the <script> tag then you must use the UMD version. You can find it in /dist/umd. 
+	The default (in /dist) is the ESNext (ECMA-Script) which can not be loaded using the script tag. -->
+	<script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>
 	<script src="static/js/bootstrap.min.js"
 		th:src="@{/js/bootstrap.min.js}"></script>
 		

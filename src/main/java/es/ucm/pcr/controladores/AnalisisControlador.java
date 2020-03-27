@@ -98,9 +98,14 @@ public class AnalisisControlador {
 			
 			List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
 			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();
+			System.out.println("beanListadoAnalistaLab tiene: " + beanListadoAnalistaLab.size());
+			
 			
 			//para recoger los analistas y voluntarios seleccionados
 			List<Integer> listaIdsAnalistasLabSeleccionados = new ArrayList<Integer>();
+			listaIdsAnalistasLabSeleccionados.add(3);
+			listaIdsAnalistasLabSeleccionados.add(7);
+			
 			
 			vista.addObject("beanMuestra", beanMuestra);
 			vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);
@@ -109,18 +114,24 @@ public class AnalisisControlador {
 			return vista;
 		}
 		
-						
+
+		/*
 		@GetMapping("/consultaAnalistas")
-		public String consultaCentrosUsuario(@RequestParam("id") String id, Model modelo, HttpSession session) {
+		public String consultaAnalistas(@RequestParam("id") String id, Model modelo, HttpSession session) {
 			System.out.println("id vale: " + id);
 			
 			List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
+			
+			//para recoger los analistas y voluntarios seleccionados
+			List<Integer> listaIdsAnalistasLabSeleccionados = new ArrayList<Integer>();
 						
 			modelo.addAttribute("beanListadoAnalistaLab", beanListadoAnalistaLab);
+			
+			modelo.addAttribute("listaIdsAnalistasLabSeleccionados", listaIdsAnalistasLabSeleccionados);			
 						
 			return "VistaAsignarAnalistasAMuestra :: #analistasLabSeleccionado";
 		}
-		
+		*/
 		
 		
 //		@RequestMapping(value="/nueva", method=RequestMethod.GET)

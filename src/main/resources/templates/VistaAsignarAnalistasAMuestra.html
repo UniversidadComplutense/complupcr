@@ -65,7 +65,7 @@
 		
 		
 		<!-- ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->
-		<fieldset id="nuevasAsignaciones" class="form-group border p-2" th:disabled="${beanMuestra.id} != null">
+		<fieldset id="nuevasAsignaciones" class="form-group border p-2">
 			<legend class="w-auto">Nuevas Asignaciones Muestra</legend>
 			<div class="row">
 				<div class="col-4 form-group">
@@ -77,20 +77,24 @@
 		<!--PAS -->
 							<div class="form-group col-12">
 								 
-								<div class="btn-outline-primary col-6" id="headingOne">
+							<!--  	<div class="btn-outline-primary col-6" id="headingOne">
 
 									<input type="checkbox" data-toggle="collapse"
 										data-target="#collapseOne" aria-expanded="true"
 										aria-controls="collapseOne" onChange="loadAnalistas('LAB')">Analistas Laboratorio									
 
 								</div>
-								 
+							-->
+							<!--  
 								<div id="collapseOne" class="collapse hide"
 									aria-labelledby="headingOne">
+							 -->	
+								<div>
 									<div class="card-body">
 										<div class="form-row col-12 ">
 											<div id=centroPAS class="form-group  col-12">
-												<label>Analistas laboratorio: </label> <select
+												<label>Analistas laboratorio: </label> 
+												<select
 													class="form-control selectpicker" multiple
 													data-live-search="true" data-actions-box="true"
 													id="analistasLabSeleccionado" th:field="${listaIdsAnalistasLabSeleccionados}"

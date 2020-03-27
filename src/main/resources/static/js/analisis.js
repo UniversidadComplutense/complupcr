@@ -4,7 +4,7 @@ function loadAnalistas(id) {
 	var urlAbs = getAbsolutePath();
 	var lista = "";
 	var texto = "";
-	url = '/consultaAnalistas/?id=' + id;
+	url = '/analisis/consultaAnalistas/?id=' + id;
 
 	$.ajax({
 		type : 'GET',
