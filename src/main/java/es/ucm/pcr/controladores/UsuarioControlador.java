@@ -27,67 +27,13 @@ public class UsuarioControlador {
 	@Autowired
 	UsuarioRepositorio usuarioRepositorio;
 	
-	
-//	@RequestMapping(value="/gestor/listaUsuarios", method=RequestMethod.GET)
-//	public ModelAndView GestionUsuario(HttpSession session) throws Exception {
-//		ModelAndView vista = new ModelAndView("VistaGestionUsuario");
-//	
-//		List<BeanUsuario> listaUsuarios = new ArrayList<BeanUsuario>();
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "bbbbbbbb", "bbbbbbbbbbbb", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "dddddddd", "dddddddddddd", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//
-//		listaUsuarios.add(new BeanUsuario(0, "ccccccccc", "ccccccccccc", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "Fernando", "de las Heras", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		listaUsuarios.add(new BeanUsuario(0, "aaaAAAAA", "aaaaaaaaaaaa", "martin", "999", "666", "fherasm@ucm,es", "I", "rol"));
-//		
-//		Collections.sort(listaUsuarios);
-//		vista.addObject("listaUsuarios", listaUsuarios);
-//	
-//		return vista;
-//	}
-	
+	//	Muestra una lista ordenada ap1, ap2,nombre con los usuarios
+	// Punto de entrada a la gestión de usuarios
 	@RequestMapping(value="/gestor/listaUsuarios", method=RequestMethod.GET)
 	public ModelAndView GestionUsuario(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionUsuario");
 	
+		// cargo todos los usuarios de BBDD
 		List<BeanUsuario> listaUsuarios = new ArrayList<BeanUsuario>();
 		for (Usuario usuario: usuarioRepositorio.findAll())
 		{
@@ -96,12 +42,14 @@ public class UsuarioControlador {
 					 						  usuario.getEmail(), usuario.getEmail(), 
 					 						  usuario.getEmail(), "I", "rol", "L"));
 		}
+		//	Ordeno por ap1, ap2, nombre
 		Collections.sort(listaUsuarios);
 		vista.addObject("listaUsuarios", listaUsuarios);
 	
 		return vista;
 	}
 	
+	// da de alta un nuevo usuario
 	@RequestMapping(value="/gestor/altaUsuario", method=RequestMethod.GET)
 	public ModelAndView AltaUsuario(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaUsuario");
@@ -114,12 +62,11 @@ public class UsuarioControlador {
 		return vista;
 	}
 	
-   // Alta de centro 
+   // Alta/modificación de usuario 
 	@RequestMapping(value="/gestor/altaUsuario", method=RequestMethod.POST)	
 	public ModelAndView grabarAltaUsuario ( @ModelAttribute("formBeanUsuario") BeanUsuario beanUsuario, HttpSession session) throws Exception {
 
-		System.out.println("Accion a realizar: "+ beanUsuario.getAccion());
-		
+		// Damos de alta nuevo usuario
 		if (beanUsuario.getAccion().equals("A"))
 		{
 			Usuario usuario = new Usuario();
@@ -130,17 +77,14 @@ public class UsuarioControlador {
 			usuario.setPassword(beanUsuario.getMail());
 			usuarioRepositorio.save(usuario);
 		}
-		
+		// Modificamos usuario existente, menos mail
 		if (beanUsuario.getAccion().equals("M"))
 		{
-			System.out.println("Voy a modificar: " );
-			System.out.println("Voy a modificar: " + beanUsuario.toString());
-			
 			// No todos los campos son modificables, el mail por ejemplo
 			// va asociado a la pwd, y es único, por lo que no modificable
 			// Buscamos el usuario a modificar, y volcamos los datos recogidos por el formulario
 			Optional<Usuario> usuario = usuarioRepositorio.findById(beanUsuario.getId());
-			
+			// añadimos campos del formulario
 			usuario.get().setApellido1(beanUsuario.getAp1());
 			usuario.get().setApellido2(beanUsuario.getAp2());
 			usuario.get().setNombre(beanUsuario.getNom());
@@ -149,18 +93,18 @@ public class UsuarioControlador {
 
 		// Volvemos a grabar mas centros
 		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaUsuarios",true));	
-		return vista;
-		
+		return vista;		
 	}	
 	
-	
+	// Modificamos un usuario
 	@RequestMapping(value = "/gestor/editarUsuario", method = RequestMethod.GET)
 	public ModelAndView editarUsuario(@RequestParam("idUsuario") Integer idUsuario) throws Exception {
 
 		ModelAndView vista = new ModelAndView("VistaUsuario");
 		
+		// Busco el usuario a modificar
 		Optional<Usuario> usuario = usuarioRepositorio.findById(idUsuario);
-		
+		// cargo el beanUsuario con lo datos del usuario a modificar
 		BeanUsuario beanUsuario = new BeanUsuario();
 		beanUsuario.setId(usuario.get().getId());
 		beanUsuario.setAp1(usuario.get().getApellido1());
@@ -174,33 +118,9 @@ public class UsuarioControlador {
 	
 		return vista;
 	}
-	
-//	@RequestMapping(value="/gestor/editarUsuario", method=RequestMethod.POST)	
-//	public ModelAndView modificarUsuario ( @ModelAttribute("formBeanUsuario") BeanUsuario beanUsuario, HttpSession session) throws Exception {
-//
-//		// No todos los campos son modificables, el mail por ejemplo
-//		// va asociado a la pwd, y es único, por lo que no modificable
-//		// Buscamos el usuario a modificar, y volcamos los datos recogidos por el formulario
-//		Optional<Usuario> usuario = usuarioRepositorio.findById(beanUsuario.getId());
-//		
-//		usuario.get().setApellido1(beanUsuario.getAp1());
-//		usuario.get().setApellido2(beanUsuario.getAp2());
-//		usuario.get().setNombre(beanUsuario.getNom());
-//	
-//		System.out.println("usuario a modificar; " + usuario.toString());
-//		
-////		usuarioRepositorio.save(usuario.get());
-//		
-//		// Volvemos a grabar mas centros
-//		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaUsuarios",true));	
-//		return vista;
-//		
-//	}	
-	
+		
 	@RequestMapping(value = "/gestor/borrarUsuario", method = RequestMethod.GET)
 	public ModelAndView borrarUsuario(@RequestParam("idUsuario") Integer idUsuario) throws Exception {
-
-//		System.out.println("Usuario a borrar: " + idUsuario);
 		
 		usuarioRepositorio.deleteById(idUsuario);
 		
