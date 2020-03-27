@@ -14,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -97,13 +99,27 @@ public class AnalisisControlador {
 			List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
 			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();
 			
+			//para recoger los analistas y voluntarios seleccionados
+			List<Integer> listaIdsAnalistasLabSeleccionados = new ArrayList<Integer>();
+			
 			vista.addObject("beanMuestra", beanMuestra);
 			vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);
+			vista.addObject("listaIdsAnalistasLabSeleccionados", listaIdsAnalistasLabSeleccionados);
 			vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
 			return vista;
 		}
 		
-		
+						
+		@GetMapping("/consultaAnalistas")
+		public String consultaCentrosUsuario(@RequestParam("id") String id, Model modelo, HttpSession session) {
+			System.out.println("id vale: " + id);
+			
+			List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
+						
+			modelo.addAttribute("beanListadoAnalistaLab", beanListadoAnalistaLab);
+						
+			return "VistaAsignarAnalistasAMuestra :: #analistasLabSeleccionado";
+		}
 		
 		
 		

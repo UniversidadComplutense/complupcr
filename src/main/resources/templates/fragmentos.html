@@ -21,16 +21,22 @@
 
 <link th:href="@{/css/pcr-ucm.css}" href="static/css/pcr-ucm.css"
 	rel="stylesheet" />
+		
+<!-- Data-toggle -->
+<link th:href="@{/css/bootstrap4-toggle.min.css}"
+	href="static/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<!--bootstrap-select -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.min.css}"
+	href="static/css/bootstrap-select.min.css">
+<!-- - -->
+	
 
 <link rel="shortcut icon" th:href="@{/img/logoucm.ico}"
 	href="static/img/logoucm.ico" type="image/x-icon" />
 <link rel="icon" th:href="@{/img/logoucm.ico}"
 	href="static/img/logoucm.ico" type="image/x-icon" />
-
-<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
-<script src="static/js/bootstrap.min.js"
-	th:src="@{/js/bootstrap.min.js}"></script>
+	
+	
 </head>
 
 
@@ -50,6 +56,30 @@
 		</div>
 	</div>
 </header>
+
+
+<!--/* SCRIPTS BOOTSTRAP - SIEMPRE FINAL DE PÁGINA */-->
+<div th:fragment="scriptsBootstrap" id="scriptsBootstrap">
+
+	<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+	<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
+	<script src="static/js/bootstrap.min.js"
+		th:src="@{/js/bootstrap.min.js}"></script>
+		
+	<!-- 	Data-toggle	 -->
+	<script th:src="@{/js/bootstrap4-toggle.min.js}"
+		src="static/js/bootstrap4-toggle.min.js"></script>
+	<!--bootstrap-select -->
+	<script th:src="@{/js/bootstrap-select.min.js}"
+		src="static/js/bootstrap-select.min.js"></script>
+	<!-- - -->
+
+
+</div>
+
+
+
+
 <!-- /* Pie de página */ -->
 <div th:fragment="footer-responsive" id="footer">
 	<div class="container">

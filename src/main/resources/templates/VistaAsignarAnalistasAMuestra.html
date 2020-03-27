@@ -62,6 +62,61 @@
 			</div>
 			-->
 		</fieldset>
+		
+		
+		<!-- ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->
+		<fieldset id="nuevasAsignaciones" class="form-group border p-2" th:disabled="${beanMuestra.id} != null">
+			<legend class="w-auto">Nuevas Asignaciones Muestra</legend>
+			<div class="row">
+				<div class="col-4 form-group">
+		
+		
+		<form id="formularioGuardarAsignacion" action="#"
+						th:action="@{/guardarAviso}" method="post"
+						 role="form"> <!--th:object="${formBeanGuardarAviso}"-->
+		<!--PAS -->
+							<div class="form-group col-12">
+								 
+								<div class="btn-outline-primary col-6" id="headingOne">
+
+									<input type="checkbox" data-toggle="collapse"
+										data-target="#collapseOne" aria-expanded="true"
+										aria-controls="collapseOne" onChange="loadAnalistas('LAB')">Analistas Laboratorio									
+
+								</div>
+								 
+								<div id="collapseOne" class="collapse hide"
+									aria-labelledby="headingOne">
+									<div class="card-body">
+										<div class="form-row col-12 ">
+											<div id=centroPAS class="form-group  col-12">
+												<label>Analistas laboratorio: </label> <select
+													class="form-control selectpicker" multiple
+													data-live-search="true" data-actions-box="true"
+													id="analistasLabSeleccionado" th:field="${listaIdsAnalistasLabSeleccionados}"
+													title="Todos los analistas">
+													<option th:each="var: ${beanListadoAnalistaLab}"
+														th:value="${var.id}" th:text="${var.nom}"></option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+		
+		
+	</form>	
+	<!-- FIN ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->	
+		
+	</div>
+	</div>
+	</fielset>	
+		
+		
+		
+		
+		
+		
 
 	
 	<form action="#" th:action="@{/centroSalud/muestra/guardar}" method="post" th:object="${beanMuestra}" id="formGuardar" role="form">
@@ -158,7 +213,12 @@
 	</form>
 
 	</div>
+	
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	
+	<object th:include="fragmentos :: scriptsBootstrap" th:remove="tag"></object>
+	
+	<script th:src="@{/js/analisis.js}"></script>
     
 </body>
 </html>
