@@ -18,6 +18,11 @@
 	font-size: xx-large;
 	background-color: orange;	
 }
+.menu-beige {
+	background-color: #ffa5001a;
+	min-height:25px;
+	color: white;
+}
 
 fieldset legend {
 	font-size: 18px;

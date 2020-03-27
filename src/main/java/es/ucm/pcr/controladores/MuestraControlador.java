@@ -30,7 +30,7 @@ import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.validadores.MuestraValidador;
 
 @Controller
-@RequestMapping(value = "/centroSalud/muestra")
+@RequestMapping(value = "/centroSalud")
 public class MuestraControlador {
 	
 	// TODO - INCLUIR EL ROL DEL CENTRO
@@ -49,7 +49,7 @@ public class MuestraControlador {
 		binder.setValidator(validadorMuestra);
 	}
 	
-	@RequestMapping(value="/", method=RequestMethod.GET)
+	@RequestMapping(value="/muestra", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ModelAndView buscadorMuestras(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestraListado");
@@ -60,7 +60,7 @@ public class MuestraControlador {
 		return vista;
 	}
 	
-	@RequestMapping(value="/list", method=RequestMethod.POST)
+	@RequestMapping(value="/muestra/list", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute MuestraBusquedaBean beanBusqueda) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestraListado");
@@ -76,7 +76,7 @@ public class MuestraControlador {
 		return vista;
 	}
 	
-	@RequestMapping(value="/nueva", method=RequestMethod.GET)
+	@RequestMapping(value="/muestra/nueva", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ModelAndView nuevaMuestra(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
@@ -89,7 +89,7 @@ public class MuestraControlador {
 		return vista;
 	}
 	
-	@RequestMapping(value="/{id}", method=RequestMethod.GET)
+	@RequestMapping(value="/muestra/{id}", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ModelAndView consultaMuestras(HttpSession session, @PathVariable Integer id) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
@@ -102,7 +102,7 @@ public class MuestraControlador {
 		return vista;
 	}
 	
-	@RequestMapping(value="/guardar", method=RequestMethod.POST)
+	@RequestMapping(value="/muestra/guardar", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ModelAndView nuevaMuestra(@Valid @ModelAttribute("beanMuestra") MuestraCentroBean beanMuestra, BindingResult result) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");

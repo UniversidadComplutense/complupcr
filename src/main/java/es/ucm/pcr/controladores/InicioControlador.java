@@ -46,7 +46,7 @@ public class InicioControlador {
 		return vista;
 	}
 	
-	@RequestMapping(value = "/cerrarSession")
+	@RequestMapping(value = "/cerrarSesion")
 	public String cerrarSesion() {
 		return "logout";
 	}
