@@ -142,4 +142,44 @@ public class LaboratorioVisavetUCMController {
 			ModelAndView vista = new ModelAndView("VistaBuscarPlacas");
 			return vista;
 		}
+		public BeanLote getBean2(int i) {
+			BeanLote bean = new BeanLote();
+			bean.setId(""+i);
+			bean.setNumLote("44444");
+			BeanEstado estado= new BeanEstado();
+			estado.setTipoEstado(TipoEstado.EstadoLote);
+			estado.setEstado(Estado.Recibido);
+			
+			Date date= new Date();
+			bean.setCentroProcedencia("Centro de Salud de Getafe");
+			bean.setFechaEntrada(Calendar.getInstance().getTime());
+			bean.setEstado(estado);
+			List<BeanMuestra>  listaMuestras = new ArrayList();
+			for (int j=0;j<10;j++) {
+				BeanMuestra e=new BeanMuestra();
+				e.setId(j);
+				e.setEtiqueta("498979");
+				listaMuestras.add(e);
+			}
+			bean.setListaMuestras(listaMuestras);
+			
+			
+			return bean;
+		}
+		// refrescar  datos con ajax
+		@RequestMapping(value = "/laboratorioUni/actualizarLote", method = RequestMethod.POST)
+		public String buscarPlacasPost(@RequestParam("id") String id, Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) {
+			Page<BeanLote> paginaLotes = null;
+			BeanBusquedaLotes busquedaLotes=(BeanBusquedaLotes) model.getAttribute("busquedaLotes");
+			paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, pageable);
+			List<BeanLote> list= new ArrayList();
+			for (int i = 0; i<10; i++) {
+				list.add(getBean2(i));
+			}		
+			paginaLotes = new PageImpl<BeanLote>(list, pageable,20);
+			model.addAttribute("paginaLotes", paginaLotes);
+			
+			return "VistaListadoRecepcionLotes :: #trGroup";
+		}
+		
 }
