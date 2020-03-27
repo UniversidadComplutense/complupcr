@@ -17,9 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanRol;
-import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.modelo.orm.Rol;
-import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.RolRepositorio;
 
 @Controller
@@ -117,28 +115,6 @@ public class RolControlador {
 		// Volvemos a grabar mas centros
 		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaRoles",true));	
 		return vista;
-	}
-		
-//	@RequestMapping(value="/gestor/altaRol", method=RequestMethod.GET)
-//	public ModelAndView AltaRol(HttpSession session) throws Exception {
-//		ModelAndView vista = new ModelAndView("VistaRol");
-//	
-//		BeanRol beanRol = new BeanRol();
-//		
-//		vista.addObject("formBeanRol", beanRol);
-//		return vista;
-//	}
-//	
-//   // Alta de centro 
-//	@RequestMapping(value="AltaRol", method=RequestMethod.POST)	
-//	public ModelAndView grabarAltaRol ( @ModelAttribute("formBeanRol") BeanRol beanRol, HttpSession session) throws Exception {
-//
-//		System.out.println("Rol a grabar: " + beanRol.toString());
-//		
-//		// Volvemos a grabar mas centros
-//		ModelAndView vista = new ModelAndView(new RedirectView("AltaRol",true));	
-//		return vista;
-//		
-//	}		
+	}	
 
 }
