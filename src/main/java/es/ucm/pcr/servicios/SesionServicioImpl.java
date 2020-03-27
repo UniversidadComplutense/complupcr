@@ -76,11 +76,11 @@ public class SesionServicioImpl implements SesionServicio {
 
 		menuPrincipal = new ArrayList<MenuBean>();
 //	Centro de Salud	
-		if (this.tieneRol("ROLE_ADMIN")) {
+		if (this.tieneRol("ROLE_ADMIN") || this.tieneRol("CENTROSALUD")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Nueva muestra", "", null);
+			opcionSecundaria = new MenuBean("Nueva muestra", "/centroSalud/muestra/nueva", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Buscar resultados", "", null);
+			opcionSecundaria = new MenuBean("Buscar resultados", "/centroSalud/muestra/list", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Revisar lotes", "", null);
 			menuSecundario.add(opcionSecundaria);
@@ -88,7 +88,7 @@ public class SesionServicioImpl implements SesionServicio {
 			menuPrincipal.add(opcionPrincipal);
 		}
 //	Tecnico laboratorio
-		if (this.tieneRol("ROLE_ADMIN")) {
+		if (this.tieneRol("ROLE_ADMIN") || this.tieneRol("TECNICO")) {
 			menuSecundario = new ArrayList<MenuBean>();
 			opcionSecundaria = new MenuBean("Gestionar entregas", "", null);
 			menuSecundario.add(opcionSecundaria);
