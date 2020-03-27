@@ -75,25 +75,66 @@ public class SesionServicioImpl implements SesionServicio {
 		MenuBean opcionPrincipal = null;
 
 		menuPrincipal = new ArrayList<MenuBean>();
-//	OPCIONES A	
+//	Centro de Salud	
 		if (this.tieneRol("ROLE_ADMIN")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Opcion 1", "", null);
+			opcionSecundaria = new MenuBean("Nueva muestra", "", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Opcion 2", "", null);
+			opcionSecundaria = new MenuBean("Buscar resultados", "", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionPrincipal = new MenuBean("Menu ADMIN", "", menuSecundario);
+			opcionSecundaria = new MenuBean("Revisar lotes", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Centro de salud", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
-
-//	OPCIONES B
-		if (this.tieneRol("ROLE_TECNICO")) {
+//	Tecnico laboratorio
+		if (this.tieneRol("ROLE_ADMIN")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Opcion 1", "", null);
+			opcionSecundaria = new MenuBean("Gestionar entregas", "", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Opcion 2", "", null);
+			opcionSecundaria = new MenuBean("Preparar", "", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionPrincipal = new MenuBean("Menu TECNICO", "", menuSecundario);
+			opcionSecundaria = new MenuBean("Placas en preparacion", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Placas listas para laboratorio", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Laboratorios", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Tecnico laboratorio", "", menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
+//		Responsable PCR
+		if (this.tieneRol("ROLE_ADMIN")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Placas recepcionads", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Placas listas para PCR", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Placas esperando resultado PCR", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Responsable PCR", "", menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
+//		Jefe de servicio
+		if (this.tieneRol("ROLE_ADMIN")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Asignar muestras", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Revisar  muestras", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Estado  muestras", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Coger  lotes", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Jefe de servicio", "", menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
+//			Analista
+		if (this.tieneRol("ROLE_ADMIN")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Revisar miestra", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Analista", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
 		return menuPrincipal;
