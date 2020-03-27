@@ -12,7 +12,7 @@
 	<div class="container">
 		<h4>GESTIÓN DE USUARIOS</h4>
 
-		<a th:href="@{/gestor/gestionUsuario}" class="btn btn-primary eBtn">Añadir usuarios</a>
+		<a th:href="@{/gestor/usuario/gestion}" class="btn btn-primary eBtn">Añadir usuarios</a>
 <!-- 		<button th:href="@{/gestor/gestionUsuario}"class="btn btn-success nBtn">Añadir usuarios</button> -->
 
 		</p>
@@ -37,8 +37,8 @@
 <!-- 								<a th:href="@{delete/(id=${users.id})}" class="btn btn-danger delBtn">Borrar</a>
 									<a th:href="@{edit/(id=${users.id})}" class="btn btn-primary eBtn">Editar</a> 
  -->								
- 								<a th:href="@{/gestor/borrarUsuario(idUsuario=${users.id})}" class="btn btn-danger delBtn">Borrar</a>
-								<a th:href="@{/gestor/editarUsuario(idUsuario=${users.id})}" class="btn btn-primary eBtn">Editar</a>
+ 								<a th:href="@{/gestor/usuario/borrar/(id=${users..id})}" class="btn btn-danger delBtn">Borrar</a>
+								<a th:href="@{/gestor/usuario/editar/(id=${users..id})}" class="btn btn-primary eBtn">Editar</a>
 							</td>
 						</tr>
 					</tbody>

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,12 +21,13 @@ import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
 
 @Controller
+@RequestMapping(value="/gestor/usuario")
 public class UsuarioControlador {
 	
 	@Autowired
 	UsuarioRepositorio usuarioRepositorio;
 	
-	@RequestMapping(value="/gestor/gestionUsuario", method=RequestMethod.GET)
+	@RequestMapping(value="/gestion", method=RequestMethod.GET)
 	public ModelAndView AltaUsuario(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaUsuario");
 	
@@ -51,18 +53,18 @@ public class UsuarioControlador {
 	}
 	
    // Alta de centro 
-	@RequestMapping(value="/gestor/gestionUsuario", method=RequestMethod.POST)	
+	@RequestMapping(value="/gestion", method=RequestMethod.POST)	
 	public ModelAndView grabarAltaUsuario ( @ModelAttribute("formBeanUsuario") BeanUsuario beanUsuario, HttpSession session) throws Exception {
 
 		System.out.println("Usuario a grabar: " + beanUsuario.toString());
 		
 		// Volvemos a grabar mas centros
-		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/gestionUsuario",true));	
+		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/usuario/gestion",true));	
 		return vista;
 		
 	}	
 	
-//	@RequestMapping(value="/gestor/listaUsuarios", method=RequestMethod.GET)
+//	@RequestMapping(value="/lista", method=RequestMethod.GET)
 //	public ModelAndView GestionUsuario(HttpSession session) throws Exception {
 //		ModelAndView vista = new ModelAndView("VistaGestionUsuario");
 //	
@@ -118,7 +120,7 @@ public class UsuarioControlador {
 //		return vista;
 //	}
 	
-	@RequestMapping(value="/gestor/listaUsuarios", method=RequestMethod.GET)
+	@RequestMapping(value="/lista", method=RequestMethod.GET)
 	public ModelAndView GestionUsuario(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionUsuario");
 	
@@ -134,23 +136,23 @@ public class UsuarioControlador {
 	}
 	
 	
-	@RequestMapping(value = "/gestor/editarUsuario", method = RequestMethod.GET)
-	public ModelAndView editarUsuario(@RequestParam("idUsuario") Integer idUsuario) throws Exception {
+	@RequestMapping(value = "/editar/{idUsuario}", method = RequestMethod.GET)
+	public ModelAndView editarUsuario(@PathVariable("idUsuario") Integer idUsuario) throws Exception {
 
 		System.out.println("Usuario a editar: " + idUsuario);
 		
 		// Volvemos a grabar mas centros
-		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/gestionUsuario",true));	
+		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/usuario/gestion",true));	
 		return vista;
 	}
 	
-	@RequestMapping(value = "/gestor/borrarUsuario", method = RequestMethod.GET)
-	public ModelAndView borrarUsuario(@RequestParam("idUsuario") Integer idUsuario) throws Exception {
+	@RequestMapping(value = "/borrar/{idUsuario}", method = RequestMethod.GET)
+	public ModelAndView borrarUsuario(@PathVariable("idUsuario") Integer idUsuario) throws Exception {
 
 		System.out.println("Usuario a borrar: " + idUsuario);
 		
 		// Volvemos a grabar mas centros
-		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaUsuarios",true));	
+		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/usuario/lista",true));	
 		return vista;
 	}
 	
