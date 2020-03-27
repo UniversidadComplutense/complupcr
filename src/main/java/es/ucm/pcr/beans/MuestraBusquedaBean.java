@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class BeanBusquedaMuestra {
+public class MuestraBusquedaBean {
 	private String nombrePaciente;
 	private String emailPaciente;
 	private String nhcPaciente;
@@ -18,7 +18,7 @@ public class BeanBusquedaMuestra {
 	// TODO - ENUMERADO?
 	private String estadoMuestra;
 	
-	public BeanBusquedaMuestra() {
+	public MuestraBusquedaBean() {
 		super();
 	}
 	public String getNombrePaciente() {

@@ -1,11 +1,11 @@
 package es.ucm.pcr.beans;
 
-public class BeanListadoMuestra extends BeanBusquedaMuestra {
+public class MuestraListadoBean extends MuestraBusquedaBean {
 
 	private Integer id;
 	private String codNumLote;
 
-	public BeanListadoMuestra() {
+	public MuestraListadoBean() {
 		super();
 	}
 
