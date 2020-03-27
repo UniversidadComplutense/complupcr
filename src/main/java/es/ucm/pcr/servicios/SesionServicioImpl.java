@@ -75,18 +75,40 @@ public class SesionServicioImpl implements SesionServicio {
 		MenuBean opcionPrincipal = null;
 
 		menuPrincipal = new ArrayList<MenuBean>();
+//		Administrador
+			if (this.tieneRol("ROLE_ADMIN")) {
+				menuSecundario = new ArrayList<MenuBean>();
+				opcionSecundaria = new MenuBean("Gestionar Usuarios", "/gestor/usuario/gestion", null);
+				menuSecundario.add(opcionSecundaria);
+				opcionSecundaria = new MenuBean("Gestionar Roles", "/gestor/rol/alta", null);
+				menuSecundario.add(opcionSecundaria);
+				opcionSecundaria = new MenuBean("Gestionar Centros de Salud", "/gestor/centro/alta", null);
+				menuSecundario.add(opcionSecundaria);
+				opcionSecundaria = new MenuBean("Gestionar Laboratorios", "/gestor/laboratorio/alta", null);
+				menuSecundario.add(opcionSecundaria);
+				opcionPrincipal = new MenuBean("Administrador", null, menuSecundario);
+				menuPrincipal.add(opcionPrincipal);
+			}
 //	Centro de Salud	
 		if (this.tieneRol("ROLE_ADMIN") || this.tieneRol("CENTROSALUD")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Nueva muestra", "/centroSalud/muestra/nueva", null);
+			opcionSecundaria = new MenuBean("Gestionar muestras", "/centroSalud/muestra", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Buscar resultados", "/centroSalud/muestra/list", null);
-			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Revisar lotes", "", null);
+			opcionSecundaria = new MenuBean("Gestionar lotes", "", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Centro de salud", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
+//	Laboratorio Visavet
+			if (this.tieneRol("ROLE_ADMIN") || this.tieneRol("TECNICO")) {
+				menuSecundario = new ArrayList<MenuBean>();
+				opcionSecundaria = new MenuBean("Gestionar lotes centros de salud", "/laboratorioUni/buscarLotes", null);
+				menuSecundario.add(opcionSecundaria);
+				opcionSecundaria = new MenuBean("Gestionar placas VISAVET", "/laboratorioUni/buscarPlacas", null);
+				menuSecundario.add(opcionSecundaria);
+				opcionPrincipal = new MenuBean("Laboratorio VISAVET", "", menuSecundario);
+				menuPrincipal.add(opcionPrincipal);
+			}
 //	Tecnico laboratorio
 		if (this.tieneRol("ROLE_ADMIN") || this.tieneRol("TECNICO")) {
 			menuSecundario = new ArrayList<MenuBean>();
