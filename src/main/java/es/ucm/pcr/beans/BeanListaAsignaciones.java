@@ -1,12 +1,14 @@
 package es.ucm.pcr.beans;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BeanListaAsignaciones {
-	public List<BeanAsignacion> listaAsignaciones;
+	private List<BeanAsignacion> listaAsignaciones;
 	
 	
 	public BeanListaAsignaciones() {
+		listaAsignaciones = new ArrayList<BeanAsignacion>();
 		
 	}
 

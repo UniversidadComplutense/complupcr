@@ -2,6 +2,7 @@ package es.ucm.pcr.controladores;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -21,12 +22,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import es.ucm.pcr.beans.BeanBusquedaMuestra;
-import es.ucm.pcr.beans.BeanListadoMuestra;
-import es.ucm.pcr.beans.BeanMuestraCentro;
+import es.ucm.pcr.beans.BeanAnalisis;
+import es.ucm.pcr.beans.BeanAsignacion;
+import es.ucm.pcr.beans.BeanBusquedaMuestraAnalisis;
+import es.ucm.pcr.beans.BeanEstado;
+import es.ucm.pcr.beans.BeanListaAsignaciones;
+import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
+import es.ucm.pcr.beans.BeanUsuario;
+import es.ucm.pcr.beans.MuestraBean;
+//import es.ucm.pcr.beans.BeanMuestraCentro;
 //import es.ucm.pcr.validadores.ValidadorMuestra;
 
 
@@ -54,9 +62,9 @@ public class AnalisisControlador {
 		@RequestMapping(value="/", method=RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN')")
 		public ModelAndView buscadorMuestras(HttpSession session) throws Exception {
-			ModelAndView vista = new ModelAndView("VistaMuestraListado");
+			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 		
-			BeanBusquedaMuestra beanBusqueda = new BeanBusquedaMuestra();
+			BeanBusquedaMuestraAnalisis beanBusqueda = new BeanBusquedaMuestraAnalisis();
 			
 			vista.addObject("beanBusquedaMuestra", beanBusqueda);
 			return vista;
@@ -64,10 +72,10 @@ public class AnalisisControlador {
 		
 		@RequestMapping(value="/list", method=RequestMethod.POST)
 		@PreAuthorize("hasAnyRole('ADMIN')")
-		public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute BeanBusquedaMuestra beanBusqueda) throws Exception {
-			ModelAndView vista = new ModelAndView("VistaMuestraListado");
+		public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute BeanBusquedaMuestraAnalisis beanBusqueda) throws Exception {
+			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 			
-			List<BeanListadoMuestra> list = new ArrayList<BeanListadoMuestra>();
+			List<BeanListadoMuestraAnalisis> list = new ArrayList<BeanListadoMuestraAnalisis>();
 			
 			for (int i = 0; i<10; i++) {
 				list.add(getBean(i));
@@ -78,47 +86,64 @@ public class AnalisisControlador {
 			return vista;
 		}
 		
-		@RequestMapping(value="/nueva", method=RequestMethod.GET)
-		@PreAuthorize("hasAnyRole('ADMIN')")
-		public ModelAndView nuevaMuestra(HttpSession session) throws Exception {
-			ModelAndView vista = new ModelAndView("VistaMuestra");
 		
-			BeanMuestraCentro beanMuestra = new BeanMuestraCentro();
-			beanMuestra.setFechaEntrada(new Date());
+		@RequestMapping(value="/asignar", method=RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN')")
+		public ModelAndView asignarMuestra(HttpSession session, @RequestParam("idMuestra") Integer idMuestra) throws Exception {
+			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAMuestra");
+			
+			//BeanMuestraCentro beanMuestra = getBeanCentro(id.intValue());
+			MuestraBean beanMuestra = getBeanMuestra(idMuestra);
 			
 			vista.addObject("beanMuestra", beanMuestra);
 			return vista;
 		}
 		
-		@RequestMapping(value="/{id}", method=RequestMethod.GET)
-		@PreAuthorize("hasAnyRole('ADMIN')")
-		public ModelAndView consultaMuestras(HttpSession session, @PathVariable Integer id) throws Exception {
-			ModelAndView vista = new ModelAndView("VistaMuestra");
-			
-			BeanMuestraCentro beanMuestra = getBeanCentro(id.intValue());
 		
-			
-			vista.addObject("beanMuestra", beanMuestra);
-			return vista;
-		}
 		
-		@RequestMapping(value="/guardar", method=RequestMethod.POST)
-		@PreAuthorize("hasAnyRole('ADMIN')")
-		public ModelAndView nuevaMuestra(@Valid @ModelAttribute("beanMuestra") BeanMuestraCentro beanMuestra, BindingResult result) throws Exception {
-			ModelAndView vista = new ModelAndView("VistaMuestra");
 		
-			if (result.hasErrors()) {
-				vista.addObject("beanMuestra", beanMuestra);
-				return vista;			
-			} else {
-				// TODO - GUARDAR
-				ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/", true));
-				return respuesta;
-			}
-		}
 		
-		public BeanListadoMuestra getBean(int i) {
-			BeanListadoMuestra bean = new BeanListadoMuestra();
+//		@RequestMapping(value="/nueva", method=RequestMethod.GET)
+//		@PreAuthorize("hasAnyRole('ADMIN')")
+//		public ModelAndView nuevaMuestra(HttpSession session) throws Exception {
+//			ModelAndView vista = new ModelAndView("VistaMuestra");
+//		
+//			BeanMuestraCentro beanMuestra = new BeanMuestraCentro();
+//			beanMuestra.setFechaEntrada(new Date());
+//			
+//			vista.addObject("beanMuestra", beanMuestra);
+//			return vista;
+//		}
+		
+//		@RequestMapping(value="/{id}", method=RequestMethod.GET)
+//		@PreAuthorize("hasAnyRole('ADMIN')")
+//		public ModelAndView consultaMuestras(HttpSession session, @PathVariable Integer id) throws Exception {
+//			ModelAndView vista = new ModelAndView("VistaMuestra");
+//			
+//			BeanMuestraCentro beanMuestra = getBeanCentro(id.intValue());
+//		
+//			
+//			vista.addObject("beanMuestra", beanMuestra);
+//			return vista;
+//		}
+		
+//		@RequestMapping(value="/guardar", method=RequestMethod.POST)
+//		@PreAuthorize("hasAnyRole('ADMIN')")
+//		public ModelAndView nuevaMuestra(@Valid @ModelAttribute("beanMuestra") BeanMuestraCentro beanMuestra, BindingResult result) throws Exception {
+//			ModelAndView vista = new ModelAndView("VistaMuestra");
+//		
+//			if (result.hasErrors()) {
+//				vista.addObject("beanMuestra", beanMuestra);
+//				return vista;			
+//			} else {
+//				// TODO - GUARDAR
+//				ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/", true));
+//				return respuesta;
+//			}
+//		}
+		
+		public BeanListadoMuestraAnalisis getBean(int i) {
+			BeanListadoMuestraAnalisis bean = new BeanListadoMuestraAnalisis();
 			bean.setId(i);
 			bean.setNombrePaciente("Paciente " + i);
 			bean.setNhcPaciente("nhc-" + i);
@@ -135,20 +160,63 @@ public class AnalisisControlador {
 			return bean;
 		}
 		
-		public BeanMuestraCentro getBeanCentro(int i) {
-			BeanMuestraCentro bean = new BeanMuestraCentro();
+		
+		public MuestraBean getBeanMuestra(int i) {
+			MuestraBean bean = new MuestraBean();
 			bean.setId(i);
-			bean.setNombreApellidos("Paciente " + i);
-			bean.setNhc("nhc-" + i);
 			bean.setEtiqueta("etiquetaM-" + i);
-			bean.setRefInterna("refInternaM-" + i);
-			bean.setFechaEntrada(new Date());
-			bean.setFechaResultado(new Date());
-			//bean.setResultado("Pendiente");
-			bean.setTipoMuestra("N");
+			bean.setTipoMuestra("tipoMuestra-" + i);
+			//bean.setFecha(fecha);
+			//bean.setReferenciaInterna(referenciaInterna);
+			//bean.setEstado(estado); //pendiente de analizar
+			Date date = new Date(); // your date
+		    Calendar cal = Calendar.getInstance();
+		    cal.setTime(date);
+			BeanAnalisis beanAnalisis  = new BeanAnalisis();
+			BeanListaAsignaciones beanListaAsignaciones = new BeanListaAsignaciones();
+			//usuarios que analizan, 2 analistas y 2 voluntario
+			for(int j=0;j<2; j++) {
+				BeanAsignacion beanAsigAna = new BeanAsignacion();
+				BeanUsuario ana = new BeanUsuario();
+				ana.setId(j);
+				ana.setNom("analista-" + j);
+				ana.setRol("ANALISTA_LAB");
+				beanAsigAna.setBeanUsuario(ana);				
+				beanAsigAna.setFechaAsignacion(cal);				
+				beanListaAsignaciones.getListaAsignaciones().add(beanAsigAna);
+				
+				BeanAsignacion beanAsigVol = new BeanAsignacion();
+				BeanUsuario vol = new BeanUsuario();
+				vol.setId(j);
+				vol.setNom("voluntario-" + j);
+				vol.setRol("ANALISTA_VOLUNTARIO");
+				beanAsigVol.setBeanUsuario(ana);				
+				beanAsigVol.setFechaAsignacion(cal);				
+				beanListaAsignaciones.getListaAsignaciones().add(beanAsigVol);
+			}
+			beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
+			bean.setBeanAnalisis(beanAnalisis);					
 			
 			return bean;
 		}
+		
+		
+		
+		
+//		public BeanMuestraCentro getBeanCentro(int i) {
+//			BeanMuestraCentro bean = new BeanMuestraCentro();
+//			bean.setId(i);
+//			bean.setNombreApellidos("Paciente " + i);
+//			bean.setNhc("nhc-" + i);
+//			bean.setEtiqueta("etiquetaM-" + i);
+//			bean.setRefInterna("refInternaM-" + i);
+//			bean.setFechaEntrada(new Date());
+//			bean.setFechaResultado(new Date());
+//			//bean.setResultado("Pendiente");
+//			bean.setTipoMuestra("N");
+//			
+//			return bean;
+//		}
 		
 		/*@RequestMapping(value="", method=RequestMethod.POST)	
 		public ModelAndView grabarAltaLaboratorio ( @ModelAttribute("formBeanLaboratorio") BeanLaboratorio beanLaboratorio, HttpSession session) throws Exception {
