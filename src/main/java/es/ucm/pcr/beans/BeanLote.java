@@ -4,13 +4,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class BeanLote{
 	private String id;
 	private String numLote;
+	private String centroProcedencia;
 	private int capacidad;
 	private int ocupacion;
 	private BeanEstado estado;
-	private Calendar fechaEntrada;
+	private Date fechaEntrada;
 	private List<BeanMuestra>  listaMuestras;
 	
 	private String test;
@@ -44,10 +47,11 @@ public class BeanLote{
 	public void setEstado(BeanEstado estado) {
 		this.estado = estado;
 	}
-	public Calendar getFechaEntrada() {
+	
+	public Date getFechaEntrada() {
 		return fechaEntrada;
 	}
-	public void setFechaEntrada(Calendar fechaEntrada) {
+	public void setFechaEntrada(Date fechaEntrada) {
 		this.fechaEntrada = fechaEntrada;
 	}
 	public List<BeanMuestra> getListaMuestras() {
@@ -62,6 +66,12 @@ public class BeanLote{
 	}
 	public void setTest(String test) {
 		this.test = test;
+	}
+	public String getCentroProcedencia() {
+		return centroProcedencia;
+	}
+	public void setCentroProcedencia(String centroProcedencia) {
+		this.centroProcedencia = centroProcedencia;
 	}
 	
 }

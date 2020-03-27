@@ -1,6 +1,7 @@
 package es.ucm.pcr.beans;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -9,7 +10,7 @@ public class BeanBusquedaLotes {
 private String idLaboratorio;
 private String nombreLaboratorio;
 private  String numLote;
-private Calendar fechaEntrada;
+private String fechaEntrada;
 private String muestra;
 private List<BeanElemento> listaBeanEstado;
 private String codNumEstadoSeleccionado;
@@ -34,10 +35,10 @@ public String getNumLote() {
 public void setNumLote(String numLote) {
 	this.numLote = numLote;
 }
-public Calendar getFechaEntrada() {
+public String getFechaEntrada() {
 	return fechaEntrada;
 }
-public void setFechaEntrada(Calendar fechaEntrada) {
+public void setFechaEntrada(String fechaEntrada) {
 	this.fechaEntrada = fechaEntrada;
 }
 public String getMuestra() {
