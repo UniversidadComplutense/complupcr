@@ -31,7 +31,7 @@ function loadTabla(i) {
         dataType: 'html',
         data:  sBody
 	}).done(function(respuesta) {
-		alert(respuesta);
+		
 		eliminaFilas();
 		//$("#tablaResultadosLotes").append("<thead><th>#Lote</th><th>Centro</th><th>F.Entrada</th><th>#Muestras</th><th>Test</th><th>Estado</th></thead>");
 
