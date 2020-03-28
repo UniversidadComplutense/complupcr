@@ -13,6 +13,17 @@
 	<!-- DATOS MUESTRA -->
 		<fieldset id="datosMuestras" class="form-group border p-2" th:disabled="${beanMuestra.id} != null">
 			<legend class="w-auto">Asignaciones Muestra</legend>
+			
+			<div th:if="${mensaje !=null}"
+						class="alert alert-success alert-dismissible fade show"
+						role="alert">
+						<label th:text="${mensaje}"></label>
+						<button type="button" class="close" data-dismiss="alert"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+			</div>
+			
 			<div class="row">
 				<div class="col-4 form-group">
 					<label>Etiqueta: </label>
@@ -64,6 +75,11 @@
 		</fieldset>
 		
 		
+		<form id="formularioGuardarAsignacion" action="#"
+						th:action="@{/analisis/guardarAsignacion}" method="post"
+						 role="form" th:object="${formBeanGuardarAsignacionMuestra}"> 
+		
+		
 		<!-- ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->
 		<fieldset id="nuevasAsignaciones" class="form-group border p-2">
 			<legend class="w-auto">Nuevas Asignaciones Muestra</legend>
@@ -71,9 +87,12 @@
 				<div class="col-4 form-group">
 		
 		
-		<form id="formularioGuardarAsignacion" action="#"
-						th:action="@{/guardarAviso}" method="post"
-						 role="form"> <!--th:object="${formBeanGuardarAviso}"-->
+		
+						 
+						 <!-- guardo en un hidden el id de la muestra -->
+						 <div class="form-group">
+							<input type="text" th:field="*{id}"></input>
+						</div>
 		<!--PAS -->
 							<div class="form-group col-12">
 								 
@@ -97,7 +116,7 @@
 												<select
 													class="form-control selectpicker" multiple
 													data-live-search="true" data-actions-box="true"
-													id="analistasLabSeleccionado" th:field="${listaIdsAnalistasLabSeleccionados}"
+													id="analistasLabSeleccionado" th:field="*{listaIdsAnalistasLabSeleccionados}"
 													title="Todos los analistas">
 													<option th:each="var: ${beanListadoAnalistaLab}"
 														th:value="${var.id}" th:text="${var.nom}"></option>
@@ -107,14 +126,28 @@
 									</div>
 								</div>
 							</div>
-		
+							
+							
+	</div>
+	</div>
+	</fielset>
+	
+	
+		<!-- botones cancelar y guardar asignacion -->
+		<div class="row justify-content-center mt-3">
+			<div class="col-1">							
+				<a th:href="@{/analisis/}" class="btn btn-secondary ">Cancelar</a>
+			</div>
+			<div class="col-1">
+				<input type="submit" class="btn btn-primary "
+					value="Guardar asignacion"></input>
+			</div>
+		</div>
 		
 	</form>	
 	<!-- FIN ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->	
 		
-	</div>
-	</div>
-	</fielset>	
+		
 		
 		
 		

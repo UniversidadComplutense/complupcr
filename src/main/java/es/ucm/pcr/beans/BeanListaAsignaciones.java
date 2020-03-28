@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BeanListaAsignaciones {
-	private List<BeanAsignacion> listaAnalistasLab; //lista de los analistas de laboratorio ucm
-	private List<BeanAsignacion> listaAnalistasVol; //lista de los analistas voluntarios
+	private List<BeanAsignacion> listaAnalistasLab; //lista de los analistas de laboratorio ucm asignados
+	private List<BeanAsignacion> listaAnalistasVol; //lista de los analistas voluntarios asignados
+	
+	
 	
 	
 	public BeanListaAsignaciones() {

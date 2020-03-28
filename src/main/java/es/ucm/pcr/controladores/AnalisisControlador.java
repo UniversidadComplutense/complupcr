@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanAnalisis;
@@ -35,6 +38,7 @@ import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanListaAsignaciones;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.BeanUsuario;
+import es.ucm.pcr.beans.GuardarAsignacionMuestraBean;
 import es.ucm.pcr.beans.MuestraBean;
 //import es.ucm.pcr.beans.BeanMuestraCentro;
 //import es.ucm.pcr.validadores.ValidadorMuestra;
@@ -91,29 +95,57 @@ public class AnalisisControlador {
 		
 		@RequestMapping(value="/asignar", method=RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN')")
-		public ModelAndView asignarMuestra(HttpSession session, @RequestParam("idMuestra") Integer idMuestra) throws Exception {
+		public ModelAndView asignarMuestra(HttpSession session, HttpServletRequest request, @RequestParam("idMuestra") Integer idMuestra) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAMuestra");
 						
+			String mensaje = null;
+			// Comprobamos si hay mensaje enviado desde guardarAsignacion.
+			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+			if (inputFlashMap != null) {
+				mensaje = (String) inputFlashMap.get("mensaje");
+				System.out.println("mensaje vale: " + mensaje);
+			}
+			vista.addObject("mensaje", mensaje);
+
+			
 			MuestraBean beanMuestra = getBeanMuestra(idMuestra);
+
+			//para recoger los analistas y voluntarios seleccionados
+			GuardarAsignacionMuestraBean formBeanGuardarAsignacionMuestra = new GuardarAsignacionMuestraBean(beanMuestra);
+			
+			//List<Integer> listaIdsAnalistasLabSeleccionados = new ArrayList<Integer>();
+			//listaIdsAnalistasLabSeleccionados.add(3);
+			//listaIdsAnalistasLabSeleccionados.add(7);
+			
 			
 			List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
-			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();
-			System.out.println("beanListadoAnalistaLab tiene: " + beanListadoAnalistaLab.size());
-			
-			
-			//para recoger los analistas y voluntarios seleccionados
-			List<Integer> listaIdsAnalistasLabSeleccionados = new ArrayList<Integer>();
-			listaIdsAnalistasLabSeleccionados.add(3);
-			listaIdsAnalistasLabSeleccionados.add(7);
+			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();			
 			
 			
 			vista.addObject("beanMuestra", beanMuestra);
-			vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);
-			vista.addObject("listaIdsAnalistasLabSeleccionados", listaIdsAnalistasLabSeleccionados);
+			vista.addObject("formBeanGuardarAsignacionMuestra", formBeanGuardarAsignacionMuestra);
+			vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);			
 			vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
 			return vista;
 		}
 		
+		
+		@RequestMapping(value = "/guardarAsignacion", method = RequestMethod.POST)
+		public RedirectView guardarAsignacion(@ModelAttribute("formBeanGuardarAsignacionMuestra") GuardarAsignacionMuestraBean formBeanGuardarAsignacionMuestra,
+				HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
+			
+			System.out.println("muestra id: " + formBeanGuardarAsignacionMuestra.getId());
+			System.out.println("analistasLab seleccionados para asignar: " + formBeanGuardarAsignacionMuestra.getListaIdsAnalistasLabSeleccionados().toString());
+			
+			//TODO llamar a metodo de servicio que a partir de formBeanGuardarAsignacionMuestra recupere la muestra y le asigne los nuevos analistas lab y analistas vol
+			
+			//muestraSevicio.guardarAsignacion(formBeanGuardarAsignacionMuestra);
+						
+			//vuelvo al formulario de asignacion de la muestra
+			String idMuestra = String.valueOf(formBeanGuardarAsignacionMuestra.getId());
+			redirectAttributes.addFlashAttribute("mensaje", "Asignacion de muestra guardada");
+			return new RedirectView("/analisis/asignar?idMuestra="+idMuestra, true);
+		}
 
 		/*
 		@GetMapping("/consultaAnalistas")

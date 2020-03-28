@@ -2,6 +2,7 @@ package es.ucm.pcr.beans;
 
 import java.util.Calendar;
 
+
 public class MuestraBean{
 	private int id;
 	private String etiqueta;
@@ -12,6 +13,21 @@ public class MuestraBean{
 	
 	private BeanAnalisis beanAnalisis; //proceso de analizar la muestra (asignación de analistas a las muestras por parte del jefe de servicio y su resolucion)  F6y F7
 	
+	
+	public MuestraBean() {		
+		
+	}
+	
+	public MuestraBean(MuestraBean muestraBean) {
+		super();
+		this.id = muestraBean.getId();
+		this.etiqueta = muestraBean.getEtiqueta();
+		this.tipoMuestra = muestraBean.getTipoMuestra();
+		this.fecha = muestraBean.getFecha();
+		this.referenciaInterna = muestraBean.getReferenciaInterna();
+		this.estado = muestraBean.getEstado();
+		this.beanAnalisis = muestraBean.getBeanAnalisis();		
+	}
 	
 	public int getId() {
 		return id;
