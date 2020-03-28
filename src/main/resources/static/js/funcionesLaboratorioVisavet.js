@@ -15,15 +15,16 @@ for(i=n-1;i>0;i--)
 {
 $("#tablaResultadosLotes tbody tr:eq('"+i+"')").remove();
 };
+$("#tablaResultadosLotes thead").remove();
 };
+
 function loadTabla(i) {
-  alert (i);
+
 	var url = "";
 	//var urlAbs = getAbsolutePath();
 	
 	url =  'https://localhost:8443/laboratorioUni/actualizarLote?id=' + i;
-	
-sBody=$('#formularioPrueba').serialize();
+	sBody=$('#formularioPrueba').serialize();
 	$.ajax({
         type:  'POST',
         url:   url,
@@ -32,9 +33,8 @@ sBody=$('#formularioPrueba').serialize();
 	}).done(function(respuesta) {
 		alert(respuesta);
 		eliminaFilas();
-	$("#trGroup").html(respuesta);
-		
-	
+		//$("#tablaResultadosLotes").append("<thead><th>#Lote</th><th>Centro</th><th>F.Entrada</th><th>#Muestras</th><th>Test</th><th>Estado</th></thead>");
+
+		$("#trGroup").html(respuesta);
 	});
-	
-}
+	}
