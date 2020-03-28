@@ -11,10 +11,12 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -76,7 +78,7 @@ public class LaboratorioVisavetUCMController {
 		bean.setFechaEntrada(Calendar.getInstance().getTime());
 		bean.setEstado(estado);
 		List<BeanMuestra>  listaMuestras = new ArrayList();
-		for (int j=0;j<10;j++) {
+		for (int j=0;j<30;j++) {
 			BeanMuestra e=new BeanMuestra();
 			e.setId(j);
 			e.setEtiqueta("498979");
@@ -106,11 +108,21 @@ public class LaboratorioVisavetUCMController {
 	@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.GET)
 	public ModelAndView buscarLotesGet(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
          // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
+		System.out.println("numero get "+pageable.getPageNumber());
 		BeanBusquedaLotes busquedaLotes= new BeanBusquedaLotes();
 		// inicializamos a enviado para filtrar por estos
 		busquedaLotes.setCodNumEstadoSeleccionado("2");
 		busquedaLotes.setListaBeanEstado(this.rellenaListaEstados());
-		return this.buscarLotes(busquedaLotes, request, session, pageable);
+		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
+		// invocar al servicio que dado id De laboratorio se obtiene la entidad laboratorioUni
+		List<BeanLote> list= new ArrayList();
+		Page<BeanLote> paginaLotes =new PageImpl<BeanLote>(list, pageable,20);
+		
+		model.addAttribute("paginaLotes", paginaLotes);;
+		vista.addObject("busquedaLotes", busquedaLotes);
+		vista.addObject("paginaLotes", paginaLotes);
+		return vista;
+		// return this.buscarLotes(busquedaLotes, request, session, pageable);
 		// mas adelante necesito obtener Centros de un servicioCentros
 		
 		//busquedaLotes.setListaBeanCentro(servicioCentros.buscarCentros());
@@ -120,12 +132,23 @@ public class LaboratorioVisavetUCMController {
 	}
 	// buscar lotes segun los criterios de busqueda 
 	@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.POST)
-	public ModelAndView buscarLotesPost(Model model, HttpServletRequest request, HttpSession session,@ModelAttribute BeanBusquedaLotes busquedaLotes,@PageableDefault(page = 0, value = 20) Pageable pageable) {
+	public String buscarLotesPost(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
         // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
-		
-		
-	return this.buscarLotes(busquedaLotes, request, session, pageable);
+		Page<BeanLote> paginaLotes = null;
+		BeanBusquedaLotes busquedaLotes=(BeanBusquedaLotes) model.getAttribute("busquedaLotes");
 	
+		paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, pageable);
+		// para probar
+		List<BeanLote> list= new ArrayList();
+		for (int i = 0; i<20; i++) {
+			list.add(getBean(i));
+		}		
+		paginaLotes = new PageImpl<BeanLote>(list, pageable,pageable.getPageSize());
+		// fin para probar 
+		model.addAttribute("paginaLotes", paginaLotes);
+		
+		return "VistaListadoRecepcionLotes :: #trGroup";
+	//return "VistaListadoRecepcionLotes :: #trGroup";
 	
 	}
 	// buscar placas segun los criterios de busqueda 

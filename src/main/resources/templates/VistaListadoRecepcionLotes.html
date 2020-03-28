@@ -80,44 +80,46 @@
 
         <div class="row justify-content-end mt-3">
 			<div class="col-2">
-				<button type="submit" class="btn btn-secondary">Buscar</button>
+				<button type="button" th:onClick="|buscarResultados('lote','DESC','2','20'); return false|"  class="btn btn-secondary">Buscar</button>
 			</div>
 		</div>	
 		</fieldset>
-		
-		
+		<!-- campos hidden para permitir ordenar y para paginar -->
+		<input type="hidden" class="form-control" id="orden" th:field="*{orden}" />
+		<input type="hidden" class="form-control" id="sentidoOrden" th:field="*{sentidoOrden}" />
 		</form>
 		</div>
 		
 		<!-- Aqui vienen los resultados -->
 		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
 	<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">	
-		<div th:unless="${(paginaLotes == null)}"
+		<div th:id="capaResultados" 
 			class="row formPnl1">
-			<table class="col-xs-12 table" th:id="tablaResultadosCabecera">
+			<table class="col-xs-12 table" th:id="tablaResultadosCabecera" style="display:none">
 			 <thead class="thead-light">
 				<tr>
 				<th  style="text-align: left;"></th>
-					<th  style="text-align: left;">#Lote</th>
+					<th  style="text-align: left;">#Lotes
+				<!--  	<a th:onClick="|cambiarOrdenColumna('lote','DESC','0','20'); return false|">
+				<span th:text="${paginaLotes.sort}"></span>
+				
+				<img th:if="${paginaLotes.sort == 'lote'} and ${paginaLotes.direction=='DESC'}" th:src="@{/img/asc.gif}" src="static/img/asc.gif" />	#Lote 
+					</a>
+					-->
+					</th>
 					<th style="text-align: left;">Centro</th>
 					<th  style="text-align: left;">F.Entrada</th>
 					<th  style="text-align: left;">#Muestras</th>
 					<th  style="text-align: left;">Test</th>
 					<th  style="text-align: left;">Estado</th>
-				<!--  	<th width="1%" style="text-align: left;"></th>
-					<th width="1%" style="text-align: left;">#Lote</th>
-					<th width="10%" style="text-align: left;">Centro</th>
-					<th width="1%" style="text-align: left;">F.Entrada</th>
-					<th width="1%" style="text-align: left;">#Muestras</th>
-					<th width="1%" style="text-align: left;">Test</th>
-					<th width="16%" style="text-align: left;">Estado</th>-->
+				
 				</tr>
 				</thead>
 				</table>
 				<!--  datos bean -->
-					<table class="col-xs-12 table" th:id="tablaResultadosLotes">
-				<tr id="trGroup"
-					th:each="unResultado,count : ${paginaLotes.getContent()}">
+					<table class="col-xs-12 table" th:id="tablaResultadosLotes" >
+						<tr id="trGroup"></tr>
+			 	<tr id="trGroup"  th:each="unResultado,count : ${paginaLotes.getContent()}">
 					
 							<td width="1%">
 								<input type="checkbox" name="seleccionado" th:id="seleccionado+${unResultado.id}"/>
@@ -146,19 +148,24 @@
 								</td>
 								<td width="16%">
 								<span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
-								<button th:if="${#strings.toString(unResultado.estado.Estado) == 'Enviado'}" th:onClick="|loadTabla('2'); return false|" type="button" class="btn btn-secondary">Confirmar recibido</button>
-					         </td>
+								  </td>
 					</tr>	
 					
 			</table>
 				<input type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados"/>
+		<div
+				th:include="fragmentos :: paginador(${busquedaLotes.urlPaginada},${paginaLotes},${busquedaLotes.orden},${busquedaLotes.sentidoOrden},'0')"></div>
+		
 		</div> <!--  capa de resultados -->
-		<input type="button" class="btn btn-secondary" 	th:onClick="|loadTabla('2'); return false|"  value="Prueba"/>
-	
+		
 		</div>
-		<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+
 	</div>
-</div> <!--  contenedor de todo -->
+	
+	
+</div> 
+<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+<!--  contenedor de todo -->
 	<!--  
 	<script th:src="@{/js/util.js}" src="static/js/util.js"
 		type="text/javascript"></script>

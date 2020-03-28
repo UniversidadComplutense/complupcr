@@ -16,7 +16,9 @@ private List<BeanElemento> listaBeanEstado;
 private String codNumEstadoSeleccionado;
 private List<CentroBean> listaCentros;
 private int idCentro;
-private String urlPaginada;
+private String urlPaginada="/laboratorioUni/buscarLotesGet";
+private String orden;
+private String sentidoOrden;
 public String getIdLaboratorio() {
 	return idLaboratorio;
 }
@@ -76,6 +78,18 @@ public String getUrlPaginada() {
 }
 public void setUrlPaginada(String urlPaginada) {
 	this.urlPaginada = urlPaginada;
+}
+public String getOrden() {
+	return orden;
+}
+public void setOrden(String orden) {
+	this.orden = orden;
+}
+public String getSentidoOrden() {
+	return sentidoOrden;
+}
+public void setSentidoOrden(String sentidoOrden) {
+	this.sentidoOrden = sentidoOrden;
 }
 
 }
