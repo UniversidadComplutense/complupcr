@@ -65,8 +65,8 @@ public class Rol implements java.io.Serializable {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "usuario_rol", 
-		joinColumns = {@JoinColumn(name = "rol_id", referencedColumnName="id", nullable = false) },
-		inverseJoinColumns = {@JoinColumn(name = "usuario_id", referencedColumnName="id", nullable = false) })
+		joinColumns = {@JoinColumn(name = "idRol", referencedColumnName="id", nullable = false) },
+		inverseJoinColumns = {@JoinColumn(name = "idUsuario", referencedColumnName="id", nullable = false) })
 	public Set<Usuario> getUsuarios() {
 		return this.usuarios;
 	}

@@ -66,7 +66,7 @@ public class AnalisisControlador {
 
 		
 		@RequestMapping(value="/", method=RequestMethod.GET)
-		@PreAuthorize("hasAnyRole('ADMIN')")
+		//@PreAuthorize("hasAnyRole('ADMIN')")
 		public ModelAndView buscadorMuestras(HttpSession session) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 		
@@ -77,7 +77,7 @@ public class AnalisisControlador {
 		}
 		
 		@RequestMapping(value="/list", method=RequestMethod.POST)
-		@PreAuthorize("hasAnyRole('ADMIN')")
+		//@PreAuthorize("hasAnyRole('ADMIN')")
 		public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute BeanBusquedaMuestraAnalisis beanBusqueda) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 			
@@ -94,7 +94,7 @@ public class AnalisisControlador {
 		
 		
 		@RequestMapping(value="/asignar", method=RequestMethod.GET)
-		@PreAuthorize("hasAnyRole('ADMIN')")
+		//@PreAuthorize("hasAnyRole('ADMIN')")
 		public ModelAndView asignarMuestra(HttpSession session, HttpServletRequest request, @RequestParam("idMuestra") Integer idMuestra) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAMuestra");
 						
@@ -119,7 +119,18 @@ public class AnalisisControlador {
 			
 			
 			List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
-			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();			
+			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();	
+			
+			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la muestra para no mostrarlos como posibles a asignar en el desplegable
+			List<BeanAsignacion> beanListadoAnalistaLabAsignados = beanMuestra.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasLab();
+			List<BeanUsuario> beanListadoAnalistaLabABorrar = new ArrayList<BeanUsuario>();
+			//convierto la lista BeanAsignacion en lista BeanUsuario
+			for(BeanAsignacion beanAsig: beanListadoAnalistaLabAsignados) {
+				beanListadoAnalistaLabABorrar.add(beanAsig.getBeanUsuario());
+				System.out.println("beanListadoAnalistaLabABorrar tiene: " + beanListadoAnalistaLabABorrar.size());
+			}
+			//borro de la lista todal de analistaslab los asignados
+			beanListadoAnalistaLab.removeAll(beanListadoAnalistaLabABorrar);
 			
 			
 			vista.addObject("beanMuestra", beanMuestra);
