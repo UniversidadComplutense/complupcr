@@ -165,3 +165,28 @@ function procesarLotes() {
 	var url="/laboratorioUni/procesarLotes?lotes="+lotesProcesar;
 	window.location=url;
 }
+
+// funcion que al ser pulsada da de alta una nueva placa vacia
+function altaNuevaPlaca(){
+	var url = "";
+	//var urlAbs = getAbsolutePath();
+	
+	url =  '/laboratorioUni/altaPlacaVisavet';
+	
+	
+	$.ajax({
+        type:  'GET',
+        url:   url,
+        dataType: 'html'
+	}).done(function(respuesta) {
+	 
+	   $("#criteriosBusqueda").show();
+		$("#numPlacaSpan").html(respuesta);
+		
+	});
+
+}
+// muestra las muestras con la referencia visavet
+function mostrarMuestrasPlacas(numLote){
+	alert(numLote);
+}

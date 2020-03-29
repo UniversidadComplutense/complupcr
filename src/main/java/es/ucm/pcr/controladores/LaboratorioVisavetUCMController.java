@@ -38,6 +38,8 @@ import es.ucm.pcr.beans.BeanBusquedaMuestra;
 import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanLote;
 import es.ucm.pcr.beans.BeanMuestra;
+import es.ucm.pcr.beans.BeanPlacaVisavetUCM;
+import es.ucm.pcr.beans.LotePlacaVisavetBean;
 import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
 import es.ucm.pcr.servicios.ServicioLotes;
 
@@ -297,11 +299,55 @@ public class LaboratorioVisavetUCMController {
 		}
 		
 // request PLACAS
+		//este metodo obtiene los lotes q estan listos para ser procesados en placas visavet y muestran en las placas
 		@RequestMapping(value = "/laboratorioUni/procesarLotes", method = RequestMethod.GET)
 		public ModelAndView buscarPlacasGet(@RequestParam("lotes") String lotes,Model model, HttpServletRequest request, HttpSession session) {
 			ModelAndView vista = new ModelAndView("VistaLotesPlacasVisavet");
+			// obtenemos los lotes con sus muestras
+			String[] idsLotes=lotes.split("&");
+			List<BeanLote> listaLotes=new ArrayList();
+			for (int i=0; i<idsLotes.length;i++) {
+				// cuando ya este el servicio BeanLote lote=servicioLotes.obtenerLote(idsLotes[i]);
+				// para probar
+				listaLotes.add(getBean(i));
+				
+			} 
+			LotePlacaVisavetBean lotePlacaVisavetBean= new LotePlacaVisavetBean();
+			// para probar
+			List<Integer> tamanoLista= new ArrayList();
+			tamanoLista.add(20);
+			tamanoLista.add(96);
+			lotePlacaVisavetBean.setListaTamanosDisponibles(tamanoLista);
+			
+			BeanPlacaVisavetUCM placaVisavet= new BeanPlacaVisavetUCM();
+			
+			placaVisavet.setListaLotes(listaLotes);
+			lotePlacaVisavetBean.setPlaca(placaVisavet);
+			//fin probar
+			
+			vista.addObject("lotePlacaVisavetBean",lotePlacaVisavetBean);
+			//vista.addObject("listaLotes",listaLotes);
+			// los mostramos en la vista
 			return vista;
 		}
+		@ResponseBody
+		@RequestMapping(value = "/laboratorioUni/altaPlacaVisavet", method = RequestMethod.GET)
+		public String altaPlacasGet(Model model, HttpServletRequest request, HttpSession session) {
+			// para obtener un numero de Placa voy a crear una placa vacia
+			// la creo vacia pq quiero obtener solo el num de placa
+			// cuando tenga servicio BeanPlacasVisavetUCM placaVisavet = servicioVisavet.crearPlaca();
+			// para probar
+			BeanPlacaVisavetUCM placaVisavet = new BeanPlacaVisavetUCM();
+			placaVisavet.setId("1");
+			/*List<Integer> tamanoLista= new ArrayList();
+			tamanoLista.add(20);
+			tamanoLista.add(96);
+			placaVisavet.setListaTamanosDisponibles(tamanoLista);
+			*/
+			// los mostramos en la vista
+			return placaVisavet.getId();
+		}
+		
 		
 				// buscar placas segun los criterios de busqueda 
 				@RequestMapping(value = "/laboratorioUni/buscarPlacas", method = RequestMethod.GET)
