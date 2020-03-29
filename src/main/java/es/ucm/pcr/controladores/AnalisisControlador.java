@@ -122,15 +122,27 @@ public class AnalisisControlador {
 			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();	
 			
 			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la muestra para no mostrarlos como posibles a asignar en el desplegable
+			//listaAnalistasLab
 			List<BeanAsignacion> beanListadoAnalistaLabAsignados = beanMuestra.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasLab();
 			List<BeanUsuario> beanListadoAnalistaLabABorrar = new ArrayList<BeanUsuario>();
 			//convierto la lista BeanAsignacion en lista BeanUsuario
 			for(BeanAsignacion beanAsig: beanListadoAnalistaLabAsignados) {
-				beanListadoAnalistaLabABorrar.add(beanAsig.getBeanUsuario());
-				System.out.println("beanListadoAnalistaLabABorrar tiene: " + beanListadoAnalistaLabABorrar.size());
+				beanListadoAnalistaLabABorrar.add(beanAsig.getBeanUsuario());				
 			}
+			System.out.println("beanListadoAnalistaLabABorrar tiene: " + beanListadoAnalistaLabABorrar.size());
 			//borro de la lista todal de analistaslab los asignados
 			beanListadoAnalistaLab.removeAll(beanListadoAnalistaLabABorrar);
+			
+			//listaAnalistasVol			
+			List<BeanAsignacion> beanListadoAnalistaVolAsignados = beanMuestra.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasVol();
+			List<BeanUsuario> beanListadoAnalistaVolABorrar = new ArrayList<BeanUsuario>();
+			//convierto la lista BeanAsignacion en lista BeanUsuario
+			for(BeanAsignacion beanAsig: beanListadoAnalistaVolAsignados) {
+				beanListadoAnalistaVolABorrar.add(beanAsig.getBeanUsuario());				
+			}
+			System.out.println("beanListadoAnalistaVolABorrar tiene: " + beanListadoAnalistaVolABorrar.size());
+			//borro de la lista todal de analistaslab los asignados
+			beanListadoAnalistaVol.removeAll(beanListadoAnalistaVolABorrar);
 			
 			
 			vista.addObject("beanMuestra", beanMuestra);
@@ -147,6 +159,7 @@ public class AnalisisControlador {
 			
 			System.out.println("muestra id: " + formBeanGuardarAsignacionMuestra.getId());
 			System.out.println("analistasLab seleccionados para asignar: " + formBeanGuardarAsignacionMuestra.getListaIdsAnalistasLabSeleccionados().toString());
+			System.out.println("analistasVol seleccionados para asignar: " + formBeanGuardarAsignacionMuestra.getListaIdsAnalistasVolSeleccionados().toString());
 			
 			//TODO llamar a metodo de servicio que a partir de formBeanGuardarAsignacionMuestra recupere la muestra y le asigne los nuevos analistas lab y analistas vol
 			
