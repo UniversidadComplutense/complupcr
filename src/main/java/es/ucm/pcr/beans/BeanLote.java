@@ -15,7 +15,7 @@ public class BeanLote{
 	private BeanEstado estado;
 	private Date fechaEntrada;
 	private List<BeanMuestra>  listaMuestras;
-	
+	private String funcionEjecutar;
 	private String test;
 	public String getId() {
 		return id;
@@ -72,6 +72,12 @@ public class BeanLote{
 	}
 	public void setCentroProcedencia(String centroProcedencia) {
 		this.centroProcedencia = centroProcedencia;
+	}
+	public String getFuncionEjecutar() {
+		return funcionEjecutar;
+	}
+	public void setFuncionEjecutar(String funcionEjecutar) {
+		this.funcionEjecutar = funcionEjecutar;
 	}
 	
 }

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.ucm.pcr.beans.BeanEstado;
@@ -84,6 +85,7 @@ public class LaboratorioVisavetUCMController {
 			e.setEtiqueta("498979");
 			listaMuestras.add(e);
 		}
+		bean.setFuncionEjecutar("loadConfirmarEnvio("+bean.getId()+")");
 		bean.setListaMuestras(listaMuestras);
 		
 		
@@ -131,7 +133,7 @@ public class LaboratorioVisavetUCMController {
 		
 	}
 	// buscar lotes segun los criterios de busqueda 
-	@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.POST)
 	public String buscarLotesPost(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
         // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
 		Page<BeanLote> paginaLotes = null;
@@ -151,20 +153,88 @@ public class LaboratorioVisavetUCMController {
 	//return "VistaListadoRecepcionLotes :: #trGroup";
 	
 	}
-	// buscar placas segun los criterios de busqueda 
-		@RequestMapping(value = "/laboratorioUni/buscarPlacas", method = RequestMethod.GET)
-		public ModelAndView buscarPlacasGet(Model model, HttpServletRequest request, HttpSession session) {
+	*/
+	private String mostrarResultadosLotes(List<BeanLote> lista) {
+		String tabla="<table class=\"col-xs-12 table\" id=\"tablaResultadosCabecera\">";
+		 tabla+="<thead class=\"thead-light\"><tr><th  style=\"text-align: left;\"></th><th  style=\"text-align: left;\">#Lotes</th><th style=\"text-align: left;\">Centro</th><th  style=\"text-align: left;\">F.Entrada</th>";
+				tabla+="<th  style=\"text-align: left;\">#Muestras</th><th  style=\"text-align: left;\">Test</th><th  style=\"text-align: left;\">Estado</th>	</tr></thead></table>";
+				
+				tabla+="<table class=\"col-xs-12 table\" id=\"tablaResultadosLotes\">";
+				for (int i=0; i<lista.size();i++) {
+			 	tabla+="<tr id=\"trGroup"+i+"\" >";
+			 	tabla+="<td width=\"1%\">";
+				if (lista.get(i).getEstado().getEstado()== Estado.Recibido) {
+			 	tabla+="<input type=\"checkbox\" id=\"seleccionado"+i+"\" value=\""+lista.get(i).getId()+"\"/></td>";
+				}
+				else {
+					tabla+="<input type=\"checkbox\" disabled id=\"seleccionado"+i+"\" value=\""+lista.get(i).getId()+"\"/></td>";		
+				}
+				tabla+="<td width=\"1%\"><span>"+lista.get(i).getNumLote()+"</span></td>";
+				tabla+="<td width=\"10%\"><span>"+lista.get(i).getCentroProcedencia()+"</span></td>";
+				tabla+="<td width=\"1%\"><span>"+lista.get(i).getFechaEntrada()+"</span></td>";
+			    tabla+="<td id=\"mensajes_log\" style=\"text-align: center;\" width=\"1%\"> <a  data-toggle=\"modal\" href=\"#modalConsultarMuestras\" onClick=\"consultarMuestras('"+lista.get(i).getNumLote()+"','"+lista.get(i).getCentroProcedencia()+"','"+lista.get(i).getId()+"')\" >"; 
+			    tabla+="<i class=\"fa fa-table\" aria-hidden=\"true\" 	style=\"font-size: 1.2em;\"></i></a></td>";
+			 	tabla+="<td id=\"mensajes_log\" width=\"1%\"><span>Covid19</span></td>";
+			 	tabla+="<td width=\"16%\"><span>"+lista.get(i).getEstado().getEstado().getDescripcion()+"</span>&nbsp;";
+			 	if (lista.get(i).getEstado().getEstado()== Estado.Enviado)
+			 	tabla+="<a   href=\"#modalConfirmRecibido\" data-toggle=\"modal\" onclick=\"loadConfirmarEnvio('"+lista.get(i).getId()+"','"+lista.get(i).getNumLote()+"', '"+lista.get(i).getCentroProcedencia()+"')\">Confirmar recibido</a> ";
+			 	tabla+="</td>";
+				tabla+="</tr>";
+	   }
+			
+	tabla +="</table>";
+	return tabla;
+	}
+	
+	// buscar lotes segun los criterios de busqueda 
+	@ResponseBody
+		@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.POST)
+		public String buscarLotesPost(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
 	        // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
-			ModelAndView vista = new ModelAndView("VistaBuscarPlacas");
-			return vista;
+			Page<BeanLote> paginaLotes = null;
+			BeanBusquedaLotes busquedaLotes=(BeanBusquedaLotes) model.getAttribute("busquedaLotes");
+		
+			paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, pageable);
+			// para probar
+			List<BeanLote> list= new ArrayList();
+			for (int i = 0; i<20; i++) {
+				list.add(getBean(i));
+			}		
+			paginaLotes = new PageImpl<BeanLote>(list, pageable,pageable.getPageSize());
+			// fin para probar 
+			model.addAttribute("paginaLotes", paginaLotes);
+			String tabla=this.mostrarResultadosLotes(paginaLotes.getContent());
+		    return tabla;
+		
 		}
-		// buscar lotes segun los criterios de busqueda 
-		@RequestMapping(value = "/laboratorioUni/buscarPlacas", method = RequestMethod.POST)
-		public ModelAndView buscarPlacasPost(Model model, HttpServletRequest request, HttpSession session) {
-		    // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
-			ModelAndView vista = new ModelAndView("VistaBuscarPlacas");
-			return vista;
-		}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/laboratorioUni/confirmarReciboLote", method = RequestMethod.GET)
+	public String confirmarReciboLote(@RequestParam("id") String id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
+	// llamar al servicio lotes y cambiar el estado de id a Recibido
+		// para probar
+		
+				List<BeanLote> list=new ArrayList();
+					for (int i = 0; i<20; i++) {
+						list.add(getBean(i));
+						if (list.get(i).getId().equals(id)) {
+							// cambiamos estado
+							BeanEstado estado= new BeanEstado();
+							estado.setTipoEstado(TipoEstado.EstadoLote);
+							estado.setEstado(Estado.Recibido);
+							list.get(i).setEstado(estado);
+						}
+					}	
+					
+					Page<BeanLote> paginaLotes = null;
+					paginaLotes = new PageImpl<BeanLote>(list, pageable,pageable.getPageSize());
+					// fin para probar 
+					model.addAttribute("paginaLotes", paginaLotes);
+					String tabla=this.mostrarResultadosLotes(paginaLotes.getContent());
+				    return tabla;	
+	}
+	
 		public BeanLote getBean2(int i) {
 			BeanLote bean = new BeanLote();
 			bean.setId(""+i);
@@ -204,5 +274,52 @@ public class LaboratorioVisavetUCMController {
 			
 			return "VistaListadoRecepcionLotes :: #trGroup";
 		}
+// obtiene las muestras de un lote
+		
+		
+		@RequestMapping(value = "/laboratorioUni/mostrarMuestras", method = RequestMethod.GET)
+		public String consultarMuestrasLote(@RequestParam("id") String id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
+		// ir al servicio lotes y llamar al metodo que me liste las muestra a partir del id de lote
+		// para probar
+			
+			List<BeanMuestra> muestras=new ArrayList();
+			List<BeanLote> list= new ArrayList();
+			for (int i = 0; i<10; i++) {
+				list.add(getBean(i));
+				if (list.get(i).getId().equals(id)) {
+					muestras= list.get(i).getListaMuestras();
+				}
+			}	
+	    // fin de prueba		
+           model.addAttribute("muestras", muestras);
+			
+			return "VistaListadoRecepcionLotes :: #trMuestra";
+		}
+		
+// request PLACAS
+		@RequestMapping(value = "/laboratorioUni/procesarLotes", method = RequestMethod.GET)
+		public ModelAndView buscarPlacasGet(@RequestParam("lotes") String lotes,Model model, HttpServletRequest request, HttpSession session) {
+			ModelAndView vista = new ModelAndView("VistaLotesPlacasVisavet");
+			return vista;
+		}
+		
+				// buscar placas segun los criterios de busqueda 
+				@RequestMapping(value = "/laboratorioUni/buscarPlacas", method = RequestMethod.GET)
+				public ModelAndView buscarPlacasGet(Model model, HttpServletRequest request, HttpSession session) {
+			        // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
+					ModelAndView vista = new ModelAndView("VistaBuscarPlacas");
+					return vista;
+				}
+				// buscar lotes segun los criterios de busqueda 
+				@RequestMapping(value = "/laboratorioUni/buscarPlacas", method = RequestMethod.POST)
+				public ModelAndView buscarPlacasPost(Model model, HttpServletRequest request, HttpSession session) {
+				    // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
+					ModelAndView vista = new ModelAndView("VistaBuscarPlacas");
+					return vista;
+				}
 		
 }
+
+
+
+

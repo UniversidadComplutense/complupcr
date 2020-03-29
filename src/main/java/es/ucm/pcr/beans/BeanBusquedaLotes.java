@@ -19,6 +19,7 @@ private int idCentro;
 private String urlPaginada="/laboratorioUni/buscarLotesGet";
 private String orden;
 private String sentidoOrden;
+
 public String getIdLaboratorio() {
 	return idLaboratorio;
 }
