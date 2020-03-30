@@ -81,7 +81,9 @@
 
         <div class="row justify-content-end mt-3">
 			<div class="col-2">
-				<button type="button" th:onClick="|buscarResultados('lote','DESC','2','20'); return false|"  class="btn btn-secondary">Buscar</button>
+			 <button type="submit"  class="btn btn-secondary">Buscar</button>
+			
+			<!--  <button type="button" th:onClick="|buscarResultados('lote','DESC','2','20'); return false|"  class="btn btn-secondary">Buscar</button>-->
 			</div>
 		</div>	
 		</fieldset>
@@ -95,8 +97,8 @@
 		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
 	<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">	
 		<div id="capaResultados" 
-			class="row formPnl1">
-		<!--  	<table class="col-xs-12 table" th:id="tablaResultadosCabecera" style="display:none">
+			class="row formPnl1"  th:unless="${(paginaLotes == null)}">
+		 	<table class="col-xs-12 table" th:id="tablaResultadosCabecera" >
 			 <thead class="thead-light">
 				<tr>
 				<th  style="text-align: left;"></th>
@@ -114,11 +116,11 @@
 				</table>
 			
 					<table class="col-xs-12 table" th:id="tablaResultadosLotes" >
-						<tr id="trGroup"></tr>
-			 	<tr id="trGroup"  th:each="unResultado,count : ${paginaLotes.getContent()}">
+						
+			 	<tr th:id="trGroup+${count.index}"  th:each="unResultado,count : ${paginaLotes.getContent()}">
 					
 							<td width="1%">
-								<input type="checkbox" name="seleccionado" th:id="seleccionado+${unResultado.id}"/>
+								<input type="checkbox" name="seleccionado" th:disabled="${#strings.toString(unResultado.estado.Estado) != 'Recibido'}" th:id="seleccionado+${unResultado.id}"/>
 								</td>
 								<td width="1%">
 								<span th:text="${unResultado.numLote}"></span>
@@ -131,28 +133,70 @@
 								<span th:text="${#dates.format(unResultado.fechaEntrada, 'dd-mm-yyyy')}"></span>
 								</td>
                               <td id="mensajes_log" style="text-align: center;" width="1%">
-                              <a
+                                                                                     
+                              <a  data-toggle="modal" href="#modalConsultarMuestras" th:data-lote="${unResultado.numLote}" th:data-centro="${unResultado.centroProcedencia}" th:data-id="${unResultado.id}"  th:onClick="|consultarMuestras(this.getAttribute('data-lote'),this.getAttribute('data-centro'),this.getAttribute('data-id'));|">
+                        <i class="fa fa-table" aria-hidden="true"
+										style="font-size: 1.2em;"></i>
+							</a>
+                           <!--    <a
 									th:attr="data-target='#modalMuestras'+${unResultado.id}"
 									data-toggle="modal"
 									th:href="'#modalMuestras'+${unResultado.id}">
 										<i class="fa fa-table" aria-hidden="true"
 										style="font-size: 1.2em;"></i>
-								</a>
+								</a>  -->
 								</td>
 								<td id="mensajes_log" width="1%">
 								<span>Covid19</span>
 								</td>
 								<td width="16%">
 								<span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
-								<input type="text" th:id="identificador+${#strings.toString(unResultado.id)}" th:value="${#strings.toString(unResultado.id)}"/>
-								  <a  th:if="${#strings.toString(unResultado.estado.Estado) == 'Enviado'}" href="#modalConfirmRecibido" data-toggle="modal" th:onclick="|${unResultado.funcionEjecutar};return false|">
+
+							  <a  th:if="${#strings.toString(unResultado.estado.Estado) == 'Enviado'}" href="#modalConfirmRecibido" data-toggle="modal" th:data-lote="${unResultado.numLote}" th:data-centro="${unResultado.centroProcedencia}" th:data-id="${unResultado.id}" th:onclick="|loadConfirmarEnvio(this.getAttribute('data-id'),this.getAttribute('data-lote'),this.getAttribute('data-centro'))|">
 							Confirmar recibido
 							</a>
 								  </td>
+								  
 					</tr>	
 					
 			</table>
-			-->
+			
+			<!--  Confirmar Recibido -->
+<div id="modalConfirmRecibido" class="modal fade modal1 in" role="dialog">
+   <div id="ventanaConfirmRecibido" class="modal-dialog ">
+    
+	<div class="modal-content">
+         <div class="modal-header" id="modal-header">
+         <button class="close" data-dismiss="modal" type="button">×</button>
+	
+         <h4 class="modal-title"> <span id="modalTitleNombre" class="info">Confirmar lote recibido</span>
+         </h4>
+        </div>
+
+	<div id="mensajeSinSeleccionarTit" style="display: block; height: 70px;">
+		<span style="text-align: center; padding-top: 30px; padding-left: 30px;">Confirmar como recibido el siguiente lote:</span>
+	
+						<label>Número de lote:</label><span id="mensajeConfirmar"></span>
+						<label>Centro de procedencia:</label><span id="mensajeCentroProcedencia"></span>
+									<div class="modal-footer">
+									<input type="hidden" id="id" value=""></input>
+									    <button type="button" id="aceptarConfirmacion" data-dismiss="modal" th:data-num="${paginaLote.number}" th:data-size="${paginaLote.size}" th:onclick="|confirmarLote(this.getAttribute('data-pagina'),this.getAttribute('data-size'))|">Aceptar</button>
+										<button type="button" id="cerrarConfirmacion" data-dismiss="modal">Cerrar</button>
+										
+									</div>
+						
+
+							</div>
+
+
+
+
+						</div>
+						</div>
+	</div> 		
+			
+<!--  	 fin  Recibido -->
+			
 				
 		
 		</div> <!--  capa de resultados -->
@@ -241,42 +285,7 @@
 		</div>			-->
 	<!-- fin consultar Muestras -->
 	
-	<!--  Confirmar Recibido -->
-<div id="modalConfirmRecibido" class="modal fade modal1 in" role="dialog">
-   <div id="ventanaConfirmRecibido" class="modal-dialog ">
-    
-	<div class="modal-content">
-         <div class="modal-header" id="modal-header">
-         <button class="close" data-dismiss="modal" type="button">×</button>
 	
-         <h4 class="modal-title"> <span id="modalTitleNombre" class="info">Confirmar lote recibido</span>
-         </h4>
-        </div>
-
-	<div id="mensajeSinSeleccionarTit" style="display: block; height: 70px;">
-		<span style="text-align: center; padding-top: 30px; padding-left: 30px;">Confirmar como recibido el siguiente lote:</span>
-	
-						<label>Número de lote:</label><span id="mensajeConfirmar"></span>
-						<label>Centro de procedencia:</label><span id="mensajeCentroProcedencia"></span>
-									<div class="modal-footer">
-									<input type="hidden" id="id" value=""></input>
-									    <button type="button" id="aceptarConfirmacion" data-dismiss="modal" onClick="confirmarLote();">Aceptar</button>
-										<button type="button" id="cerrarConfirmacion" data-dismiss="modal">Cerrar</button>
-										
-									</div>
-						
-
-							</div>
-
-
-
-
-						</div>
-						</div>
-	</div> 		
-			
-<!--  	 fin  Recibido -->
-
 <object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 <!--  contenedor de todo -->
 	<!--  

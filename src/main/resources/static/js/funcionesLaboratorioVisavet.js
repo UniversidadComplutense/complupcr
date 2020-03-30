@@ -107,8 +107,8 @@ function loadConfirmarEnvio(id, numLote, centroProcedencia){
 	$("#id").val(id);
 }
 /* funcion que  realia una llamada ajax para cambiar el estado de un lote y recargar tabla de resultados */
-function confirmarLote(){
-	var url = "";
+function confirmarLote(pagina,size){
+	/* por ajax var url = "";
 	//var urlAbs = getAbsolutePath();
 	var id=$("#id").val();
 	url =  '/laboratorioUni/confirmarReciboLote?id='+id;
@@ -123,6 +123,13 @@ function confirmarLote(){
 		$("#capaResultados").html(respuesta);
 		habilitarBotonProcesar();
 	});
+	*/
+	var url = "";
+	//var urlAbs = getAbsolutePath();
+	alert (pagina);
+	var id=$("#id").val();
+	url =  '/laboratorioUni/confirmarReciboLote?id='+id+'&page='+pagina+'&size='+size;
+	window.location=url;
 }
 function consultarMuestras(lote,centroProcedencia,id){
 	var url = "";
