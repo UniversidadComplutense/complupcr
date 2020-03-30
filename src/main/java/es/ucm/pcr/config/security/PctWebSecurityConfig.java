@@ -53,6 +53,6 @@ public class PctWebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and().formLogin().loginPage("/acceso").usernameParameter("email")
 				.passwordParameter("password").failureUrl("/acceso?error")				
 				.permitAll().and().logout()
-				.logoutUrl("/cerrarSession").deleteCookies("JSESSIONID").permitAll();
+				.logoutUrl("/cerrarSesion").deleteCookies("JSESSIONID").permitAll();
 	}
 }

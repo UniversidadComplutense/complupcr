@@ -15,9 +15,10 @@ import es.ucm.pcr.beans.BeanCentro;
 
 
 @Controller
+@RequestMapping(value="/gestor/centro")
 public class CentroControlador {
 	
-	@RequestMapping(value="AltaCentro", method=RequestMethod.GET)
+	@RequestMapping(value="/alta", method=RequestMethod.GET)
 	public ModelAndView AltaCentro(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaCentro");
 	
@@ -28,7 +29,7 @@ public class CentroControlador {
 	}
 	
    // Alta de centro 
-	@RequestMapping(value="AltaCentro", method=RequestMethod.POST)	
+	@RequestMapping(value="/alta", method=RequestMethod.POST)	
 	public ModelAndView grabarAltaCentro ( @ModelAttribute("formBeanCentro") BeanCentro beanCentro, HttpSession session) throws Exception {
 
 		System.out.println("Centro a grabar: " + beanCentro.toString());

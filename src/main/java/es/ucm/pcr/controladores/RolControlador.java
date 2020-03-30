@@ -12,9 +12,10 @@ import org.springframework.web.servlet.view.RedirectView;
 import es.ucm.pcr.beans.BeanRol;
 
 @Controller
+@RequestMapping(value="/gestor/rol")
 public class RolControlador {
 	
-	@RequestMapping(value="AltaRol", method=RequestMethod.GET)
+	@RequestMapping(value="/alta", method=RequestMethod.GET)
 	public ModelAndView AltaRol(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaRol");
 	
@@ -25,7 +26,7 @@ public class RolControlador {
 	}
 	
    // Alta de centro 
-	@RequestMapping(value="AltaRol", method=RequestMethod.POST)	
+	@RequestMapping(value="/alta", method=RequestMethod.POST)	
 	public ModelAndView grabarAltaRol ( @ModelAttribute("formBeanRol") BeanRol beanRol, HttpSession session) throws Exception {
 
 		System.out.println("Rol a grabar: " + beanRol.toString());
