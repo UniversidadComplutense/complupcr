@@ -23,6 +23,8 @@ import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
+import es.ucm.pcr.servicios.LaboratorioCentroServicio;
+import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 
 @Controller
 public class LaboratorioVisavetControlador {
@@ -30,13 +32,14 @@ public class LaboratorioVisavetControlador {
 	@Autowired
 	LaboratorioVisavetRepositorio laboratorioVisavetRepositorio;
 	
+	@Autowired
+	LaboratorioVisavetServicio laboratorioVisavetServicio;
+	
 	//	Muestra una lista ordenada ap1, ap2,nombre con los laboratorioVisavets
 	// Punto de entrada a la gestión de laboratorioVisavets
 	@RequestMapping(value="/gestor/listaLaboratorioVisavet", method=RequestMethod.GET)
 	public ModelAndView GestionLaboratorioVisavet(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionLaboratorioVisavet");
-		
-//		System.out.println("estro lb ucm");
 	
 		// cargo todos los laboratorioVisavets de BBDD
 		List<BeanLaboratorioVisavet> listaLaboratorioVisavet = new ArrayList<BeanLaboratorioVisavet>();
@@ -47,6 +50,8 @@ public class LaboratorioVisavetControlador {
 												laboratorioVisavet.getNombre(), 
 												laboratorioVisavet.getCapacidad(),
 												laboratorioVisavet.getOcupacion(),
+												laboratorioVisavet.getDocumentos(),
+												laboratorioVisavet.getPlacaVisavets(),
 												"L"));
 		}
 		//	Ordeno por ap1, ap2, nombre
@@ -76,10 +81,13 @@ public class LaboratorioVisavetControlador {
 			// Damos de alta nuevo laboratorioVisavet
 			if (beanLaboratorioVisavet.getAccion().equals("A"))
 			{
-				LaboratorioVisavet laboratorioVisavet = new LaboratorioVisavet();
-				laboratorioVisavet.setNombre(beanLaboratorioVisavet.getNombre());
-				laboratorioVisavet.setCapacidad(beanLaboratorioVisavet.getCapacidad());
-				laboratorioVisavetRepositorio.save(laboratorioVisavet);
+//				LaboratorioVisavet laboratorioVisavet = new LaboratorioVisavet();
+//				laboratorioVisavet.setNombre(beanLaboratorioVisavet.getNombre());
+//				laboratorioVisavet.setCapacidad(beanLaboratorioVisavet.getCapacidad());
+//				laboratorioVisavetRepositorio.save(laboratorioVisavet);
+				
+				laboratorioVisavetRepositorio.save(laboratorioVisavetServicio.mapeoBeanEntidadLaboratorioVisavet(beanLaboratorioVisavet));
+				
 			}
 			// Modificamos laboratorioVisavet existente, menos mail
 			if (beanLaboratorioVisavet.getAccion().equals("M"))
@@ -87,9 +95,11 @@ public class LaboratorioVisavetControlador {
 				// Buscamos el laboratorioVisavet a modificar, y volcamos los datos recogidos por el formulario
 				Optional<LaboratorioVisavet> laboratorioVisavet = laboratorioVisavetRepositorio.findById(beanLaboratorioVisavet.getId());
 				// añadimos campos del formulario
-				laboratorioVisavet.get().setNombre(beanLaboratorioVisavet.getNombre());
-				laboratorioVisavet.get().setCapacidad(beanLaboratorioVisavet.getCapacidad());
-				laboratorioVisavetRepositorio.save(laboratorioVisavet.get());
+//				laboratorioVisavet.get().setNombre(beanLaboratorioVisavet.getNombre());
+//				laboratorioVisavet.get().setCapacidad(beanLaboratorioVisavet.getCapacidad());
+//				laboratorioVisavetRepositorio.save(laboratorioVisavet.get());
+				
+				laboratorioVisavetRepositorio.save(laboratorioVisavetServicio.mapeoBeanEntidadLaboratorioVisavet(beanLaboratorioVisavet));
 			}
 
 			// Volvemos a grabar mas laboratorioVisavet
@@ -106,10 +116,12 @@ public class LaboratorioVisavetControlador {
 			// Busco el laboratorioVisavet a modificar
 			Optional<LaboratorioVisavet> laboratorioVisavet = laboratorioVisavetRepositorio.findById(idLaboratorioVisavet);
 			// cargo el beanLaboratorioVisavet con lo datos del laboratorioVisavet a modificar
-			BeanLaboratorioVisavet beanLaboratorioVisavet = new BeanLaboratorioVisavet();
-			beanLaboratorioVisavet.setId(laboratorioVisavet.get().getId());
-			beanLaboratorioVisavet.setNombre(laboratorioVisavet.get().getNombre());
-			beanLaboratorioVisavet.setCapacidad(laboratorioVisavet.get().getCapacidad());
+//			BeanLaboratorioVisavet beanLaboratorioVisavet = new BeanLaboratorioVisavet();
+//			beanLaboratorioVisavet.setId(laboratorioVisavet.get().getId());
+//			beanLaboratorioVisavet.setNombre(laboratorioVisavet.get().getNombre());
+//			beanLaboratorioVisavet.setCapacidad(laboratorioVisavet.get().getCapacidad());
+			
+			BeanLaboratorioVisavet beanLaboratorioVisavet = laboratorioVisavetServicio.mapeoEntidadBeanLaboratorioVisavet(laboratorioVisavet.get());
 			
 			// le indicamos la acción a relizar: M modificación de un laboratorioVisavet
 			beanLaboratorioVisavet.setAccion("M");
