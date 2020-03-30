@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - MUESTRAS</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<div class="container">	
+	
+	<!-- DATOS MUESTRA -->
+		<fieldset id="datosMuestras" class="form-group border p-2">
+			<legend class="w-auto">Placa #1, Muestra: <span th:text="${beanMuestra.etiqueta}"></span></legend>
+			
+			<div th:if="${mensaje !=null}"
+						class="alert alert-success alert-dismissible fade show"
+						role="alert">
+						<label th:text="${mensaje}"></label>
+						<button type="button" class="close" data-dismiss="alert"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+			</div>
+			<div class="container">
+				<div class="row form-group" >
+					<div class="col-6 form-group border p-2">
+						<label>Grafico1: </label><br>
+					 	<i class="fa fa-bar-chart" aria-hidden="true"></i>				 	
+					</div>	
+					<div class="col-6 form-group border p-2">
+						<label>Grafico2:</label><br>
+						<i class="fa fa-bar-chart" aria-hidden="true"></i>	
+					</div>								
+				</div>
+			</div> 
+			<div class="container"> 			
+				<div class="row form-group">
+					<div class="col-12 form-group border p-2">
+						<label>Resultados PCR:</label>
+					 	<table class="table">
+						  <thead>
+						    <tr>
+						      <th scope="col">#</th>
+						      <th scope="col">Well</th>
+						      <th scope="col">Fluor</th>
+						      <th scope="col">Content</th>
+						      <th scope="col">Sample</th>
+						      <th scope="col">Cq</th>
+						      <th scope="col">Cq Mean</th>
+						      <th scope="col">Cq Std. Dev</th>
+						      <th scope="col">Starting Quantity (SQ)</th>
+						      <th scope="col">Log Starting Quantity</th>
+						      <th scope="col">SQ Mean</th>
+						      <th scope="col">SQ Std. Dev</th>
+						      <th scope="col">Target</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						    <tr>
+						      <th scope="row">1</th>					      
+						      <td>A01</td>
+						      <td>FAM</td>
+						      <td></td>
+						      <td>Std-01</td>
+						      <td></td>
+						      <td>22,58</td>
+						      <td>22,65</td>
+						      <td>0,073</td>
+						      <td>3,440E+04</td>
+						      <td>4,537</td>
+						      <td>3,44E+04</td>
+						      <td>0,00E+00</td>
+						    </tr>					    
+						  </tbody>
+						</table>				
+					</div>	
+				</div>
+			</div>
+		</fieldset>
+		
+		
+		<form id="formularioGuardarRevision" action="#"
+						th:action="@{/analisis/guardarRevision}" method="post"
+						 role="form" th:object="${formBeanGuardarAsignacionMuestra}"> 
+		
+		<fieldset id="revisarMuestra" class="form-group border p-2">
+			<legend class="w-auto">Revisar muestra</legend>
+			
+			<!-- guardo en un hidden el id de la muestra -->
+		 	<div class="form-group col-12">
+				<input type="hidden" th:field="*{id}"></input>
+		 	</div>
+			
+			<div class="row">
+				<div class="col-12 form-group">
+					<div class="form-check-inline">
+					  <label class="form-check-label">
+					    <input type="radio" class="form-check-input" name="optradio">Negativo
+					  </label>
+					</div>
+					<div class="form-check-inline">
+					  <label class="form-check-label">
+					    <input type="radio" class="form-check-input" name="optradio">Positivo
+					  </label>
+					</div>
+					<div class="form-check-inline disabled">
+					  <label class="form-check-label">
+					    <input type="radio" class="form-check-input" name="optradio">Repetir
+					  </label>
+					</div>
+					<div class="form-check-inline disabled">
+					  <label class="form-check-label">
+					    <input type="radio" class="form-check-input" name="optradio">Ayuda
+					  </label>
+					</div>
+				</div>
+			</div>
+						
+						
+			
+			<div class="row">					
+				<div class="col-12 form-group">					
+					<ul>					
+						<li><label>Analistas asignados</label>
+							<ul th:each="analistaLab : ${beanMuestra.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
+								<li><span th:text="${analistaLab.beanUsuario.nom}"></span>; 
+									<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
+									<span th:text="${analistaLab.valoracion}"></span> 
+								</li>
+							</ul>
+						</li>
+						<li><label>Voluntarios asignados</label>
+							<ul th:each="voluntarioLab : ${beanMuestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
+								<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span>; 
+									<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
+									<span th:text="${voluntarioLab.valoracion}"></span> 
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>														
+			</div>	
+			
+		<!-- botones cancelar y guardar revision -->
+		<div class="row justify-content-center mt-4">		
+			<div class="col-1">							
+				<a th:href="@{/analisis/}" class="btn btn-secondary ">Cancelar</a>
+			</div>
+			<div class="col-1">
+				<input type="submit" class="btn btn-primary "
+					value="Guardar revision"></input>
+			</div>		
+		</div>
+			
+			
+		</fieldset>
+		
+		
+		
+		</form>
+		
+
+	
+	
+	</div>
+	
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	
+	<object th:include="fragmentos :: scriptsBootstrap" th:remove="tag"></object>
+	
+	<script th:src="@{/js/analisis.js}"></script>
+    
+</body>
+</html>

@@ -103,6 +103,7 @@
 						<th scope="col">Lote</th>
 						<!-- <th scope="col">Modificar</th> -->
 						<th scope="col">Asignar</th>
+						<th scope="col">Revisar</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -141,6 +142,11 @@
 					    <td>
 					        <a th:href="@{/analisis/asignar(idMuestra=${muestra.id} )}" data-toggle="tooltip" title="Asignar">					         
 					          <i class="fa fa-child" aria-hidden="true"></i>
+					        </a>
+						</td>
+						<td>
+					        <a th:href="@{/analisis/revisar(idMuestra=${muestra.id} )}" data-toggle="tooltip" title="Revisar">					         
+					          <i class="fa fa-pencil" aria-hidden="true"></i>
 					        </a>
 						</td>
 												

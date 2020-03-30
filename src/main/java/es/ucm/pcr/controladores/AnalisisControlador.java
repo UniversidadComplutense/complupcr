@@ -170,6 +170,68 @@ public class AnalisisControlador {
 			redirectAttributes.addFlashAttribute("mensaje", "Asignacion de muestra guardada");
 			return new RedirectView("/analisis/asignar?idMuestra="+idMuestra, true);
 		}
+		
+		
+		//muestra pantalla al jefe para que resuelva la muestra
+		@RequestMapping(value="/revisar", method=RequestMethod.GET)
+		//@PreAuthorize("hasAnyRole('ADMIN')")
+		public ModelAndView revisarMuestra(HttpSession session, HttpServletRequest request, @RequestParam("idMuestra") Integer idMuestra) throws Exception {
+			ModelAndView vista = new ModelAndView("VistaRevisarMuestra");
+						
+			String mensaje = null;
+			// Comprobamos si hay mensaje enviado desde guardarAsignacion.
+			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+			if (inputFlashMap != null) {
+				mensaje = (String) inputFlashMap.get("mensaje");
+				System.out.println("mensaje vale: " + mensaje);
+			}
+			vista.addObject("mensaje", mensaje);
+
+			
+			MuestraBean beanMuestra = getBeanMuestra(idMuestra);
+
+			//para recoger los analistas y voluntarios seleccionados
+			GuardarAsignacionMuestraBean formBeanGuardarAsignacionMuestra = new GuardarAsignacionMuestraBean(beanMuestra);
+			
+			//List<Integer> listaIdsAnalistasLabSeleccionados = new ArrayList<Integer>();
+			//listaIdsAnalistasLabSeleccionados.add(3);
+			//listaIdsAnalistasLabSeleccionados.add(7);
+			
+			
+			List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
+			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();	
+			
+			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la muestra para no mostrarlos como posibles a asignar en el desplegable
+			//listaAnalistasLab
+			List<BeanAsignacion> beanListadoAnalistaLabAsignados = beanMuestra.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasLab();
+			List<BeanUsuario> beanListadoAnalistaLabABorrar = new ArrayList<BeanUsuario>();
+			//convierto la lista BeanAsignacion en lista BeanUsuario
+			for(BeanAsignacion beanAsig: beanListadoAnalistaLabAsignados) {
+				beanListadoAnalistaLabABorrar.add(beanAsig.getBeanUsuario());				
+			}
+			System.out.println("beanListadoAnalistaLabABorrar tiene: " + beanListadoAnalistaLabABorrar.size());
+			//borro de la lista todal de analistaslab los asignados
+			beanListadoAnalistaLab.removeAll(beanListadoAnalistaLabABorrar);
+			
+			//listaAnalistasVol			
+			List<BeanAsignacion> beanListadoAnalistaVolAsignados = beanMuestra.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasVol();
+			List<BeanUsuario> beanListadoAnalistaVolABorrar = new ArrayList<BeanUsuario>();
+			//convierto la lista BeanAsignacion en lista BeanUsuario
+			for(BeanAsignacion beanAsig: beanListadoAnalistaVolAsignados) {
+				beanListadoAnalistaVolABorrar.add(beanAsig.getBeanUsuario());				
+			}
+			System.out.println("beanListadoAnalistaVolABorrar tiene: " + beanListadoAnalistaVolABorrar.size());
+			//borro de la lista todal de analistaslab los asignados
+			beanListadoAnalistaVol.removeAll(beanListadoAnalistaVolABorrar);
+			
+			
+			vista.addObject("beanMuestra", beanMuestra);
+			vista.addObject("formBeanGuardarAsignacionMuestra", formBeanGuardarAsignacionMuestra);
+			vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);			
+			vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
+			return vista;
+		}
+		
 
 		/*
 		@GetMapping("/consultaAnalistas")
