@@ -24,6 +24,9 @@ public class InicioControlador {
 			@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout, 
 			HttpSession session) {
+//  para probar la pagina de error error.toString();
+		
+		
 
 		if (error != null) {
 			model.addAttribute("mensajeError","Login incorrecto.");
