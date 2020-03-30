@@ -127,11 +127,11 @@ public class Usuario implements java.io.Serializable {
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "usuario_rol", 
-	    joinColumns = {@JoinColumn(name = "usuario_id", referencedColumnName="id",nullable = false) }, 
-	    inverseJoinColumns = {@JoinColumn(name = "rol_id", referencedColumnName="id", nullable = false) })
+	@JoinTable(name = "usuario_rol",
+	   joinColumns = {@JoinColumn(name = "idUsuario", referencedColumnName="id",nullable = false) },
+	   inverseJoinColumns = {@JoinColumn(name = "idRol", referencedColumnName="id", nullable = false) })
 	public Set<Rol> getRols() {
-		return this.rols;
+	return this.rols;
 	}
 
 	public void setRols(Set<Rol> rols) {
