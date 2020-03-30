@@ -1,5 +1,5 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 30 mar. 2020 12:25:35 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +35,7 @@ public class Usuario implements java.io.Serializable {
 	private Integer idLaboratorioCentro;
 	private Integer asignadas;
 	private Integer acertadas;
+	private boolean habilitado;
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<UsuarioMuestra> usuarioMuestras = new HashSet<UsuarioMuestra>(0);
 	private Set<Rol> rols = new HashSet<Rol>(0);
@@ -42,16 +43,18 @@ public class Usuario implements java.io.Serializable {
 	public Usuario() {
 	}
 
-	public Usuario(String nombre, String apellido1, String email, String password) {
+	public Usuario(String nombre, String apellido1, String email, String password, boolean habilitado) {
 		this.nombre = nombre;
 		this.apellido1 = apellido1;
 		this.email = email;
 		this.password = password;
+		this.habilitado = habilitado;
 	}
 
 	public Usuario(Centro centro, String nombre, String apellido1, String apellido2, String email, String password,
 			Integer idLaboratorioVisavet, Integer idLaboratorioCentro, Integer asignadas, Integer acertadas,
-			Set<Documento> documentos, Set<UsuarioMuestra> usuarioMuestras, Set<Rol> rols) {
+			boolean habilitado, Set<Documento> documentos,
+			Set<UsuarioMuestra> usuarioMuestras, Set<Rol> rols) {
 		this.centro = centro;
 		this.nombre = nombre;
 		this.apellido1 = apellido1;
@@ -62,6 +65,7 @@ public class Usuario implements java.io.Serializable {
 		this.idLaboratorioCentro = idLaboratorioCentro;
 		this.asignadas = asignadas;
 		this.acertadas = acertadas;
+		this.habilitado = habilitado;
 		this.documentos = documentos;
 		this.usuarioMuestras = usuarioMuestras;
 		this.rols = rols;
@@ -168,6 +172,15 @@ public class Usuario implements java.io.Serializable {
 
 	public void setAcertadas(Integer acertadas) {
 		this.acertadas = acertadas;
+	}
+
+	@Column(name = "habilitado", nullable = false)
+	public boolean isHabilitado() {
+		return this.habilitado;
+	}
+
+	public void setHabilitado(boolean habilitado) {
+		this.habilitado = habilitado;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")

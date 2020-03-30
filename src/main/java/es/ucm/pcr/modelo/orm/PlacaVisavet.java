@@ -1,5 +1,5 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 30 mar. 2020 12:25:35 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +28,7 @@ public class PlacaVisavet implements java.io.Serializable {
 	private Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>(
 			0);
 	private Set<Documento> documentos = new HashSet<Documento>(0);
+	private Set<Lote> lotes = new HashSet<Lote>(0);
 
 	public PlacaVisavet() {
 	}
@@ -38,12 +39,13 @@ public class PlacaVisavet implements java.io.Serializable {
 
 	public PlacaVisavet(EstadoPlacaVisavet estadoPlacaVisavet, LaboratorioVisavet laboratorioVisavet,
 			Integer numeromuestras, Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios,
-			Set<Documento> documentos) {
+			Set<Documento> documentos, Set<Lote> lotes) {
 		this.estadoPlacaVisavet = estadoPlacaVisavet;
 		this.laboratorioVisavet = laboratorioVisavet;
 		this.numeromuestras = numeromuestras;
 		this.placaVisavetPlacaLaboratorios = placaVisavetPlacaLaboratorios;
 		this.documentos = documentos;
+		this.lotes = lotes;
 	}
 
 	@Id
@@ -103,6 +105,15 @@ public class PlacaVisavet implements java.io.Serializable {
 
 	public void setDocumentos(Set<Documento> documentos) {
 		this.documentos = documentos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "placaVisavet")
+	public Set<Lote> getLotes() {
+		return this.lotes;
+	}
+
+	public void setLotes(Set<Lote> lotes) {
+		this.lotes = lotes;
 	}
 
 }
