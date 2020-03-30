@@ -42,7 +42,11 @@ public class LaboratorioCentroControlador {
 		{
 			listaLaboratorioCentro.add(new BeanLaboratorioCentro(
 					laboratorioCentro.getId(), 
-					laboratorioCentro.getNombre(), "L"));
+					laboratorioCentro.getNombre(),
+					laboratorioCentro.getDocumentos(),
+					laboratorioCentro.getPlacaLaboratorios(),
+					laboratorioCentro.getEquipos(),
+					"L"));
 		}
 		//	Ordeno por ap1, ap2, nombre
 		Collections.sort(listaLaboratorioCentro);

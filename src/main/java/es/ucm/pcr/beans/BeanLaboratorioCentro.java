@@ -1,11 +1,20 @@
 package es.ucm.pcr.beans;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import es.uc.pcr.utilidades.Utilidades;
+import es.ucm.pcr.modelo.orm.Documento;
+import es.ucm.pcr.modelo.orm.Equipo;
+import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 
 public class BeanLaboratorioCentro implements Comparable <BeanLaboratorioCentro>{
 
 	private Integer id;
 	private String nombre;
+	private Set<Documento> documentos = new HashSet<Documento>(0);
+	private Set<PlacaLaboratorio> placaLaboratorios = new HashSet<PlacaLaboratorio>(0);
+	private Set<Equipo> equipos = new HashSet<Equipo>(0);
 	private String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA
 	
 	public BeanLaboratorioCentro() {
@@ -13,12 +22,18 @@ public class BeanLaboratorioCentro implements Comparable <BeanLaboratorioCentro>
 		// TODO Auto-generated constructor stub
 	}
 
-	public BeanLaboratorioCentro(Integer id, String nombre, String accion) {
+
+	public BeanLaboratorioCentro(Integer id, String nombre, Set<Documento> documentos,
+			Set<PlacaLaboratorio> placaLaboratorios, Set<Equipo> equipos, String accion) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
+		this.documentos = documentos;
+		this.placaLaboratorios = placaLaboratorios;
+		this.equipos = equipos;
 		this.accion = accion;
 	}
+
 
 	public Integer getId() {
 		return id;
@@ -44,11 +59,46 @@ public class BeanLaboratorioCentro implements Comparable <BeanLaboratorioCentro>
 		this.accion = accion;
 	}
 
+
+	
+	public Set<Documento> getDocumentos() {
+		return documentos;
+	}
+
+
+	public void setDocumentos(Set<Documento> documentos) {
+		this.documentos = documentos;
+	}
+
+
+	public Set<PlacaLaboratorio> getPlacaLaboratorios() {
+		return placaLaboratorios;
+	}
+
+
+	public void setPlacaLaboratorios(Set<PlacaLaboratorio> placaLaboratorios) {
+		this.placaLaboratorios = placaLaboratorios;
+	}
+
+
+	public Set<Equipo> getEquipos() {
+		return equipos;
+	}
+
+
+	public void setEquipos(Set<Equipo> equipos) {
+		this.equipos = equipos;
+	}
+
+	
+
 	@Override
 	public String toString() {
-		return "BeanLaboratorioCentro [id=" + id + ", nombre=" + nombre + ", accion=" + accion + "]";
+		return "BeanLaboratorioCentro [id=" + id + ", nombre=" + nombre + ", documentos=" + documentos
+				+ ", placaLaboratorios=" + placaLaboratorios + ", equipos=" + equipos + ", accion=" + accion + "]";
 	}
-	
+
+
 	@Override
     public int compareTo(BeanLaboratorioCentro o) {
 		String p1 = Utilidades.limpiarStringParaOrdenacion(o.getNombre());

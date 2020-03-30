@@ -13,7 +13,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		LaboratorioCentro laboratorioCentro = new LaboratorioCentro();
 		
 		laboratorioCentro.setId(beanLaboratorioCentro.getId());
-		laboratorioCentro.setNombre(beanLaboratorioCentro.getNombre());		
+		laboratorioCentro.setNombre(beanLaboratorioCentro.getNombre());	
+		laboratorioCentro.setDocumentos(beanLaboratorioCentro.getDocumentos());
+		laboratorioCentro.setEquipos(beanLaboratorioCentro.getEquipos());
+		laboratorioCentro.setPlacaLaboratorios(beanLaboratorioCentro.getPlacaLaboratorios());
 		
 		return laboratorioCentro;
 		
@@ -25,6 +28,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		
 		beanLaboratorioCentro.setId(laboratorioCentro.getId());
 		beanLaboratorioCentro.setNombre(laboratorioCentro.getNombre());
+		beanLaboratorioCentro.setDocumentos(laboratorioCentro.getDocumentos());
+		beanLaboratorioCentro.setEquipos(laboratorioCentro.getEquipos());
+		beanLaboratorioCentro.setPlacaLaboratorios(laboratorioCentro.getPlacaLaboratorios());
 		
 		return beanLaboratorioCentro;
 		
