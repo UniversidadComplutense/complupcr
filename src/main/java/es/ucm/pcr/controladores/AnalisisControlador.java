@@ -34,6 +34,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import es.ucm.pcr.beans.BeanAnalisis;
 import es.ucm.pcr.beans.BeanAsignacion;
 import es.ucm.pcr.beans.BeanBusquedaMuestraAnalisis;
+import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanListaAsignaciones;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
@@ -189,47 +190,34 @@ public class AnalisisControlador {
 
 			
 			MuestraBean beanMuestra = getBeanMuestra(idMuestra);
-
-			//para recoger los analistas y voluntarios seleccionados
-			GuardarAsignacionMuestraBean formBeanGuardarAsignacionMuestra = new GuardarAsignacionMuestraBean(beanMuestra);
+			//beanMuestra.setResultado("P");
 			
-			//List<Integer> listaIdsAnalistasLabSeleccionados = new ArrayList<Integer>();
-			//listaIdsAnalistasLabSeleccionados.add(3);
-			//listaIdsAnalistasLabSeleccionados.add(7);
-			
-			
-			List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
-			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();	
-			
-			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la muestra para no mostrarlos como posibles a asignar en el desplegable
-			//listaAnalistasLab
-			List<BeanAsignacion> beanListadoAnalistaLabAsignados = beanMuestra.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasLab();
-			List<BeanUsuario> beanListadoAnalistaLabABorrar = new ArrayList<BeanUsuario>();
-			//convierto la lista BeanAsignacion en lista BeanUsuario
-			for(BeanAsignacion beanAsig: beanListadoAnalistaLabAsignados) {
-				beanListadoAnalistaLabABorrar.add(beanAsig.getBeanUsuario());				
-			}
-			System.out.println("beanListadoAnalistaLabABorrar tiene: " + beanListadoAnalistaLabABorrar.size());
-			//borro de la lista todal de analistaslab los asignados
-			beanListadoAnalistaLab.removeAll(beanListadoAnalistaLabABorrar);
-			
-			//listaAnalistasVol			
-			List<BeanAsignacion> beanListadoAnalistaVolAsignados = beanMuestra.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasVol();
-			List<BeanUsuario> beanListadoAnalistaVolABorrar = new ArrayList<BeanUsuario>();
-			//convierto la lista BeanAsignacion en lista BeanUsuario
-			for(BeanAsignacion beanAsig: beanListadoAnalistaVolAsignados) {
-				beanListadoAnalistaVolABorrar.add(beanAsig.getBeanUsuario());				
-			}
-			System.out.println("beanListadoAnalistaVolABorrar tiene: " + beanListadoAnalistaVolABorrar.size());
-			//borro de la lista todal de analistaslab los asignados
-			beanListadoAnalistaVol.removeAll(beanListadoAnalistaVolABorrar);
-			
+			List<BeanElemento> beanListadoPosiblesResultadosMuestra = getBeanListadoPosiblesResultadosMuestra();
+			System.out.println("el beanListadoPosiblesResultadosMuestra tiene: " + beanListadoPosiblesResultadosMuestra.toString());
 			
 			vista.addObject("beanMuestra", beanMuestra);
-			vista.addObject("formBeanGuardarAsignacionMuestra", formBeanGuardarAsignacionMuestra);
-			vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);			
-			vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
+			vista.addObject("beanListadoPosiblesResultadosMuestra", beanListadoPosiblesResultadosMuestra);	
+		
+		
 			return vista;
+		}
+		
+		
+		@RequestMapping(value = "/guardarRevision", method = RequestMethod.POST)
+		public RedirectView guardarAsignacion(@ModelAttribute("beanMuestra") MuestraBean beanMuestra,
+				HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
+			
+			System.out.println("muestra id: " + beanMuestra.getId());
+			System.out.println("resultado seleccionado por el jefe: " + beanMuestra.getResultado());			
+			
+			//TODO llamar a metodo de servicio que a partir de beanMuestra recupere la muestra y le asigne el resultado escogido por el jefe
+			
+			//muestraSevicio.guardarResultado (beanMuestra);
+						
+			//vuelvo al formulario de asignacion de la muestra
+			String idMuestra = String.valueOf(beanMuestra.getId());
+			redirectAttributes.addFlashAttribute("mensaje", "Resultado de muestra guardado");
+			return new RedirectView("/analisis/revisar?idMuestra="+idMuestra, true);
 		}
 		
 
@@ -384,7 +372,31 @@ public class AnalisisControlador {
 			return bean;
 		}
 		
-		
+		public List<BeanElemento> getBeanListadoPosiblesResultadosMuestra() {
+			List<BeanElemento> listaPosiblesResultadosMuestra = new ArrayList<BeanElemento>();		
+			BeanElemento negativo = new BeanElemento();
+			negativo.setCodigo(1);
+			negativo.setCodigoString("N");
+			negativo.setDescripcion("Negativo");
+			listaPosiblesResultadosMuestra.add(negativo);
+			BeanElemento positivo = new BeanElemento();
+			positivo.setCodigo(2);
+			positivo.setCodigoString("P");
+			positivo.setDescripcion("Positivo");
+			listaPosiblesResultadosMuestra.add(positivo);
+			BeanElemento repetir = new BeanElemento();
+			repetir.setCodigo(3);
+			repetir.setCodigoString("R");
+			repetir.setDescripcion("Repetir");
+			listaPosiblesResultadosMuestra.add(repetir);
+			BeanElemento ayuda = new BeanElemento();
+			ayuda.setCodigo(4);
+			ayuda.setCodigoString("A");
+			ayuda.setDescripcion("Ayuda");
+			listaPosiblesResultadosMuestra.add(ayuda);		
+			
+			return listaPosiblesResultadosMuestra;
+		}
 		
 		
 //		public BeanMuestraCentro getBeanCentro(int i) {

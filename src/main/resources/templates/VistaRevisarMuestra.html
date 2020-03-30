@@ -83,7 +83,7 @@
 		
 		<form id="formularioGuardarRevision" action="#"
 						th:action="@{/analisis/guardarRevision}" method="post"
-						 role="form" th:object="${formBeanGuardarAsignacionMuestra}"> 
+						 role="form" th:object="${beanMuestra}"> 
 		
 		<fieldset id="revisarMuestra" class="form-group border p-2">
 			<legend class="w-auto">Revisar muestra</legend>
@@ -92,15 +92,20 @@
 		 	<div class="form-group col-12">
 				<input type="hidden" th:field="*{id}"></input>
 		 	</div>
-			
+		 	
+		 	
 			<div class="row">
-				<div class="col-12 form-group">
-					<div class="form-check-inline">
+				<div class="col-12 form-group" >
+					<div class="form-check-inline" th:each="posibleResultadoMuestra : ${beanListadoPosiblesResultadosMuestra}">
 					  <label class="form-check-label">
-					    <input type="radio" class="form-check-input" name="optradio">Negativo
+					    <input type="radio" class="form-check-input" name="optradio"
+					    th:field="*{resultado}"
+					    th:checked="${#strings.toString(posibleResultadoMuestra.codigoString) == beanMuestra.resultado}"
+					    th:value="${posibleResultadoMuestra.codigoString}"
+					    ><span th:text="${posibleResultadoMuestra.descripcion}">Tipo resultado muestra</span>
 					  </label>
 					</div>
-					<div class="form-check-inline">
+		<!--  			<div class="form-check-inline">
 					  <label class="form-check-label">
 					    <input type="radio" class="form-check-input" name="optradio">Positivo
 					  </label>
@@ -115,6 +120,7 @@
 					    <input type="radio" class="form-check-input" name="optradio">Ayuda
 					  </label>
 					</div>
+		-->
 				</div>
 			</div>
 						

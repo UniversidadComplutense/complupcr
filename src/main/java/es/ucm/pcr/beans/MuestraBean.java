@@ -12,6 +12,7 @@ public class MuestraBean{
 	private BeanEstado estado;
 	
 	private BeanAnalisis beanAnalisis; //proceso de analizar la muestra (asignación de analistas a las muestras por parte del jefe de servicio y su resolucion)  F6y F7
+	private String resultado; //valoracion final de la muestra despues de analizarla los analistas o dar su veredicto el jefe de servicio
 	
 	
 	public MuestraBean() {		
@@ -26,7 +27,8 @@ public class MuestraBean{
 		this.fecha = muestraBean.getFecha();
 		this.referenciaInterna = muestraBean.getReferenciaInterna();
 		this.estado = muestraBean.getEstado();
-		this.beanAnalisis = muestraBean.getBeanAnalisis();		
+		this.beanAnalisis = muestraBean.getBeanAnalisis();
+		this.resultado = muestraBean.getResultado();
 	}
 	
 	public int getId() {
@@ -70,6 +72,12 @@ public class MuestraBean{
 	}
 	public void setBeanAnalisis(BeanAnalisis beanAnalisis) {
 		this.beanAnalisis = beanAnalisis;
+	}
+	public String getResultado() {
+		return resultado;
+	}
+	public void setResultado(String resultado) {
+		this.resultado = resultado;
 	}
 	
 	
