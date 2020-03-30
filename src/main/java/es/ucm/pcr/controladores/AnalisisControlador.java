@@ -88,6 +88,7 @@ public class AnalisisControlador {
 				list.add(getBean(i));
 			}
 			
+			
 			vista.addObject("beanBusquedaMuestra", beanBusqueda);
 			vista.addObject("listadoMuestras", list);
 			return vista;
@@ -212,6 +213,10 @@ public class AnalisisControlador {
 			
 			//TODO llamar a metodo de servicio que a partir de beanMuestra recupere la muestra y le asigne el resultado escogido por el jefe
 			
+			//la muestra se cierra desde la pagina principal (creo) alli habrá que 
+			//cambiar el estado de la muestra a resuelta (cerrada) con su fecha de resolucion
+			//TODO actualizar estadisticas de aciertos a los asignados a la muestra
+			
 			//muestraSevicio.guardarResultado (beanMuestra);
 						
 			//vuelvo al formulario de asignacion de la muestra
@@ -293,6 +298,37 @@ public class AnalisisControlador {
 				bean.setEstadoMuestra("Negativo");
 			}
 			bean.setCodNumLote("codLote-" + i);
+			
+			Date date = new Date(); // your date
+		    Calendar cal = Calendar.getInstance();
+		    cal.setTime(date);
+			BeanAnalisis beanAnalisis  = new BeanAnalisis();
+			BeanListaAsignaciones beanListaAsignaciones = new BeanListaAsignaciones();
+			//usuarios que analizan, 2 analistas y 2 voluntario
+			for(int j=0;j<2; j++) {
+				BeanAsignacion beanAsigAna = new BeanAsignacion();
+				BeanUsuario ana = new BeanUsuario();
+				ana.setId(j);
+				ana.setNom("analista-" + j);
+				ana.setRol("ANALISTA_LAB");
+				beanAsigAna.setBeanUsuario(ana);				
+				beanAsigAna.setFechaAsignacion(cal);
+				beanAsigAna.setValoracion("P");
+				beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);
+				
+				BeanAsignacion beanAsigVol = new BeanAsignacion();
+				BeanUsuario vol = new BeanUsuario();
+				vol.setId(j);
+				vol.setNom("voluntario-" + j);
+				vol.setRol("ANALISTA_VOLUNTARIO");
+				beanAsigVol.setBeanUsuario(vol);				
+				beanAsigVol.setFechaAsignacion(cal);
+				beanAsigVol.setValoracion("N");
+				beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
+			}
+			beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
+			bean.setBeanAnalisis(beanAnalisis);		
+			
 			
 			return bean;
 		}

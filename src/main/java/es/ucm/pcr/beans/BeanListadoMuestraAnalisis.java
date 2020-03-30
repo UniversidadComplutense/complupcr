@@ -7,6 +7,9 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 	
 	private Integer id;
 	private String codNumLote;
+	
+	private BeanAnalisis beanAnalisis; //proceso de analizar la muestra (asignación de analistas a las muestras por parte del jefe de servicio y su resolucion)  F6y F7
+	private String resultado; //valoracion final de la muestra despues de analizarla los analistas o dar su veredicto el jefe de servicio
 
 	public BeanListadoMuestraAnalisis() {
 		super();
@@ -26,6 +29,22 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 
 	public void setCodNumLote(String codNumLote) {
 		this.codNumLote = codNumLote;
+	}
+
+	public BeanAnalisis getBeanAnalisis() {
+		return beanAnalisis;
+	}
+
+	public void setBeanAnalisis(BeanAnalisis beanAnalisis) {
+		this.beanAnalisis = beanAnalisis;
+	}
+
+	public String getResultado() {
+		return resultado;
+	}
+
+	public void setResultado(String resultado) {
+		this.resultado = resultado;
 	}
 
 	

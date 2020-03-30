@@ -93,6 +93,7 @@
 			<table class="table">
 				<thead class="thead-light">	
 	    			<tr>
+	    				<th scope="col">Analistas</th>
 	      				<th scope="col">Nombre</th>
 						<th scope="col">NHC</th>
 						<th scope="col">Etiqueta</th>
@@ -106,30 +107,33 @@
 						<th scope="col">Revisar</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr th:if="${listadoMuestras != null}" th:each="muestra : ${listadoMuestras}">
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+				<tbody th:if="${listadoMuestras != null}" th:each="muestra : ${listadoMuestras}">	
+					<!-- data-target="#group-of-rows-1" -->			
+					<tr class="clickable" data-toggle="collapse" th:data-target="${'#analistas'+ muestra.id}" aria-expanded="false" th:aria-controls="${'analistas'+ muestra.id}"> 
+						<td><i class="fa fa-folder"></i></td>
+					
+						<td>
 							<span th:text="${muestra.nombrePaciente}"></span>
 						</td>					
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td>
 							<span th:text="${muestra.nhcPaciente}"></span>							
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">							
+						<td>							
 							<span th:text="${muestra.etiquetaMuestra}"></span>							
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td>
 							<span th:text="${muestra.refInternaMuestra}"></span>							
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td>
 							<span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/mm/yyyy')}"></span>
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td>
 							<span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/mm/yyyy')}"></span>
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td>
 							<span th:text="${muestra.estadoMuestra}"></span>
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td>
 							<span th:text="${muestra.codNumLote}"></span>
 						</td>
 						<!--  
@@ -149,15 +153,40 @@
 					          <i class="fa fa-pencil" aria-hidden="true"></i>
 					        </a>
 						</td>
-												
-					</tr>		
-				</tbody>
+					</tr>				
+					<!-- id="group-of-rows-1" -->	
+					<tr th:id="${'analistas'+ muestra.id}" class="collapse table-warning">
+						<td><i class="fa fa-folder-open"></i></td>
+						<td colspan="5">							
+							<label>Analistas asignados</label>
+							<ul th:each="analistaLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
+								<li><span th:text="${analistaLab.beanUsuario.nom}"></span>; 
+									<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
+									<span th:text="${analistaLab.valoracion}"></span> 
+								</li>
+							</ul>						
+						</td>
+						<td colspan="5">							
+							<label>Voluntarios asignados</label>
+							<ul th:each="voluntarioLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
+								<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span>; 
+									<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
+									<span th:text="${voluntarioLab.valoracion}"></span> 
+								</li>
+							</ul>						
+						</td>
+					</tr>	
+			
+			</tbody>
+			
 			</table>
 		</div>
 	</form>
 
 	</div>
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	
+	<object th:include="fragmentos :: scriptsBootstrap" th:remove="tag"></object>
     
 </body>
 </html>
