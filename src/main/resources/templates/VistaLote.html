@@ -18,6 +18,10 @@
 				<div class="col-4 form-group">
 					<label>Código</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="${beanLote.numLote}"  th:value="${beanLote.numLote}" required maxlength="50"/>
+				</div>
+				<div class="col-4 form-group">
+					<label>Capacidad</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanLote.capacidad}"  th:value="${beanLote.capacidad}" pattern="[0-9]{3}" required/>
 				</div>					
 				<div class="col-3 form-group">
 					<label>Laboratorio</label>
@@ -34,7 +38,7 @@
 		<!-- ACCCIONES -->
 		<div class="row justify-content-center mt-3">
 			<div class="col-2">
-				<a th:href="@{/centroSalud/lote/}" class="btn btn-secondary">Volver</a>				
+				<a th:href="@{/centroSalud/lote}" class="btn btn-secondary">Volver</a>				
 			</div>
 			<div class="col-2">
 				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>

@@ -35,11 +35,9 @@
 					<label>Estado</label>
 				 	<select class="form-control form-control-sm" th:field="${beanBusquedaLote.idEstado}"  th:value="${beanBusquedaLote.idEstado}">
 				 		<option value="">Seleccione</option>
-				 		<option value="1">Iniciado</option>
-				 		<option value="2">Asignado Centro análisis</option>
-				 		<option value="3">Enviado laboratorio</option>
-				 		<option value="4">Recibido</option>
-				 		<option value="5">Procesado</option>
+				 		<option th:each="var: ${listaEstadosLote}"
+									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
+									th:select="${beanBusquedaLote.idEstado}">Estado</option>				 		
 				 	</select>
 				</div>
 				<div class="col-3 form-group">

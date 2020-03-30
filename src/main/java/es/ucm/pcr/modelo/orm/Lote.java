@@ -24,6 +24,7 @@ public class Lote implements java.io.Serializable {
 	private EstadoLote estadoLote;
 	private String numeroLote;
 	private String fechaEnvio;
+	private Integer capacidad;
 	private Set<Muestra> muestras = new HashSet<Muestra>(0);
 
 	public Lote() {
@@ -93,6 +94,15 @@ public class Lote implements java.io.Serializable {
 
 	public void setFechaEnvio(String fechaEnvio) {
 		this.fechaEnvio = fechaEnvio;
+	}
+	
+	@Column(name = "capacidad", nullable = false)
+	public Integer getCapacidad() {
+		return capacidad;
+	}
+
+	public void setCapacidad(Integer capacidad) {
+		this.capacidad = capacidad;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lote")

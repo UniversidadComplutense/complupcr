@@ -6,7 +6,8 @@ public class BeanEstado {
 	
 	public enum TipoEstado {EstadoLote}; // estan solo los de los lotes habria que incluir los estados del resto
 	
-	public enum Estado {PendienteEnvio (1, "PendienteEnvio"), Enviado (2, "Enviado"), Recibido (3, "Recibido");
+	public enum Estado {INICIADO (1, "Iniciado"), ASIGNADO_CENTRO_ANALISIS(2, "Asignado centro análisis"), 
+							ENVIADO_CENTRO_ANALISIS (3, "Enviado centro análisis"), RECIBIDO_CENTRO_ANALISIS (4, "Recibido centro análisis"), PROCESADO_CENTRO_ANALISIS(5, "Procesado centro análisis");
 
 		private int codNum;		
 		public String descripcion;
@@ -76,15 +77,23 @@ public class BeanEstado {
 				this.setTipoEstado(TipoEstado.EstadoLote);
 				switch (codNumEstado) {				
 					case 1: {
-						this.setEstado(Estado.PendienteEnvio);
+						this.setEstado(Estado.INICIADO);
 						break;
 					}
 					case 2: {
-						this.setEstado(Estado.Enviado);
+						this.setEstado(Estado.ASIGNADO_CENTRO_ANALISIS);
 						break;
 					}
 					case 3: {
-						this.setEstado(Estado.Recibido);
+						this.setEstado(Estado.ENVIADO_CENTRO_ANALISIS);
+						break;
+					}
+					case 4: {
+						this.setEstado(Estado.RECIBIDO_CENTRO_ANALISIS);
+						break;
+					}
+					case 5: {
+						this.setEstado(Estado.PROCESADO_CENTRO_ANALISIS);
 						break;
 					}
 				}

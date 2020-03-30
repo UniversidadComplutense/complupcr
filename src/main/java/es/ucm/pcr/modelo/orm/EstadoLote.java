@@ -25,6 +25,11 @@ public class EstadoLote implements java.io.Serializable {
 
 	public EstadoLote() {
 	}
+	
+	public EstadoLote(Integer id) {
+		super();
+		this.id = id;
+	}
 
 	public EstadoLote(String descripcion) {
 		this.descripcion = descripcion;
