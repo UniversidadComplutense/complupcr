@@ -1,13 +1,13 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 23 mar. 2020 23:59:07 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 12:25:35 by Hibernate Tools 5.2.12.Final
 
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -21,40 +21,35 @@ import javax.persistence.Table;
 @Table(name = "rol")
 public class Rol implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5884879270022594310L;
-	private int id;
+	private Integer id;
 	private String nombre;
 	private Set<Usuario> usuarios = new HashSet<Usuario>(0);
 
 	public Rol() {
 	}
 
-	public Rol(int id, String nombre) {
-		this.id = id;
+	public Rol(String nombre) {
 		this.nombre = nombre;
 	}
 
-	public Rol(int id, String nombre, Set<Usuario> usuarios) {
-		this.id = id;
+	public Rol(String nombre, Set<Usuario> usuarios) {
 		this.nombre = nombre;
 		this.usuarios = usuarios;
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	@Column(name = "nombre", nullable = false)
+	@Column(name = "nombre", nullable = false, length = 100)
 	public String getNombre() {
 		return this.nombre;
 	}
@@ -64,9 +59,9 @@ public class Rol implements java.io.Serializable {
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "usuario_rol", 
-		joinColumns = {@JoinColumn(name = "rol_id", referencedColumnName="id", nullable = false) },
-		inverseJoinColumns = {@JoinColumn(name = "usuario_id", referencedColumnName="id", nullable = false) })
+	@JoinTable(name = "usuario_rol", joinColumns = {
+			@JoinColumn(name = "idRol", nullable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "idUsuario", nullable = false, updatable = false) })
 	public Set<Usuario> getUsuarios() {
 		return this.usuarios;
 	}
