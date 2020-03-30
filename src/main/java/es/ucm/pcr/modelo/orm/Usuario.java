@@ -126,13 +126,22 @@ public class Usuario implements java.io.Serializable {
 		this.password = password;
 	}
 
+//	@ManyToMany(fetch = FetchType.LAZY)
+//	@JoinTable(name = "usuario_rol", 
+//	    joinColumns = {@JoinColumn(name = "usuario_id", referencedColumnName="id",nullable = false) }, 
+//	    inverseJoinColumns = {@JoinColumn(name = "rol_id", referencedColumnName="id", nullable = false) })
+//	public Set<Rol> getRols() {
+//		return this.rols;
+//	}
+	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "usuario_rol", 
-	    joinColumns = {@JoinColumn(name = "usuario_id", referencedColumnName="id",nullable = false) }, 
-	    inverseJoinColumns = {@JoinColumn(name = "rol_id", referencedColumnName="id", nullable = false) })
+	   joinColumns = {@JoinColumn(name = "idUsuario", referencedColumnName="id",nullable = false) }, 
+	   inverseJoinColumns = {@JoinColumn(name = "idRol", referencedColumnName="id", nullable = false) })
 	public Set<Rol> getRols() {
-		return this.rols;
+	return this.rols;
 	}
+	
 
 	public void setRols(Set<Rol> rols) {
 		this.rols = rols;

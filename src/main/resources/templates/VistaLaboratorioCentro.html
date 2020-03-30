@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - ALTA LABORATORIO UCM</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<div class="container">
+
+		<form action="#" th:action="@{/gestor/altaLaboratorioCentro}"
+			method="post" th:object="${formBeanLaboratorioCentro}"
+			id="ALTALaboratorioCentro" role="form">
+
+			<h4>ALTA LABORATORIO UCM</h4>
+
+			<div class="form-group">
+				<label class="text_formulario">Laboratorio Ucm</label> <input
+					type="text" class="form-control"
+					th:field="${formBeanLaboratorioCentro.nombre}"
+					th:value="${formBeanLaboratorioCentro.nombre}" required="required" />
+			</div>
+
+			<!--  Los campos id y acción van ocultos en la pantalla 
+			-->
+			<div class="form-group">
+				<label class="text_formulario"></label> <input type="hidden"
+					class="form-control" th:field="${formBeanLaboratorioCentro.accion}"
+					th:value="${formBeanLaboratorioCentro.accion}" />
+			</div>
+			<div class="form-group">
+				<label class="text_formulario"></label> <input type="hidden"
+					class="form-control" th:field="${formBeanLaboratorioCentro.id}"
+					th:value="${formBeanLaboratorioCentro.id}" />
+			</div>
+			<!--  Los campos id y acción van ocultos en la pantalla 
+			-->
+
+			<div class="row align-content-center">
+				<div class="col-4 mx-auto">
+					<button type="submit" class="btn btn-primary">Alta
+						Laboratorio Ucm</button>
+				</div>
+			</div>
+
+		</form>
+
+	</div>
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+
+</body>
+</html>

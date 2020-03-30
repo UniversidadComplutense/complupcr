@@ -9,18 +9,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "laboratorioCentroUcm")
-public class LaboratorioUcm implements java.io.Serializable {
-	
+@Table(name = "laboratorioCentro")
+public class LaboratorioCentro implements java.io.Serializable{
+
 	private Integer id;
 	private String nombre;
-	
-	public LaboratorioUcm() {
+
+	public LaboratorioCentro() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	public LaboratorioUcm(Integer id, String nombre) {
+
+	public LaboratorioCentro(Integer id, String nombre) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -32,22 +32,25 @@ public class LaboratorioUcm implements java.io.Serializable {
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	@Column(name = "nombre", nullable = false, length = 100)
 	public String getNombre() {
 		return nombre;
 	}
+
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+
 	@Override
 	public String toString() {
-		return "LaboratorioUcm [id=" + id + ", nombre=" + nombre + "]";
+		return "LaboratorioCentro [id=" + id + ", nombre=" + nombre + "]";
 	}
 	
 	
-
+	
 }
