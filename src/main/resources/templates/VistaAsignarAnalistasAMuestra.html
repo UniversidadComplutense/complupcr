@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - MUESTRAS</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<div class="container">	
+	
+	<!-- DATOS MUESTRA -->
+		<fieldset id="datosMuestras" class="form-group border p-2" th:disabled="${beanMuestra.id} != null">
+			<legend class="w-auto">Asignaciones Muestra</legend>
+			
+			<div th:if="${mensaje !=null}"
+						class="alert alert-success alert-dismissible fade show"
+						role="alert">
+						<label th:text="${mensaje}"></label>
+						<button type="button" class="close" data-dismiss="alert"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+			</div>
+			
+			<div class="row">
+				<div class="col-6 form-group">
+					<label>Etiqueta: </label>
+				 	<span th:text="${beanMuestra.etiqueta}"></span>				 	
+				</div>	
+				<div class="col-6 form-group">
+					<label>Asignaciones</label><br>
+						<ul>					
+							<li><label>Analistas</label>
+								<ul th:each="analistaLab : ${beanMuestra.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
+									<li><span th:text="${analistaLab.beanUsuario.nom}"></span>; 
+										<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
+										<span th:text="${analistaLab.valoracion}"></span> 
+									</li>
+								</ul>
+							</li>
+							<li><label>Voluntarios</label>
+								<ul th:each="voluntarioLab : ${beanMuestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
+									<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span>; 
+										<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
+										<span th:text="${voluntarioLab.valoracion}"></span> 
+									</li>
+								</ul>
+							</li>
+					</ul>
+				</div>	
+				<!-- 
+				<div class="col-4 form-group">
+					<label>Fecha</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${beanMuestra.fechaEntrada}"  th:value="${beanMuestra.fechaEntrada}" required/>
+				</div>
+				 -->										
+			</div>	
+			<!--  			
+			<div class="row">
+				<div class="col-3 form-group">
+					<label>Lote</label>
+				 	<select class="form-control form-control-sm" th:field="${beanMuestra.idLote}"  th:value="${beanMuestra.idLote}">
+				 		<option value="0">Seleccione</option>
+				 		<option value="1">Lote1</option>
+				 		<option value="2">Lote2</option>
+				 		<option value="3">Lote3</option>
+				 		<option value="4">Lote4</option>
+				 		<option value="5">Lote5</option>
+				 	</select>					
+				</div>	
+			</div>
+			-->
+		</fieldset>
+		
+		
+		
+		
+		<form id="formularioGuardarAsignacion" action="#"
+						th:action="@{/analisis/guardarAsignacion}" method="post"
+						 role="form" th:object="${formBeanGuardarAsignacionMuestra}"> 
+		
+		
+		<!-- ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->
+		<fieldset id="nuevasAsignaciones" class="form-group border p-2">
+						
+			<legend class="w-auto">Nuevas Asignaciones Muestra</legend>
+			<div class="row">		
+						 
+						 <!-- guardo en un hidden el id de la muestra -->
+						 <div class="form-group col-12">
+							<input type="hidden" th:field="*{id}"></input>
+						 </div>				
+								 
+							<!--  	<div class="btn-outline-primary col-6" id="headingOne">
+
+									<input type="checkbox" data-toggle="collapse"
+										data-target="#collapseOne" aria-expanded="true"
+										aria-controls="collapseOne" onChange="loadAnalistas('LAB')">Analistas Laboratorio									
+
+								</div>
+							-->
+							<!--  
+								<div id="collapseOne" class="collapse hide"
+									aria-labelledby="headingOne">
+							 -->	
+											
+								<div id=analistasLab class="form-group  col-6">
+									<label>Analistas laboratorio: </label> 
+									<select
+										class="form-control selectpicker" multiple
+										data-live-search="true" data-actions-box="true"
+										id="analistasLabSeleccionado" th:field="*{listaIdsAnalistasLabSeleccionados}"
+										title="Todos los analistas">
+										<option th:each="var: ${beanListadoAnalistaLab}"
+											th:value="${var.id}" th:text="${var.nom}"></option>
+									</select>
+								</div>
+															
+								<div id=analistasVol class="form-group  col-6">
+									<label>Analistas voluntarios: </label> 
+									<select
+										class="form-control selectpicker" multiple
+										data-live-search="true" data-actions-box="true"
+										id="analistasLabSeleccionado" th:field="*{listaIdsAnalistasVolSeleccionados}"
+										title="Todos los voluntarios">
+										<option th:each="var: ${beanListadoAnalistaVol}"
+											th:value="${var.id}" th:text="${var.nom}"></option>
+									</select>
+								</div>
+							
+	
+	</div>
+		
+		</fielset>
+		<!-- botones cancelar y guardar asignacion -->
+		<div class="row justify-content-center mt-4">		
+			<div class="col-1">							
+				<a th:href="@{/analisis/}" class="btn btn-secondary ">Cancelar</a>
+			</div>
+			<div class="col-1">
+				<input type="submit" class="btn btn-primary "
+					value="Guardar asignacion"></input>
+			</div>		
+		</div>
+		
+		<!-- ACCCIONES Tere -->
+		<!-- <div class="row justify-content-center mt-3">
+			<div class="col-1">
+				<a th:href="@{/centroSalud/muestra/}" class="btn btn-secondary">Volver</a>				
+			</div>
+			<div class="col-1">
+				<button th:disabled="${beanMuestra.id} != null" type="submit" class="btn btn-secondary">Guardar</button>
+			</div>
+		</div>	 -->
+		
+	</form>	
+	
+	
+	<!-- FIN ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->	
+		
+		
+
+	
+	
+	</div>
+	
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	
+	<object th:include="fragmentos :: scriptsBootstrap" th:remove="tag"></object>
+	
+	<script th:src="@{/js/analisis.js}"></script>
+    
+</body>
+</html>
