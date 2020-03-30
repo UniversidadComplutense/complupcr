@@ -8,6 +8,7 @@
 <body>
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
 	
 	<form action="#" th:action="@{/centroSalud/lote/list}" method="post" th:object="${beanBusquedaLote}" id="formBusqueda" role="form">
@@ -16,11 +17,11 @@
 		<fieldset id="datosLote" class="form-group border p-2">
 			<legend class="w-auto">Lote</legend>
 			<div class="row">
-				<div class="col-4 form-group">
+				<div class="col-3 form-group">
 					<label>Código</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="${beanBusquedaLote.numLote}"  th:value="${beanBusquedaLote.numLote}" maxlength="100"/>
 				</div>	
-				<div class="col-4 form-group">
+				<div class="col-3 form-group">
 					<label>Laboratorio</label>
 				 	<select class="form-control form-control-sm" th:field="${beanBusquedaLote.idLaboratorio}"  th:value="${beanBusquedaLote.idLaboratorio}">
 				 		<option value="">Seleccione</option>
@@ -40,6 +41,14 @@
 				 		<option value="4">Recibido</option>
 				 		<option value="5">Procesado</option>
 				 	</select>
+				</div>
+				<div class="col-3 form-group">
+					<label >Fecha envío</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaLote.fechaEnvioIni}"  th:value="${beanBusquedaLote.fechaEnvioIni}"/>
+				</div>
+				<div class="col-3 form-group">
+					<label >a</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaLote.fechaEnvioFin}"  th:value="${beanBusquedaLote.fechaEnvioFin}"/>
 				</div>							
 			</div>
 		</fieldset>
@@ -62,6 +71,7 @@
 	      				<th scope="col">Código</th>
 						<th scope="col">Laboratorio</th>
 						<th scope="col">Estado</th>
+						<th scope="col">Fecha envío</th>
 						<th scope="col">Numero muestras</th>
 						<th scope="col">Muestras</th>
 						<th scope="col">Modificar</th>
@@ -72,6 +82,7 @@
 						<td><span th:text="${lote.numLote}"></span></td>					
 						<td><span th:text="${lote.descLaboratorio}"></span></td>
 						<td><span th:text="${lote.descEstado}"></span></td>
+						<td><span th:text="${#dates.format(lote.fechaEnvio, 'dd/MM/yyyy')}"></span></td>
 						<td><span th:text="${#lists.size(lote.muestras)}"></span></td>
 						<td>
 							<div th:if="${#lists.size(lote.muestras) == 0}">
@@ -103,22 +114,20 @@
 									    				<tr>
 										      				<th scope="col">Nombre</th>
 															<th scope="col">NHC</th>
-															<th scope="col">Etiqueta</th>
-															<th scope="col">Ref. interna</th>
 															<th scope="col">Fecha envío</th>
 															<th scope="col">Fecha resultado</th>
 															<th scope="col">Resultado</th>
+															<th scope="col">Notificado</th>
 														</tr>
 													</thead>
 													<tbody>
 														<tr th:if="${lote.muestras != null}" th:each="muestra : ${lote.muestras}">
 															<td><span th:text="${muestra.nombrePaciente}"></span></td>					
-															<td><span th:text="${muestra.nhcPaciente}"></span></td>
-															<td><span th:text="${muestra.etiquetaMuestra}"></span></td>
 															<td><span th:text="${muestra.refInternaMuestra}"></span></td>
 															<td><span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/mm/yyyy')}"></span></td>
 															<td><span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/mm/yyyy')}"></span></td>
-															<td><span th:text="${muestra.estadoMuestra}"></span></td>																	
+															<td><span th:text="${muestra.estadoMuestra}"></span></td>		
+															<td><span th:text="${muestra.notificado} ? 'Sí' : 'No'"></span></td>															
 														</tr>		
 													</tbody>
 												</table>
@@ -146,6 +155,7 @@
 	</div>
 	
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
 
 </body>
 </html>

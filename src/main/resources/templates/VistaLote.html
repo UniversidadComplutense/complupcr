@@ -10,119 +10,40 @@
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<div class="container">	
 	
-	<form action="#" th:action="@{/centroSalud/muestra/guardar}" method="post" th:object="${beanMuestra}" id="formGuardar" role="form">
-		<fieldset id="datosPaciente" class="form-group border p-2" th:disabled="!${editable}">
+	<form action="#" th:action="@{/centroSalud/lote/guardar}" method="post" th:object="${beanLote}" id="formGuardar" role="form">
+		<fieldset id="datosLote" class="form-group border p-2" th:disabled="!${editable}">
 			<!-- DATOS PACIENTE -->
-			<legend class="w-auto">Paciente</legend>
+			<legend class="w-auto">Lote</legend>
 			<div class="row">
 				<div class="col-4 form-group">
-					<label>Nombre</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nombreApellidos}"  th:value="${beanMuestra.nombreApellidos}" required maxlength="50"/>
+					<label>Código</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanLote.numLote}"  th:value="${beanLote.numLote}" required maxlength="50"/>
 				</div>					
-				<div class="col-4 form-group">
-					<label>Correo</label>
-				 	<input type="email" class="form-control form-control-sm" th:field="${beanMuestra.correo}"  th:value="${beanMuestra.correo}" required maxlength="50" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
-				</div>
-				
-				<div class="col-4 form-group">
-					<label>Teléfono</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.telefono}"  th:value="${beanMuestra.telefono}" pattern="[0-9]{9}" maxlength="9" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required />
-				</div>					
-			</div>
-			<div class="row">	
-				<div class="col-4 form-group">
-					<label>NHC</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nhc}"  th:value="${beanMuestra.nhc}" required maxlength="20"/>
-				</div>											
-			</div>
-			<div class="row">	
-				<div class="col-4 form-group">				
-					<label>Recoger datos para notificar</label><br>
-					<label><input type="radio" name="recogerDatosNotif" id="recogerDatosNotif1" th:field="${beanMuestra.recogerDatosNotif}" value="true">Sí</label>
-					<label><input type="radio" name="recogerDatosNotif" id="recogerDatosNotif2" th:field="${beanMuestra.recogerDatosNotif}" value="false"></input>No</label>					  
-				</div>	
-				<div class="col-4 form-group">
-					<label>Notificar paciente automáticamente</label><br>
-					<label><input type="radio" name="avisosAuto" id="avisosAuto1" th:field="${beanMuestra.avisosAuto}" value="true">Sí</label>
-					<label><input type="radio" name="avisosAuto" id="avisosAuto2" th:field="${beanMuestra.avisosAuto}" value="false"></input>No</label>	
-				</div>	
-				<div class="col-4 form-group">
-					<label>Avisar al paciente por sms</label><br>
-					<label><input type="radio" name="avisoSms" id="avisoSms1" th:field="${beanMuestra.avisoSms}" value="true">Sí</label>
-					<label><input type="radio" name="avisoSms" id="avisoSms2" th:field="${beanMuestra.avisoSms}" value="false"></input>No</label>	
-				</div>								
-			</div>			
+				<div class="col-3 form-group">
+					<label>Laboratorio</label>
+				 	<select class="form-control form-control-sm" th:field="${beanLote.idLaboratorio}"  th:value="${beanLote.idLaboratorio}" required>
+				 		<option value="">Seleccione</option>
+				 		<option value="1">LAB UCM</option>
+				 		<option value="2">LAB 2</option>
+				 	</select>
+				</div>				
+			</div>					
 		</fieldset>
 		
-		<!-- DATOS MUESTRA -->
-		<fieldset id="datosMuestras" class="form-group border p-2" th:disabled="!${editable}">
-			<legend class="w-auto">Muestra</legend>
-			<div class="row">
-				<div class="col-4 form-group">
-					<label>Etiqueta</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanMuestra.etiqueta}"  th:value="${beanMuestra.etiqueta}" required/>
-				 	<label class="text-warning" th:if="${#fields.hasErrors('etiqueta')}" th:errors="${beanMuestra.etiqueta}"></label>
-				</div>	
-				<div class="col-4 form-group">
-					<label>Tipo muestra</label><br>
-				 	<label><input type="radio" name="tipoMuestra" id="tipoMuestra1" th:field="${beanMuestra.tipoMuestra}" value="N" required>Nariz</label>
-					<label><input type="radio" name="tipoMuestra" id="tipoMuestra2" th:field="${beanMuestra.tipoMuestra}" value="B" required></input>Boca</label>
-				</div>	
-				<div class="col-4 form-group">
-					<label>Fecha</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanMuestra.fechaEntrada}"  th:value="${beanMuestra.fechaEntrada}" required/>
-				</div>										
-			</div>				
-			<div class="row">
-				<div class="col-3 form-group">
-					<label>Lote</label>
-				 	<select class="form-control form-control-sm" th:field="${beanMuestra.idLote}"  th:value="${beanMuestra.idLote}">
-				 		<option value="0">Seleccione</option>
-				 		<option value="1">Lote1</option>
-				 		<option value="2">Lote2</option>
-				 		<option value="3">Lote3</option>
-				 		<option value="4">Lote4</option>
-				 		<option value="5">Lote5</option>
-				 	</select>					
-				</div>	
-			</div>
-			
-			<!-- SI LA MUESTRA NO SE PUEDE EDITAR SE MUESTRAN DATOS DE RESULTADOS DE LAS MUESTRAS Y NOTIFICAION -->
-			<div class="row" th:if="!${editable}">
-				<div class="col-4 form-group">
-					<label>Resultado</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanMuestra.resultado}"  th:value="${beanMuestra.resultado}" required/>				 	
-				</div>	
-				<div class="col-4 form-group">
-					<label>Fecha Resultado</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanMuestra.fechaResultado}"  th:value="${beanMuestra.fechaResultado}" required/>
-				</div>
-				<div class="col-4 form-group">
-					<label>Fecha Notificacion</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanMuestra.fechaNotificacion}"  th:value="${beanMuestra.fechaNotificacion}" required/>
-				</div>	
-			</div>
-		</fieldset>
 
 		<!-- ACCCIONES -->
 		<div class="row justify-content-center mt-3">
 			<div class="col-2">
-				<a th:href="@{/centroSalud/muestra/}" class="btn btn-secondary">Volver</a>				
+				<a th:href="@{/centroSalud/lote/}" class="btn btn-secondary">Volver</a>				
 			</div>
 			<div class="col-2">
 				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>
-			</div>
-			<div class="col-2" th:if="${notificable}">
-				<a th:href="@{/centroSalud/muestra/notificarTelefono/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Ya he llamado</a>
-			</div>
-			<div class="col-2" th:if="${notificable}">
-				<a th:href="@{/centroSalud/muestra/notificarCorreo/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Enviar correo</a>
-			</div>
+			</div>			
 		</div>					
 	</form>
 
 	</div>
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
-    
+    <object th:replace="fragmentos :: scripts" th:remove="tag"></object>
 </body>
 </html>

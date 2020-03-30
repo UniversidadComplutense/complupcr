@@ -5,6 +5,7 @@ public class LoteCentroBean {
 	private String numLote;
 	private BeanEstado estado;
 	private CentroBean centroProcedencia;
+	private Integer idLaboratorio;
 
 	public Integer getId() {
 		return id;
@@ -36,6 +37,14 @@ public class LoteCentroBean {
 
 	public void setCentroProcedencia(CentroBean centroProcedencia) {
 		this.centroProcedencia = centroProcedencia;
+	}
+
+	public Integer getIdLaboratorio() {
+		return idLaboratorio;
+	}
+
+	public void setIdLaboratorio(Integer idLaboratorio) {
+		this.idLaboratorio = idLaboratorio;
 	}
 
 }

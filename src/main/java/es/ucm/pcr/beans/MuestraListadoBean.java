@@ -4,6 +4,7 @@ public class MuestraListadoBean extends MuestraBusquedaBean {
 
 	private Integer id;
 	private String codNumLote;
+	private boolean notificado;
 
 	public MuestraListadoBean() {
 		super();
@@ -23,6 +24,14 @@ public class MuestraListadoBean extends MuestraBusquedaBean {
 
 	public void setCodNumLote(String codNumLote) {
 		this.codNumLote = codNumLote;
+	}
+
+	public boolean isNotificado() {
+		return notificado;
+	}
+
+	public void setNotificado(boolean notificado) {
+		this.notificado = notificado;
 	}
 
 }

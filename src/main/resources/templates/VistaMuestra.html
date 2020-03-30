@@ -8,6 +8,7 @@
 <body>
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
 	
 	<form action="#" th:action="@{/centroSalud/muestra/guardar}" method="post" th:object="${beanMuestra}" id="formGuardar" role="form">
@@ -113,16 +114,16 @@
 				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>
 			</div>
 			<div class="col-2" th:if="${notificable}">
-				<a th:href="@{/centroSalud/muestra/notificarTelefono/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Ya he llamado</a>
+				<a th:disabled="${beanMuestra.avisosAuto}" th:href="@{/centroSalud/muestra/notificarTelefono/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Ya he llamado</a>
 			</div>
 			<div class="col-2" th:if="${notificable}">
-				<a th:href="@{/centroSalud/muestra/notificarCorreo/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Enviar correo</a>
+				<a th:disabled="${beanMuestra.avisosAuto}" th:href="@{/centroSalud/muestra/notificarCorreo/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Enviar correo</a>
 			</div>
 		</div>					
 	</form>
 
 	</div>
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
-    
+    <object th:replace="fragmentos :: scripts" th:remove="tag"></object>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package es.ucm.pcr.beans;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class LoteListadoBean {
@@ -9,6 +10,7 @@ public class LoteListadoBean {
 	private String numLote;
 	private String descLaboratorio;
 	private String descEstado;
+	private Date fechaEnvio;
 
 	private List<MuestraListadoBean> muestras;
 
@@ -42,6 +44,14 @@ public class LoteListadoBean {
 
 	public void setDescEstado(String descEstado) {
 		this.descEstado = descEstado;
+	}
+
+	public Date getFechaEnvio() {
+		return fechaEnvio;
+	}
+
+	public void setFechaEnvio(Date fechaEnvio) {
+		this.fechaEnvio = fechaEnvio;
 	}
 
 	public List<MuestraListadoBean> getMuestras() {

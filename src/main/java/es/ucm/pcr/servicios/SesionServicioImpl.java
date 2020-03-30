@@ -78,11 +78,9 @@ public class SesionServicioImpl implements SesionServicio {
 //	Centro de Salud	
 		if (this.tieneRol("ROLE_ADMIN") || this.tieneRol("CENTROSALUD")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Nueva muestra", "/centroSalud/muestra/nueva", null);
+			opcionSecundaria = new MenuBean("Gestión muestras", "/centroSalud/muestra", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Buscar resultados", "/centroSalud/muestra/list", null);
-			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Revisar lotes", "", null);
+			opcionSecundaria = new MenuBean("Gestión lotes", "/centroSalud/lote", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Centro de salud", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);

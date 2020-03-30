@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -96,6 +97,21 @@ public class MuestraControlador {
 		
 		MuestraCentroBean beanMuestra = getBeanCentro(id.intValue());
 	
+		// TODO - consulta/modificacion
+		//vista.addObject("editable", muestraEditable(beanMuestra));
+		vista.addObject("editable", false);
+		vista.addObject("notificable", muestraNotificable(beanMuestra));
+		vista.addObject("beanMuestra", beanMuestra);
+		return vista;
+	}
+	
+	@RequestMapping(value="/muestra/modificar", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	public ModelAndView modificarMuestras(HttpSession session, @RequestParam(value = "id", required = true) Integer id) throws Exception {
+		ModelAndView vista = new ModelAndView("VistaMuestra");
+		
+		MuestraCentroBean beanMuestra = getBeanCentro(id.intValue());
+	
 		vista.addObject("editable", muestraEditable(beanMuestra));
 		vista.addObject("notificable", muestraNotificable(beanMuestra));
 		vista.addObject("beanMuestra", beanMuestra);
@@ -112,7 +128,7 @@ public class MuestraControlador {
 			return vista;			
 		} else {
 			// TODO - GUARDAR
-			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/", true));
+			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/" + beanMuestra.getId(), true));
 			return respuesta;
 		}
 	}
@@ -172,7 +188,7 @@ public class MuestraControlador {
 			bean.setEstadoMuestra("Enviado");
 		}
 		if (i > 5) {
-			bean.setEstadoMuestra("Resuelta");
+			bean.setEstadoMuestra("Resuelta");			
 		}
 		bean.setCodNumLote("codLote-" + i);
 		
@@ -194,6 +210,9 @@ public class MuestraControlador {
 		}
 		if (i > 5) {
 			bean.setResultado("Resuelta");
+			if (i > 7) {
+				bean.setAvisosAuto(true);
+			}
 		}
 		bean.setTipoMuestra("N");
 		
