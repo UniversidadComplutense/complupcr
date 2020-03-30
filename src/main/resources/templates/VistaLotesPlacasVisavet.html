@@ -62,9 +62,7 @@
 		<div id="capaResultados" 
 			class="row formPnl1">
 		
-			
-			
-					<table class="col-xs-12 table" th:id="tablaResultadosLotes" >
+				<table class="col-xs-12 table" th:id="tablaResultadosLotes" >
 						 <thead class="thead-light">
 				<tr>
 				
@@ -100,7 +98,18 @@
 								
 								</td>
 								</tr>
-								<tr><td colspan="5">HOLLLLL</td></tr>
+								<tr th:id="muestrasLotes+ ${count.index}"><td colspan="5">
+								<table class="table"><thead class="thead-light"><tr> <th>Tipo Hisopo</th><th>Ref.Envio</th><th>Ref.Interna</th>
+								</tr></thead>
+								<tbody>
+								<tr th:id="trMuestra+ ${countM.index}"   th:each="unaMuestra,countM : ${unResultad.listaMuestras}">
+								<td width="2%">
+								<span th:text="${unaMuestra.tipoMuestra}"></span>
+								</td>
+								</tr>
+								</tbody>
+								</table>
+								</td></tr>
 								</table>
 					</tr>	
 					
