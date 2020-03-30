@@ -6,4 +6,5 @@ import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 
 public interface LaboratorioCentroRepositorio extends JpaRepository<LaboratorioCentro, Integer>{
 
+
 }

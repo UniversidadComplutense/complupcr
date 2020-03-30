@@ -28,7 +28,7 @@ public class LaboratorioControlador {
 	@RequestMapping(value="AltaLaboratorio", method=RequestMethod.POST)	
 	public ModelAndView grabarAltaLaboratorio ( @ModelAttribute("formBeanLaboratorio") BeanLaboratorio beanLaboratorio, HttpSession session) throws Exception {
 
-		System.out.println("Laboratorio a grabar: " + beanLaboratorio.toString());
+//		System.out.println("Laboratorio a grabar: " + beanLaboratorio.toString());
 		
 		// Volvemos a grabar mas centros
 		ModelAndView vista = new ModelAndView(new RedirectView("AltaLaboratorio",true));	

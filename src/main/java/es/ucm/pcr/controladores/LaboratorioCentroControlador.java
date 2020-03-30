@@ -17,11 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
-import es.ucm.pcr.beans.BeanRol;
-import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
-import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
+import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 
 @Controller
 public class LaboratorioCentroControlador {
@@ -29,19 +27,22 @@ public class LaboratorioCentroControlador {
 	@Autowired
 	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
 	
+	@Autowired
+	LaboratorioCentroServicio laboratorioCentroServicio;
+	
 	//	Muestra una lista ordenada ap1, ap2,nombre con los laboratorioCentros
 	// Punto de entrada a la gestión de laboratorioCentros
 	@RequestMapping(value="/gestor/listaLaboratorioCentro", method=RequestMethod.GET)
 	public ModelAndView GestionLaboratorioCentro(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionLaboratorioCentro");
-		
-		System.out.println("estro lb ucm");
 	
 		// cargo todos los laboratorioCentros de BBDD
 		List<BeanLaboratorioCentro> listaLaboratorioCentro = new ArrayList<BeanLaboratorioCentro>();
 		for (LaboratorioCentro laboratorioCentro: laboratorioCentroRepositorio.findAll())
 		{
-			listaLaboratorioCentro.add(new BeanLaboratorioCentro(laboratorioCentro.getId(), laboratorioCentro.getNombre(), "L"));
+			listaLaboratorioCentro.add(new BeanLaboratorioCentro(
+					laboratorioCentro.getId(), 
+					laboratorioCentro.getNombre(), "L"));
 		}
 		//	Ordeno por ap1, ap2, nombre
 		Collections.sort(listaLaboratorioCentro);
@@ -70,18 +71,21 @@ public class LaboratorioCentroControlador {
 			// Damos de alta nuevo laboratorioCentro
 			if (beanLaboratorioCentro.getAccion().equals("A"))
 			{
-				LaboratorioCentro laboratorioCentro = new LaboratorioCentro();
-				laboratorioCentro.setNombre(beanLaboratorioCentro.getNombre());
-				laboratorioCentroRepositorio.save(laboratorioCentro);
+//				LaboratorioCentro laboratorioCentro = new LaboratorioCentro();
+//				laboratorioCentro.setNombre(beanLaboratorioCentro.getNombre());
+//				laboratorioCentroRepositorio.save(laboratorioCentro);
+				laboratorioCentroRepositorio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
+				
 			}
-			// Modificamos laboratorioCentro existente, menos mail
+			// Modificamos laboratorioCentro existente
 			if (beanLaboratorioCentro.getAccion().equals("M"))
 			{	
 				// Buscamos el laboratorioCentro a modificar, y volcamos los datos recogidos por el formulario
 				Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroRepositorio.findById(beanLaboratorioCentro.getId());
 				// añadimos campos del formulario
-				laboratorioCentro.get().setNombre(beanLaboratorioCentro.getNombre());
-				laboratorioCentroRepositorio.save(laboratorioCentro.get());
+//				laboratorioCentro.get().setNombre(beanLaboratorioCentro.getNombre());
+//				laboratorioCentroRepositorio.save(laboratorioCentro.get());
+				laboratorioCentroRepositorio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 			}
 
 			// Volvemos a grabar mas laboratorioCentro
@@ -98,9 +102,11 @@ public class LaboratorioCentroControlador {
 			// Busco el laboratorioCentro a modificar
 			Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroRepositorio.findById(idLaboratorioCentro);
 			// cargo el beanLaboratorioCentro con lo datos del laboratorioCentro a modificar
-			BeanLaboratorioCentro beanLaboratorioCentro = new BeanLaboratorioCentro();
-			beanLaboratorioCentro.setId(laboratorioCentro.get().getId());
-			beanLaboratorioCentro .setNombre(laboratorioCentro.get().getNombre());
+//			BeanLaboratorioCentro beanLaboratorioCentro = new BeanLaboratorioCentro();
+//			beanLaboratorioCentro.setId(laboratorioCentro.get().getId());
+//			beanLaboratorioCentro.setNombre(laboratorioCentro.get().getNombre());
+			 
+			BeanLaboratorioCentro beanLaboratorioCentro = laboratorioCentroServicio.mapeoEntidadBeanLaboratorioCentro(laboratorioCentro.get());
 			
 			// le indicamos la acción a relizar: M modificación de un laboratorioCentro
 			beanLaboratorioCentro.setAccion("M");

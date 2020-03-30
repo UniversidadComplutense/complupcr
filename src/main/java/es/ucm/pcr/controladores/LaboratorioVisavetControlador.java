@@ -36,7 +36,7 @@ public class LaboratorioVisavetControlador {
 	public ModelAndView GestionLaboratorioVisavet(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionLaboratorioVisavet");
 		
-		System.out.println("estro lb ucm");
+//		System.out.println("estro lb ucm");
 	
 		// cargo todos los laboratorioVisavets de BBDD
 		List<BeanLaboratorioVisavet> listaLaboratorioVisavet = new ArrayList<BeanLaboratorioVisavet>();
