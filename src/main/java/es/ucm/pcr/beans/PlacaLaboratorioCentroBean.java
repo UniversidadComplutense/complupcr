@@ -5,27 +5,19 @@ import java.util.List;
 public class PlacaLaboratorioCentroBean {
 
 	private String id;
-	private String tipo;
 	private String capacidad;
 	private EstadoBean estado;
+	private List<PlacaLaboratorioVisavetBean> placasVisavet;
 	private List<DocumentoBean> documentos;
+	
+	
 
-	
-	
 	public String getId() {
 		return id;
 	}
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
 	}
 
 	public String getCapacidad() {
@@ -42,6 +34,14 @@ public class PlacaLaboratorioCentroBean {
 
 	public void setEstado(EstadoBean estado) {
 		this.estado = estado;
+	}
+
+	public List<PlacaLaboratorioVisavetBean> getPlacasVisavet() {
+		return placasVisavet;
+	}
+
+	public void setPlacasVisavet(List<PlacaLaboratorioVisavetBean> placasVisavet) {
+		this.placasVisavet = placasVisavet;
 	}
 
 	public List<DocumentoBean> getDocumentos() {

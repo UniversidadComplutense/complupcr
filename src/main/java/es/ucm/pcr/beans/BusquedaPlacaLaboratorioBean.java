@@ -1,27 +1,22 @@
 package es.ucm.pcr.beans;
 
+import java.util.List;
+
 public class BusquedaPlacaLaboratorioBean {
 
-	private String id;
-	private String tipo;
+	private String idPlaca;
 	private String capacidad;
-	private EstadoBean estado;
-
+	private List<EstadoBean> estadoPlaca;
+	private String estadoSeleccionado;
 	
-	public String getId() {
-		return id;
+	
+
+	public String getIdPlaca() {
+		return idPlaca;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void setIdPlaca(String idPlaca) {
+		this.idPlaca = idPlaca;
 	}
 
 	public String getCapacidad() {
@@ -32,13 +27,20 @@ public class BusquedaPlacaLaboratorioBean {
 		this.capacidad = capacidad;
 	}
 
-	public EstadoBean getEstado() {
-		return estado;
+	public List<EstadoBean> getEstadoPlaca() {
+		return estadoPlaca;
 	}
 
-	public void setEstado(EstadoBean estado) {
-		this.estado = estado;
+	public void setEstadoPlaca(List<EstadoBean> estadoPlaca) {
+		this.estadoPlaca = estadoPlaca;
 	}
 
+	public String getEstadoSeleccionado() {
+		return estadoSeleccionado;
+	}
+
+	public void setEstadoSeleccionado(String estadoSeleccionado) {
+		this.estadoSeleccionado = estadoSeleccionado;
+	}
 
 }

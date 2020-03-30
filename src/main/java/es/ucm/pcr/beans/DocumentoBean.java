@@ -3,11 +3,11 @@ package es.ucm.pcr.beans;
 public class DocumentoBean {
 
 	private Integer id;
-	private String tipoDocumento;
 	private String nombreDocumento;
+	private String tipoDocumento;
 	private String tamanioDocumento;
-	private String tipoContenido;
-	private byte[] elDocumento;
+	private String fechaDocumento;
+	private byte[] fichero;
 
 	
 	public Integer getId() {
@@ -18,20 +18,20 @@ public class DocumentoBean {
 		this.id = id;
 	}
 
-	public String getTipoDocumento() {
-		return tipoDocumento;
-	}
-
-	public void setTipoDocumento(String tipoDocumento) {
-		this.tipoDocumento = tipoDocumento;
-	}
-
 	public String getNombreDocumento() {
 		return nombreDocumento;
 	}
 
 	public void setNombreDocumento(String nombreDocumento) {
 		this.nombreDocumento = nombreDocumento;
+	}
+
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
 	}
 
 	public String getTamanioDocumento() {
@@ -42,20 +42,20 @@ public class DocumentoBean {
 		this.tamanioDocumento = tamanioDocumento;
 	}
 
-	public String getTipoContenido() {
-		return tipoContenido;
+	public String getFechaDocumento() {
+		return fechaDocumento;
 	}
 
-	public void setTipoContenido(String tipoContenido) {
-		this.tipoContenido = tipoContenido;
+	public void setFechaDocumento(String fechaDocumento) {
+		this.fechaDocumento = fechaDocumento;
 	}
 
-	public byte[] getElDocumento() {
-		return elDocumento;
+	public byte[] getFichero() {
+		return fichero;
 	}
 
-	public void setElDocumento(byte[] elDocumento) {
-		this.elDocumento = elDocumento;
+	public void setFichero(byte[] fichero) {
+		this.fichero = fichero;
 	}
 
 }

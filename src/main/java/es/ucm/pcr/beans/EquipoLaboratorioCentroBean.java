@@ -1,24 +1,19 @@
 package es.ucm.pcr.beans;
 
-import java.util.List;
-
 public class EquipoLaboratorioCentroBean {
 
-	private String id;
+	private String idEquipo;
 	private String nombre;
-	private String universidad;
-	private List<PlacaLaboratorioCentroBean> placasInternas;
-	private List<PlacaLaboratorioVisavetBean> placasRecibidas;
-	private List<EquipoLaboratorioCentroBean> equipos;
+	private String idLaboratorio;
+	private String capacidad;
 
 	
-	
-	public String getId() {
-		return id;
+	public String getIdEquipo() {
+		return idEquipo;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setIdEquipo(String idEquipo) {
+		this.idEquipo = idEquipo;
 	}
 
 	public String getNombre() {
@@ -29,36 +24,20 @@ public class EquipoLaboratorioCentroBean {
 		this.nombre = nombre;
 	}
 
-	public String getUniversidad() {
-		return universidad;
+	public String getIdLaboratorio() {
+		return idLaboratorio;
 	}
 
-	public void setUniversidad(String universidad) {
-		this.universidad = universidad;
+	public void setIdLaboratorio(String idLaboratorio) {
+		this.idLaboratorio = idLaboratorio;
 	}
 
-	public List<PlacaLaboratorioCentroBean> getPlacasInternas() {
-		return placasInternas;
+	public String getCapacidad() {
+		return capacidad;
 	}
 
-	public void setPlacasInternas(List<PlacaLaboratorioCentroBean> placasInternas) {
-		this.placasInternas = placasInternas;
-	}
-
-	public List<PlacaLaboratorioVisavetBean> getPlacasRecibidas() {
-		return placasRecibidas;
-	}
-
-	public void setPlacasRecibidas(List<PlacaLaboratorioVisavetBean> placasRecibidas) {
-		this.placasRecibidas = placasRecibidas;
-	}
-
-	public List<EquipoLaboratorioCentroBean> getEquipos() {
-		return equipos;
-	}
-
-	public void setEquipos(List<EquipoLaboratorioCentroBean> equipos) {
-		this.equipos = equipos;
+	public void setCapacidad(String capacidad) {
+		this.capacidad = capacidad;
 	}
 
 }

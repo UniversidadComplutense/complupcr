@@ -7,8 +7,7 @@ public class LaboratorioCentroBean {
 	private String id;
 	private String nombre;
 	private String universidad;
-	private List<PlacaLaboratorioCentroBean> placasInternas;
-	private List<PlacaLaboratorioVisavetBean> placasRecibidas;
+	private List<PlacaLaboratorioCentroBean> placas;
 	private List<EquipoLaboratorioCentroBean> equipos;
 
 	
@@ -36,20 +35,12 @@ public class LaboratorioCentroBean {
 		this.universidad = universidad;
 	}
 
-	public List<PlacaLaboratorioCentroBean> getPlacasInternas() {
-		return placasInternas;
+	public List<PlacaLaboratorioCentroBean> getPlacas() {
+		return placas;
 	}
 
-	public void setPlacasInternas(List<PlacaLaboratorioCentroBean> placasInternas) {
-		this.placasInternas = placasInternas;
-	}
-
-	public List<PlacaLaboratorioVisavetBean> getPlacasRecibidas() {
-		return placasRecibidas;
-	}
-
-	public void setPlacasRecibidas(List<PlacaLaboratorioVisavetBean> placasRecibidas) {
-		this.placasRecibidas = placasRecibidas;
+	public void setPlacas(List<PlacaLaboratorioCentroBean> placas) {
+		this.placas = placas;
 	}
 
 	public List<EquipoLaboratorioCentroBean> getEquipos() {

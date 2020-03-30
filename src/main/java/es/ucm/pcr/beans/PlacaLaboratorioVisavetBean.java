@@ -5,11 +5,11 @@ import java.util.List;
 public class PlacaLaboratorioVisavetBean {
 
 	private String id;
-	private String tipo;
 	private String capacidad;
 	private EstadoBean estado;
+	private List<LoteBean> lotes;
 	private List<DocumentoBean> documentos;
-
+	
 	
 	public String getId() {
 		return id;
@@ -17,14 +17,6 @@ public class PlacaLaboratorioVisavetBean {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
 	}
 
 	public String getCapacidad() {
@@ -41,6 +33,14 @@ public class PlacaLaboratorioVisavetBean {
 
 	public void setEstado(EstadoBean estado) {
 		this.estado = estado;
+	}
+
+	public List<LoteBean> getLotes() {
+		return lotes;
+	}
+
+	public void setLotes(List<LoteBean> lotes) {
+		this.lotes = lotes;
 	}
 
 	public List<DocumentoBean> getDocumentos() {
