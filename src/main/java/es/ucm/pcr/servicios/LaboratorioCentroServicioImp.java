@@ -1,5 +1,7 @@
 package es.ucm.pcr.servicios;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,16 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio {
 
 	@Autowired
 	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
-
+	
+	
 	@Override
-	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda,
+	public List<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public Page<PlacaLaboratorioCentroBean> buscarPlacasPaginable(BusquedaPlacaLaboratorioBean criteriosBusqueda,
 			Pageable pageable) {
 		// TODO Auto-generated method stub
 		return null;
