@@ -1,11 +1,12 @@
 package es.ucm.pcr.beans;
 
-public class BeanListadoMuestra extends BeanBusquedaMuestra {
+public class MuestraListadoBean extends MuestraBusquedaBean {
 
 	private Integer id;
 	private String codNumLote;
+	private boolean notificado;
 
-	public BeanListadoMuestra() {
+	public MuestraListadoBean() {
 		super();
 	}
 
@@ -23,6 +24,14 @@ public class BeanListadoMuestra extends BeanBusquedaMuestra {
 
 	public void setCodNumLote(String codNumLote) {
 		this.codNumLote = codNumLote;
+	}
+
+	public boolean isNotificado() {
+		return notificado;
+	}
+
+	public void setNotificado(boolean notificado) {
+		this.notificado = notificado;
 	}
 
 }

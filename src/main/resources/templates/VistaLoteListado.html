@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - LOTES</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+	<div class="container">	
+	
+	<form action="#" th:action="@{/centroSalud/lote/list}" method="post" th:object="${beanBusquedaLote}" id="formBusqueda" role="form">
+		
+		<!-- CRITERIOS BUSQUEDA LOTE -->
+		<fieldset id="datosLote" class="form-group border p-2">
+			<legend class="w-auto">Lote</legend>
+			<div class="row">
+				<div class="col-3 form-group">
+					<label>Código</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanBusquedaLote.numLote}"  th:value="${beanBusquedaLote.numLote}" maxlength="100"/>
+				</div>	
+				<div class="col-3 form-group">
+					<label>Laboratorio</label>
+				 	<select class="form-control form-control-sm" th:field="${beanBusquedaLote.idLaboratorio}"  th:value="${beanBusquedaLote.idLaboratorio}">
+				 		<option value="">Seleccione</option>
+				 		<option value="1">LAB UCM</option>
+				 		<option value="2">LAB 2</option>
+				 	</select>
+				</div>
+			</div>
+			<div class="row">			
+				<div class="col-3 form-group">
+					<label>Estado</label>
+				 	<select class="form-control form-control-sm" th:field="${beanBusquedaLote.idEstado}"  th:value="${beanBusquedaLote.idEstado}">
+				 		<option value="">Seleccione</option>
+				 		<option value="1">Iniciado</option>
+				 		<option value="2">Asignado Centro análisis</option>
+				 		<option value="3">Enviado laboratorio</option>
+				 		<option value="4">Recibido</option>
+				 		<option value="5">Procesado</option>
+				 	</select>
+				</div>
+				<div class="col-3 form-group">
+					<label >Fecha envío</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaLote.fechaEnvioIni}"  th:value="${beanBusquedaLote.fechaEnvioIni}"/>
+				</div>
+				<div class="col-3 form-group">
+					<label >a</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaLote.fechaEnvioFin}"  th:value="${beanBusquedaLote.fechaEnvioFin}"/>
+				</div>							
+			</div>
+		</fieldset>
+		
+
+		<div class="row justify-content-end mt-3">
+			<div class="col-1">
+				<a th:href="@{/centroSalud/lote/nuevo}" class="btn btn-secondary">Nuevo</a>				
+			</div>
+			<div class="col-1">
+				<button type="submit" class="btn btn-secondary">Buscar</button>
+			</div>
+		</div>	
+		
+		<!-- RESULTADO -->
+		<div class="row justify-content-center mt-3">
+			<table class="table">
+				<thead class="thead-light">	
+	    			<tr>
+	      				<th scope="col">Código</th>
+						<th scope="col">Laboratorio</th>
+						<th scope="col">Estado</th>
+						<th scope="col">Fecha envío</th>
+						<th scope="col">Numero muestras</th>
+						<th scope="col">Muestras</th>
+						<th scope="col">Modificar</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${listadoLotes != null}" th:each="lote : ${listadoLotes}">
+						<td><span th:text="${lote.numLote}"></span></td>					
+						<td><span th:text="${lote.descLaboratorio}"></span></td>
+						<td><span th:text="${lote.descEstado}"></span></td>
+						<td><span th:text="${#dates.format(lote.fechaEnvio, 'dd/MM/yyyy')}"></span></td>
+						<td><span th:text="${#lists.size(lote.muestras)}"></span></td>
+						<td>
+							<div th:if="${#lists.size(lote.muestras) == 0}">
+								<a style="cursor: pointer;color:grey">
+									<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+								</a>
+							</div>
+							
+							<div th:if="${#lists.size(lote.muestras) > 0}">
+								<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${lote.id}" style="cursor: pointer;">
+									<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+								</a>
+							</div>
+							<!-- MODAL MUESTRAS -->							
+							<div class="modal fade" th:id="modal-warning+${lote.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-lg" role="document">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">Muestras Lote <span th:text="${lote.numLote}"/></h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	<!-- Muestras del lote -->
+								          	<div class="justify-content-center mt-3">
+												<table class="table">
+													<thead class="thead-light">	
+									    				<tr>
+										      				<th scope="col">Nombre</th>
+															<th scope="col">NHC</th>
+															<th scope="col">Fecha envío</th>
+															<th scope="col">Fecha resultado</th>
+															<th scope="col">Resultado</th>
+															<th scope="col">Notificado</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${lote.muestras != null}" th:each="muestra : ${lote.muestras}">
+															<td><span th:text="${muestra.nombrePaciente}"></span></td>					
+															<td><span th:text="${muestra.refInternaMuestra}"></span></td>
+															<td><span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/mm/yyyy')}"></span></td>
+															<td><span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/mm/yyyy')}"></span></td>
+															<td><span th:text="${muestra.estadoMuestra}"></span></td>		
+															<td><span th:text="${muestra.notificado} ? 'Sí' : 'No'"></span></td>															
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>							        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+							<!-- FIN MODAL MUESTRAS -->	
+						</td>
+						<td>
+					        <a style="color:black" th:href="@{/centroSalud/lote/modificar(id=${lote.id})}">
+					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>
+						</td>						
+					</tr>		
+				</tbody>
+			</table>
+		</div>
+	</form>
+
+	</div>
+	
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+
+</body>
+</html>

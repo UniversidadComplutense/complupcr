@@ -32,9 +32,9 @@ import org.springframework.web.servlet.ModelAndView;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
-import es.ucm.pcr.beans.BeanListadoMuestra;
+
 import es.ucm.pcr.beans.BeanBusquedaLotes;
-import es.ucm.pcr.beans.BeanBusquedaMuestra;
+
 import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanLote;
 import es.ucm.pcr.beans.BeanMuestra;
@@ -189,13 +189,14 @@ public class LaboratorioVisavetUCMController {
 	}
 	
 	// buscar lotes segun los criterios de busqueda 
-	@ResponseBody
+	
 		@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.POST)
-		public String buscarLotesPost(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
+		public ModelAndView buscarLotesPost(@ModelAttribute("busquedaLotes") BeanBusquedaLotes busquedaLotes, Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
 	        // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
 			Page<BeanLote> paginaLotes = null;
-			BeanBusquedaLotes busquedaLotes=(BeanBusquedaLotes) model.getAttribute("busquedaLotes");
-		
+			//BeanBusquedaLotes busquedaLotes=(BeanBusquedaLotes) model.getAttribute("busquedaLotes");
+			ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
+			
 			paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, pageable);
 			// para probar
 			List<BeanLote> list= new ArrayList();
@@ -203,20 +204,24 @@ public class LaboratorioVisavetUCMController {
 				list.add(getBean(i));
 			}		
 			paginaLotes = new PageImpl<BeanLote>(list, pageable,pageable.getPageSize());
+			
 			// fin para probar 
 			model.addAttribute("paginaLotes", paginaLotes);
-			String tabla=this.mostrarResultadosLotes(paginaLotes.getContent());
-		    return tabla;
+			vista.addObject("paginaLotes", paginaLotes);
+			vista.addObject("busquedaLotes",busquedaLotes);
+			// guardo los criterios de busqueda de lotes
+			session.setAttribute("busquedaLotes", busquedaLotes);
+		    return vista;
 		
 		}
 	
 	
-	@ResponseBody
+	//@ResponseBody
 	@RequestMapping(value = "/laboratorioUni/confirmarReciboLote", method = RequestMethod.GET)
-	public String confirmarReciboLote(@RequestParam("id") String id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
+	public ModelAndView confirmarReciboLote(@RequestParam("id") String id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
 	// llamar al servicio lotes y cambiar el estado de id a Recibido
 		// para probar
-		
+		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 				List<BeanLote> list=new ArrayList();
 					for (int i = 0; i<20; i++) {
 						list.add(getBean(i));
@@ -233,8 +238,10 @@ public class LaboratorioVisavetUCMController {
 					paginaLotes = new PageImpl<BeanLote>(list, pageable,pageable.getPageSize());
 					// fin para probar 
 					model.addAttribute("paginaLotes", paginaLotes);
-					String tabla=this.mostrarResultadosLotes(paginaLotes.getContent());
-				    return tabla;	
+					model.addAttribute("busquedaLotes", session.getAttribute("busquedaLotes"));
+					vista.addObject("paginaLotes", paginaLotes);
+					vista.addObject("busquedaLotes", session.getAttribute("busquedaLotes"));
+				    return vista;	
 	}
 	
 		public BeanLote getBean2(int i) {

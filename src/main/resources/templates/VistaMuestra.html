@@ -8,10 +8,11 @@
 <body>
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
 	
 	<form action="#" th:action="@{/centroSalud/muestra/guardar}" method="post" th:object="${beanMuestra}" id="formGuardar" role="form">
-		<fieldset id="datosPaciente" class="form-group border p-2" th:disabled="${beanMuestra.id} != null">
+		<fieldset id="datosPaciente" class="form-group border p-2" th:disabled="!${editable}">
 			<!-- DATOS PACIENTE -->
 			<legend class="w-auto">Paciente</legend>
 			<div class="row">
@@ -21,7 +22,7 @@
 				</div>					
 				<div class="col-4 form-group">
 					<label>Correo</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.correo}"  th:value="${beanMuestra.correo}" required maxlength="50"/>
+				 	<input type="email" class="form-control form-control-sm" th:field="${beanMuestra.correo}"  th:value="${beanMuestra.correo}" required maxlength="50" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
 				</div>
 				
 				<div class="col-4 form-group">
@@ -55,7 +56,7 @@
 		</fieldset>
 		
 		<!-- DATOS MUESTRA -->
-		<fieldset id="datosMuestras" class="form-group border p-2" th:disabled="${beanMuestra.id} != null">
+		<fieldset id="datosMuestras" class="form-group border p-2" th:disabled="!${editable}">
 			<legend class="w-auto">Muestra</legend>
 			<div class="row">
 				<div class="col-4 form-group">
@@ -86,21 +87,43 @@
 				 	</select>					
 				</div>	
 			</div>
+			
+			<!-- SI LA MUESTRA NO SE PUEDE EDITAR SE MUESTRAN DATOS DE RESULTADOS DE LAS MUESTRAS Y NOTIFICAION -->
+			<div class="row" th:if="!${editable}">
+				<div class="col-4 form-group">
+					<label>Resultado</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanMuestra.resultado}"  th:value="${beanMuestra.resultado}" required/>				 	
+				</div>	
+				<div class="col-4 form-group">
+					<label>Fecha Resultado</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${beanMuestra.fechaResultado}"  th:value="${beanMuestra.fechaResultado}" required/>
+				</div>
+				<div class="col-4 form-group">
+					<label>Fecha Notificacion</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${beanMuestra.fechaNotificacion}"  th:value="${beanMuestra.fechaNotificacion}" required/>
+				</div>	
+			</div>
 		</fieldset>
 
 		<!-- ACCCIONES -->
 		<div class="row justify-content-center mt-3">
-			<div class="col-1">
+			<div class="col-2">
 				<a th:href="@{/centroSalud/muestra/}" class="btn btn-secondary">Volver</a>				
 			</div>
-			<div class="col-1">
-				<button th:disabled="${beanMuestra.id} != null" type="submit" class="btn btn-secondary">Guardar</button>
+			<div class="col-2">
+				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>
+			</div>
+			<div class="col-2" th:if="${notificable}">
+				<a th:disabled="${beanMuestra.avisosAuto}" th:href="@{/centroSalud/muestra/notificarTelefono/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Ya he llamado</a>
+			</div>
+			<div class="col-2" th:if="${notificable}">
+				<a th:disabled="${beanMuestra.avisosAuto}" th:href="@{/centroSalud/muestra/notificarCorreo/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Enviar correo</a>
 			</div>
 		</div>					
 	</form>
 
 	</div>
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
-    
+    <object th:replace="fragmentos :: scripts" th:remove="tag"></object>
 </body>
 </html>

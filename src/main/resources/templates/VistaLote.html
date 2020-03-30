@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - MUESTRAS</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<div class="container">	
+	
+	<form action="#" th:action="@{/centroSalud/lote/guardar}" method="post" th:object="${beanLote}" id="formGuardar" role="form">
+		<fieldset id="datosLote" class="form-group border p-2" th:disabled="!${editable}">
+			<!-- DATOS PACIENTE -->
+			<legend class="w-auto">Lote</legend>
+			<div class="row">
+				<div class="col-4 form-group">
+					<label>Código</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanLote.numLote}"  th:value="${beanLote.numLote}" required maxlength="50"/>
+				</div>					
+				<div class="col-3 form-group">
+					<label>Laboratorio</label>
+				 	<select class="form-control form-control-sm" th:field="${beanLote.idLaboratorio}"  th:value="${beanLote.idLaboratorio}" required>
+				 		<option value="">Seleccione</option>
+				 		<option value="1">LAB UCM</option>
+				 		<option value="2">LAB 2</option>
+				 	</select>
+				</div>				
+			</div>					
+		</fieldset>
+		
+
+		<!-- ACCCIONES -->
+		<div class="row justify-content-center mt-3">
+			<div class="col-2">
+				<a th:href="@{/centroSalud/lote/}" class="btn btn-secondary">Volver</a>				
+			</div>
+			<div class="col-2">
+				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>
+			</div>			
+		</div>					
+	</form>
+
+	</div>
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+    <object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+</body>
+</html>

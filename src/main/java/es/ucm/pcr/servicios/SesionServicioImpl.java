@@ -9,13 +9,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import es.ucm.pcr.beans.MenuBean;
 import es.ucm.pcr.config.security.PcrUserDetails;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.Usuario;
 
 @Service
 public class SesionServicioImpl implements SesionServicio {
-	
+
 	@Autowired
 	UsuarioServicio usuarioServicio;
 
@@ -37,7 +38,7 @@ public class SesionServicioImpl implements SesionServicio {
 		String email = authentication.getName();
 		return email;
 	}
-	
+
 	@Override
 	public List<String> getRoles() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -54,10 +55,87 @@ public class SesionServicioImpl implements SesionServicio {
 	}
 
 	@Override
+	public Boolean tieneRol(String rol) {
+		return this.getRoles().contains(rol);
+	}
+
+	@Override
 	public Centro getCentro() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
 		return ud.getCentro();
+	}
+
+	@Override
+	public List<MenuBean> getMenu() {
+		// TODO Auto-generated method stub -- AARON
+		List<MenuBean> menuPrincipal = null;
+		List<MenuBean> menuSecundario = null;
+		MenuBean opcionSecundaria = null;
+		MenuBean opcionPrincipal = null;
+
+		menuPrincipal = new ArrayList<MenuBean>();
+//	Centro de Salud	
+		if (this.tieneRol("ROLE_ADMIN") || this.tieneRol("CENTROSALUD")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Gestión muestras", "/centroSalud/muestra", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Gestión lotes", "/centroSalud/lote", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Centro de salud", null, menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
+//	Tecnico laboratorio
+		if (this.tieneRol("ROLE_ADMIN") || this.tieneRol("TECNICO")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Gestionar entregas", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Preparar", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Placas en preparacion", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Placas listas para laboratorio", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Laboratorios", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Tecnico laboratorio", "", menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
+//		Responsable PCR
+		if (this.tieneRol("ROLE_ADMIN")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Placas recepcionads", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Placas listas para PCR", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Placas esperando resultado PCR", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Responsable PCR", "", menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
+//		Jefe de servicio
+		if (this.tieneRol("ROLE_ADMIN")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Asignar muestras", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Revisar  muestras", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Estado  muestras", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Coger  lotes", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Jefe de servicio", "", menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
+//			Analista
+		if (this.tieneRol("ROLE_ADMIN")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Revisar miestra", "", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Analista", "", menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
+		return menuPrincipal;
 	}
 
 }

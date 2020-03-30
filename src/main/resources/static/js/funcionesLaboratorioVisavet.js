@@ -1,6 +1,7 @@
 /**
  * 
- */function eliminaFilas()
+ */
+function eliminaFilas()
 {
 //OBTIENE EL NÚMERO DE FILAS DE LA TABLA
 var n=0;
@@ -126,9 +127,9 @@ function confirmarLote(pagina,size){
 	*/
 	var url = "";
 	//var urlAbs = getAbsolutePath();
-	alert (pagina);
+	
 	var id=$("#id").val();
-	url =  '/laboratorioUni/confirmarReciboLote?id='+id+'&page='+pagina+'&size='+size;
+	url =  '/laboratorioUni/confirmarReciboLote?id='+id;
 	window.location=url;
 }
 function consultarMuestras(lote,centroProcedencia,id){

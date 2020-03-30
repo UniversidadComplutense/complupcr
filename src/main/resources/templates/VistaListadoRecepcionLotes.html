@@ -180,7 +180,7 @@
 						<label>Centro de procedencia:</label><span id="mensajeCentroProcedencia"></span>
 									<div class="modal-footer">
 									<input type="hidden" id="id" value=""></input>
-									    <button type="button" id="aceptarConfirmacion" data-dismiss="modal" th:data-num="${paginaLote.number}" th:data-size="${paginaLote.size}" th:onclick="|confirmarLote(this.getAttribute('data-pagina'),this.getAttribute('data-size'))|">Aceptar</button>
+									    <button type="button" id="aceptarConfirmacion" data-dismiss="modal"  th:onclick="|confirmarLote(this.getAttribute('data-pagina'),this.getAttribute('data-size'))|">Aceptar</button>
 										<button type="button" id="cerrarConfirmacion" data-dismiss="modal">Cerrar</button>
 										
 									</div>
@@ -202,7 +202,7 @@
 		</div> <!--  capa de resultados -->
 		<div th:include="fragmentos :: paginador(${busquedaLotes.urlPaginada},${paginaLotes},${busquedaLotes.orden},${busquedaLotes.sentidoOrden},'0')"></div>
 		
-		<input id="procesarBoton" style="display:none" disabled type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" onclick="procesarLotes()"/>
+		<input id="procesarBoton"   type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" onclick="procesarLotes()"/>
 		</div>
 
 	</div>

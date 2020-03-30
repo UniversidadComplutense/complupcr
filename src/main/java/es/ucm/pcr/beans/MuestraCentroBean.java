@@ -4,7 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 
-public class BeanMuestraCentro implements java.io.Serializable {
+public class MuestraCentroBean implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -28,7 +28,7 @@ public class BeanMuestraCentro implements java.io.Serializable {
 	private boolean avisoSms;
 	private Date fechaNotificacion;
 
-	public BeanMuestraCentro() {
+	public MuestraCentroBean() {
 	}
 
 	public Integer getId() {
