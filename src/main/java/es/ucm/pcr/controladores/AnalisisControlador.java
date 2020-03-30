@@ -328,6 +328,7 @@ public class AnalisisControlador {
 			}
 			beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
 			bean.setBeanAnalisis(beanAnalisis);		
+			bean.setEsCerrable(true); //lo pongo a true para que esté habilitado el check
 			
 			
 			return bean;

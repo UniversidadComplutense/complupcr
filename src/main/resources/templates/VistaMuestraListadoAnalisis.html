@@ -93,6 +93,7 @@
 			<table class="table">
 				<thead class="thead-light">	
 	    			<tr>
+	    			    <th scope="col">Cerrar</th>
 	    				<th scope="col">Analistas</th>
 	      				<th scope="col">Nombre</th>
 						<th scope="col">NHC</th>
@@ -109,8 +110,18 @@
 				</thead>
 				<tbody th:if="${listadoMuestras != null}" th:each="muestra : ${listadoMuestras}">	
 					<!-- data-target="#group-of-rows-1" -->			
-					<tr class="clickable" data-toggle="collapse" th:data-target="${'#analistas'+ muestra.id}" aria-expanded="false" th:aria-controls="${'analistas'+ muestra.id}"> 
-						<td><i class="fa fa-folder"></i></td>
+					<tr >
+						<td>
+							<!-- th:checked="${muestra.estado == 'cerrada'}"  -->
+							<input
+									th:disabled="${muestra.esCerrable == false}"
+									type="checkbox" name="idCerrar" th:id="idCerrar"
+									onClick="return AniadirOQuitarElementoLlamamiento(this, '${muestra.id}')">
+							</input>
+						</td> 
+						<td class="clickable" data-toggle="collapse" th:data-target="${'#analistas'+ muestra.id}" aria-expanded="false" th:aria-controls="${'analistas'+ muestra.id}">
+							<i class="fa fa-folder"></i>
+						</td>
 					
 						<td>
 							<span th:text="${muestra.nombrePaciente}"></span>
@@ -156,6 +167,7 @@
 					</tr>				
 					<!-- id="group-of-rows-1" -->	
 					<tr th:id="${'analistas'+ muestra.id}" class="collapse table-warning">
+						<td></td>
 						<td><i class="fa fa-folder-open"></i></td>
 						<td colspan="5">							
 							<label>Analistas asignados</label>
@@ -181,6 +193,13 @@
 			
 			</table>
 		</div>
+		
+		<div class="row justify-content-start mt-3">
+			<div class="col-2">
+				<a href="#" id="idbotonCerrarMuestras" onclick="return AsistenteBuscadorLlamamientosLE()" class="btn btn-secondary">Cerrar muestras</a>
+			</div>			
+		</div>
+		
 	</form>
 
 	</div>
