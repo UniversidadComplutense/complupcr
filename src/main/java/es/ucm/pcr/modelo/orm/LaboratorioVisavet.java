@@ -9,20 +9,22 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "laboratorioVisavetUcm")
-public class LaboratorioVisavet {
+@Table(name = "laboratorioVisavet")
+public class LaboratorioVisavet implements java.io.Serializable{
 	
 	private Integer id;
 	private String nombre;
-	private String capacidad;
-	private String ocupacion;
+	private Integer capacidad;
+	private Integer ocupacion;
 	
+
+
 	public LaboratorioVisavet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	public LaboratorioVisavet(Integer id, String nombre, String capacidad, String ocupacion) {
+	
+	public LaboratorioVisavet(Integer id, String nombre, Integer capacidad, Integer ocupacion) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -51,20 +53,20 @@ public class LaboratorioVisavet {
 	}
 
 	@Column(name = "capacidad")
-	public String getCapacidad() {
+	public Integer getCapacidad() {
 		return capacidad;
 	}
 
-	public void setCapacidad(String capacidad) {
+	public void setCapacidad(Integer capacidad) {
 		this.capacidad = capacidad;
 	}
 
 	@Column(name = "ocupacion")
-	public String getOcupacion() {
+	public Integer getOcupacion() {
 		return ocupacion;
 	}
 
-	public void setOcupacion(String ocupacion) {
+	public void setOcupacion(Integer ocupacion) {
 		this.ocupacion = ocupacion;
 	}
 
