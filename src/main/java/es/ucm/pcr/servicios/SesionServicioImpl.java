@@ -91,7 +91,7 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario = new ArrayList<MenuBean>();
 			opcionSecundaria = new MenuBean("Gestionar entregas", null, null);
 			menuSecundario.add(opcionSecundaria);
-			opcionPrincipal = new MenuBean("Centro de salud", null, menuSecundario);
+			opcionPrincipal = new MenuBean("Recepción laboratorio", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
 //	Tecnico laboratorio
