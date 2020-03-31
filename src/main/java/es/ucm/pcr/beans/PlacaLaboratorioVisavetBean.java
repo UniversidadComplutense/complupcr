@@ -6,10 +6,10 @@ public class PlacaLaboratorioVisavetBean {
 
 	private String id;
 	private String capacidad;
-	private EstadoBean estado;
+	private BeanEstado BeanEstado;
 	private List<LoteBean> lotes;
 	private List<DocumentoBean> documentos;
-	
+
 	
 	public String getId() {
 		return id;
@@ -27,12 +27,12 @@ public class PlacaLaboratorioVisavetBean {
 		this.capacidad = capacidad;
 	}
 
-	public EstadoBean getEstado() {
-		return estado;
+	public BeanEstado getBeanEstado() {
+		return BeanEstado;
 	}
 
-	public void setEstado(EstadoBean estado) {
-		this.estado = estado;
+	public void setBeanEstado(BeanEstado beanEstado) {
+		BeanEstado = beanEstado;
 	}
 
 	public List<LoteBean> getLotes() {

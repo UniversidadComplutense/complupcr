@@ -7,7 +7,7 @@ public class BusquedaRecepcionPlacasVisavetBean {
 
 	private String idPlacaVisavet;
 	private String capacidad;
-	private List<EstadoBean> estadosPlacaVisavet;
+	private List<BeanEstado> estadosPlacaVisavet;
 	private String estadoSeleccionado;
 	private Calendar fechaEnvio;
 	private Calendar fechaRecepcion;
@@ -30,11 +30,11 @@ public class BusquedaRecepcionPlacasVisavetBean {
 		this.capacidad = capacidad;
 	}
 
-	public List<EstadoBean> getEstadosPlacaVisavet() {
+	public List<BeanEstado> getEstadosPlacaVisavet() {
 		return estadosPlacaVisavet;
 	}
 
-	public void setEstadosPlacaVisavet(List<EstadoBean> estadosPlacaVisavet) {
+	public void setEstadosPlacaVisavet(List<BeanEstado> estadosPlacaVisavet) {
 		this.estadosPlacaVisavet = estadosPlacaVisavet;
 	}
 

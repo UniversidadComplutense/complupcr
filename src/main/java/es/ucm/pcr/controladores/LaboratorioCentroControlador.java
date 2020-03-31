@@ -1,6 +1,5 @@
 package es.ucm.pcr.controladores;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +26,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
-import es.ucm.pcr.beans.EstadoBean;
-import es.ucm.pcr.beans.EstadoBean.Estado;
-import es.ucm.pcr.beans.EstadoBean.TipoEstado;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.validadores.LaboratorioCentroValidador;
@@ -51,12 +47,7 @@ public class LaboratorioCentroControlador {
 	private void agregarListasDesplegables (ModelAndView vista) {
 		
 		// Estados de una placa de laboratorio
-		List<EstadoBean> estadosPlacaLaboratorio = new ArrayList<EstadoBean>();
-		estadosPlacaLaboratorio.add(new EstadoBean(TipoEstado.EstadoPlacaLabCentro, Estado.IniciadaConMuestras));
-		estadosPlacaLaboratorio.add(new EstadoBean(TipoEstado.EstadoPlacaLabCentro, Estado.PreparadaParaPCR));
-		estadosPlacaLaboratorio.add(new EstadoBean(TipoEstado.EstadoPlacaLabCentro, Estado.FinalizadoPCR));
-		estadosPlacaLaboratorio.add(new EstadoBean(TipoEstado.EstadoPlacaLabCentro, Estado.ListaParaAnalizar));
-		estadosPlacaLaboratorio.add(new EstadoBean(TipoEstado.EstadoPlacaLabCentro, Estado.AsignadaJefeAnalistas));		
+		List<BeanEstado> estadosPlacaLaboratorio = BeanEstado.estadosPlacaLabCentro();	
 		vista.addObject("estadosPlacaLaboratorio", estadosPlacaLaboratorio);
 	}
 
@@ -110,7 +101,7 @@ public class LaboratorioCentroControlador {
 		BusquedaPlacaLaboratorioBean criteriosBusqueda = new BusquedaPlacaLaboratorioBean();
 		
 		// Inicializamos búsqueda con estado 'PreparadaParaPCR'
-		criteriosBusqueda.setIdEstadoPlaca(String.valueOf(EstadoBean.Estado.PreparadaParaPCR.getCodNum()));
+		criteriosBusqueda.setIdEstadoPlaca(String.valueOf(BeanEstado.Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()));
 
 		List<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, pageable).getContent();
 		this.agregarListasDesplegables(vista);
@@ -145,7 +136,7 @@ public class LaboratorioCentroControlador {
 		BusquedaPlacaLaboratorioBean criteriosBusqueda = new BusquedaPlacaLaboratorioBean();
 
 		// Inicializamos búsqueda con estado 'FinalizadoPCR'
-		criteriosBusqueda.setIdEstadoPlaca(String.valueOf(EstadoBean.Estado.FinalizadoPCR.getCodNum()));
+		criteriosBusqueda.setIdEstadoPlaca(String.valueOf(BeanEstado.Estado.PLACA_FINALIZADA_PCR.getCodNum()));
 
 		List<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, pageable).getContent();
 		this.agregarListasDesplegables(vista);
