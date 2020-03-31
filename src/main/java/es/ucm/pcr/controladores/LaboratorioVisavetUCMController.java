@@ -74,7 +74,7 @@ public class LaboratorioVisavetUCMController {
 		bean.setNumLote("33454d");
 		BeanEstado estado= new BeanEstado();
 		estado.setTipoEstado(TipoEstado.EstadoLote);
-		estado.setEstado(Estado.Enviado);
+		estado.setEstado(Estado.LOTE_ENVIADO_CENTRO_ANALISIS);
 		
 		Date date= new Date();
 		bean.setCentroProcedencia("Centro de Salud de Getafe");
@@ -168,7 +168,7 @@ public class LaboratorioVisavetUCMController {
 				for (int i=0; i<lista.size();i++) {
 			 	tabla+="<tr id=\"trGroup"+i+"\" >";
 			 	tabla+="<td width=\"1%\">";
-				if (lista.get(i).getEstado().getEstado()== Estado.Recibido) {
+				if (lista.get(i).getEstado().getEstado()== Estado.LOTE_RECIBIDO_CENTRO_ANALISIS) {
 			 	tabla+="<input type=\"checkbox\" id=\"seleccionado"+i+"\" value=\""+lista.get(i).getId()+"\"/></td>";
 				}
 				else {
@@ -181,7 +181,7 @@ public class LaboratorioVisavetUCMController {
 			    tabla+="<i class=\"fa fa-table\" aria-hidden=\"true\" 	style=\"font-size: 1.2em;\"></i></a></td>";
 			 	tabla+="<td id=\"mensajes_log\" width=\"1%\"><span>Covid19</span></td>";
 			 	tabla+="<td width=\"16%\"><span>"+lista.get(i).getEstado().getEstado().getDescripcion()+"</span>&nbsp;";
-			 	if (lista.get(i).getEstado().getEstado()== Estado.Enviado)
+			 	if (lista.get(i).getEstado().getEstado()== Estado.LOTE_ENVIADO_CENTRO_ANALISIS)
 			 	tabla+="<a   href=\"#modalConfirmRecibido\" data-toggle=\"modal\" onclick=\"loadConfirmarEnvio('"+lista.get(i).getId()+"','"+lista.get(i).getNumLote()+"', '"+lista.get(i).getCentroProcedencia()+"')\">Confirmar recibido</a> ";
 			 	tabla+="</td>";
 				tabla+="</tr>";
@@ -232,7 +232,7 @@ public class LaboratorioVisavetUCMController {
 							// cambiamos estado
 							BeanEstado estado= new BeanEstado();
 							estado.setTipoEstado(TipoEstado.EstadoLote);
-							estado.setEstado(Estado.Recibido);
+							estado.setEstado(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS);
 							list.get(i).setEstado(estado);
 						}
 						//para que tenga mas de dos lotes 
@@ -240,7 +240,7 @@ public class LaboratorioVisavetUCMController {
 							// cambiamos estado
 							BeanEstado estado= new BeanEstado();
 							estado.setTipoEstado(TipoEstado.EstadoLote);
-							estado.setEstado(Estado.Recibido);
+							estado.setEstado(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS);
 							list.get(i).setEstado(estado);
 						}
 					}	
@@ -261,7 +261,7 @@ public class LaboratorioVisavetUCMController {
 			bean.setNumLote("44444");
 			BeanEstado estado= new BeanEstado();
 			estado.setTipoEstado(TipoEstado.EstadoLote);
-			estado.setEstado(Estado.Recibido);
+			estado.setEstado(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS);
 			
 			Date date= new Date();
 			bean.setCentroProcedencia("Centro de Salud de Getafe");
@@ -390,7 +390,7 @@ public class LaboratorioVisavetUCMController {
 					// cambiamos estado
 					BeanEstado estado= new BeanEstado();
 					estado.setTipoEstado(TipoEstado.EstadoLote);
-					estado.setEstado(Estado.Recibido);
+					estado.setEstado(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS);
 					list.get(i).setEstado(estado);
 				}
 			}	
