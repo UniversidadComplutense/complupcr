@@ -79,18 +79,66 @@
 			
 		</fieldset>
 		
-		<!-- Diana, metemos un div hidden con un imput con los codnum's de muestras que se han ido marcando para cerrar -->
-		<div class="row" > <!-- style="display: none" -->
+		<!-- Diana, metemos un div no visible con un input con los codnum's de muestras que se han ido marcando para cerrar -->
+		<div class="row" style="display: none"> 
 			<label>				
 				listaCodnumMuestrasMarcadasParaCerrar 
 			</label>
 			<input  type="text" id="idListaCodnumMuestrasMarcadasParaCerrar" style="width: 400px !important;" />
 		</div> 
+		<!-- fin input con codnums -->
+		
+		<!-- Modal para mostrar al usuario las muestras marcadas para borrar y boton de confirmacion o cancelar -->
+		
+		
+		<!-- Modal id="exampleModalScrollable"-->
+		<div id="modalCerrarMuestras" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-scrollable" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalScrollableTitle">Modal title</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div id="modalCerrarMuestrasBody" class="modal-body">
+		        ...CUERPO MODAL
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+		        <!-- <button type="button" class="btn btn-primary">Cerrar muestras</button> -->
+		        <a href="#" class="btn btn-secondary"
+				onclick="return EjecutarCierreMuestras();">
+				Cerrar muestras
+				</a>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- fin Modal para mostrar al usuario las muestras marcadas para borrar y boton de confirmacion o cancelar -->
+		
+		<!-- modal para mostrar un alert -->
+		<div id="alert-modal" class="modal fade">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		      	<h4 id="alert-modal-title" class="modal-title"></h4>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>		        
+		      </div>
+		      <div id="alert-modal-body" class="modal-body alert alert-warning"></div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!-- fin modal para mostrar un alert -->
 
 		<div class="row justify-content-end mt-3">
-			<div class="col-1">
+			<!-- <div class="col-1">
 				<a th:href="@{/centroSalud/muestra/nueva}" class="btn btn-secondary">Nueva</a>				
-			</div>
+			</div> -->
 			<div class="col-1">
 				<button type="submit" class="btn btn-secondary">Buscar</button>
 			</div>
@@ -202,15 +250,21 @@
 			</table>
 		</div>
 		
-		<div class="row justify-content-start mt-3">
+		<div class="row justify-content-start mt-3">			
+			<!-- data-toggle="modal" data-target="#modalCerrarMuestras" -->
 			<div class="col-2">
-				<a href="#" id="idbotonCerrarMuestras" onclick="return AsistenteBuscadorLlamamientosLE()" class="btn btn-secondary">Cerrar muestras</a>
-			</div>			
+				<a href="#" class="btn btn-secondary"			
+				th:onclick="|cargarModalCerrarMuestras(); return false|" >
+				Cerrar muestras</a>
+			</div>	
 		</div>
 		
 	</form>
 
 	</div>
+		
+	
+	
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 	
 	<object th:include="fragmentos :: scriptsBootstrap" th:remove="tag"></object>

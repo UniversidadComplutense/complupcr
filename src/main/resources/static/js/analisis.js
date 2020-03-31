@@ -102,6 +102,223 @@ function Marcarllamamientos() {
 	return false;
 }
 
+//de titulos loadUploadAjaxDocumSecret loadUploadAjaxDocumSecret(codNumDocAportar, codNumTipoDoc, descTipoDoc) {
+function cargarModalCerrarMuestrasOLD() {
+	alert("estoy en  cargarModalCerrarMuestrasOLD")
+	
+	/*
+	// vamos a hacer una llamada ajax que nos devuelva un json para saber si tenemos sesion o ha expirado 
+	$.ajax({
+		type: 'GET',
+        dataType : 'html',
+		url: "/gestor/getSession",
+		
+	}).done(function(resp) {
+		
+	    if (resp.search('OK') == -1) // no tiene sesion le redirigimos a la pagina de login
+	      window.location.href = "/gestor/buscarPreinscripciones";
+	    else {
+	    	
+	*/
+	/*   
+	var $modalSubirDoc = $("#modalCerrarMuestras");
+	$modalSubirDoc.html("");
+	
+	$modalSubirDoc.html("HOLAAAAAA");
+	*/
+	var $modalCerrarMuestrasBody = $("#modalCerrarMuestrasBody");
+	$modalCerrarMuestrasBody.html("");
+	
+	$modalCerrarMuestrasBody.html("HOLAAAAAA");
+	
+	
+	
+	
+	/*
+	//var $form = $("#formSecretDocumentVal");
+	var $form = $("#formBusqueda");
+	
+	
+	var url = "/gestor/formulariosubirdocSecre?codNumDocAportar=" + codNumDocAportar 
+	+ "&codNumTipoDoc=" + codNumTipoDoc + "&descTipoDoc=" + descTipoDoc;
+	*/
+	
+	/*
+	if ($form.length){
+		//showLoading();
+		$.ajax({
+			type: 'GET',
+            dataType : 'html',
+			url: url,			
+		}).done(function(resp) {
+			$modalSubirDoc.html(resp);
+			
+		
+			//hideLoading();
+			//document.getElementById("file2Upload").focus();
+		}).fail(function(resp) {
+			$modalSubirDoc.html(resp);
+			//hideLoading();
+		});
+	}
+	*/
+	
+	
+	/*
+	    }  
+    	
+    }).fail(function(resp) {
+    	
+	});
+	*/	   
+}
+
+
+//TODO si queremos mostrar un modal con las muestras marcadas para cerrar
+//comprueba que se hayan marcado registros para cerrar (si no hay marcados muestra modal alert) y si hay marcadas para cerrar se abre modal para solicitar confirmacion
+function cargarModalCerrarMuestras(){
+	
+	//alert("estoy en  cargarModalCerrarMuestras")
+	
+	//if (EstaConectado()) {
+		
+		//comprobación de si se ha marcado algún registro nuevo para incluirlo en la lista de muestras a cerrar
+		//miramos si hay algo en la idListaCodnumMuestrasMarcadasParaCerrar de los registros que ha marcado para cerrar en todas las paginas
+		var claves = $('#idListaCodnumMuestrasMarcadasParaCerrar').val();
+		//alert("ListaCodnumMuestrasMarcadasParaCerrar =  " + claves);
+		
+		//si no hemos marcado nigun registro para cerrar
+		if (vacio(claves)){			
+			//alert("debe marcar al menos un registro para cerrar");
+			//VentanaModalAviso("idventanaemergente", 300, "<div class=\"advertencia\" style=\"background-position-y: center;\">Debe marcar al menos un registro para el llamamiento</div>");
+			
+			// Display error message to the user in a modal
+			$('#alert-modal-title').html("Cerrar muestras");
+			$('#alert-modal-body').html("Debe marcar al menos un registro para cerrar");
+			$('#alert-modal').modal('show');
+			
+			//var $modalCerrarMuestrasBody = $("#modalCerrarMuestrasBody");
+			//$modalCerrarMuestrasBody.html("");			
+			//$modalCerrarMuestrasBody.html("<div class=\"warning\" style=\"background-position-y: center;\">Debe marcar al menos un registro para cerrar</div>");
+			return false;			
+		}
+		//si hemos marcado registros de muestras para cerrar, abrimos un modal para mostrar las muestras marcadas para cerrar y solicitar confirmación
+		else{
+			MostrarMuestrasACerrar();			
+		}
+	
+	//}
+	//return false;
+}
+
+function MostrarMuestrasACerrar() {
+	
+	//alert("estoy en MostrarMuestrasACerrar");
+	
+	//if (EstaConectado()) {
+		
+		//cogemos la lista de codnum de muestras que se han marcado para cerrar en todas las paginas
+		var claves = $('#idListaCodnumMuestrasMarcadasParaCerrar').val();
+			
+		//alert(claves);
+		
+		//$('#idavisos').html("Salvando modificaciones del usuario").css('display', 'block');	
+			
+		//url = $('#idrealformulariobusqueda').attr('action')  + "/buscarAlumnosAIncluirEnLlamamiento";
+		url = "/analisis/buscarMuestrasACerrar";
+		
+			
+			sBody = $('#formBusqueda').serialize() + "&claves=" + claves;
+			$.ajax({
+				type : 'POST',
+				url : url,
+				//beforeSend : function() {
+					//showSpinner();
+				//},
+				dataType : 'html',
+				data : sBody,
+				//complete : function() {
+					//hideSpinnerAsistente();
+				//}
+			}).done(function(respuesta) {			
+				//alert("estoy en done");
+				//VentanaModalAvisoSinBoton("idventanaemergente", 640, respuesta);
+				$('#exampleModalScrollableTitle').html("");
+				$('#exampleModalScrollableTitle').html("Muestras a cerrar");				
+				$("#modalCerrarMuestrasBody").html("");			
+				$("#modalCerrarMuestrasBody").html(respuesta);
+				var $modalCerrarMuestras = $("#modalCerrarMuestras");
+				$modalCerrarMuestras.modal('show');
+				
+			}).fail(function(jqXHR, textStatus, errorThrown) {
+				//$('#idavisos').html("ERROR: No he podido conectar con el servidor para realizar la acción").css('color', "#f00");
+			});
+		//}
+	
+	return false;
+}
+
+//diana cerrar muestras con paginacion 
+//(no recogemos los que hay marcados para llamar en la vista porque puede haber marcados en otras pagians, los tenemos todos en idListaCodnumMuestrasMarcadasParaCerrar)
+	
+function EjecutarCierreMuestras() {
+	
+	//alert("estoy en EjecutarCierreMuestraso");
+	
+	//if (EstaConectado()) {			
+			
+			//nulificarInputsVentanaAsistente();
+			$("#modalCerrarMuestras").modal('hide');
+			
+			//recogemos la lista de codnums de los registros que ha marcado para cerrar en todas las paginas
+			var listaCodnumMuestrasMarcadasParaCerrar = $('#idListaCodnumMuestrasMarcadasParaCerrar').val();
+			alert("listaCodnumMuestrasMarcadasParaCerrar =  " + listaCodnumMuestrasMarcadasParaCerrar);
+					
+						
+			//$('#idavisos').html("Salvando modificaciones del usuario").css('display', 'block');	
+			
+			//url = $('#idrealformulariobusqueda').attr('action')  + "/ejecutarllamamiento";
+			url = "/analisis/ejecutarCierreMuestras";
+			
+			sBody = $('#formBusqueda').serialize() + "&claves=" + listaCodnumMuestrasMarcadasParaCerrar;		
+			
+			$.ajax({
+				type : 'POST',
+				url : url,
+				//beforeSend : function() {
+					//showSpinner();
+				//},
+				dataType : 'html',
+				data : sBody,
+				//complete : function() {
+					//hideSpinnerAsistente();
+				//}
+			}).done(function(respuesta) {
+				//CloseModalFade();
+				$("#modalCerrarMuestras").modal('hide');
+				//despues de ejecutar el cierre de muestras tenemos que vaciar la lista de los marcados para cerrar
+				$("#idListaCodnumMuestrasMarcadasParaCerrar").val("");				
+				/*
+				$('#idbotones').html('');
+				$('#idcuerpo').html(respuesta);
+				$('#idavisos').html("").css('display', 'none');
+				$('#idbotones').html($('#parabotones').html());
+				$('td.cursorpointer').each(function() {
+					$(this).hover(function() {
+						$(this).css('cursor', 'pointer');
+					}, function() {
+						$(this).css('cursor', 'auto');
+					});
+				
+				});*/
+				
+			}).fail(function(jqXHR, textStatus, errorThrown) {
+				//$('#idavisos').html("ERROR: No he podido conectar con el servidor para realizar la acción").css('color', "#f00");
+			});
+		
+	//}
+	return false;
+}
 
 
 
