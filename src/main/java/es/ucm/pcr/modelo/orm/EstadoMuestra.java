@@ -19,6 +19,10 @@ import javax.persistence.Table;
 @Table(name = "estadoMuestra")
 public class EstadoMuestra implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3775363044138173600L;
 	private Integer id;
 	private String descripcion;
 	private Set<Muestra> muestras = new HashSet<Muestra>(0);
