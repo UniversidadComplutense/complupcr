@@ -49,6 +49,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	{
 		BeanUsuario beanUsuario =  new BeanUsuario();
 		
+		beanUsuario.setId(usuario.getId());
 		beanUsuario.setAcertadas(usuario.getAcertadas());
 		beanUsuario.setApellido1(usuario.getApellido1());
 		beanUsuario.setApellido2(usuario.getApellido2());
@@ -69,10 +70,9 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	}
 	
 	@Override
-	public Usuario mapeoBeanEntidadUsuario (BeanUsuario beanUsuario) throws Exception{
+	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuario beanUsuario) throws Exception{
 	
-//		Usuario usuario = new Usuario();
-		Optional<Usuario> usuario = usurep.findById(beanUsuario.getId());
+		Usuario usuario = new Usuario();
 		
 		usuario.setAcertadas(beanUsuario.getAcertadas());
 		usuario.setApellido1(beanUsuario.getApellido1());
@@ -81,15 +81,6 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		usuario.setCentro(beanUsuario.getCentro());
 		usuario.setDocumentos(beanUsuario.getDocumentos());
 		usuario.setDocumentos(beanUsuario.getDocumentos());
-//		// Si estamos modificando, no podemos cambiar el PWD
-//		if (beanUsuario.getAccion() == "M") 
-//		{
-//			// no modificamos email
-//		}
-//		else
-//		{
-//			usuario.setEmail(beanUsuario.getEmail());
-//		}
 		usuario.setEmail(beanUsuario.getEmail());
 		usuario.setHabilitado(beanUsuario.getHabilitado());
 		usuario.setId(beanUsuario.getId());
@@ -112,8 +103,29 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		
 	}
 	
-//	@Autowired
-//	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuario beanUsuario, Usuario usuario) throws Exception {
-//		
-//	}
+	@Override
+	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuario beanUsuario, Usuario usuario) throws Exception {
+		
+		// No asigno el id del usuario
+		usuario.setAcertadas(beanUsuario.getAcertadas());
+		usuario.setApellido1(beanUsuario.getApellido1());
+		usuario.setApellido2(beanUsuario.getApellido2());
+		usuario.setAsignadas(beanUsuario.getAsignadas());
+		usuario.setCentro(beanUsuario.getCentro());
+		usuario.setDocumentos(beanUsuario.getDocumentos());
+		usuario.setDocumentos(beanUsuario.getDocumentos());
+		//  El mail es único, y asociado al usuario, no poemos modifciarlo
+//		usuario.setEmail(beanUsuario.getEmail());
+		usuario.setHabilitado(beanUsuario.getHabilitado());
+		usuario.setId(beanUsuario.getId());
+		usuario.setIdLaboratorioCentro(beanUsuario.getIdLaboratorioCentro());
+		usuario.setIdLaboratorioVisavet(beanUsuario.getIdLaboratorioVisavet());
+		usuario.setNombre(beanUsuario.getNombre());
+		// el Pwd se asigna por otros medios, no podemos modificarlo
+//		usuario.setPassword(beanUsuario.getPassword());
+		usuario.setRols(beanUsuario.getRols());
+		usuario.setUsuarioMuestras(beanUsuario.getUsuarioMuestras());
+		
+		return usuario;
+	}
 }

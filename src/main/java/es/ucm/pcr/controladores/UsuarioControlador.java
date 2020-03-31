@@ -93,7 +93,7 @@ public class UsuarioControlador {
 //			usuario.setEmail(beanUsuario.getMail());
 //			usuario.setPassword(beanUsuario.getMail());
 //			usuarioRepositorio.save(usuario);
-			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuario(beanUsuario));
+			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioAlta(beanUsuario));
 		}
 		// Modificamos usuario existente, menos mail
 		if (beanUsuario.getAccion().equals("M"))
@@ -107,7 +107,7 @@ public class UsuarioControlador {
 //			usuario.get().setApellido2(beanUsuario.getAp2());
 //			usuario.get().setNombre(beanUsuario.getNom());
 //			usuarioRepositorio.save(usuario.get());
-			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuario(beanUsuario));
+			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get()));
 		}
 
 		// Volvemos a grabar mas centros
