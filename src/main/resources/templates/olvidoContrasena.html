@@ -7,25 +7,22 @@
 <body>
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<div class="container">
-
-		<form name="f" action="/acceso" method="post">
+		<form name="f" action="/regenerarContrasena" method="post">
 			<div class="row justify-content-center mt-3 mt-md-5">
 				<div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
 					<div class="card">
 						<div class="card-body">
-							<div class="form-group">
-								<label for="email">Correo electrónico</label> <input
-									type="email" class="form-control" name="email"
-									placeholder="Email" />
+							<h5 class="card-title">Restablecer password</h5>
+							<div th:if="${mensajeEnviado == null}" class="form-group">
+								<small class="text-muted">Introduce tu dirección de
+									correo electrónico y te enviaremos un enlace para que recuperes
+									el acceso.</small> <input id="email" type="email" class="form-control"
+									name="email" placeholder="Email" />
 							</div>
-							<div class="form-group">
-								<label for="password">Password</label> <input type="password"
-									class="form-control" name="password" placeholder="Password" />
-							</div>
-
-							<div class="row align-content-center">
-								<div class="col-4 mx-auto">
-									<button type="submit" class="btn btn-primary">Acceder</button>
+							<div th:if="${mensajeEnviado == null}" class="row align-content-center">
+								<div class="col-7 mx-auto">
+									<button type="submit" class="btn btn-primary"
+										onclick="resetPass()">Enviar enlace de acceso</button>
 								</div>
 							</div>
 							<div class="row mt-2">
@@ -34,27 +31,21 @@
 										class="alert alert-danger alert-dismissable">
 										<p>
 											<i class="icon fa fa-ban"></i> <span
-												th:text="${mensajeError}">Invalid Email and Password.</span>
+												th:text="${mensajeError}">Invalid Email</span>
 										</p>
 									</div>
-									<div th:if="${mensajeLogout != null}"
+									<div th:if="${mensajeEnviado != null}"
 										class="alert alert-info alert-dismissable">
 										<p>
 											<i class="icon fa fa-info"></i> <span
-												th:text="${mensajeLogout}">You have been logged out.</span>
-										</p>
-									</div>
-									<div th:if="${msg!=null}"
-										class="alert alert-warning alert-dismissable">
-										<p>
-											<i class="icon fa fa-warning"></i> <span th:text="${msg}"></span>
+												th:text="${mensajeEnviado}">Enviado</span>
 										</p>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="card-footer bg-transparent text-center">
-							<a th:href="@{/regenerarContrasena}">¿Has olvidado la contraseña?</a>
+							<a th:href="@{/acceso}">Volver al inicio de sesión</a>
 						</div>
 					</div>
 				</div>
