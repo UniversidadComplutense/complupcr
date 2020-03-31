@@ -72,7 +72,7 @@ public class AnalisisControlador {
 
 		
 		@RequestMapping(value="/", method=RequestMethod.GET)
-		//@PreAuthorize("hasAnyRole('ADMIN')")
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView buscadorMuestras(HttpSession session) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 		
@@ -83,7 +83,7 @@ public class AnalisisControlador {
 		}
 		
 		@RequestMapping(value="/list", method=RequestMethod.POST)
-		//@PreAuthorize("hasAnyRole('ADMIN')")
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute BeanBusquedaMuestraAnalisis beanBusqueda) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 			
@@ -101,7 +101,7 @@ public class AnalisisControlador {
 		
 		
 		@RequestMapping(value="/asignar", method=RequestMethod.GET)
-		//@PreAuthorize("hasAnyRole('ADMIN')")
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView asignarMuestra(HttpSession session, HttpServletRequest request, @RequestParam("idMuestra") Integer idMuestra) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAMuestra");
 						
@@ -161,6 +161,7 @@ public class AnalisisControlador {
 		
 		
 		@RequestMapping(value = "/guardarAsignacion", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public RedirectView guardarAsignacion(@ModelAttribute("formBeanGuardarAsignacionMuestra") GuardarAsignacionMuestraBean formBeanGuardarAsignacionMuestra,
 				HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
 			
@@ -181,7 +182,7 @@ public class AnalisisControlador {
 		
 		//muestra pantalla al jefe para que resuelva la muestra
 		@RequestMapping(value="/revisar", method=RequestMethod.GET)
-		//@PreAuthorize("hasAnyRole('ADMIN')")
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView revisarMuestra(HttpSession session, HttpServletRequest request, @RequestParam("idMuestra") Integer idMuestra) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaRevisarMuestra");
 						
@@ -210,7 +211,7 @@ public class AnalisisControlador {
 		
 		
 		@RequestMapping(value = "/guardarRevision", method = RequestMethod.POST)
-		//@PreAuthorize("hasAnyRole('ADMIN')")
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public RedirectView guardarAsignacion(@ModelAttribute("beanMuestra") MuestraBean beanMuestra,
 				HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
 			
@@ -250,7 +251,7 @@ public class AnalisisControlador {
 		//metodo que recibe la lista de codnums de muestras que se han marcado  para cerrar
 		//busca sus datos y los muestra en el modal
 		@PostMapping("/buscarMuestrasACerrar")
-		//@PreAuthorize("hasAnyRole('ADMIN')")
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public String buscarMuestrasACerrar(@ModelAttribute("beanBusquedaMuestra") BeanBusquedaMuestraAnalisis beanBusquedaMuestra,			
 				BindingResult result, HttpServletRequest req, Model model, Locale locale) {
 			
@@ -274,7 +275,7 @@ public class AnalisisControlador {
 		
 		
 		@PostMapping("/ejecutarCierreMuestras")
-		//@PreAuthorize("hasAnyRole('ADMIN')")
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView ejecutarCierreMuestras(@ModelAttribute("beanBusquedaMuestra") BeanBusquedaMuestraAnalisis beanBusquedaMuestra,			
 				BindingResult result, HttpServletRequest req, Model model, Locale locale, HttpSession session) throws Exception {
 			

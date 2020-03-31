@@ -38,12 +38,6 @@
 	href="static/img/logoucm.ico" type="image/x-icon" />
 
 
-<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
-<script src="static/js/bootstrap.min.js"
-	th:src="@{/js/bootstrap.min.js}"></script>
-	<script src="static/js/funcionesLaboratorioVisavet.js"
-	th:src="@{/js/funcionesLaboratorioVisavet.js}"></script>
 
 </head>
 
@@ -65,39 +59,8 @@
 	</div>
 </header>
 
-<<<<<<< HEAD
-
-<!--/* SCRIPTS BOOTSTRAP - SIEMPRE FINAL DE PÁGINA */-->
-<div th:fragment="scriptsBootstrap" id="scriptsBootstrap">
-
-	<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-	<!-- <script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>  -->
-	<!--  para arreglar error enconsola Uncaught SyntaxError: Unexpected token 'export' en popper.min.js
-	https://stackoverflow.com/questions/46459767/popper-js-in-bootstrap-4-gives-syntaxerror-unexpected-token-export -->
-	<!-- Check the readme.md "Usage". The lib is available in three version for three difference module loaders. 
-	In short: if you load it with the <script> tag then you must use the UMD version. You can find it in /dist/umd. 
-	The default (in /dist) is the ESNext (ECMA-Script) which can not be loaded using the script tag. -->
-	<script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>
-	<script src="static/js/bootstrap.min.js"
-		th:src="@{/js/bootstrap.min.js}"></script>
-		
-	<!-- 	Data-toggle	 -->
-	<script th:src="@{/js/bootstrap4-toggle.min.js}"
-		src="static/js/bootstrap4-toggle.min.js"></script>
-	<!--bootstrap-select -->
-	<script th:src="@{/js/bootstrap-select.min.js}"
-		src="static/js/bootstrap-select.min.js"></script>
-	<!-- - -->
 
 
-</div>
-
-
-
-
-
-=======
->>>>>>> refs/remotes/origin/premaster
 <!-- /*Navbar/ -->
 <div th:fragment="navbar-responsive" id="nabvar">
 	<div class="container menu-beige">
@@ -130,7 +93,6 @@
 	</div>
 </div>
 
-<<<<<<< HEAD
 <!-- /* Pie de página */ -->
 <div th:fragment="footer-responsive" id="footer">
 	<div class="container">
@@ -147,98 +109,66 @@
 </div>
 
 <!--/* PAGINADOR  */-->
-	<div
-		th:fragment="paginador(urlPaginada, pagina, orden,sentidoOrden,fila)"
-		class="table-pagination">
+<div th:fragment="paginador(urlPaginada, pagina, orden,sentidoOrden,fila)"
+	class="table-pagination">
 
-		<ul class="pagination"
-			th:with="beginIndex=${((pagina.number - 4) lt 1) ? 1 : pagina.number - 4},
+	<ul class="pagination"
+		th:with="beginIndex=${((pagina.number - 4) lt 1) ? 1 : pagina.number - 4},
 	    	      endIndex=${((beginIndex + 9) gt pagina.totalPages) ? pagina.totalPages : beginIndex + 9 }">
-			<li th:class="${pagina.number eq 0} ? 'disabled' : ''"><a
-				th:if="${pagina.number eq 0}" href="javascript:void(0);">&lt;&lt;</a>
-				<a th:if="${not (pagina.number eq 0)}"
-				th:href="@{${urlPaginada}(page=0,size=${pagina.size}, orden=${orden}, sentidoOrden=${sentidoOrden},filaTratada='0')}">&lt;&lt;</a>
-			</li>
-			<li th:class="${pagina.number eq 0} ? 'disabled' : ''"><a
-				th:if="${pagina.number eq 0}" href="javascript:void(0);">&lt;</a> <a
-				th:if="${not (pagina.number eq 0)}"
-				th:href="@{${urlPaginada}(page=${pagina.number-1},size=${pagina.size}, orden=${orden}, sentidoOrden=${sentidoOrden},filaTratada='0')}">&lt;</a>
-			</li>
+		<li th:class="${pagina.number eq 0} ? 'disabled' : ''"><a
+			th:if="${pagina.number eq 0}" href="javascript:void(0);">&lt;&lt;</a>
+			<a th:if="${not (pagina.number eq 0)}"
+			th:href="@{${urlPaginada}(page=0,size=${pagina.size}, orden=${orden}, sentidoOrden=${sentidoOrden},filaTratada='0')}">&lt;&lt;</a>
+		</li>
+		<li th:class="${pagina.number eq 0} ? 'disabled' : ''"><a
+			th:if="${pagina.number eq 0}" href="javascript:void(0);">&lt;</a> <a
+			th:if="${not (pagina.number eq 0)}"
+			th:href="@{${urlPaginada}(page=${pagina.number-1},size=${pagina.size}, orden=${orden}, sentidoOrden=${sentidoOrden},filaTratada='0')}">&lt;</a>
+		</li>
 
 
-			<li th:each="pageNo : ${#numbers.sequence(beginIndex, endIndex)}"
-				th:class="${pagina.number eq (pageNo - 1) }? 'active' : ''"><a
-				th:if="${pagina.number  eq (pageNo - 1)}" href="javascript:void(0);">
-					<span th:text="${pageNo}"></span>
-			</a> <a th:if="${not (pagina.number  eq (pageNo - 1))}"
-				th:href="@{${urlPaginada}(page=${pageNo - 1},size=${pagina.size}, orden=${orden}, sentidoOrden=${sentidoOrden},filaTratada='0')}">
+		<li th:each="pageNo : ${#numbers.sequence(beginIndex, endIndex)}"
+			th:class="${pagina.number eq (pageNo - 1) }? 'active' : ''"><a
+			th:if="${pagina.number  eq (pageNo - 1)}" href="javascript:void(0);">
+				<span th:text="${pageNo}"></span>
+		</a> <a th:if="${not (pagina.number  eq (pageNo - 1))}"
+			th:href="@{${urlPaginada}(page=${pageNo - 1},size=${pagina.size}, orden=${orden}, sentidoOrden=${sentidoOrden},filaTratada='0')}">
 
-					<span th:text="${pageNo}"></span>
-			</a></li>
-			<li
-				th:class="${pagina.number + 1  eq pagina.totalPages} ? 'disabled' : ''">
-				<a th:if="${pagina.number + 1  eq pagina.totalPages}"
-				href="javascript:void(0);">&gt;</a> 
-				<a th:if="${not (pagina.number +1 eq pagina.totalPages)}"
-				th:href="@{${urlPaginada}(page=${pagina.number+1},size=${pagina.size}, orden=${orden}, sentidoOrden=${sentidoOrden},filaTratada='0')}">&gt;</a>
-			</li>
-			<li
-				th:class="${pagina.number + 1  eq pagina.totalPages} ? 'disabled' : ''">
-				<a th:if="${pagina.number + 1  eq pagina.totalPages}"
-				href="javascript:void(0);">&gt;&gt;</a> <a
-				th:if="${not (pagina.number +1 eq pagina.totalPages)}"
-				th:href="@{${urlPaginada}(page=${pagina.totalPages-1},size=${pagina.size},   orden=${orden}, sentidoOrden=${sentidoOrden},filaTratada='0')}">&gt;&gt;</a>
-			</li>
-		</ul>
-	</div>
-=======
-
-
-
-
-
-
-
-<!-- /* Pie de página */ -->
-<div th:fragment="footer-responsive" id="footer">
-	<div class="container">
-		<div class="row pie-orange mt-5">
-			<div class="col text-left" sec:authorize="isAuthenticated()">
-				<span th:text="${@pcrTHExpressions.getEmailUsuario()}">pericopalotes@ucm.es</span>
-			</div>
-			<div class="col text-right" sec:authorize="isAuthenticated()">
-				<span th:text="${@pcrTHExpressions.getCentro()}">Centro de
-					prueba</span>
-			</div>
-		</div>
-	</div>
+				<span th:text="${pageNo}"></span>
+		</a></li>
+		<li
+			th:class="${pagina.number + 1  eq pagina.totalPages} ? 'disabled' : ''">
+			<a th:if="${pagina.number + 1  eq pagina.totalPages}"
+			href="javascript:void(0);">&gt;</a> <a
+			th:if="${not (pagina.number +1 eq pagina.totalPages)}"
+			th:href="@{${urlPaginada}(page=${pagina.number+1},size=${pagina.size}, orden=${orden}, sentidoOrden=${sentidoOrden},filaTratada='0')}">&gt;</a>
+		</li>
+		<li
+			th:class="${pagina.number + 1  eq pagina.totalPages} ? 'disabled' : ''">
+			<a th:if="${pagina.number + 1  eq pagina.totalPages}"
+			href="javascript:void(0);">&gt;&gt;</a> <a
+			th:if="${not (pagina.number +1 eq pagina.totalPages)}"
+			th:href="@{${urlPaginada}(page=${pagina.totalPages-1},size=${pagina.size},   orden=${orden}, sentidoOrden=${sentidoOrden},filaTratada='0')}">&gt;&gt;</a>
+		</li>
+	</ul>
 </div>
 
-<!--/* SCRIPTS - SIEMPRE FINAL DE PÁGINA */-->
+!--/* SCRIPTS - SIEMPRE FINAL DE PÁGINA */-->
 <div th:fragment="scripts" id="scripts">
 
 	<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-	<!--<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>-->	
-	<!--  da un error en consola Uncaught SyntaxError: Unexpected token 'export' en popper.min.js
-	https://stackoverflow.com/questions/46459767/popper-js-in-bootstrap-4-gives-syntaxerror-unexpected-token-export -->
-	<!-- Check the readme.md "Usage". The lib is available in three version for three difference module loaders. 
-	In short: if you load it with the <script> tag then you must use the UMD version. You can find it in /dist/umd. 
-	The default (in /dist) is the ESNext (ECMA-Script) which can not be loaded using the script tag. -->
-	<!-- segun stackoverflow habría que descargar el popper.min.js que cuelgue de /dist/umd; pero no he conseguido encontrarlo, si referenciamos la url externa no da el error y funciona el popper -->
-	<script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>
+	<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
 	<script src="static/js/bootstrap.min.js"
 		th:src="@{/js/bootstrap.min.js}"></script>
-		
+
 	<!-- 	Data-toggle	 -->
 	<script th:src="@{/js/bootstrap4-toggle.min.js}"
 		src="static/js/bootstrap4-toggle.min.js"></script>
 	<!--bootstrap-select -->
 	<script th:src="@{/js/bootstrap-select.min.js}"
 		src="static/js/bootstrap-select.min.js"></script>
-	<!-- - -->
 
-
+	<script src="static/js/funcionesLaboratorioVisavet.js"
+	th:src="@{/js/funcionesLaboratorioVisavet.js}"></script>
 </div>
-
->>>>>>> refs/remotes/origin/premaster
-
+</html>

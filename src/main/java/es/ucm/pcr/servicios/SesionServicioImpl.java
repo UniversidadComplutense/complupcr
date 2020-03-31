@@ -91,7 +91,7 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario = new ArrayList<MenuBean>();
 			opcionSecundaria = new MenuBean("Gestionar entregas", null, null);
 			menuSecundario.add(opcionSecundaria);
-			opcionPrincipal = new MenuBean("Centro de salud", null, menuSecundario);
+			opcionPrincipal = new MenuBean("Recepción laboratorio", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
 //	Tecnico laboratorio
@@ -113,11 +113,11 @@ public class SesionServicioImpl implements SesionServicio {
 //		Responsable PCR
 		if (this.tieneRol("ADMIN") || this.tieneRol("RESPONSABLEPCR")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Placas recepcionads", "", null);
+			opcionSecundaria = new MenuBean("Recepción placas", "/laboratorioCentro/recepcionPlacas", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Placas listas para PCR", "", null);
+			opcionSecundaria = new MenuBean("Placas listas para PCR", "/laboratorioCentro/gestionPlacas/preparacion", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Placas esperando resultado PCR", "", null);
+			opcionSecundaria = new MenuBean("Placas esperando resultado PCR", "/laboratorioCentro/gestionPlacas/resultados", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Responsable PCR", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
@@ -125,10 +125,10 @@ public class SesionServicioImpl implements SesionServicio {
 //		Jefe de servicio
 		if (this.tieneRol("ADMIN") || this.tieneRol("JEFESERVICIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Asignar muestras", "", null);
+			opcionSecundaria = new MenuBean("Asignar y revisar muestras", "/analisis/", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Revisar  muestras", "", null);
-			menuSecundario.add(opcionSecundaria);
+			//opcionSecundaria = new MenuBean("Revisar  muestras", "", null);
+			//menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Estado  muestras", "", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Coger  lotes", "", null);
