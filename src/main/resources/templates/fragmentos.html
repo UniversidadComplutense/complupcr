@@ -38,13 +38,6 @@
 	href="static/img/logoucm.ico" type="image/x-icon" />
 
 
-<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
-<script src="static/js/bootstrap.min.js"
-	th:src="@{/js/bootstrap.min.js}"></script>
-	<script src="static/js/funcionesLaboratorioVisavet.js"
-	th:src="@{/js/funcionesLaboratorioVisavet.js}"></script>
-
 </head>
 
 
@@ -65,39 +58,6 @@
 	</div>
 </header>
 
-<<<<<<< HEAD
-
-<!--/* SCRIPTS BOOTSTRAP - SIEMPRE FINAL DE PÁGINA */-->
-<div th:fragment="scriptsBootstrap" id="scriptsBootstrap">
-
-	<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-	<!-- <script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>  -->
-	<!--  para arreglar error enconsola Uncaught SyntaxError: Unexpected token 'export' en popper.min.js
-	https://stackoverflow.com/questions/46459767/popper-js-in-bootstrap-4-gives-syntaxerror-unexpected-token-export -->
-	<!-- Check the readme.md "Usage". The lib is available in three version for three difference module loaders. 
-	In short: if you load it with the <script> tag then you must use the UMD version. You can find it in /dist/umd. 
-	The default (in /dist) is the ESNext (ECMA-Script) which can not be loaded using the script tag. -->
-	<script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>
-	<script src="static/js/bootstrap.min.js"
-		th:src="@{/js/bootstrap.min.js}"></script>
-		
-	<!-- 	Data-toggle	 -->
-	<script th:src="@{/js/bootstrap4-toggle.min.js}"
-		src="static/js/bootstrap4-toggle.min.js"></script>
-	<!--bootstrap-select -->
-	<script th:src="@{/js/bootstrap-select.min.js}"
-		src="static/js/bootstrap-select.min.js"></script>
-	<!-- - -->
-
-
-</div>
-
-
-
-
-
-=======
->>>>>>> refs/remotes/origin/premaster
 <!-- /*Navbar/ -->
 <div th:fragment="navbar-responsive" id="nabvar">
 	<div class="container menu-beige">
@@ -130,21 +90,7 @@
 	</div>
 </div>
 
-<<<<<<< HEAD
-<!-- /* Pie de página */ -->
-<div th:fragment="footer-responsive" id="footer">
-	<div class="container">
-		<div class="row pie-orange mt-5">
-			<div class="col text-left" sec:authorize="isAuthenticated()">
-				<span th:text="${@pcrTHExpressions.getEmailUsuario()}">pericopalotes@ucm.es</span>
-			</div>
-			<div class="col text-right" sec:authorize="isAuthenticated()">
-				<span th:text="${@pcrTHExpressions.getCentro()}">Centro de
-					prueba</span>
-			</div>
-		</div>
-	</div>
-</div>
+
 
 <!--/* PAGINADOR  */-->
 	<div
@@ -191,12 +137,6 @@
 			</li>
 		</ul>
 	</div>
-=======
-
-
-
-
-
 
 
 <!-- /* Pie de página */ -->
@@ -213,6 +153,9 @@
 		</div>
 	</div>
 </div>
+
+
+
 
 <!--/* SCRIPTS - SIEMPRE FINAL DE PÁGINA */-->
 <div th:fragment="scripts" id="scripts">
@@ -237,8 +180,8 @@
 		src="static/js/bootstrap-select.min.js"></script>
 	<!-- - -->
 
+	<script src="static/js/funcionesLaboratorioVisavet.js"
+	th:src="@{/js/funcionesLaboratorioVisavet.js}"></script>
 
 </div>
-
->>>>>>> refs/remotes/origin/premaster
 
