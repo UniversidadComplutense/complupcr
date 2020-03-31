@@ -120,7 +120,7 @@
 			 	<tr th:id="trGroup+${count.index}"  th:each="unResultado,count : ${paginaLotes.getContent()}">
 					
 							<td width="1%">
-								<input type="checkbox" name="seleccionado" th:disabled="${#strings.toString(unResultado.estado.Estado) != 'Recibido'}" th:id="seleccionado+${unResultado.id}"/>
+								<input type="checkbox" name="seleccionado" th:disabled="${#strings.toString(unResultado.estado.Estado) != 'Recibido'}" th:id="seleccionado+${count.index}" th:value="${unResultado.id}" />
 								</td>
 								<td width="1%">
 								<span th:text="${unResultado.numLote}"></span>
@@ -180,7 +180,7 @@
 						<label>Centro de procedencia:</label><span id="mensajeCentroProcedencia"></span>
 									<div class="modal-footer">
 									<input type="hidden" id="id" value=""></input>
-									    <button type="button" id="aceptarConfirmacion" data-dismiss="modal"  th:onclick="|confirmarLote(this.getAttribute('data-pagina'),this.getAttribute('data-size'))|">Aceptar</button>
+									    <button type="button" id="aceptarConfirmacion" data-dismiss="modal"  th:onclick="|confirmarLote()|">Aceptar</button>
 										<button type="button" id="cerrarConfirmacion" data-dismiss="modal">Cerrar</button>
 										
 									</div>

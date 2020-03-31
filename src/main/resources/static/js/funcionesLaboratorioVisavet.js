@@ -9,14 +9,14 @@ $("#tablaResultadosLotes tbody tr").each(function ()
 {
 n++;
 });
-alert ("filas"+ n);
+
 //BORRA LAS n-1 FILAS VISIBLES DE LA TABLA
 //LAS BORRA DE LA ULTIMA FILA HASTA LA SEGUNDA
 //DEJANDO LA PRIMERA FILA VISIBLE, MÁS LA FILA PLANTILLA OCULTA
 for(i=n-1;i>0;i--)
 {
 $("#tablaResultadosLotes tbody tr:eq('"+i+"')").remove();
-alert ("borrar");
+
 };
 //$("#tablaResultadosLotes thead").remove();
 };
@@ -110,7 +110,7 @@ function loadConfirmarEnvio(id, numLote, centroProcedencia){
 	$("#id").val(id);
 }
 /* funcion que  realia una llamada ajax para cambiar el estado de un lote y recargar tabla de resultados */
-function confirmarLote(pagina,size){
+function confirmarLote(){
 	/* por ajax var url = "";
 	//var urlAbs = getAbsolutePath();
 	var id=$("#id").val();
@@ -132,6 +132,7 @@ function confirmarLote(pagina,size){
 	
 	var id=$("#id").val();
 	url =  '/laboratorioUni/confirmarReciboLote?id='+id;
+	alert(url);
 	window.location=url;
 }
 function consultarMuestras(lote,centroProcedencia,id){
@@ -168,7 +169,8 @@ function procesarLotes() {
 		 var seleccionado="#seleccionado"+i;
 		if ($(seleccionado).is(':checked')) {
 			//lotesProcesar
-			lotesProcesar+=$(seleccionado).val()+"&";
+			
+			lotesProcesar+=$(seleccionado).val()+":";
 		}
 	 }
 	}
@@ -197,13 +199,15 @@ function altaNuevaPlaca(){
 	});
 
 }
+
 // muestra las muestras con la referencia visavet
 function mostrarMuestrasPlacas(numLote){
 
-		if ($("#tabla"+numLote).is(':visible')) {
-	$("#tabla"+numLote).hide();}
-		else $("#tabla"+numLote).show();
+		if ($("#muestra"+numLote).is(':visible')) {
+	$("#muestra"+numLote).hide();}
+		else $("#muestra"+numLote).show();
 }
+
 function asignarPlaca(){
 	$("#criteriosBusqueda").show();
 	var url = "";
@@ -224,4 +228,8 @@ function asignarPlaca(){
 	    $("#trGroup").html(respuesta);
 		
 	});
+}
+function seleccionAccion(accion){
+	$("#accion").val(accion);
+	$("#formularioConReferencias").submit();
 }

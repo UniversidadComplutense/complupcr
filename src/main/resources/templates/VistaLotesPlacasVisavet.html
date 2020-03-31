@@ -51,7 +51,7 @@
 						</label>
 			    </div>
 			   
-			    <div class="col-12 form-group" >
+			    <div class="col-12 form-group">
 			   <!--  <div class="col-6 form-group">
 				<label class="col-xs-2">#Lote:</label>
 						<label class="col-xs-2">
@@ -61,8 +61,9 @@
 				           </select>
 						</label>
 			    </div> --><div class="col-6 form-group" th:each="var: ${lotePlacaVisavetBean.listaLotesDisponibles}">
-			     <label id="tamanoMuestra" >Tamaño del lote: <span th:text="${#lists.size(var.listaMuestras)}"></span></label>
+			     <label id="tamanoMuestra" >Nº muestras del lote  <span th:text="${var.numLote}"></span>: <span th:text="${#lists.size(var.listaMuestras)}"></span></label>
 			   </div> 
+			   <div class="col-6 form-group">Nº total:<span th:text="${lotePlacaVisavetBean.totalMuestras}"/></div>
 			    <div class="col-6 form-group">
 				<button type="button" th:onClick="|asignarPlaca(); return false|"  class="btn btn-secondary">Asignar</button>
 			    </div>
@@ -72,8 +73,9 @@
 
 		</fieldset>
 		
-		
-		
+		</form>
+		 <form action="#" th:action="@{/laboratorioUni/buscarPlacas}" id="formularioConReferencias" method="post" th:object="${lotePlacaVisavetBean}" th:modelAttribute="${lotePlacaVisavetBean}"
+			class="form-horizontal">
 		<!-- Aqui vienen los resultados -->
 		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
 		<div id="capaResultados" 
@@ -95,25 +97,62 @@
 				<tbody>
 				<tr id="trGroup"></tr>
 				<tr id="trGroup" th:each="unResultado,count : ${lotePlacaVisavetBean.placa.listaLotes}">
+					   <td colspan="4">    
+					     <table class="col-xs-12 table" id="tablaMuestras" >
+				    <tbody>
+				    <tr>
 					           <td width="2%">
+					          <input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].idPlacaVisavet}"/>
 								<span th:text="${unResultado.idPlacaVisavet}"></span>
 								</td>
 								<td width="1%">
+								<input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].id}"/>
 								<span th:text="${unResultado.numLote}"></span>
 								</td>
                                 <td width="10%">
-								<span th:text="${unResultado.centroProcedencia}"></span>
+                                <span th:text="${unResultado.centroProcedencia}"></span>
 								</td>
                                 <td width="5%">
+                                
 								<span th:text="${#lists.size(unResultado.listaMuestras)}"></span>
 								</td>
                               <td id="mensajes_log" style="text-align: left;" width="1%">
-                              <a th:data-lote="${unResultado.numLote}" href="#" th:onclick="|mostrarMuestrasPlacas(this.getAttribute('data-lote'));|">
-										<i class="fa fa-table" aria-hidden="true" id="rere"
+                              <a th:data-lote="${unResultado.id}" href="#" th:onclick="|mostrarMuestrasPlacas(this.getAttribute('data-lote'));|">
+										<i class="fa fa-table" aria-hidden="true" 
 										style="font-size: 1.2em;"></i>
 								</a>
 								
 								</td>
+							
+				</tr>
+				<tr th:id="muestra+${unResultado.id}" style="display:none;">
+				<!--  <tr th:if="${#lists.size(unResultado.listaMuestras)>0}"  th:each="unaMuestra,countM : ${unResultado.listaMuestras}">
+					-->
+					<td colspan="5">  
+					<table class="col-xs-12 table">
+					<tr th:if="${#lists.size(unResultado.listaMuestras)>0}"  th:each="unaMuestra,countM : ${unResultado.listaMuestras}">
+					
+								<td width="2%">
+								<input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].id}"/>
+								<span th:text="${unaMuestra.tipoMuestra}"></span>
+								</td>
+								<td width="2%">
+								<span th:text="${unaMuestra.etiqueta}"></span>
+								</td>
+								<td width="2%">
+								<input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].referenciaInterna}"/>
+								<input th:id="${unaMuestra.referenciaInterna}" th:value="${unaMuestra.referenciaInterna}"></span>
+								</td>
+					</tr>
+					</table>
+					</td>			
+					</tr>	
+				</tbody>
+		    	</table>
+				
+				
+				
+				
 				</tr>
 		
 		
@@ -121,8 +160,12 @@
 				</tbody>
 				
 				</table>
-			
-			
+			<!--  input grabar o grabar y finalizar -->
+			<!-- enviamos el mismo formulario a la misma url con este hidden voy a saber que quiere hacer el usuairo -->
+			<!--  si grabar o grabar y pasar a estado finalizado -->
+			<input type="hidden" th:field="${lotePlacaVisavetBean.accion}" id="accion" />
+			<button type="submit" th:onClick="|seleccionAccion('grabar'); return false|"  class="btn btn-secondary">Grabar</button>
+			<button type="submit" th:onClick="|seleccionAccion('grabaryFinalizar'); return false|"  class="btn btn-secondary">Grabar y Finalizar</button>
 			</div>
 		
 		 <!--  capa de resultados -->

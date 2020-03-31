@@ -5,7 +5,9 @@ import java.util.List;
 public class LotePlacaVisavetBean {
 private List<Integer> listaTamanosDisponibles;
 private List<BeanLote> listaLotesDisponibles;
+private int totalMuestras;
 private BeanPlacaVisavetUCM placa;
+private String accion;
 public List<Integer> getListaTamanosDisponibles() {
 	return listaTamanosDisponibles;
 }
@@ -28,6 +30,22 @@ public List<BeanLote> getListaLotesDisponibles() {
 
 public void setListaLotesDisponibles(List<BeanLote> listaLotesDisponibles) {
 	this.listaLotesDisponibles = listaLotesDisponibles;
+}
+
+public int getTotalMuestras() {
+	return totalMuestras;
+}
+
+public void setTotalMuestras(int totalMuestras) {
+	this.totalMuestras = totalMuestras;
+}
+
+public String getAccion() {
+	return accion;
+}
+
+public void setAccion(String accion) {
+	this.accion = accion;
 }
 
 
