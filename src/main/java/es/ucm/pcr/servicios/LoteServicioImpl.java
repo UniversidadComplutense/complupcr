@@ -46,6 +46,19 @@ public class LoteServicioImpl implements LoteServicio {
 		
 		return lotesCentro;
 	}
+	
+	@Override
+	public List<LoteListadoBean> findLoteByParam(LoteBusquedaBean params) {
+		List<LoteListadoBean> listLotesBean = new ArrayList<LoteListadoBean>();
+		
+		List<Lote> lotes = loteRepositorio.findByParams(params); 
+		
+		for (Lote l : lotes) {
+			listLotesBean.add(LoteListadoBean.modelToBean(l));
+		}
+		
+		return listLotesBean;
+	}
 
 	@Override
 	public LoteCentroBean guardar(LoteCentroBean loteBean) {

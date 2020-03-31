@@ -1,5 +1,6 @@
 package es.ucm.pcr.controladores;
 
+import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.LoteListadoBean;
@@ -67,7 +69,20 @@ public class LoteControlador {
 	@InitBinder("beanLote")
 	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session) throws Exception {  
 		binder.setValidator(validadorLote);
-	}	
+	}
+	/*
+	@InitBinder
+	public void initBinder(ServletRequestDataBinder binder) {
+	    binder.registerCustomEditor(BeanEstado.class, "idEstado", new PropertyEditorSupport() {
+	    	public void setAsText(String text) {
+	            Integer id = Integer.parseInt(text);
+	            BeanEstado beanEstado = new BeanEstado();
+	            beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoLote, id);	            
+	            setValue(beanEstado);               
+	        }
+	    });
+
+	}*/
 	
 	@RequestMapping(value="/lote", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN')")
@@ -138,6 +153,11 @@ public class LoteControlador {
 		ModelAndView vista = new ModelAndView("VistaLote");
 	
 		if (result.hasErrors()) {
+			// TODO - VER SI PODEMOS EVITAR ESTO CON EL INIT BINDER
+			BeanEstado beanEstado = new BeanEstado();
+            beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoLote, beanLote.getIdEstado());
+            beanLote.setEstado(beanEstado);
+			vista.addObject("editable", loteEditable(beanLote));
 			vista.addObject("beanLote", beanLote);
 			return vista;			
 		} else {

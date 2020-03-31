@@ -1,5 +1,7 @@
 package es.ucm.pcr.servicios;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,6 +18,13 @@ public interface LoteServicio {
 	 * @return
 	 */
 	public Page<LoteListadoBean> findLoteByParam(LoteBusquedaBean params, Pageable pageable);
+	
+	/**
+	 * Busca lotes en funcion de los parametros de busqueda
+	 * @param params
+	 * @return
+	 */
+	public List<LoteListadoBean> findLoteByParam(LoteBusquedaBean params);
 	
 	/**
 	 * Guardar lote

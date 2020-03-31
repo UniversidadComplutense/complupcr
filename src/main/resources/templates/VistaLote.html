@@ -12,12 +12,20 @@
 	
 	<form action="#" th:action="@{/centroSalud/lote/guardar}" method="post" th:object="${beanLote}" id="formGuardar" role="form">
 		<input type="hidden" th:field="${beanLote.id}"  th:value="${beanLote.id}" />
+		<!-- <input type="hidden" th:field="${beanLote.estado}"  th:value="${beanLote.estado}" /> -->
+		<!-- 
+		<input type="hidden" th:field="${beanLote.estado.estado.codNum}"  th:value="${beanLote.estado.estado.codNum}" />
+		<input type="hidden" th:field="${beanLote.estado.estado.descripcion}"  th:value="${beanLote.estado.estado.descripcion}" />
+		-->
+		 
+		<input type="hidden" name="idEstado" th:value="${beanLote.estado.estado.codNum}" /> 
 		<fieldset id="datosLote" class="form-group border p-2" th:disabled="!${editable}">
 			<legend class="w-auto">Lote</legend>
 			<div class="row">
 				<div class="col-4 form-group">
 					<label>Código</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="${beanLote.numLote}"  th:value="${beanLote.numLote}" required maxlength="50"/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('numLote')}" th:errors="${beanLote.numLote}"></label>
 				</div>
 				<div class="col-4 form-group">
 					<label>Capacidad</label>

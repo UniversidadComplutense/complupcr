@@ -51,7 +51,7 @@ public class MuestraListadoBean extends MuestraBusquedaBean {
 	}
 
 	public static MuestraListadoBean modelToBean(Muestra muestra) {
-		Paciente paciente = muestra.getPacientes().iterator().next();
+		Paciente paciente = muestra.getPaciente();
 		
 		MuestraListadoBean bean = new MuestraListadoBean();
 		bean.setId(muestra.getId());

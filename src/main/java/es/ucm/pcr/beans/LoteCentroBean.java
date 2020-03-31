@@ -15,6 +15,7 @@ public class LoteCentroBean {
 	private Integer idLaboratorio;
 	private Integer capacidad;
 	private Date fechaEnvio;
+	private Integer idEstado;
 	
 	public LoteCentroBean() {
 		super();	
@@ -80,6 +81,14 @@ public class LoteCentroBean {
 
 	public void setFechaEnvio(Date fechaEnvio) {
 		this.fechaEnvio = fechaEnvio;
+	}
+	
+	public Integer getIdEstado() {
+		return idEstado;
+	}
+
+	public void setIdEstado(Integer idEstado) {
+		this.idEstado = idEstado;
 	}
 
 	public static Lote beanToModel(LoteCentroBean loteBean) {

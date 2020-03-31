@@ -76,7 +76,7 @@ public class MuestraServicioImpl implements MuestraServicio {
 			muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ASIGNADA_LOTE.getCodNum()));
 		}
 		
-		Paciente paciente = muestra.getPacientes().iterator().next();
+		Paciente paciente = muestra.getPaciente();
 		muestra = muestraRepositorio.save(muestra);
 		paciente.setMuestra(muestra);
 		pacienteRepositorio.save(paciente);

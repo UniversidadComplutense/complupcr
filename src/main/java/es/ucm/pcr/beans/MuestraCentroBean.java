@@ -249,7 +249,7 @@ public class MuestraCentroBean implements java.io.Serializable {
 		paciente.setNotificarAutomato(muestraBean.isAvisosAuto() ? "S" : "N");
 
 		paciente.setMuestra(muestra);
-		muestra.getPacientes().add(paciente);
+		muestra.setPaciente(paciente);
 		
 		// TODO - COMPLETAR MUESTRAS
 		
@@ -257,7 +257,7 @@ public class MuestraCentroBean implements java.io.Serializable {
 	}
 	
 	public static MuestraCentroBean modelToBean(Muestra muestra) {
-		Paciente paciente = muestra.getPacientes().iterator().next();
+		Paciente paciente = muestra.getPaciente();
 		MuestraCentroBean muestraBean = new MuestraCentroBean();
 
 		muestraBean.setId(muestra.getId());

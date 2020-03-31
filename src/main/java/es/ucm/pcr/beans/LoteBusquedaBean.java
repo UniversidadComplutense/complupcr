@@ -14,6 +14,16 @@ public class LoteBusquedaBean {
 	private Date fechaEnvioIni;
 	private Date fechaEnvioFin;
 	private Integer idCentro;
+	
+	public LoteBusquedaBean() {
+		super();		
+	}
+	
+	public LoteBusquedaBean(String numLote, Integer idCentro) {
+		super();
+		this.numLote = numLote;
+		this.idCentro = idCentro;
+	}
 
 	public Integer getId() {
 		return id;

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -41,7 +43,7 @@ public class Muestra implements java.io.Serializable {
 	private Date fechaNotificacion;
 	private Set<UsuarioMuestra> usuarioMuestras = new HashSet<UsuarioMuestra>(0);
 	private Set<Documento> documentos = new HashSet<Documento>(0);
-	private Set<Paciente> pacientes = new HashSet<Paciente>(0);
+	private Paciente paciente;
 
 	public Muestra() {
 	}
@@ -56,7 +58,7 @@ public class Muestra implements java.io.Serializable {
 	public Muestra(Centro centro, EstadoMuestra estadoMuestra, Lote lote, String etiqueta, String tipoMuestra,
 			Date fechaEntrada, Date fechaEnvio, Date fechaResultado, String refInternaVisavet, String resultado,
 			Date fechaAsignada, Date fechaNotificacion, Set<UsuarioMuestra> usuarioMuestras,
-			Set<Documento> documentos, Set<Paciente> pacientes) {
+			Set<Documento> documentos, Paciente paciente) {
 		this.centro = centro;
 		this.estadoMuestra = estadoMuestra;
 		this.lote = lote;
@@ -71,12 +73,11 @@ public class Muestra implements java.io.Serializable {
 		this.fechaNotificacion = fechaNotificacion;
 		this.usuarioMuestras = usuarioMuestras;
 		this.documentos = documentos;
-		this.pacientes = pacientes;
+		this.paciente = paciente;
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-
 	@Column(name = "id", unique = true, nullable = false)
 	public Integer getId() {
 		return this.id;
@@ -220,13 +221,15 @@ public class Muestra implements java.io.Serializable {
 		this.documentos = documentos;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "muestra")
-	public Set<Paciente> getPacientes() {
-		return this.pacientes;
+	@OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL,
+            mappedBy = "muestra")
+	public Paciente getPaciente() {
+		return this.paciente;
 	}
 
-	public void setPacientes(Set<Paciente> pacientes) {
-		this.pacientes = pacientes;
+	public void setPaciente(Paciente paciente) {
+		this.paciente = paciente;
 	}
 
 }
