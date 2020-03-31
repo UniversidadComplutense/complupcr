@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-Covid19</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+	<div sec:authorize="hasAuthority('CHANGE_PASSWORD_PRIVILEGE')">
+		<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+		<div class="container">
+			<form name="f" action="/modificarContrasena" method="post">
+				<div class="row justify-content-center mt-3 mt-md-5">
+					<div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+						<div class="card">
+							<div class="card-body">
+								<div class="form-group">
+									<label for="password">Nueva contraseña</label> <input
+										id="password" name="newPassword" type="password" value=""
+										class="form-control" />
+								</div>
+								<div class="form-group">
+									<label for="confirmPass">Confirmar contraseña</label> <input
+										id="matchPassword" type="password" value=""
+										class="form-control" />
+								</div>
+								<div id="globalError" style="display: none" class="form-group">error</div>
+
+								<div class="col-7 mx-auto">
+									<button id="cambio" type="submit" class="btn btn-primary" disabled>Cambiar
+										contraseña</button>
+								</div>
+
+								<div class="row mt-2">
+									<div class="col-12">
+										<div th:if="${mensajeError != null}"
+											class="alert alert-danger alert-dismissable">
+											<p>
+												<i class="icon fa fa-ban"></i> <span
+													th:text="${mensajeError}">Invalid Email</span>
+											</p>
+										</div>
+										<div th:if="${mensajeEnviado != null}"
+											class="alert alert-info alert-dismissable">
+											<p>
+												<i class="icon fa fa-info"></i> <span
+													th:text="${mensajeEnviado}">Enviado</span>
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+			<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+
+			<script th:inline="javascript">
+					var serverContext = [[@{/}]];
+					$(document).ready(function () {
+					    $('form').submit(function(event) {
+					        savePass(event);
+					    });
+					     
+					    $("#matchPassword").keyup(function(){
+					        if($("#password").val() != $("#matchPassword").val()){
+					            $("#globalError").show().html("La confirmacion debe coincidir").addClass("alert alert-danger");
+					            $("#cambio").prop('disabled', true);
+					        }else{
+					        	$("#globalError").show().html("Confirmación correcta!!").removeClass("alert alert-danger").addClass("alert alert-success");
+					        	$("#cambio").prop('disabled', false);
+					        }
+					    });
+					});
+			</script>
+		</div>
+	</div>
+</body>
+</html>

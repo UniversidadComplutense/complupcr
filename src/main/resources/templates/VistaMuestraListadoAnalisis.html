@@ -78,11 +78,67 @@
 			</div>
 			
 		</fieldset>
+		
+		<!-- Diana, metemos un div no visible con un input con los codnum's de muestras que se han ido marcando para cerrar -->
+		<div class="row" style="display: none"> 
+			<label>				
+				listaCodnumMuestrasMarcadasParaCerrar 
+			</label>
+			<input  type="text" id="idListaCodnumMuestrasMarcadasParaCerrar" style="width: 400px !important;" />
+		</div> 
+		<!-- fin input con codnums -->
+		
+		<!-- Modal para mostrar al usuario las muestras marcadas para borrar y boton de confirmacion o cancelar -->
+		
+		
+		<!-- Modal id="exampleModalScrollable"-->
+		<div id="modalCerrarMuestras" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-scrollable" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalScrollableTitle">Modal title</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div id="modalCerrarMuestrasBody" class="modal-body">
+		        ...CUERPO MODAL
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+		        <!-- <button type="button" class="btn btn-primary">Cerrar muestras</button> -->
+		        <a href="#" class="btn btn-secondary"
+				onclick="return EjecutarCierreMuestras();">
+				Cerrar muestras
+				</a>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- fin Modal para mostrar al usuario las muestras marcadas para borrar y boton de confirmacion o cancelar -->
+		
+		<!-- modal para mostrar un alert -->
+		<div id="alert-modal" class="modal fade">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		      	<h4 id="alert-modal-title" class="modal-title"></h4>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>		        
+		      </div>
+		      <div id="alert-modal-body" class="modal-body alert alert-warning"></div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!-- fin modal para mostrar un alert -->
 
 		<div class="row justify-content-end mt-3">
-			<div class="col-1">
+			<!-- <div class="col-1">
 				<a th:href="@{/centroSalud/muestra/nueva}" class="btn btn-secondary">Nueva</a>				
-			</div>
+			</div> -->
 			<div class="col-1">
 				<button type="submit" class="btn btn-secondary">Buscar</button>
 			</div>
@@ -93,6 +149,8 @@
 			<table class="table">
 				<thead class="thead-light">	
 	    			<tr>
+	    			    <th scope="col">Cerrar</th>
+	    				<th scope="col">Analistas</th>
 	      				<th scope="col">Nombre</th>
 						<th scope="col">NHC</th>
 						<th scope="col">Etiqueta</th>
@@ -103,32 +161,46 @@
 						<th scope="col">Lote</th>
 						<!-- <th scope="col">Modificar</th> -->
 						<th scope="col">Asignar</th>
+						<th scope="col">Revisar</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr th:if="${listadoMuestras != null}" th:each="muestra : ${listadoMuestras}">
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+				<tbody th:if="${listadoMuestras != null}" th:each="muestra : ${listadoMuestras}">	
+					<!-- data-target="#group-of-rows-1" -->			
+					<tr >
+						<td>
+							<!-- th:checked="${muestra.estado == 'cerrada'}"  -->
+							<input
+									th:disabled="${muestra.esCerrable == false}"
+									type="checkbox" name="idCerrar" th:id="idCerrar"									
+									th:onClick="|AniadirOQuitarElementoAListaDeMuestrasACerrar(this, '${muestra.id}')|">
+							</input>
+						</td> 
+						<td class="clickable" data-toggle="collapse" th:data-target="${'#analistas'+ muestra.id}" aria-expanded="false" th:aria-controls="${'analistas'+ muestra.id}">
+							<i class="fa fa-folder"></i>
+						</td>
+					
+						<td>
 							<span th:text="${muestra.nombrePaciente}"></span>
 						</td>					
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td>
 							<span th:text="${muestra.nhcPaciente}"></span>							
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">							
+						<td>							
 							<span th:text="${muestra.etiquetaMuestra}"></span>							
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td>
 							<span th:text="${muestra.refInternaMuestra}"></span>							
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td>
 							<span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/mm/yyyy')}"></span>
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td>
 							<span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/mm/yyyy')}"></span>
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td>
 							<span th:text="${muestra.estadoMuestra}"></span>
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td>
 							<span th:text="${muestra.codNumLote}"></span>
 						</td>
 						<!--  
@@ -143,15 +215,61 @@
 					          <i class="fa fa-child" aria-hidden="true"></i>
 					        </a>
 						</td>
-												
-					</tr>		
-				</tbody>
+						<td>
+					        <a th:href="@{/analisis/revisar(idMuestra=${muestra.id} )}" data-toggle="tooltip" title="Revisar">					         
+					          <i class="fa fa-pencil" aria-hidden="true"></i>
+					        </a>
+						</td>
+					</tr>				
+					<!-- id="group-of-rows-1" -->	
+					<tr th:id="${'analistas'+ muestra.id}" class="collapse table-warning">
+						<td></td>
+						<td><i class="fa fa-folder-open"></i></td>
+						<td colspan="5">							
+							<label>Analistas asignados</label>
+							<ul th:each="analistaLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
+								<li><span th:text="${analistaLab.beanUsuario.nom}"></span>; 
+									<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
+									<span th:text="${analistaLab.valoracion}"></span> 
+								</li>
+							</ul>						
+						</td>
+						<td colspan="5">							
+							<label>Voluntarios asignados</label>
+							<ul th:each="voluntarioLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
+								<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span>; 
+									<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
+									<span th:text="${voluntarioLab.valoracion}"></span> 
+								</li>
+							</ul>						
+						</td>
+					</tr>	
+			
+			</tbody>
+			
 			</table>
 		</div>
+		
+		<div class="row justify-content-start mt-3">			
+			<!-- data-toggle="modal" data-target="#modalCerrarMuestras" -->
+			<div class="col-2">
+				<a href="#" class="btn btn-secondary"			
+				th:onclick="|cargarModalCerrarMuestras(); return false|" >
+				Cerrar muestras</a>
+			</div>	
+		</div>
+		
 	</form>
 
 	</div>
+		
+	
+	
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+	
+	<script th:src="@{/js/analisis.js}"></script>
     
 </body>
 </html>
