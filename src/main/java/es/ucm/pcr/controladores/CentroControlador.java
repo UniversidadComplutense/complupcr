@@ -17,10 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanCentro;
-import es.ucm.pcr.beans.BeanRol;
 import es.ucm.pcr.modelo.orm.Centro;
-import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.repositorio.CentroRepositorio;
+import es.ucm.pcr.servicios.CentroServicio;
 
 
 @Controller
@@ -28,6 +27,9 @@ public class CentroControlador {
 	
 	@Autowired
 	CentroRepositorio centroRepositorio;
+	
+	@Autowired
+	CentroServicio centroServicio;
 	
 	//	Muestra una lista ordenada ap1, ap2,nombre con los centros
 	// Punto de entrada a la gestión de centros
@@ -40,9 +42,18 @@ public class CentroControlador {
 		for (Centro centro: centroRepositorio.findAll())
 		{
 			listaCentros.add( 
-					new BeanCentro(centro.getId(), centro.getCodCentro(), centro.getNombre(), 
-					centro.getTelefono(), "RESPONSABLE", "tfno responsable", 
-					centro.getEmail(), "L")
+					new BeanCentro(
+							centro.getId(), 
+							centro.getNombre(), 
+							centro.getCodCentro(), 
+							centro.getTelefono(), 
+							centro.getEmail(), 
+							centro.getDireccion(),
+							centro.getUsuarios(),
+							centro.getMuestras(),
+							centro.getDocumentos(),
+							centro.getLotes(),
+							"L")
 			);
 		}
 		//	Ordeno por ap1, ap2, nombre
@@ -72,24 +83,27 @@ public class CentroControlador {
 		// Damos de alta nuevo centro
 		if (beanCentro.getAccion().equals("A"))
 		{
-			Centro centro = new Centro();
-			centro.setCodCentro(beanCentro.getCodCentro());
-			centro.setEmail(beanCentro.getMailCentro());
-			centro.setNombre(beanCentro.getDesCentro());
-			centro.setTelefono(beanCentro.getTelefonoCentro());
-			centroRepositorio.save(centro);
+//			Centro centro = new Centro();
+//			centro.setCodCentro(beanCentro.getCodCentro());
+//			centro.setEmail(beanCentro.getMailCentro());
+//			centro.setNombre(beanCentro.getDesCentro());
+//			centro.setTelefono(beanCentro.getTelefonoCentro());
+//			centroRepositorio.save(centro);
+			
+			centroRepositorio.save(centroServicio.mapeoBeanEntidadCentro(beanCentro));
 		}
 		// Modificamos centro existente
 		if (beanCentro.getAccion().equals("M"))
 		{
 			// Buscamos el centro a modificar, y volcamos los datos recogidos por el formulario
-			Optional<Centro> centro = centroRepositorio.findById(beanCentro.getIdCentro());
+			Optional<Centro> centro = centroRepositorio.findById(beanCentro.getId());
 			// añadimos campos del formulario
-			centro.get().setCodCentro(beanCentro.getCodCentro());
-			centro.get().setEmail(beanCentro.getMailCentro());
-			centro.get().setNombre(beanCentro.getDesCentro());
-			centro.get().setTelefono(beanCentro.getTelefonoCentro());
-			centroRepositorio.save(centro.get());
+//			centro.get().setCodCentro(beanCentro.getCodCentro());
+//			centro.get().setEmail(beanCentro.getMailCentro());
+//			centro.get().setNombre(beanCentro.getDesCentro());
+//			centro.get().setTelefono(beanCentro.getTelefonoCentro());
+//			centroRepositorio.save(centro.get());
+			centroRepositorio.save(centroServicio.mapeoBeanEntidadCentro(beanCentro));
 		}
 
 		// Volvemos a grabar mas centros
@@ -106,14 +120,16 @@ public class CentroControlador {
 		// Busco el centro a modificar
 		Optional<Centro> centro = centroRepositorio.findById(idCentro);
 		// cargo el beanCentro con lo datos del centro a modificar
-		BeanCentro beanCentro = new BeanCentro();
-		beanCentro.setIdCentro(centro.get().getId());
-		beanCentro.setCodCentro(centro.get().getCodCentro());
-		beanCentro.setDesCentro(centro.get().getNombre());
-		beanCentro.setMailCentro(centro.get().getEmail());
-		beanCentro.setResponsableCentro("RESPONSAABLE");
-		beanCentro.setTelefonoCentro(centro.get().getTelefono());
-		beanCentro.setTelefonoResponsableCentro(centro.get().getTelefono());
+//		BeanCentro beanCentro = new BeanCentro();
+//		beanCentro.setIdCentro(centro.get().getId());
+//		beanCentro.setCodCentro(centro.get().getCodCentro());
+//		beanCentro.setDesCentro(centro.get().getNombre());
+//		beanCentro.setMailCentro(centro.get().getEmail());
+//		beanCentro.setResponsableCentro("RESPONSAABLE");
+//		beanCentro.setTelefonoCentro(centro.get().getTelefono());
+//		beanCentro.setTelefonoResponsableCentro(centro.get().getTelefono());
+//		
+		BeanCentro beanCentro = centroServicio.mapeoEntidadBeanCentro(centro.get());
 	
 		// le indicamos la acción a relizar: M modificación de un centro
 		beanCentro.setAccion("M");

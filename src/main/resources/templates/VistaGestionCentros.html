@@ -28,10 +28,10 @@
 					<tbody>
 						<tr th:each="centro :${listaCentros}">
 							<td th:text="${centro.codCentro}"></td>
-							<td th:text="${centro.desCentro}"></td>							
+							<td th:text="${centro.nombre}"></td>							
 							<td>							
- 								<a th:href="@{/gestor/borrarCentro(idCentro=${centro.idCentro})}" class="btn btn-danger delBtn">Borrar</a>
-								<a th:href="@{/gestor/editarCentro(idCentro=${centro.idCentro})}" class="btn btn-primary eBtn">Editar</a>
+ 								<a th:href="@{/gestor/borrarCentro(idCentro=${centro.id})}" class="btn btn-danger delBtn">Borrar</a>
+								<a th:href="@{/gestor/editarCentro(idCentro=${centro.id})}" class="btn btn-primary eBtn">Editar</a>
 							</td>
 						</tr>
 					</tbody>
