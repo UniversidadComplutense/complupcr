@@ -174,7 +174,7 @@
 	
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 	
-	<object th:include="fragmentos :: scriptsBootstrap" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
 	
 	<script th:src="@{/js/analisis.js}"></script>
     
