@@ -68,7 +68,7 @@ function AniadirOQuitarElementoAListaDeMuestrasACerrar(input, idmuestra) {
 	
 }
 
-
+//TODO esto lo necesitaré cuando haya paginacion para no perder los marcados al movernos de una pagina a otra
 //Diana marcar llamamientos usuario cada vez que pulsamos en los botones de paginar
 //para no perder al paginar los registros que ha marcado el usuario para llamar
 //lo llamamos desde paginaRegistroTablaGestorListaEspera
