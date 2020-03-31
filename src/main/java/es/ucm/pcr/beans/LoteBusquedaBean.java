@@ -10,7 +10,7 @@ public class LoteBusquedaBean {
 	private Integer id;
 	private String numLote;
 	private String idLaboratorio;
-	private String idEstado;
+	private Integer idEstado;
 	private Date fechaEnvioIni;
 	private Date fechaEnvioFin;
 	private Integer idCentro;
@@ -39,11 +39,11 @@ public class LoteBusquedaBean {
 		this.idLaboratorio = idLaboratorio;
 	}
 
-	public String getIdEstado() {
+	public Integer getIdEstado() {
 		return idEstado;
 	}
 
-	public void setIdEstado(String idEstado) {
+	public void setIdEstado(Integer idEstado) {
 		this.idEstado = idEstado;
 	}
 

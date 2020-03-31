@@ -70,6 +70,7 @@
 						<th scope="col">Laboratorio</th>
 						<th scope="col">Estado</th>
 						<th scope="col">Fecha envío</th>
+						<th scope="col">Capacidad</th>
 						<th scope="col">Numero muestras</th>
 						<th scope="col">Muestras</th>
 						<th scope="col">Modificar</th>
@@ -81,6 +82,7 @@
 						<td><span th:text="${lote.descLaboratorio}"></span></td>
 						<td><span th:text="${lote.descEstado}"></span></td>
 						<td><span th:text="${#dates.format(lote.fechaEnvio, 'dd/MM/yyyy')}"></span></td>
+						<td><span th:text="${lote.capacidad}"></span></td>
 						<td><span th:text="${#lists.size(lote.muestras)}"></span></td>
 						<td>
 							<div th:if="${#lists.size(lote.muestras) == 0}">
@@ -140,9 +142,9 @@
 							<!-- FIN MODAL MUESTRAS -->	
 						</td>
 						<td>
-					        <a style="color:black" th:href="@{/centroSalud/lote/modificar(id=${lote.id})}">
+							<a style="color:black" th:href="@{/centroSalud/lote/modificar(id=${lote.id})}">
 					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
-					        </a>
+					        </a>					        
 						</td>						
 					</tr>		
 				</tbody>

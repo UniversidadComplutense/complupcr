@@ -2,31 +2,39 @@ package es.ucm.pcr.beans;
 
 import java.util.Date;
 
-import javax.persistence.Column;
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
+import es.ucm.pcr.modelo.orm.Centro;
+import es.ucm.pcr.modelo.orm.EstadoMuestra;
+import es.ucm.pcr.modelo.orm.Muestra;
+import es.ucm.pcr.modelo.orm.Paciente;
 
 public class MuestraCentroBean implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Integer id;
 	private Integer idCentro;
 	private String etiqueta;
 	private String tipoMuestra;
 	private Date fechaEntrada;
+	private Date fechaAsignada;
 	private Date fechaEnvio;
 	private Date fechaResultado;
 	private String refInterna;
 	private String resultado;
-	private Integer idEstado;
-	private int idLote;
+	private BeanEstado estado;
+	private Integer idLote;
 	private String nhc;
 	private boolean recogerDatosNotif;
 	private boolean avisosAuto;
-	private String nombreApellidos;
+	private String nombre;
+	private String primerApellido;
+	private String segundoApellido;
 	private String correo;
 	private String telefono;
 	private boolean avisoSms;
 	private Date fechaNotificacion;
+	private Integer idPaciente;
 
 	public MuestraCentroBean() {
 	}
@@ -71,6 +79,14 @@ public class MuestraCentroBean implements java.io.Serializable {
 		this.fechaEntrada = fechaEntrada;
 	}
 
+	public Date getFechaAsignada() {
+		return fechaAsignada;
+	}
+
+	public void setFechaAsignada(Date fechaAsignada) {
+		this.fechaAsignada = fechaAsignada;
+	}
+
 	public Date getFechaEnvio() {
 		return this.fechaEnvio;
 	}
@@ -103,19 +119,19 @@ public class MuestraCentroBean implements java.io.Serializable {
 		this.resultado = resultado;
 	}
 
-	public Integer getIdEstado() {
-		return this.idEstado;
+	public BeanEstado getEstado() {
+		return estado;
 	}
 
-	public void setIdEstado(Integer idEstado) {
-		this.idEstado = idEstado;
+	public void setEstado(BeanEstado estado) {
+		this.estado = estado;
 	}
 
-	public int getIdLote() {
+	public Integer getIdLote() {
 		return this.idLote;
 	}
 
-	public void setIdLote(int idLote) {
+	public void setIdLote(Integer idLote) {
 		this.idLote = idLote;
 	}
 
@@ -143,12 +159,28 @@ public class MuestraCentroBean implements java.io.Serializable {
 		this.avisosAuto = avisosAuto;
 	}
 
-	public String getNombreApellidos() {
-		return this.nombreApellidos;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setNombreApellidos(String nombreApellidos) {
-		this.nombreApellidos = nombreApellidos;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getPrimerApellido() {
+		return primerApellido;
+	}
+
+	public void setPrimerApellido(String primerApellido) {
+		this.primerApellido = primerApellido;
+	}
+
+	public String getSegundoApellido() {
+		return segundoApellido;
+	}
+
+	public void setSegundoApellido(String segundoApellido) {
+		this.segundoApellido = segundoApellido;
 	}
 
 	public String getCorreo() {
@@ -159,7 +191,6 @@ public class MuestraCentroBean implements java.io.Serializable {
 		this.correo = correo;
 	}
 
-	@Column(name = "telefono", length = 25)
 	public String getTelefono() {
 		return this.telefono;
 	}
@@ -182,6 +213,74 @@ public class MuestraCentroBean implements java.io.Serializable {
 
 	public void setFechaNotificacion(Date fechaNotificacion) {
 		this.fechaNotificacion = fechaNotificacion;
+	}
+
+	public void setIdCentro(Integer idCentro) {
+		this.idCentro = idCentro;
+	}
+
+	public Integer getIdPaciente() {
+		return idPaciente;
+	}
+
+	public void setIdPaciente(Integer idPaciente) {
+		this.idPaciente = idPaciente;
+	}
+
+	public static Muestra beanToModel(MuestraCentroBean muestraBean) {
+		Muestra muestra = new Muestra();
+		Paciente paciente = new Paciente();
+
+		muestra.setId(muestraBean.getId());
+		muestra.setEtiqueta(muestraBean.getEtiqueta());
+		muestra.setTipoMuestra(muestraBean.getTipoMuestra());
+		muestra.setFechaEntrada(muestraBean.getFechaEntrada());
+		muestra.setFechaAsignada(muestraBean.getFechaAsignada());
+		muestra.setEstadoMuestra(new EstadoMuestra(muestraBean.getEstado().getEstado().getCodNum()));
+		muestra.setCentro(new Centro(muestraBean.getIdCentro()));	
+		
+		paciente.setNombrePaciente(muestraBean.getNombre());
+		paciente.setApellido1paciente(muestraBean.getPrimerApellido());
+		paciente.setApellido2paciente(muestraBean.getSegundoApellido());
+		paciente.setNhc(muestraBean.getNhc());
+		paciente.setEmail(muestraBean.getCorreo());
+		paciente.setTelefono(muestraBean.getTelefono());
+		paciente.setNotificar(muestraBean.isAvisoSms() ? "S" : "N");
+		paciente.setNotificarAutomato(muestraBean.isAvisosAuto() ? "S" : "N");
+
+		paciente.setMuestra(muestra);
+		muestra.getPacientes().add(paciente);
+		
+		// TODO - COMPLETAR MUESTRAS
+		
+		return muestra;
+	}
+	
+	public static MuestraCentroBean modelToBean(Muestra muestra) {
+		Paciente paciente = muestra.getPacientes().iterator().next();
+		MuestraCentroBean muestraBean = new MuestraCentroBean();
+
+		muestraBean.setId(muestra.getId());
+		muestraBean.setEtiqueta(muestra.getEtiqueta());
+		muestraBean.setTipoMuestra(muestra.getTipoMuestra());
+		muestraBean.setFechaEntrada(muestra.getFechaEntrada());
+		muestraBean.setFechaAsignada(muestra.getFechaAsignada());
+		BeanEstado beanEstado = new BeanEstado();
+		muestraBean.setEstado(beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, muestra.getEstadoMuestra().getId()));
+		muestraBean.setIdCentro(muestra.getCentro().getId());	
+		
+		muestraBean.setNombre(paciente.getNombrePaciente());
+		muestraBean.setPrimerApellido(paciente.getApellido1paciente());
+		muestraBean.setSegundoApellido(paciente.getApellido2paciente());
+		muestraBean.setNhc(paciente.getNhc());
+		muestraBean.setCorreo(paciente.getEmail());
+		muestraBean.setTelefono(paciente.getTelefono());
+		muestraBean.setAvisoSms(paciente.getNotificar().equals("S"));
+		muestraBean.setAvisosAuto(paciente.getNotificarAutomato().equals("S"));
+
+		// TODO - COMPLETAR
+		
+		return muestraBean;
 	}
 
 }

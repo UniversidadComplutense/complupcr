@@ -12,14 +12,26 @@
 	<div class="container">	
 	
 	<form action="#" th:action="@{/centroSalud/muestra/guardar}" method="post" th:object="${beanMuestra}" id="formGuardar" role="form">
+		<input type="hidden" th:field="${beanMuestra.id}"  th:value="${beanMuestra.id}" />
+		<input type="hidden" th:field="${beanMuestra.idPaciente}"  th:value="${beanMuestra.idPaciente}" />
 		<fieldset id="datosPaciente" class="form-group border p-2" th:disabled="!${editable}">
 			<!-- DATOS PACIENTE -->
 			<legend class="w-auto">Paciente</legend>
 			<div class="row">
 				<div class="col-4 form-group">
 					<label>Nombre</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nombreApellidos}"  th:value="${beanMuestra.nombreApellidos}" required maxlength="50"/>
-				</div>					
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nombre}"  th:value="${beanMuestra.nombre}" required maxlength="50"/>
+				</div>	
+				<div class="col-4 form-group">
+					<label>Primer apellido</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.primerApellido}"  th:value="${beanMuestra.primerApellido}" required maxlength="50"/>
+				</div>	
+				<div class="col-4 form-group">
+					<label>Segundo apellido</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.segundoApellido}"  th:value="${beanMuestra.segundoApellido}" required maxlength="50"/>
+				</div>
+			</div>
+			<div class="row">					
 				<div class="col-4 form-group">
 					<label>Correo</label>
 				 	<input type="email" class="form-control form-control-sm" th:field="${beanMuestra.correo}"  th:value="${beanMuestra.correo}" required maxlength="50" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>

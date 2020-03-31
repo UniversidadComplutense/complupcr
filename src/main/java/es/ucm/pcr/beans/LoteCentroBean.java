@@ -1,5 +1,8 @@
 package es.ucm.pcr.beans;
 
+import java.util.Date;
+
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.EstadoLote;
 import es.ucm.pcr.modelo.orm.Lote;
@@ -11,6 +14,7 @@ public class LoteCentroBean {
 	private Integer idCentro;
 	private Integer idLaboratorio;
 	private Integer capacidad;
+	private Date fechaEnvio;
 	
 	public LoteCentroBean() {
 		super();	
@@ -70,15 +74,21 @@ public class LoteCentroBean {
 		this.capacidad = capacidad;
 	}
 	
+	public Date getFechaEnvio() {
+		return fechaEnvio;
+	}
+
+	public void setFechaEnvio(Date fechaEnvio) {
+		this.fechaEnvio = fechaEnvio;
+	}
+
 	public static Lote beanToModel(LoteCentroBean loteBean) {
 		Lote lote = new Lote();
 		lote.setNumeroLote(loteBean.getNumLote());
-		lote.setCentro(new Centro(loteBean.getIdCentro()));
-		
-		// TODO - PONER EL ESTADO QUE VENGA
+		lote.setCentro(new Centro(loteBean.getIdCentro()));		
 		lote.setEstadoLote(new EstadoLote(loteBean.getEstado().getEstado().getCodNum()));
 		lote.setCapacidad(loteBean.getCapacidad() != null ? loteBean.getCapacidad() : 0);
-		
+		// TODO - COMPLETAR MUESTRAS
 		return lote;
 	}
 	
@@ -87,7 +97,10 @@ public class LoteCentroBean {
 		loteBean.setId(lote.getId());
 		loteBean.setNumLote(lote.getNumeroLote());
 		loteBean.setCapacidad(lote.getCapacidad());
-		// TODO - COMPLETAR
+		BeanEstado beanEstado = new BeanEstado();
+		loteBean.setEstado(beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoLote, lote.getEstadoLote().getId()));
+		loteBean.setFechaEnvio(lote.getFechaEnvio());
+		// TODO - COMPLETAR MUESTRAS
 		return loteBean;
 	}
 	

@@ -1,9 +1,7 @@
 package es.ucm.pcr.controladores;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -11,6 +9,10 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,9 +27,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import es.ucm.pcr.beans.LoteCentroBean;
+import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
-import es.ucm.pcr.beans.MuestraListadoBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
+import es.ucm.pcr.beans.MuestraListadoBean;
+import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.servicios.MuestraServicio;
+import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.validadores.MuestraValidador;
 
 @Controller
@@ -35,6 +42,16 @@ import es.ucm.pcr.validadores.MuestraValidador;
 public class MuestraControlador {
 	
 	// TODO - INCLUIR EL ROL DEL CENTRO
+	// TODO - LOG, TRAZAR SERVICIOS
+	// TODO - MUESTRA - ACCIONES, ORDENACION, PAGINACION
+	
+	public static final Sort ORDENACION = Sort.by(Direction.ASC, "etiqueta");
+	
+	@Autowired
+	private SesionServicio sesionServicio;
+	
+	@Autowired
+	private MuestraServicio muestraServicio;
 	
 	@Autowired
 	private MuestraValidador validadorMuestra;
@@ -52,7 +69,7 @@ public class MuestraControlador {
 	
 	@RequestMapping(value="/muestra", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ModelAndView buscadorMuestras(HttpSession session) throws Exception {
+	public ModelAndView buscador(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestraListado");
 	
 		MuestraBusquedaBean beanBusqueda = new MuestraBusquedaBean();
@@ -63,23 +80,20 @@ public class MuestraControlador {
 	
 	@RequestMapping(value="/muestra/list", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute MuestraBusquedaBean beanBusqueda) throws Exception {
+	public ModelAndView buscar(HttpSession session, @ModelAttribute MuestraBusquedaBean beanBusqueda) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestraListado");
 		
-		List<MuestraListadoBean> list = new ArrayList<MuestraListadoBean>();
-		
-		for (int i = 0; i<10; i++) {
-			list.add(getBean(i));
-		}
+		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
+		Page<MuestraListadoBean> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
 		
 		vista.addObject("beanBusquedaMuestra", beanBusqueda);
-		vista.addObject("listadoMuestras", list);
+		vista.addObject("listadoMuestras", muestrasPage.getContent());
 		return vista;
 	}
 	
 	@RequestMapping(value="/muestra/nueva", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ModelAndView nuevaMuestra(HttpSession session) throws Exception {
+	public ModelAndView nueva(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
 	
 		MuestraCentroBean beanMuestra = new MuestraCentroBean();
@@ -92,10 +106,10 @@ public class MuestraControlador {
 	
 	@RequestMapping(value="/muestra/{id}", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ModelAndView consultaMuestras(HttpSession session, @PathVariable Integer id) throws Exception {
+	public ModelAndView consulta(HttpSession session, @PathVariable Integer id) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
 		
-		MuestraCentroBean beanMuestra = getBeanCentro(id.intValue());
+		MuestraCentroBean beanMuestra = muestraServicio.findById(id);
 	
 		// TODO - consulta/modificacion
 		//vista.addObject("editable", muestraEditable(beanMuestra));
@@ -107,10 +121,10 @@ public class MuestraControlador {
 	
 	@RequestMapping(value="/muestra/modificar", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ModelAndView modificarMuestras(HttpSession session, @RequestParam(value = "id", required = true) Integer id) throws Exception {
+	public ModelAndView modificar(HttpSession session, @RequestParam(value = "id", required = true) Integer id) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
 		
-		MuestraCentroBean beanMuestra = getBeanCentro(id.intValue());
+		MuestraCentroBean beanMuestra = muestraServicio.findById(id);
 	
 		vista.addObject("editable", muestraEditable(beanMuestra));
 		vista.addObject("notificable", muestraNotificable(beanMuestra));
@@ -120,15 +134,17 @@ public class MuestraControlador {
 	
 	@RequestMapping(value="/muestra/guardar", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ModelAndView nuevaMuestra(@Valid @ModelAttribute("beanMuestra") MuestraCentroBean beanMuestra, BindingResult result) throws Exception {
+	public ModelAndView guardar(@Valid @ModelAttribute("beanMuestra") MuestraCentroBean beanMuestra, BindingResult result) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
 	
 		if (result.hasErrors()) {
 			vista.addObject("beanMuestra", beanMuestra);
 			return vista;			
 		} else {
-			// TODO - GUARDAR
-			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/" + beanMuestra.getId(), true));
+			beanMuestra.setIdCentro(sesionServicio.getCentro().getId());
+			MuestraCentroBean muestra = muestraServicio.guardar(beanMuestra);
+			// TODO - VER A DONDE REDIRIGIR AL GUARDAR LOTE 
+			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/" + muestra.getId(), true));
 			return respuesta;
 		}
 	}
@@ -162,7 +178,9 @@ public class MuestraControlador {
 	 * @return
 	 */
 	private boolean muestraEditable(MuestraCentroBean beanMuestra) {
-		return (beanMuestra.getId() == null || (beanMuestra.getId() != null && beanMuestra.getResultado().equals("Pendiente")));
+		return (beanMuestra.getId() == null || (beanMuestra.getId() != null 
+					&& (beanMuestra.getEstado().getEstado().getCodNum() == Estado.MUESTRA_INICIADA.getCodNum() 
+						|| beanMuestra.getEstado().getEstado().getCodNum() == Estado.MUESTRA_ASIGNADA_LOTE.getCodNum())));	
 	}
 	
 	/**
@@ -171,52 +189,8 @@ public class MuestraControlador {
 	 * @return
 	 */
 	private boolean muestraNotificable(MuestraCentroBean beanMuestra) {
-		return beanMuestra.getId() != null && beanMuestra.getResultado().equals("Resuelta") && beanMuestra.getFechaNotificacion() == null;
+		// TODO - PENDIETE MUESTRA NOTIFICABLE
+		return beanMuestra.getId() != null && beanMuestra.getResultado() != null && beanMuestra.getResultado().equals("Resuelta") && beanMuestra.getFechaNotificacion() == null;
 	}
 	
-	public MuestraListadoBean getBean(int i) {
-		MuestraListadoBean bean = new MuestraListadoBean();
-		bean.setId(i);
-		bean.setNombrePaciente("Paciente " + i);
-		bean.setNhcPaciente("nhc-" + i);
-		bean.setEtiquetaMuestra("etiquetaM-" + i);
-		bean.setRefInternaMuestra("refInternaM-" + i);
-		bean.setFechaEnvioMuestraIni(new Date());
-		bean.setFechaResultadoMuestraIni(new Date());
-		bean.setEstadoMuestra("Pendiente");
-		if (i > 2) {
-			bean.setEstadoMuestra("Enviado");
-		}
-		if (i > 5) {
-			bean.setEstadoMuestra("Resuelta");			
-		}
-		bean.setCodNumLote("codLote-" + i);
-		
-		return bean;
-	}
-	
-	public MuestraCentroBean getBeanCentro(int i) {
-		MuestraCentroBean bean = new MuestraCentroBean();
-		bean.setId(i);
-		bean.setNombreApellidos("Paciente " + i);
-		bean.setNhc("nhc-" + i);
-		bean.setEtiqueta("etiquetaM-" + i);
-		bean.setRefInterna("refInternaM-" + i);
-		bean.setFechaEntrada(new Date());
-		bean.setFechaResultado(new Date());
-		bean.setResultado("Pendiente");
-		if (i > 2) {
-			bean.setResultado("Enviado");
-		}
-		if (i > 5) {
-			bean.setResultado("Resuelta");
-			if (i > 7) {
-				bean.setAvisosAuto(true);
-			}
-		}
-		bean.setTipoMuestra("N");
-		
-		return bean;
-	}
-
 }

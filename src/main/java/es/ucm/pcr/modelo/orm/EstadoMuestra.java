@@ -25,6 +25,11 @@ public class EstadoMuestra implements java.io.Serializable {
 
 	public EstadoMuestra() {
 	}
+	
+	public EstadoMuestra(Integer id) {
+		super();
+		this.id = id;
+	}
 
 	public EstadoMuestra(String descripcion) {
 		this.descripcion = descripcion;

@@ -17,19 +17,27 @@
 		<fieldset id="datosPaciente" class="form-group border p-2">
 			<legend class="w-auto">Paciente</legend>
 			<div class="row">
-				<div class="col-4 form-group">
+				<div class="col-3 form-group">
 					<label >Nombre</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.nombrePaciente}"  th:value="${beanBusquedaMuestra.nombrePaciente}" maxlength="100"/>
-				</div>	
-				<div class="col-4 form-group">
-					<label >Correo</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.emailPaciente}"  th:value="${beanBusquedaMuestra.emailPaciente}" maxlength="25"/>
 				</div>
+				<div class="col-3 form-group">
+					<label >Primer apellido</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.primerApellido}"  th:value="${beanBusquedaMuestra.primerApellido}" maxlength="100"/>
+				</div>	
+				<div class="col-3 form-group">
+					<label >Segundo apellido</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.segundoApellido}"  th:value="${beanBusquedaMuestra.segundoApellido}" maxlength="100"/>
+				</div>				
 			</div>
 			<div class="row">
-				<div class="col-4 form-group">
+				<div class="col-3 form-group">
 					<label >NHC</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.nhcPaciente}"  th:value="${beanBusquedaMuestra.nhcPaciente}" maxlength="10"/>
+				</div>
+				<div class="col-3 form-group">
+					<label >Correo</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.emailPaciente}"  th:value="${beanBusquedaMuestra.emailPaciente}" maxlength="25"/>
 				</div>					
 			</div>
 		</fieldset>
