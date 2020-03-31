@@ -125,10 +125,10 @@ public class SesionServicioImpl implements SesionServicio {
 //		Jefe de servicio
 		if (this.tieneRol("ADMIN") || this.tieneRol("JEFESERVICIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Asignar muestras", "", null);
+			opcionSecundaria = new MenuBean("Asignar y revisar muestras", "/analisis/", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Revisar  muestras", "", null);
-			menuSecundario.add(opcionSecundaria);
+			//opcionSecundaria = new MenuBean("Revisar  muestras", "", null);
+			//menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Estado  muestras", "", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Coger  lotes", "", null);
