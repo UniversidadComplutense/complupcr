@@ -22,12 +22,22 @@
 
 <link th:href="@{/css/pcr-ucm.css}" href="static/css/pcr-ucm.css"
 	rel="stylesheet" />
+		
+<!-- Data-toggle -->
+<link th:href="@{/css/bootstrap4-toggle.min.css}"
+	href="static/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<!--bootstrap-select -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.min.css}"
+	href="static/css/bootstrap-select.min.css">
+<!-- - -->
+	
 
 <link rel="shortcut icon" th:href="@{/img/logoucm.ico}"
 	href="static/img/logoucm.ico" type="image/x-icon" />
 <link rel="icon" th:href="@{/img/logoucm.ico}"
 	href="static/img/logoucm.ico" type="image/x-icon" />
-
+	
+	
 </head>
 
 
@@ -80,6 +90,13 @@
 	</div>
 </div>
 
+
+
+
+
+
+
+
 <!-- /* Pie de página */ -->
 <div th:fragment="footer-responsive" id="footer">
 	<div class="container">
@@ -94,10 +111,31 @@
 		</div>
 	</div>
 </div>
+
 <!--/* SCRIPTS - SIEMPRE FINAL DE PÁGINA */-->
 <div th:fragment="scripts" id="scripts">
+
 	<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-	<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
+	<!--<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>-->	
+	<!--  da un error en consola Uncaught SyntaxError: Unexpected token 'export' en popper.min.js
+	https://stackoverflow.com/questions/46459767/popper-js-in-bootstrap-4-gives-syntaxerror-unexpected-token-export -->
+	<!-- Check the readme.md "Usage". The lib is available in three version for three difference module loaders. 
+	In short: if you load it with the <script> tag then you must use the UMD version. You can find it in /dist/umd. 
+	The default (in /dist) is the ESNext (ECMA-Script) which can not be loaded using the script tag. -->
+	<!-- segun stackoverflow habría que descargar el popper.min.js que cuelgue de /dist/umd; pero no he conseguido encontrarlo, si referenciamos la url externa no da el error y funciona el popper -->
+	<script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>
 	<script src="static/js/bootstrap.min.js"
 		th:src="@{/js/bootstrap.min.js}"></script>
+		
+	<!-- 	Data-toggle	 -->
+	<script th:src="@{/js/bootstrap4-toggle.min.js}"
+		src="static/js/bootstrap4-toggle.min.js"></script>
+	<!--bootstrap-select -->
+	<script th:src="@{/js/bootstrap-select.min.js}"
+		src="static/js/bootstrap-select.min.js"></script>
+	<!-- - -->
+
+
 </div>
+
+
