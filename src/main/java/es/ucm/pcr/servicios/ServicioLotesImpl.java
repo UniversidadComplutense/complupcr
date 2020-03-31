@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
-import es.ucm.pcr.beans.BeanBusquedaLotes;
+import es.ucm.pcr.beans.BusquedaLotesBean;
 import es.ucm.pcr.beans.BeanElemento;
-import es.ucm.pcr.beans.BeanLote;
+import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 @Service
 public class ServicioLotesImpl implements ServicioLotes{
 	public List<BeanElemento> buscarEstadosLotes(){

@@ -4,7 +4,7 @@ import java.util.List;
 // lo voy a usar para empezar a asignar lotes a placas visavet pero sin haber confirmado aún
 public class LotePlacaVisavetBean {
 private List<Integer> listaTamanosDisponibles;
-private List<BeanLote> listaLotesDisponibles;
+private List<LoteBeanPlacaVisavet> listaLotesDisponibles;
 private int totalMuestras;
 private BeanPlacaVisavetUCM placa;
 private String accion;
@@ -24,11 +24,11 @@ public void setPlaca(BeanPlacaVisavetUCM listaPlacas) {
 	this.placa = listaPlacas;
 }
 
-public List<BeanLote> getListaLotesDisponibles() {
+public List<LoteBeanPlacaVisavet> getListaLotesDisponibles() {
 	return listaLotesDisponibles;
 }
 
-public void setListaLotesDisponibles(List<BeanLote> listaLotesDisponibles) {
+public void setListaLotesDisponibles(List<LoteBeanPlacaVisavet> listaLotesDisponibles) {
 	this.listaLotesDisponibles = listaLotesDisponibles;
 }
 

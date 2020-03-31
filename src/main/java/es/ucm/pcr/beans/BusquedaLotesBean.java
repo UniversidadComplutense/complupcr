@@ -6,7 +6,7 @@ import java.util.List;
 
 
 
-public class BeanBusquedaLotes {
+public class BusquedaLotesBean {
 private String idLaboratorio;
 private String nombreLaboratorio;
 private  String numLote;

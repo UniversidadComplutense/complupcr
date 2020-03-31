@@ -4,16 +4,16 @@ import java.util.List;
 
 public class BeanPlacaVisavetUCM {
 // aunque es List suponemos que una placa solo contiene un lote
-private List<BeanLote> listaLotes;
+private List<LoteBeanPlacaVisavet> listaLotes;
 private String id;
 private String tamano;
 //private Date fechaCreacion;
 //private BeanEstado 
 //private List<Integer> listaTamanosDisponibles;
-public List<BeanLote> getListaLotes() {
+public List<LoteBeanPlacaVisavet> getListaLotes() {
 	return listaLotes;
 }
-public void setListaLotes(List<BeanLote> listaLotes) {
+public void setListaLotes(List<LoteBeanPlacaVisavet> listaLotes) {
 	this.listaLotes = listaLotes;
 }
 public String getId() {

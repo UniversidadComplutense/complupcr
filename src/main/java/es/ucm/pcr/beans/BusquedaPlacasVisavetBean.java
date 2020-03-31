@@ -6,7 +6,7 @@ import java.util.List;
 
 
 
-public class BeanBusquedaPlacasVisavet {
+public class BusquedaPlacasVisavetBean {
 private String idPlaca;
 private  String numLote;
 private String fechaCreacion;

@@ -2,7 +2,7 @@ package es.ucm.pcr.beans;
 
 import java.util.Calendar;
 
-public class BeanMuestra{
+public class MuestraBeanLaboratorioVisavet{
 	private int id;
 	private String etiqueta;
 	private String tipoMuestra;

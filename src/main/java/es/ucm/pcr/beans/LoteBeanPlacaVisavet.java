@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class BeanLote{
+public class LoteBeanPlacaVisavet{
 	private String id;
 	private String numLote;
 	private String centroProcedencia;
@@ -14,7 +14,7 @@ public class BeanLote{
 	private int ocupacion;
 	private BeanEstado estado;
 	private Date fechaEntrada;
-	private List<BeanMuestra>  listaMuestras;
+	private List<MuestraBeanLaboratorioVisavet>  listaMuestras;
 	private String funcionEjecutar;
 	private String test;
 	private Integer idPlacaVisavet; 
@@ -55,10 +55,10 @@ public class BeanLote{
 	public void setFechaEntrada(Date fechaEntrada) {
 		this.fechaEntrada = fechaEntrada;
 	}
-	public List<BeanMuestra> getListaMuestras() {
+	public List<MuestraBeanLaboratorioVisavet> getListaMuestras() {
 		return listaMuestras;
 	}
-	public void setListaMuestras(List<BeanMuestra> listaMuestras) {
+	public void setListaMuestras(List<MuestraBeanLaboratorioVisavet> listaMuestras) {
 		this.listaMuestras = listaMuestras;
 	}
 	
