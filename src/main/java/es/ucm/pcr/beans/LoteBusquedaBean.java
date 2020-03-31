@@ -2,14 +2,28 @@ package es.ucm.pcr.beans;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
+
 public class LoteBusquedaBean {
 
 	private Integer id;
 	private String numLote;
 	private String idLaboratorio;
-	private String idEstado;
+	private Integer idEstado;
 	private Date fechaEnvioIni;
 	private Date fechaEnvioFin;
+	private Integer idCentro;
+	
+	public LoteBusquedaBean() {
+		super();		
+	}
+	
+	public LoteBusquedaBean(String numLote, Integer idCentro) {
+		super();
+		this.numLote = numLote;
+		this.idCentro = idCentro;
+	}
 
 	public Integer getId() {
 		return id;
@@ -35,11 +49,11 @@ public class LoteBusquedaBean {
 		this.idLaboratorio = idLaboratorio;
 	}
 
-	public String getIdEstado() {
+	public Integer getIdEstado() {
 		return idEstado;
 	}
 
-	public void setIdEstado(String idEstado) {
+	public void setIdEstado(Integer idEstado) {
 		this.idEstado = idEstado;
 	}
 
@@ -59,4 +73,16 @@ public class LoteBusquedaBean {
 		this.fechaEnvioFin = fechaEnvioFin;
 	}
 
+	public Integer getIdCentro() {
+		return idCentro;
+	}
+
+	public void setIdCentro(Integer idCentro) {
+		this.idCentro = idCentro;
+	}
+	
+	public String getCriterioNumLote() {
+		return StringUtils.isBlank(numLote) ? null : "%" + numLote + "%";
+	}
+	
 }

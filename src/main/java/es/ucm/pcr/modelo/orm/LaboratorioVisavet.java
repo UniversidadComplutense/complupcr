@@ -1,5 +1,5 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 30 mar. 2020 12:25:35 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +19,10 @@ import javax.persistence.Table;
 @Table(name = "laboratorioVisavet")
 public class LaboratorioVisavet implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4091833129817479905L;
 	private Integer id;
 	private String nombre;
 	private Integer capacidad;

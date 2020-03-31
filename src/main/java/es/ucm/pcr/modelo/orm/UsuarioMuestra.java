@@ -1,12 +1,13 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 30 mar. 2020 12:25:35 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,6 +23,10 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "usuario_muestra", uniqueConstraints = @UniqueConstraint(columnNames = "idUsuario"))
 public class UsuarioMuestra implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3347330222060386128L;
 	private Integer idUsuarioMuestra;
 	private Muestra muestra;
 	private Usuario usuario;
@@ -78,7 +83,7 @@ public class UsuarioMuestra implements java.io.Serializable {
 		this.usuario = usuario;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fechaAsignacion", length = 10)
 	public Date getFechaAsignacion() {
 		return this.fechaAsignacion;
@@ -105,5 +110,4 @@ public class UsuarioMuestra implements java.io.Serializable {
 	public void setFechaValoracion(String fechaValoracion) {
 		this.fechaValoracion = fechaValoracion;
 	}
-
 }

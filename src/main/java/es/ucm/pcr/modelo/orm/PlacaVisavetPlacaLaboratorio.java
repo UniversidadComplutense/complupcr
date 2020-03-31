@@ -1,11 +1,11 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 30 mar. 2020 12:25:35 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,6 +18,10 @@ import javax.persistence.Table;
 @Table(name = "placaVisavet_placaLaboratorio")
 public class PlacaVisavetPlacaLaboratorio implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4341094805740396522L;
 	private Integer id;
 	private PlacaLaboratorio placaLaboratorio;
 	private PlacaVisavet placaVisavet;

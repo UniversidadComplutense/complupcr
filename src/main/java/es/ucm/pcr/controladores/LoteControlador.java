@@ -1,9 +1,8 @@
 package es.ucm.pcr.controladores;
 
+import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -11,6 +10,10 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -18,15 +21,21 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import es.ucm.pcr.beans.BeanEstado;
+import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.LoteListadoBean;
-import es.ucm.pcr.beans.MuestraListadoBean;
+import es.ucm.pcr.servicios.LoteServicio;
+import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.validadores.LoteValidador;
 
 @Controller
@@ -34,9 +43,22 @@ import es.ucm.pcr.validadores.LoteValidador;
 public class LoteControlador {
 	
 	// TODO - INCLUIR EL ROL DEL CENTRO
+	// TODO - LOG, TRAZAR SERVICIOS
+	// TODO - LOTE - LABORATORIO
+	// TODO - LOTE - MUESTRAS
+	// TODO - LOTE - ACCION, ORDENACION, PAGINACION
+	
+	public static final Sort ORDENACION = Sort.by(Direction.ASC, "fechaEnvio");
+	
+	@Autowired
+	private SesionServicio sesionServicio;
+	
+	@Autowired
+	private LoteServicio loteServicio;
 	
 	@Autowired
 	private LoteValidador validadorLote;
+	
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -48,13 +70,27 @@ public class LoteControlador {
 	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session) throws Exception {  
 		binder.setValidator(validadorLote);
 	}
+	/*
+	@InitBinder
+	public void initBinder(ServletRequestDataBinder binder) {
+	    binder.registerCustomEditor(BeanEstado.class, "idEstado", new PropertyEditorSupport() {
+	    	public void setAsText(String text) {
+	            Integer id = Integer.parseInt(text);
+	            BeanEstado beanEstado = new BeanEstado();
+	            beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoLote, id);	            
+	            setValue(beanEstado);               
+	        }
+	    });
+
+	}*/
 	
 	@RequestMapping(value="/lote", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ModelAndView buscadorLotes(HttpSession session) throws Exception {
+	public ModelAndView buscador(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLoteListado");
 	
 		LoteBusquedaBean beanBusqueda = new LoteBusquedaBean();
+		addListsToView(vista);
 		
 		vista.addObject("beanBusquedaLote", beanBusqueda);
 		return vista;
@@ -62,121 +98,93 @@ public class LoteControlador {
 	
 	@RequestMapping(value="/lote/list", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute LoteBusquedaBean beanBusqueda) throws Exception {
+	public ModelAndView buscar(HttpSession session, @ModelAttribute LoteBusquedaBean beanBusqueda) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLoteListado");
 		
-		List<LoteListadoBean> list = new ArrayList<LoteListadoBean>();
+		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
+		Page<LoteListadoBean> lotesPage = loteServicio.findLoteByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION)); 
 		
-		for (int i = 0; i<10; i++) {
-			list.add(getBean(i));
-		}
-		
+		addListsToView(vista);
 		vista.addObject("beanBusquedaLote", beanBusqueda);
-		vista.addObject("listadoLotes", list);
+		vista.addObject("listadoLotes", lotesPage.getContent());
 		return vista;
 	}
 	
 	@RequestMapping(value="/lote/nuevo", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ModelAndView nuevaMuestra(HttpSession session) throws Exception {
+	public ModelAndView nuevo(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLote");
 	
-		LoteCentroBean beanLote = new LoteCentroBean();
-		
+		// estado iniciado para nuevo lote
+		LoteCentroBean beanLote = new LoteCentroBean();		
 		
 		vista.addObject("editable", loteEditable(beanLote));		
 		vista.addObject("beanLote", beanLote);
 		return vista;
 	}
-	/*
-	@RequestMapping(value="/{id}", method=RequestMethod.GET)
+	
+	@RequestMapping(value="/lote/modificar", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ModelAndView consultaMuestras(HttpSession session, @PathVariable Integer id) throws Exception {
-		ModelAndView vista = new ModelAndView("VistaMuestra");
+	public ModelAndView modificar(HttpSession session, @RequestParam(value = "id", required = true) Integer id) throws Exception {
+		ModelAndView vista = new ModelAndView("VistaLote");
 		
-		MuestraCentroBean beanMuestra = getBeanCentro(id.intValue());
+		LoteCentroBean beanLote = loteServicio.findById(id);
 	
-		vista.addObject("editable", muestraEditable(beanMuestra));
-		vista.addObject("notificable", muestraNotificable(beanMuestra));
-		vista.addObject("beanMuestra", beanMuestra);
+		vista.addObject("editable", loteEditable(beanLote));	
+		vista.addObject("beanLote", beanLote);
 		return vista;
-	}*/
+	}
 	
+	@RequestMapping(value="/lote/{id}", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	public ModelAndView consultar(HttpSession session, @PathVariable Integer id) throws Exception {
+		ModelAndView vista = new ModelAndView("VistaLote");
+		
+		LoteCentroBean beanLote = loteServicio.findById(id);
+	
+		vista.addObject("editable", loteEditable(beanLote));	
+		vista.addObject("beanLote", beanLote);
+		return vista;
+	}
 	
 	@RequestMapping(value="/lote/guardar", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ModelAndView nuevaMuestra(@Valid @ModelAttribute("beanLote") LoteCentroBean beanLote, BindingResult result) throws Exception {
+	public ModelAndView guardar(@Valid @ModelAttribute("beanLote") LoteCentroBean beanLote, BindingResult result) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLote");
 	
 		if (result.hasErrors()) {
+			// TODO - VER SI PODEMOS EVITAR ESTO CON EL INIT BINDER
+			BeanEstado beanEstado = new BeanEstado();
+            beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoLote, beanLote.getIdEstado());
+            beanLote.setEstado(beanEstado);
+			vista.addObject("editable", loteEditable(beanLote));
 			vista.addObject("beanLote", beanLote);
 			return vista;			
 		} else {
-			// TODO - GUARDAR
-			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote", true));
+			// guardar lote
+			beanLote.setIdCentro(sesionServicio.getCentro().getId());
+			LoteCentroBean lote = loteServicio.guardar(beanLote);
+			// TODO - VER A DONDE REDIRIGIR AL GUARDAR LOTE 
+			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/" + lote.getId(), true));
 			return respuesta;
 		}
 	}
 	
+	private void addListsToView(ModelAndView vista) {
+		
+		vista.addObject("listaEstadosLote", BeanEstado.estadosLote());
+	}
 	
 	/**
-	 * TODO - ESTADOS LOTE
-	 * El lote es editable mientras NO tenga estado enviado
+	 * El lote es editable si es nuevo o si existe y NO tiene estado INICIADO o ASIGNADO_CENTRO_ANALISIS
 	 * @param beanMuestra
 	 * @return
 	 */
 	private boolean loteEditable(LoteCentroBean beanLote) {
-		//return (beanLote.getId() == null || (beanLote.getId() != null && beanLote.getEstado().get.equals("Pendiente")));
-		return true;
+		return (beanLote.getId() == null 
+				|| (beanLote.getId() != null 
+						&& (beanLote.getEstado().getEstado().getCodNum() == Estado.LOTE_INICIADO.getCodNum() 
+								|| beanLote.getEstado().getEstado().getCodNum() == Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum())));		
 	}
 	
-	
-	public LoteListadoBean getBean(int i) {
-		LoteListadoBean bean = new LoteListadoBean();
-		bean.setId(i);
-		bean.setNumLote("codLote-" + i);
-		bean.setDescEstado("Iniciado");
-		if (i > 0) {
-			bean.getMuestras().add(getBeanMuestra(i));
-		}
-		if (i > 3) {
-			bean.setDescEstado("AsignadoCentroAnalisis");
-			bean.setDescLaboratorio("laboratorio-" + i);
-			bean.getMuestras().add(getBeanMuestra(++i));
-			bean.getMuestras().add(getBeanMuestra(++i));
-		}
-		if (i > 7) {
-			bean.setFechaEnvio(new Date());
-			bean.setDescEstado("EnviadoLaboratorio");	
-			bean.setDescLaboratorio("laboratorio-" + i);
-			bean.getMuestras().add(getBeanMuestra(++i));
-			bean.getMuestras().add(getBeanMuestra(++i));
-			bean.getMuestras().add(getBeanMuestra(++i));
-			bean.getMuestras().add(getBeanMuestra(++i));
-		}
-		
-		return bean;
-	}
-	
-	public MuestraListadoBean getBeanMuestra(int i) {
-		MuestraListadoBean bean = new MuestraListadoBean();
-		bean.setId(i);
-		bean.setNombrePaciente("Paciente " + i);
-		bean.setNhcPaciente("nhc-" + i);
-		bean.setEtiquetaMuestra("etiquetaM-" + i);
-		bean.setRefInternaMuestra("refInternaM-" + i);
-		bean.setFechaEnvioMuestraIni(new Date());
-		bean.setFechaResultadoMuestraIni(new Date());
-		bean.setEstadoMuestra("Pendiente");
-		if (i > 2) {
-			bean.setEstadoMuestra("Enviado");
-		}
-		if (i > 5) {
-			bean.setEstadoMuestra("Resuelta");
-		}
-		bean.setCodNumLote("codLote-" + i);
-		
-		return bean;
-	}
-
 }

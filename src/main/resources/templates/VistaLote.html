@@ -11,21 +11,43 @@
 	<div class="container">	
 	
 	<form action="#" th:action="@{/centroSalud/lote/guardar}" method="post" th:object="${beanLote}" id="formGuardar" role="form">
+		<input type="hidden" th:field="${beanLote.id}"  th:value="${beanLote.id}" />
+		<!-- <input type="hidden" th:field="${beanLote.estado}"  th:value="${beanLote.estado}" /> -->
+		<!-- 
+		<input type="hidden" th:field="${beanLote.estado.estado.codNum}"  th:value="${beanLote.estado.estado.codNum}" />
+		<input type="hidden" th:field="${beanLote.estado.estado.descripcion}"  th:value="${beanLote.estado.estado.descripcion}" />
+		-->
+		 
+		<input type="hidden" name="idEstado" th:value="${beanLote.estado.estado.codNum}" /> 
 		<fieldset id="datosLote" class="form-group border p-2" th:disabled="!${editable}">
-			<!-- DATOS PACIENTE -->
 			<legend class="w-auto">Lote</legend>
 			<div class="row">
 				<div class="col-4 form-group">
 					<label>Código</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="${beanLote.numLote}"  th:value="${beanLote.numLote}" required maxlength="50"/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('numLote')}" th:errors="${beanLote.numLote}"></label>
+				</div>
+				<div class="col-4 form-group">
+					<label>Capacidad</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanLote.capacidad}"  th:value="${beanLote.capacidad}" pattern="[0-9]{3}" required/>
 				</div>					
 				<div class="col-3 form-group">
 					<label>Laboratorio</label>
-				 	<select class="form-control form-control-sm" th:field="${beanLote.idLaboratorio}"  th:value="${beanLote.idLaboratorio}" required>
+				 	<select class="form-control form-control-sm" th:field="${beanLote.idLaboratorio}"  th:value="${beanLote.idLaboratorio}">
 				 		<option value="">Seleccione</option>
 				 		<option value="1">LAB UCM</option>
 				 		<option value="2">LAB 2</option>
 				 	</select>
+				</div>				
+			</div>
+			<div class="row" th:if="${beanLote.id} != null">
+				<div class="col-4 form-group">
+					<label>Estado</label>
+				 	<input type="text" class="form-control form-control-sm" disabled th:value="${beanLote.estado.estado.descripcion}"></input>
+				</div>
+				<div class="col-4 form-group">
+					<label>Fecha envío</label>
+				 	<input type="text" class="form-control form-control-sm" disabled th:value="${#dates.format(beanLote.fechaEnvio, 'dd/MM/yyyy')}"></input>
 				</div>				
 			</div>					
 		</fieldset>
@@ -34,7 +56,7 @@
 		<!-- ACCCIONES -->
 		<div class="row justify-content-center mt-3">
 			<div class="col-2">
-				<a th:href="@{/centroSalud/lote/}" class="btn btn-secondary">Volver</a>				
+				<a th:href="@{/centroSalud/lote}" class="btn btn-secondary">Volver</a>				
 			</div>
 			<div class="col-2">
 				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>

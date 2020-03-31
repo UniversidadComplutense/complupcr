@@ -1,5 +1,5 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 30 mar. 2020 12:25:35 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +20,10 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "centro", uniqueConstraints = @UniqueConstraint(columnNames = "codCentro"))
 public class Centro implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7990651111469057759L;
 	private Integer id;
 	private String nombre;
 	private String codCentro;
@@ -32,6 +36,11 @@ public class Centro implements java.io.Serializable {
 	private Set<Lote> lotes = new HashSet<Lote>(0);
 
 	public Centro() {
+	}
+	
+	public Centro(Integer id) {
+		super();
+		this.id = id;
 	}
 
 	public Centro(String nombre, String codCentro) {
