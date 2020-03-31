@@ -41,6 +41,7 @@
 				</div>
 				<div class="col-9 form-group">
 				<label class="col-xs-2">Tamaño:</label>
+				
 						<label class="col-xs-2">
 							 <select class="form-control form-control-sm" id="tamano" th:field="*{placa.tamano}">
 					              <option th:each="var: ${lotePlacaVisavetBean.listaTamanosDisponibles}"
@@ -48,6 +49,22 @@
 									th:select="${lotePlacaVisavetBean.placa.tamano}">Tamaño</option>
 				           </select>
 						</label>
+			    </div>
+			   
+			    <div class="col-12 form-group" >
+			   <!--  <div class="col-6 form-group">
+				<label class="col-xs-2">#Lote:</label>
+						<label class="col-xs-2">
+							 <select class="form-control form-control-sm" id="loteSeleccionado">
+					              <option th:each="var: ${lotePlacaVisavetBean.listaLotesDisponibles}"
+									th:value="${var.id}" th:text="${var.numLote} +  ' - ' + ${var.centroProcedencia} + ' - '   + ${#lists.size(var.listaMuestras)}" >lote</option>
+				           </select>
+						</label>
+			    </div> --><div class="col-6 form-group" th:each="var: ${lotePlacaVisavetBean.listaLotesDisponibles}">
+			     <label id="tamanoMuestra" >Tamaño del lote: <span th:text="${#lists.size(var.listaMuestras)}"></span></label>
+			   </div> 
+			    <div class="col-6 form-group">
+				<button type="button" th:onClick="|asignarPlaca(); return false|"  class="btn btn-secondary">Asignar</button>
 			    </div>
 			    
 			  </div>
@@ -62,7 +79,7 @@
 		<div id="capaResultados" 
 			class="row formPnl1">
 		
-				<table class="col-xs-12 table" th:id="tablaResultadosLotes" >
+				<table class="col-xs-12 table" id="tablaResultadosLotes" >
 						 <thead class="thead-light">
 				<tr>
 				
@@ -70,16 +87,16 @@
 					<th  width="1%" style="text-align: left;">#Lote</th>
 					<th width="10%" style="text-align: left;">Centro</th>
 					<th  width="5%" style="text-align: left;">Nº de muestras</th>
-					<th  style="text-align: left;" width="1%">#Muestras</th>
+				
 					
 				
 				</tr>
 				</thead>
-			 	<tr th:id="trGroup+ ${count.index}"   th:each="unResultado,count : ${lotePlacaVisavetBean.placa.listaLotes}">
-					         <table>
-					         <tr>
+				<tbody>
+				<tr id="trGroup"></tr>
+				<tr id="trGroup" th:each="unResultado,count : ${lotePlacaVisavetBean.placa.listaLotes}">
 					           <td width="2%">
-								<span th:text="${lotePlacaVisavetBean.placa.id}"></span>
+								<span th:text="${unResultado.idPlacaVisavet}"></span>
 								</td>
 								<td width="1%">
 								<span th:text="${unResultado.numLote}"></span>
@@ -97,23 +114,14 @@
 								</a>
 								
 								</td>
-								</tr>
-								<tr th:id="muestrasLotes+ ${count.index}"><td colspan="5">
-								<table class="table"><thead class="thead-light"><tr> <th>Tipo Hisopo</th><th>Ref.Envio</th><th>Ref.Interna</th>
-								</tr></thead>
-								<tbody>
-								<tr th:id="trMuestra+ ${countM.index}"   th:each="unaMuestra,countM : ${unResultad.listaMuestras}">
-								<td width="2%">
-								<span th:text="${unaMuestra.tipoMuestra}"></span>
-								</td>
-								</tr>
-								</tbody>
-								</table>
-								</td></tr>
-								</table>
-					</tr>	
-					
-			</table>
+				</tr>
+		
+		
+			
+				</tbody>
+				
+				</table>
+			
 			
 			</div>
 		

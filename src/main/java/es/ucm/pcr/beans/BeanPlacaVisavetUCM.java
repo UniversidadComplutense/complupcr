@@ -7,6 +7,8 @@ public class BeanPlacaVisavetUCM {
 private List<BeanLote> listaLotes;
 private String id;
 private String tamano;
+//private Date fechaCreacion;
+//private BeanEstado 
 //private List<Integer> listaTamanosDisponibles;
 public List<BeanLote> getListaLotes() {
 	return listaLotes;

@@ -9,14 +9,16 @@ $("#tablaResultadosLotes tbody tr").each(function ()
 {
 n++;
 });
+alert ("filas"+ n);
 //BORRA LAS n-1 FILAS VISIBLES DE LA TABLA
 //LAS BORRA DE LA ULTIMA FILA HASTA LA SEGUNDA
 //DEJANDO LA PRIMERA FILA VISIBLE, MÁS LA FILA PLANTILLA OCULTA
 for(i=n-1;i>0;i--)
 {
 $("#tablaResultadosLotes tbody tr:eq('"+i+"')").remove();
+alert ("borrar");
 };
-$("#tablaResultadosLotes thead").remove();
+//$("#tablaResultadosLotes thead").remove();
 };
 function eliminarCabecera(){
 	$("#tablaResultadosCabecera thead").remove();
@@ -186,6 +188,7 @@ function altaNuevaPlaca(){
         type:  'GET',
         url:   url,
         dataType: 'html'
+       
 	}).done(function(respuesta) {
 	 
 	   $("#criteriosBusqueda").show();
@@ -196,5 +199,29 @@ function altaNuevaPlaca(){
 }
 // muestra las muestras con la referencia visavet
 function mostrarMuestrasPlacas(numLote){
-	alert(numLote);
+
+		if ($("#tabla"+numLote).is(':visible')) {
+	$("#tabla"+numLote).hide();}
+		else $("#tabla"+numLote).show();
+}
+function asignarPlaca(){
+	$("#criteriosBusqueda").show();
+	var url = "";
+	//var urlAbs = getAbsolutePath();
+	
+	url="/laboratorioUni/asignarPlaca?idPlaca="+$("#numPlacaSpan").text();
+	sBody=$('#formularioPrueba').serialize();
+	
+	$.ajax({
+        type:  'GET',
+        url:   url,
+        dataType: 'html',
+        data:  sBody
+	}).done(function(respuesta) {
+		alert (respuesta);
+		eliminaFilas();
+		
+	    $("#trGroup").html(respuesta);
+		
+	});
 }

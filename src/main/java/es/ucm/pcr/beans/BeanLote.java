@@ -17,6 +17,7 @@ public class BeanLote{
 	private List<BeanMuestra>  listaMuestras;
 	private String funcionEjecutar;
 	private String test;
+	private Integer idPlacaVisavet; 
 	public String getId() {
 		return id;
 	}
@@ -78,6 +79,12 @@ public class BeanLote{
 	}
 	public void setFuncionEjecutar(String funcionEjecutar) {
 		this.funcionEjecutar = funcionEjecutar;
+	}
+	public Integer getIdPlacaVisavet() {
+		return idPlacaVisavet;
+	}
+	public void setIdPlacaVisavet(Integer idPlacaVisavet) {
+		this.idPlacaVisavet = idPlacaVisavet;
 	}
 	
 }
