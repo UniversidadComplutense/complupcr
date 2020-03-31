@@ -19,6 +19,10 @@ import javax.persistence.Table;
 @Table(name = "laboratorioVisavet")
 public class LaboratorioVisavet implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4091833129817479905L;
 	private Integer id;
 	private String nombre;
 	private Integer capacidad;

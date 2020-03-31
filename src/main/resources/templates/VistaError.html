@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-Covid19</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+	<div class="container">
+	
+	<div class="col-xs-0 col-lg-2"></div>
+			<div class="col-xs-12 col-lg-8">
+				<div>
+					<h2>ERROR EN LA APLICACIÓN</h2>
+					<hr />
+					<p>
+						La página ha tenido el siguiente error: <label
+							th:text="${exErrorMessage}"> </label>
+					</p>
+					<p>&nbsp;</p>
+					<p>
+						Error cargando <label th:text="${exErrorPeticion}"></label>
+					</p>
+					<p>&nbsp;</p>
+					<p>
+						Si lo desea puede enviarnos un mensaje informando del mismo <a
+							class="enlace1"
+							href="mailto:dades@ucm.es?Subject=Excepción PCRs">pulsando
+							aquí</a>.
+					</p>
+
+					<hr />
+				</div>
+
+				<div>
+					<p align="right">
+						Fecha: <label th:text="${exErrorTimestamptuneado}"> </label> (<label
+							th:text="${exErrorNode}"> </label>)
+					</p>
+				</div>
+
+			</div>
+			<div class="col-xs-0 col-lg-2"></div>
+	
+	
+	</div>
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+</body>
+</html>
