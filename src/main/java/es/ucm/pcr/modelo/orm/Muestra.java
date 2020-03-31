@@ -32,6 +32,8 @@ public class Muestra implements java.io.Serializable {
 	private Centro centro;
 	private EstadoMuestra estadoMuestra;
 	private Lote lote;
+	private PlacaVisavet placaVisavet;
+	private PlacaLaboratorio placaLaboratorio;
 	private String etiqueta;
 	private String tipoMuestra;
 	private Date fechaEntrada;
@@ -55,13 +57,15 @@ public class Muestra implements java.io.Serializable {
 		this.tipoMuestra = tipoMuestra;
 	}
 
-	public Muestra(Centro centro, EstadoMuestra estadoMuestra, Lote lote, String etiqueta, String tipoMuestra,
+	public Muestra(Centro centro, EstadoMuestra estadoMuestra, Lote lote,PlacaVisavet  placaVisavet, PlacaLaboratorio  placaLaboratorio , String etiqueta, String tipoMuestra,
 			Date fechaEntrada, Date fechaEnvio, Date fechaResultado, String refInternaVisavet, String resultado,
 			Date fechaAsignada, Date fechaNotificacion, Set<UsuarioMuestra> usuarioMuestras,
 			Set<Documento> documentos, Paciente paciente) {
 		this.centro = centro;
 		this.estadoMuestra = estadoMuestra;
 		this.lote = lote;
+		this.placaVisavet = placaVisavet; 
+		this.placaLaboratorio = placaLaboratorio ;
 		this.etiqueta = etiqueta;
 		this.tipoMuestra = tipoMuestra;
 		this.fechaEntrada = fechaEntrada;
@@ -116,7 +120,25 @@ public class Muestra implements java.io.Serializable {
 	public void setLote(Lote lote) {
 		this.lote = lote;
 	}
+	@ManyToOne
+	@JoinColumn(name = "idPlacaVisavet")
+	public PlacaVisavet getPlacaVisavet() {
+		return this.placaVisavet;
+	}
 
+	public void setPlacaVisavet(PlacaVisavet placaVisavet) {
+		this.placaVisavet = placaVisavet;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name = "idPlacaLaboratorio")
+	public PlacaLaboratorio getPlacaLaboratorio() {
+		return this.placaLaboratorio;
+	}
+
+	public void setPlacaLaboratorio(PlacaLaboratorio placaLaboratorio) {
+		this.placaLaboratorio = placaLaboratorio;
+	}
 	@Column(name = "etiqueta", nullable = false, length = 100)
 	public String getEtiqueta() {
 		return this.etiqueta;
