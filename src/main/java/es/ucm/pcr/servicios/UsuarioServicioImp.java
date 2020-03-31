@@ -44,14 +44,76 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		}
 	}
 	
-//	@Override
-//	public BeanUsuario mapeoEntidadBeanUsuario (Usuario usuario) throws Exception
-//	{
-//		
-//	}
-//	
-//	@Override
-//	public Usuario mapeoEntidadBeanUsuario (BeanUsuario beanUsuario) throws Exception{
+	@Override
+	public BeanUsuario mapeoEntidadBeanUsuario (Usuario usuario) throws Exception
+	{
+		BeanUsuario beanUsuario =  new BeanUsuario();
+		
+		beanUsuario.setAcertadas(usuario.getAcertadas());
+		beanUsuario.setApellido1(usuario.getApellido1());
+		beanUsuario.setApellido2(usuario.getApellido2());
+		beanUsuario.setAsignadas(usuario.getAsignadas());
+		beanUsuario.setCentro(usuario.getCentro());
+		beanUsuario.setDocumentos(usuario.getDocumentos());
+		beanUsuario.setEmail(usuario.getEmail());
+		beanUsuario.setHabilitado(usuario.getHabilitado());
+		beanUsuario.setId(usuario.getId());
+		beanUsuario.setIdLaboratorioCentro(usuario.getIdLaboratorioCentro());
+		beanUsuario.setIdLaboratorioVisavet(usuario.getIdLaboratorioVisavet());
+		beanUsuario.setNombre(usuario.getNombre());
+		beanUsuario.setPassword(usuario.getPassword());
+		beanUsuario.setRols(usuario.getRols());
+		beanUsuario.setUsuarioMuestras(usuario.getUsuarioMuestras());				
+		
+		return beanUsuario;
+	}
+	
+	@Override
+	public Usuario mapeoBeanEntidadUsuario (BeanUsuario beanUsuario) throws Exception{
+	
+//		Usuario usuario = new Usuario();
+		Optional<Usuario> usuario = usurep.findById(beanUsuario.getId());
+		
+		usuario.setAcertadas(beanUsuario.getAcertadas());
+		usuario.setApellido1(beanUsuario.getApellido1());
+		usuario.setApellido2(beanUsuario.getApellido2());
+		usuario.setAsignadas(beanUsuario.getAsignadas());
+		usuario.setCentro(beanUsuario.getCentro());
+		usuario.setDocumentos(beanUsuario.getDocumentos());
+		usuario.setDocumentos(beanUsuario.getDocumentos());
+//		// Si estamos modificando, no podemos cambiar el PWD
+//		if (beanUsuario.getAccion() == "M") 
+//		{
+//			// no modificamos email
+//		}
+//		else
+//		{
+//			usuario.setEmail(beanUsuario.getEmail());
+//		}
+		usuario.setEmail(beanUsuario.getEmail());
+		usuario.setHabilitado(beanUsuario.getHabilitado());
+		usuario.setId(beanUsuario.getId());
+		usuario.setIdLaboratorioCentro(beanUsuario.getIdLaboratorioCentro());
+		usuario.setIdLaboratorioVisavet(beanUsuario.getIdLaboratorioVisavet());
+		usuario.setNombre(beanUsuario.getNombre());
+		// el Pwd se asigna por otros medios, pero no puede ir vacio
+		if (beanUsuario.getPassword() == null)
+		{
+			usuario.setPassword("PWD");
+		}
+		else
+		{
+			usuario.setPassword(beanUsuario.getPassword());
+		}
+		usuario.setRols(beanUsuario.getRols());
+		usuario.setUsuarioMuestras(beanUsuario.getUsuarioMuestras());
+		
+		return usuario;
+		
+	}
+	
+//	@Autowired
+//	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuario beanUsuario, Usuario usuario) throws Exception {
 //		
 //	}
 }

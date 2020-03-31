@@ -1,18 +1,31 @@
 package es.ucm.pcr.beans;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import es.uc.pcr.utilidades.Utilidades;
+import es.ucm.pcr.modelo.orm.Centro;
+import es.ucm.pcr.modelo.orm.Documento;
+import es.ucm.pcr.modelo.orm.Rol;
+import es.ucm.pcr.modelo.orm.UsuarioMuestra;
 
 public class BeanUsuario implements Comparable<BeanUsuario>{
 
 	private Integer id;
-	private String nom;
-	private String ap1;
-	private String ap2;
-	private String telFijo;
-	private String telMovil;
-	private String mail;
-	private String internoExterno;
-	private String rol;
+	private Centro centro;
+	private String nombre;
+	private String apellido1;
+	private String apellido2;
+	private String email;
+	private String password;
+	private Integer idLaboratorioVisavet;
+	private Integer idLaboratorioCentro;
+	private Integer asignadas;
+	private Integer acertadas;
+	private Set<Documento> documentos = new HashSet<Documento>(0);
+	private Set<UsuarioMuestra> usuarioMuestras = new HashSet<UsuarioMuestra>(0);
+	private Set<Rol> rols = new HashSet<Rol>(0);
+	private Byte habilitado;
 	private String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA DE USUARIOS
 	
 	
@@ -21,20 +34,31 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 		// TODO Auto-generated constructor stub
 	}
 
-	public BeanUsuario(Integer id, String nom, String ap1, String ap2, String telFijo, String telMovil, String mail,
-			String internoExterno, String rol, String accion) {
+	
+
+	public BeanUsuario(Integer id, Centro centro, String nombre, String apellido1, String apellido2, String email,
+			String password, Integer idLaboratorioVisavet, Integer idLaboratorioCentro, Integer asignadas,
+			Integer acertadas, Set<Documento> documentos, Set<UsuarioMuestra> usuarioMuestras, Set<Rol> rols,
+			Byte habilitado, String accion) {
 		super();
 		this.id = id;
-		this.nom = nom;
-		this.ap1 = ap1;
-		this.ap2 = ap2;
-		this.telFijo = telFijo;
-		this.telMovil = telMovil;
-		this.mail = mail;
-		this.internoExterno = internoExterno;
-		this.rol = rol;
+		this.centro = centro;
+		this.nombre = nombre;
+		this.apellido1 = apellido1;
+		this.apellido2 = apellido2;
+		this.email = email;
+		this.password = password;
+		this.idLaboratorioVisavet = idLaboratorioVisavet;
+		this.idLaboratorioCentro = idLaboratorioCentro;
+		this.asignadas = asignadas;
+		this.acertadas = acertadas;
+		this.documentos = documentos;
+		this.usuarioMuestras = usuarioMuestras;
+		this.rols = rols;
+		this.habilitado = habilitado;
 		this.accion = accion;
 	}
+
 
 
 	public Integer getId() {
@@ -49,73 +73,179 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 
 
 
-	public String getNom() {
-		return nom;
+	public Centro getCentro() {
+		return centro;
 	}
 
-	public void setNom(String nom) {
-		this.nom = nom;
+
+
+	public void setCentro(Centro centro) {
+		this.centro = centro;
 	}
 
-	public String getAp1() {
-		return ap1;
+
+
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setAp1(String ap1) {
-		this.ap1 = ap1;
+
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
-	public String getAp2() {
-		return ap2;
+
+
+	public String getApellido1() {
+		return apellido1;
 	}
 
-	public void setAp2(String ap2) {
-		this.ap2 = ap2;
+
+
+	public void setApellido1(String apellido1) {
+		this.apellido1 = apellido1;
 	}
 
-	public String getTelFijo() {
-		return telFijo;
+
+
+	public String getApellido2() {
+		return apellido2;
 	}
 
-	public void setTelFijo(String telFijo) {
-		this.telFijo = telFijo;
+
+
+	public void setApellido2(String apellido2) {
+		this.apellido2 = apellido2;
 	}
 
-	public String getTelMovil() {
-		return telMovil;
+
+
+	public String getEmail() {
+		return email;
 	}
 
-	public void setTelMovil(String telMovil) {
-		this.telMovil = telMovil;
+
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public String getMail() {
-		return mail;
+
+
+	public String getPassword() {
+		return password;
 	}
 
-	public void setMail(String mail) {
-		this.mail = mail;
+
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public String getInternoExterno() {
-		return internoExterno;
+
+
+	public Integer getIdLaboratorioVisavet() {
+		return idLaboratorioVisavet;
 	}
 
-	public void setInternoExterno(String internoExterno) {
-		this.internoExterno = internoExterno;
+
+
+	public void setIdLaboratorioVisavet(Integer idLaboratorioVisavet) {
+		this.idLaboratorioVisavet = idLaboratorioVisavet;
 	}
 
-	public String getRol() {
-		return rol;
+
+
+	public Integer getIdLaboratorioCentro() {
+		return idLaboratorioCentro;
 	}
 
-	public void setRol(String rol) {
-		this.rol = rol;
+
+
+	public void setIdLaboratorioCentro(Integer idLaboratorioCentro) {
+		this.idLaboratorioCentro = idLaboratorioCentro;
 	}
+
+
+
+	public Integer getAsignadas() {
+		return asignadas;
+	}
+
+
+
+	public void setAsignadas(Integer asignadas) {
+		this.asignadas = asignadas;
+	}
+
+
+
+	public Integer getAcertadas() {
+		return acertadas;
+	}
+
+
+
+	public void setAcertadas(Integer acertadas) {
+		this.acertadas = acertadas;
+	}
+
+
+
+	public Set<Documento> getDocumentos() {
+		return documentos;
+	}
+
+
+
+	public void setDocumentos(Set<Documento> documentos) {
+		this.documentos = documentos;
+	}
+
+
+
+	public Set<UsuarioMuestra> getUsuarioMuestras() {
+		return usuarioMuestras;
+	}
+
+
+
+	public void setUsuarioMuestras(Set<UsuarioMuestra> usuarioMuestras) {
+		this.usuarioMuestras = usuarioMuestras;
+	}
+
+
+
+	public Set<Rol> getRols() {
+		return rols;
+	}
+
+
+
+	public void setRols(Set<Rol> rols) {
+		this.rols = rols;
+	}
+
+
+
+	public Byte getHabilitado() {
+		return habilitado;
+	}
+
+
+
+	public void setHabilitado(Byte habilitado) {
+		this.habilitado = habilitado;
+	}
+
+
 
 	public String getAccion() {
 		return accion;
 	}
+
+
 
 	public void setAccion(String accion) {
 		this.accion = accion;
@@ -123,21 +253,21 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 
 
 
-    @Override
+	@Override
 	public String toString() {
-		return "BeanUsuario [id=" + id + ", nom=" + nom + ", ap1=" + ap1 + ", ap2=" + ap2 + ", telFijo=" + telFijo
-				+ ", telMovil=" + telMovil + ", mail=" + mail + ", internoExterno=" + internoExterno + ", rol=" + rol
-				+ ", accion=" + accion + "]";
+		return "BeanUsuario [id=" + id + ", centro=" + centro + ", nombre=" + nombre + ", apellido1=" + apellido1
+				+ ", apellido2=" + apellido2 + ", email=" + email + ", password=" + password + ", idLaboratorioVisavet="
+				+ idLaboratorioVisavet + ", idLaboratorioCentro=" + idLaboratorioCentro + ", asignadas=" + asignadas
+				+ ", acertadas=" + acertadas + ", documentos=" + documentos + ", usuarioMuestras=" + usuarioMuestras
+				+ ", rols=" + rols + ", habilitado=" + habilitado + ", accion=" + accion + "]";
 	}
-
-
 
 
 
 	@Override
     public int compareTo(BeanUsuario o) {
-		String p1 = o.getAp1() + o.getAp2() + o.getNom();
-		String p2 = getAp1() + getAp2() + getNom();
+		String p1 = o.getApellido1() + o.getApellido2() + o.getNombre();
+		String p2 = getApellido1() + getApellido2() + getNombre();
         String l1 = Utilidades.limpiarStringParaOrdenacion(p1);
         String l2 = Utilidades.limpiarStringParaOrdenacion(p2);
 		return l2.compareTo(l1);

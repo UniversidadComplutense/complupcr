@@ -16,16 +16,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import es.ucm.pcr.beans.BeanRol;
 import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
+import es.ucm.pcr.servicios.UsuarioServicio;
 
 @Controller
 public class UsuarioControlador {
 	
 	@Autowired
 	UsuarioRepositorio usuarioRepositorio;
+	
+	@Autowired
+	UsuarioServicio usuarioServicio;
 	
 	//	Muestra una lista ordenada ap1, ap2,nombre con los usuarios
 	// Punto de entrada a la gestión de usuarios
@@ -37,10 +40,24 @@ public class UsuarioControlador {
 		List<BeanUsuario> listaUsuarios = new ArrayList<BeanUsuario>();
 		for (Usuario usuario: usuarioRepositorio.findAll())
 		{
-			listaUsuarios.add(new BeanUsuario(usuario.getId(), usuario.getNombre(), 
-					 						  usuario.getApellido1(), usuario.getApellido2(), 
-					 						  usuario.getEmail(), usuario.getEmail(), 
-					 						  usuario.getEmail(), "I", "rol", "L"));
+			listaUsuarios.add(new BeanUsuario(
+								usuario.getId(), 
+								usuario.getCentro(),
+								usuario.getNombre(), 
+					 			usuario.getApellido1(), 
+					 			usuario.getApellido2(), 
+					 			usuario.getEmail(), 
+					 			usuario.getPassword(), 
+					 			usuario.getIdLaboratorioVisavet(),
+					 			usuario.getIdLaboratorioCentro(),
+					 			usuario.getAsignadas(),
+								usuario.getAcertadas(),
+								usuario.getDocumentos(),
+								usuario.getUsuarioMuestras(),
+								usuario.getRols(),
+								usuario.getHabilitado(),
+								"L"
+								));
 		}
 		//	Ordeno por ap1, ap2, nombre
 		Collections.sort(listaUsuarios);
@@ -69,13 +86,14 @@ public class UsuarioControlador {
 		// Damos de alta nuevo usuario
 		if (beanUsuario.getAccion().equals("A"))
 		{
-			Usuario usuario = new Usuario();
-			usuario.setApellido1(beanUsuario.getAp1());
-			usuario.setApellido2(beanUsuario.getAp2());
-			usuario.setNombre(beanUsuario.getNom());
-			usuario.setEmail(beanUsuario.getMail());
-			usuario.setPassword(beanUsuario.getMail());
-			usuarioRepositorio.save(usuario);
+//			Usuario usuario = new Usuario();
+//			usuario.setApellido1(beanUsuario.getAp1());
+//			usuario.setApellido2(beanUsuario.getAp2());
+//			usuario.setNombre(beanUsuario.getNom());
+//			usuario.setEmail(beanUsuario.getMail());
+//			usuario.setPassword(beanUsuario.getMail());
+//			usuarioRepositorio.save(usuario);
+			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuario(beanUsuario));
 		}
 		// Modificamos usuario existente, menos mail
 		if (beanUsuario.getAccion().equals("M"))
@@ -85,10 +103,11 @@ public class UsuarioControlador {
 			// Buscamos el usuario a modificar, y volcamos los datos recogidos por el formulario
 			Optional<Usuario> usuario = usuarioRepositorio.findById(beanUsuario.getId());
 			// añadimos campos del formulario
-			usuario.get().setApellido1(beanUsuario.getAp1());
-			usuario.get().setApellido2(beanUsuario.getAp2());
-			usuario.get().setNombre(beanUsuario.getNom());
-			usuarioRepositorio.save(usuario.get());
+//			usuario.get().setApellido1(beanUsuario.getAp1());
+//			usuario.get().setApellido2(beanUsuario.getAp2());
+//			usuario.get().setNombre(beanUsuario.getNom());
+//			usuarioRepositorio.save(usuario.get());
+			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuario(beanUsuario));
 		}
 
 		// Volvemos a grabar mas centros
@@ -105,11 +124,12 @@ public class UsuarioControlador {
 		// Busco el usuario a modificar
 		Optional<Usuario> usuario = usuarioRepositorio.findById(idUsuario);
 		// cargo el beanUsuario con lo datos del usuario a modificar
-		BeanUsuario beanUsuario = new BeanUsuario();
-		beanUsuario.setId(usuario.get().getId());
-		beanUsuario.setAp1(usuario.get().getApellido1());
-		beanUsuario.setAp2(usuario.get().getApellido2());
-		beanUsuario.setNom(usuario.get().getNombre());
+//		BeanUsuario beanUsuario = new BeanUsuario();
+//		beanUsuario.setId(usuario.get().getId());
+//		beanUsuario.setAp1(usuario.get().getApellido1());
+//		beanUsuario.setAp2(usuario.get().getApellido2());
+//		beanUsuario.setNom(usuario.get().getNombre());
+		BeanUsuario beanUsuario = usuarioServicio.mapeoEntidadBeanUsuario(usuario.get());
 		
 		// le indicamos la acción a relizar: M modificación de un usuario
 		beanUsuario.setAccion("M");

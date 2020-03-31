@@ -24,19 +24,28 @@ public interface UsuarioServicio {
 	 */
 	public Set<Rol> getRoles(Usuario usuario);
 	
-//	/**
-//	 * Realiza el mapeo de la entidad al bean Usuario
-//	 * 
-//	 * @param Usuario
-//	 * @return BeanUsuario
-//	 */	
-//	public BeanUsuario mapeoEntidadBeanUsuario (Usuario usuario) throws Exception;
-//	
-//	/**
-//	 * Realiza el mapeo del bean a la entidad Usuario
-//	 * 
-//	 * @param BeanUsuario
-//	 * @return Usuario
-//	 */	
-//	public Usuario mapeoEntidadBeanUsuario (BeanUsuario beanUsuario) throws Exception;
+	/**
+	 * Realiza el mapeo de la entidad al bean Usuario
+	 * 
+	 * @param Usuario
+	 * @return BeanUsuario
+	 */	
+	public BeanUsuario mapeoEntidadBeanUsuario (Usuario usuario) throws Exception;
+	
+	/**
+	 * Realiza el mapeo del bean a la entidad Usuario
+	 * 
+	 * @param BeanUsuario
+	 * @return Usuario
+	 */	
+	public Usuario mapeoBeanEntidadUsuario (BeanUsuario beanUsuario) throws Exception;
+	
+	/**
+	 * Realiza el mapeo del bean a la entidad Usuario para modificar
+	 * 
+	 * @param BeanUsuario, Usuario
+	 * @return Usuario
+	 */	
+//	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuario beanUsuario, Usuario usuario) throws Exception;
+	
 }

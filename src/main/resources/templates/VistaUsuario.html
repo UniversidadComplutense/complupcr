@@ -18,44 +18,44 @@
 
 			<div class="form-group">
 				<label class="text_formulario">Nombre Usuario</label> <input
-					type="text" class="form-control" th:field="${formBeanUsuario.nom}"
-					th:value="${formBeanUsuario.nom}" required="required" />
+					type="text" class="form-control" th:field="${formBeanUsuario.nombre}"
+					th:value="${formBeanUsuario.nombre}" required="required" />
 			</div>
 
 			<div class="form-group">
 				<label class="text_formulario">Primer Apellido Usuario</label> <input
-					type="text" class="form-control" th:field="${formBeanUsuario.ap1}"
-					th:value="${formBeanUsuario.ap1}" required="required" />
+					type="text" class="form-control" th:field="${formBeanUsuario.apellido1}"
+					th:value="${formBeanUsuario.apellido1}" required="required" />
 			</div>
 
 			<div class="form-group">
 				<label class="text_formulario">Segundo Apellido Usuario</label> <input
-					type="text" class="form-control" th:field="${formBeanUsuario.ap2}"
-					th:value="${formBeanUsuario.ap2}" required="required" />
+					type="text" class="form-control" th:field="${formBeanUsuario.apellido2}"
+					th:value="${formBeanUsuario.apellido2}" required="required" />
 			</div>
 
-			<div class="form-group">
-				<label class="text_formulario">Teléfono Fijo</label> <input
+<!-- 			<div class="form-group">
+				<label class="text_formulario">Centro</label> <input
 					type="text" class="form-control"
-					th:field="${formBeanUsuario.telFijo}"
-					th:value="${formBeanUsuario.telFijo}" required="required" />
-			</div>
+					th:field="${formBeanUsuario.centro.nombre}"
+					th:value="${formBeanUsuario.centro.nombre}" required="required" />
+			</div> -->
 
 			<div class="form-group">
-				<label class="text_formulario">Teléfono Móvil</label> <input
+				<label class="text_formulario">Habilitado</label> <input
 					type="text" class="form-control"
-					th:field="${formBeanUsuario.telMovil}"
-					th:value="${formBeanUsuario.telMovil}" required="required" />
+					th:field="${formBeanUsuario.habilitado}"
+					th:value="${formBeanUsuario.habilitado}" required="required" />
 			</div>
 
 			<!-- En modificacion no modificamos el mail, eso es cosa del alta de usuarios -->
 			<div class="form-group" >
 				<label class="text_formulario">Mail</label> <input type="email"
-					class="form-control" th:field="${formBeanUsuario.mail}"
+					class="form-control" th:field="${formBeanUsuario.email}"
 					th:disabled="${formBeanUsuario.accion=='M'}"
-					th:value="${formBeanUsuario.mail}" required="required" />
+					th:value="${formBeanUsuario.email}" required="required" />
 			</div>
-
+<!-- 
 			<div class="form-group">
 				<div class="custom-control custom-radio custom-control-inline">
 					<input type="radio" id="option1" name="option1"
@@ -72,7 +72,8 @@
 				</div>
 			</div>
 
-			<!--  Los campos id y acción van ocultos en la pantalla 
+ -->			
+ 			<!--  Los campos id y acción van ocultos en la pantalla 
 			-->
 			<div class="form-group">
 				<label class="text_formulario"></label> 

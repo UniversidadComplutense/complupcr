@@ -12,8 +12,7 @@
 	<div class="container">
 		<h4>GESTIÓN DE USUARIOS</h4>
 
-		<a th:href="@{altaUsuario}" class="btn btn-primary eBtn">Añadir usuarios</a>
-<!-- 		<button th:href="@{/gestor/gestionUsuario}"class="btn btn-success nBtn">Añadir usuarios</button> -->
+		<a th:href="@{/gestor/altaUsuario}" class="btn btn-primary eBtn">Añadir usuarios</a>
 
 		</p>
 
@@ -30,9 +29,9 @@
 					</thead>
 					<tbody>
 						<tr th:each="users :${listaUsuarios}">
-							<td th:text="${users.nom}"></td>
-							<td th:text="${users.ap1}"></td>
-							<td th:text="${users.ap2}"></td>
+							<td th:text="${users.nombre}"></td>
+							<td th:text="${users.apellido1}"></td>
+							<td th:text="${users.apellido2}"></td>
 							<td>							
  								<a th:href="@{/gestor/borrarUsuario(idUsuario=${users.id})}" class="btn btn-danger delBtn">Borrar</a>
 								<a th:href="@{/gestor/editarUsuario(idUsuario=${users.id})}" class="btn btn-primary eBtn">Editar</a>
