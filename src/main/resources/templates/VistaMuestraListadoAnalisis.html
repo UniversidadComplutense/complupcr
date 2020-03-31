@@ -78,6 +78,14 @@
 			</div>
 			
 		</fieldset>
+		
+		<!-- Diana, metemos un div hidden con un imput con los codnum's de muestras que se han ido marcando para cerrar -->
+		<div class="row" > <!-- style="display: none" -->
+			<label>				
+				listaCodnumMuestrasMarcadasParaCerrar 
+			</label>
+			<input  type="text" id="idListaCodnumMuestrasMarcadasParaCerrar" style="width: 400px !important;" />
+		</div> 
 
 		<div class="row justify-content-end mt-3">
 			<div class="col-1">
@@ -115,8 +123,8 @@
 							<!-- th:checked="${muestra.estado == 'cerrada'}"  -->
 							<input
 									th:disabled="${muestra.esCerrable == false}"
-									type="checkbox" name="idCerrar" th:id="idCerrar"
-									onClick="return AniadirOQuitarElementoLlamamiento(this, '${muestra.id}')">
+									type="checkbox" name="idCerrar" th:id="idCerrar"									
+									th:onClick="|AniadirOQuitarElementoAListaDeMuestrasACerrar(this, '${muestra.id}')|">
 							</input>
 						</td> 
 						<td class="clickable" data-toggle="collapse" th:data-target="${'#analistas'+ muestra.id}" aria-expanded="false" th:aria-controls="${'analistas'+ muestra.id}">
@@ -206,6 +214,8 @@
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 	
 	<object th:include="fragmentos :: scriptsBootstrap" th:remove="tag"></object>
+	
+	<script th:src="@{/js/analisis.js}"></script>
     
 </body>
 </html>
