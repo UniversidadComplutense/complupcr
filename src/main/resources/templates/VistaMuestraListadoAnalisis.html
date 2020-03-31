@@ -8,6 +8,9 @@
 <body>
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+	 
 	<div class="container">	
 	
 	<form action="#" th:action="@{/analisis/list}" method="post" th:object="${beanBusquedaMuestra}" id="formBusqueda" role="form">
