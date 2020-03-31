@@ -37,5 +37,5 @@ public interface UsuarioServicio {
 	 * @param user
 	 * @param contrasena
 	 */
-	public void cabiarContrasena(Usuario user, String contrasena);
+	public void cambiarContrasena(Usuario user, String contrasena);
 }

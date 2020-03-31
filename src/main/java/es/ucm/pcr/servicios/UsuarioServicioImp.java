@@ -60,7 +60,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	}
 
 	@Override
-	public void cabiarContrasena(Usuario user, String contrasena) {
+	public void cambiarContrasena(Usuario user, String contrasena) {
 		 user.setPassword(passwordEncoder.encode(contrasena));
 		 usurep.save(user);
 		 passwordTokenRepositorio.deleteByUsuario(user);
