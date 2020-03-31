@@ -20,6 +20,10 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "centro", uniqueConstraints = @UniqueConstraint(columnNames = "codCentro"))
 public class Centro implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7990651111469057759L;
 	private Integer id;
 	private String nombre;
 	private String codCentro;
@@ -32,6 +36,11 @@ public class Centro implements java.io.Serializable {
 	private Set<Lote> lotes = new HashSet<Lote>(0);
 
 	public Centro() {
+	}
+	
+	public Centro(Integer id) {
+		super();
+		this.id = id;
 	}
 
 	public Centro(String nombre, String codCentro) {

@@ -19,11 +19,20 @@ import javax.persistence.Table;
 @Table(name = "estadoLote")
 public class EstadoLote implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4883812162441140189L;
 	private Integer id;
 	private String descripcion;
 	private Set<Lote> lotes = new HashSet<Lote>(0);
 
 	public EstadoLote() {
+	}
+	
+	public EstadoLote(Integer id) {
+		super();
+		this.id = id;
 	}
 
 	public EstadoLote(String descripcion) {

@@ -1,18 +1,22 @@
 package es.ucm.pcr.modelo.orm;
 // Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,10 +28,16 @@ import javax.persistence.TemporalType;
 @Table(name = "muestra")
 public class Muestra implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4671038846103227678L;
 	private Integer id;
 	private Centro centro;
 	private EstadoMuestra estadoMuestra;
 	private Lote lote;
+	private PlacaVisavet placaVisavet;
+	private PlacaLaboratorio placaLaboratorio;
 	private String etiqueta;
 	private String tipoMuestra;
 	private Date fechaEntrada;
@@ -35,11 +45,11 @@ public class Muestra implements java.io.Serializable {
 	private Date fechaResultado;
 	private String refInternaVisavet;
 	private String resultado;
-	private String fechaAsignada;
-	private String fechaNotificacion;
+	private Date fechaAsignada;
+	private Date fechaNotificacion;
 	private Set<UsuarioMuestra> usuarioMuestras = new HashSet<UsuarioMuestra>(0);
 	private Set<Documento> documentos = new HashSet<Documento>(0);
-	private Set<Paciente> pacientes = new HashSet<Paciente>(0);
+	private Paciente paciente;
 
 	public Muestra() {
 	}
@@ -51,13 +61,15 @@ public class Muestra implements java.io.Serializable {
 		this.tipoMuestra = tipoMuestra;
 	}
 
-	public Muestra(Centro centro, EstadoMuestra estadoMuestra, Lote lote, String etiqueta, String tipoMuestra,
+	public Muestra(Centro centro, EstadoMuestra estadoMuestra, Lote lote,PlacaVisavet  placaVisavet, PlacaLaboratorio  placaLaboratorio , String etiqueta, String tipoMuestra,
 			Date fechaEntrada, Date fechaEnvio, Date fechaResultado, String refInternaVisavet, String resultado,
-			String fechaAsignada, String fechaNotificacion, Set<UsuarioMuestra> usuarioMuestras,
-			Set<Documento> documentos, Set<Paciente> pacientes) {
+			Date fechaAsignada, Date fechaNotificacion, Set<UsuarioMuestra> usuarioMuestras,
+			Set<Documento> documentos, Paciente paciente) {
 		this.centro = centro;
 		this.estadoMuestra = estadoMuestra;
 		this.lote = lote;
+		this.placaVisavet = placaVisavet; 
+		this.placaLaboratorio = placaLaboratorio ;
 		this.etiqueta = etiqueta;
 		this.tipoMuestra = tipoMuestra;
 		this.fechaEntrada = fechaEntrada;
@@ -69,12 +81,11 @@ public class Muestra implements java.io.Serializable {
 		this.fechaNotificacion = fechaNotificacion;
 		this.usuarioMuestras = usuarioMuestras;
 		this.documentos = documentos;
-		this.pacientes = pacientes;
+		this.paciente = paciente;
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-
 	@Column(name = "id", unique = true, nullable = false)
 	public Integer getId() {
 		return this.id;
@@ -113,7 +124,25 @@ public class Muestra implements java.io.Serializable {
 	public void setLote(Lote lote) {
 		this.lote = lote;
 	}
+	@ManyToOne
+	@JoinColumn(name = "idPlacaVisavet")
+	public PlacaVisavet getPlacaVisavet() {
+		return this.placaVisavet;
+	}
 
+	public void setPlacaVisavet(PlacaVisavet placaVisavet) {
+		this.placaVisavet = placaVisavet;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name = "idPlacaLaboratorio")
+	public PlacaLaboratorio getPlacaLaboratorio() {
+		return this.placaLaboratorio;
+	}
+
+	public void setPlacaLaboratorio(PlacaLaboratorio placaLaboratorio) {
+		this.placaLaboratorio = placaLaboratorio;
+	}
 	@Column(name = "etiqueta", nullable = false, length = 100)
 	public String getEtiqueta() {
 		return this.etiqueta;
@@ -179,22 +208,24 @@ public class Muestra implements java.io.Serializable {
 	public void setResultado(String resultado) {
 		this.resultado = resultado;
 	}
-
-	@Column(name = "fechaAsignada", length = 45)
-	public String getFechaAsignada() {
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaAsignada", length = 19)	
+	public Date getFechaAsignada() {
 		return this.fechaAsignada;
 	}
 
-	public void setFechaAsignada(String fechaAsignada) {
+	public void setFechaAsignada(Date fechaAsignada) {
 		this.fechaAsignada = fechaAsignada;
 	}
 
-	@Column(name = "fechaNotificacion", length = 45)
-	public String getFechaNotificacion() {
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaNotificacion", length = 19)
+	public Date getFechaNotificacion() {
 		return this.fechaNotificacion;
 	}
 
-	public void setFechaNotificacion(String fechaNotificacion) {
+	public void setFechaNotificacion(Date fechaNotificacion) {
 		this.fechaNotificacion = fechaNotificacion;
 	}
 
@@ -216,13 +247,15 @@ public class Muestra implements java.io.Serializable {
 		this.documentos = documentos;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "muestra")
-	public Set<Paciente> getPacientes() {
-		return this.pacientes;
+	@OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL,
+            mappedBy = "muestra")
+	public Paciente getPaciente() {
+		return this.paciente;
 	}
 
-	public void setPacientes(Set<Paciente> pacientes) {
-		this.pacientes = pacientes;
+	public void setPaciente(Paciente paciente) {
+		this.paciente = paciente;
 	}
 
 }

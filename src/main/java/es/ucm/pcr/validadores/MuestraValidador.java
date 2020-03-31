@@ -4,19 +4,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import es.ucm.pcr.beans.BeanMuestraCentro;
+import es.ucm.pcr.beans.MuestraCentroBean;
 
 @Component
-public class ValidadorMuestra implements Validator {
+public class MuestraValidador implements Validator {
 	
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return BeanMuestraCentro.class.isAssignableFrom(clazz);	
+		return MuestraCentroBean.class.isAssignableFrom(clazz);	
 	}
 	
 	@Override
 	public  void validate(Object target, Errors errors) {
-		BeanMuestraCentro muestra = (BeanMuestraCentro) target;
+		MuestraCentroBean muestra = (MuestraCentroBean) target;
 		
 		// TODO - comprobar que no existe una muestra con la misma etiqueta
 		// errors.rejectValue("etiqueta", "campo.invalid", "Ya existe una muestra con la misma etiqueta");
