@@ -36,15 +36,6 @@
 	href="static/img/logoucm.ico" type="image/x-icon" />
 <link rel="icon" th:href="@{/img/logoucm.ico}"
 	href="static/img/logoucm.ico" type="image/x-icon" />
-
-
-<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
-<script src="static/js/bootstrap.min.js"
-	th:src="@{/js/bootstrap.min.js}"></script>
-<script src="static/js/funcionesLaboratorioVisavet.js"
-	th:src="@{/js/funcionesLaboratorioVisavet.js}"></script>
-
 </head>
 
 
@@ -159,8 +150,8 @@
 	</ul>
 </div>
 
-!--/* SCRIPTS BOOTSTRAP - SIEMPRE FINAL DE PÁGINA */-->
-<div th:fragment="scripts" id="scriptsBootstrap">
+!--/* SCRIPTS - SIEMPRE FINAL DE PÁGINA */-->
+<div th:fragment="scripts" id="scripts">
 
 	<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
 	<script src="static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
@@ -174,6 +165,7 @@
 	<script th:src="@{/js/bootstrap-select.min.js}"
 		src="static/js/bootstrap-select.min.js"></script>
 
-
+	<script src="static/js/funcionesLaboratorioVisavet.js"
+	th:src="@{/js/funcionesLaboratorioVisavet.js}"></script>
 </div>
 </html>
