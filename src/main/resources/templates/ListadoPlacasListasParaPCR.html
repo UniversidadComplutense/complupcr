@@ -1,66 +1,104 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>PCR-Covid19</title>
+<title>PCR-COVID19 - LOTES</title>
 <object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
 </head>
 <body>
-	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 
-	<div id="placasListasPCR" class="container">
-		<div class="row justify-content-center mt-1, titulo-menu">
-			<h5>PLACAS LISTAS PARA PCR</h5>
-		</div>
-		<div class="row justify-content-center mt-3">
-		    <div class="col-lg-12">
-				<table class="table">
-				  <thead class="thead-light">
-				    <tr>
-				      <th scope="col"><input class="form-check-input, justify-content-center" type="checkbox" value="" id="" disabled></th>
-				      <th scope="col">Identificador</th>
-				      <th scope="col">Fecha creación</th>
-				      <th scope="col">Nº de muestras</th>
-				      <th scope="col"></th>
-				    </tr>
-				  </thead>
-				  <tbody>
-				    <tr>
-				      <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td>
-				      <td>#5</td>
-				      <td>20/03/2020</td>
-				      <td>20</td>
-				      <td>
-				      	<button type="button" class="btn btn-secondary">Ver distribución pocillos</button>
-				      </td>
-				    </tr>
-				    <tr>
-				      <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td>
-				      <td>#7</td>
-				      <td>21/03/2020</td>
-				      <td>20</td>
-				      <td>
-				      	<button type="button" class="btn btn-secondary">Ver distribución pocillos</button>
-				      </td>
-				    </tr>
-				    <tr>
-				      <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td>
-				      <td>#9</td>
-				      <td>21/03/2020</td>
-				      <td>96</td>
-				      <td>
-				      	<button type="button" class="btn btn-secondary">Ver distribución pocillos</button>
-				      </td>
-				    </tr>
-				  </tbody>
-				</table>
-				<div class="container">
-					<button type="button" class="btn btn-secondary">Combinar en nueva placa</button>
-					<button type="button" class="btn btn-secondary">Finalizar para PCR</button>				    
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+	
+	<div class="container">	
+	
+	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/preparacion}" method="post" th:object="${busquedaPlacaLaboratorioBean}" id="formBusqueda" role="form">
+		
+		<!-- CRITERIOS BUSQUEDA -->
+		<fieldset id="criteriosBusqueda" class="form-group border p-2">
+			<legend class="w-auto">Placa de laboratorio</legend>
+			<div class="row">
+				<div class="col-3 form-group">
+					<label>Código</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.idPlaca}" th:value="${busquedaPlacaLaboratorioBean.idPlaca}" maxlength="100"/>
+				</div>	
+				<div class="col-3 form-group">
+					<label>Número de muestras</label>
+				 	<select class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.numeroMuestras}" th:value="${busquedaPlacaLaboratorioBean.numeroMuestras}">
+				 		<option value="">Seleccione</option>
+				 		<option value="20">20</option>
+				 		<option value="96">96</option>
+				 	</select>
 				</div>
-			</div>									  		
-	  </div>
+			</div>
+			<div class="row">			
+				<div class="col-3 form-group">
+					<label>Estado</label>
+				 	<select class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.idEstadoPlaca}"  th:value="${busquedaPlacaLaboratorioBean.idEstadoPlaca}">
+				 		<option value="">Seleccione</option>
+				 		<option th:each="var: ${estadosPlacaLaboratorio}"
+									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
+									th:select="${busquedaPlacaLaboratorioBean.idEstadoPlaca}">Estado</option>				 		
+				 	</select>
+				</div>
+				<div class="col-3 form-group">
+					<label >Fecha de creación</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.fechaCreacionInicio}"  th:value="${busquedaPlacaLaboratorioBean.fechaCreacionInicio}"/>
+				</div>
+				<div class="col-3 form-group">
+					<label >a</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.fechaCreacionFin}"  th:value="${busquedaPlacaLaboratorioBean.fechaCreacionFin}"/>
+				</div>							
+			</div>
+		</fieldset>
+		
+
+		<div class="row justify-content-end mt-3">
+			<div class="col-1">
+				<a th:href="@{/laboratorioCentro/gestionPlacas/nueva}" class="btn btn-secondary">Nueva placa</a>				
+			</div>
+			<div class="col-1">
+				<button type="submit" class="btn btn-secondary">Buscar</button>
+			</div>
+		</div>	
+		
+
+		<!-- RESULTADO -->
+		<div class="row justify-content-center mt-3">
+			<table class="table">
+				<thead class="thead-light">	
+	    			<tr>
+	      				<th scope="col">Código</th>
+						<th scope="col">Fecha creación</th>
+						<th scope="col">Estado</th>
+						<th scope="col">Número muestras</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${PlacaLaboratorioCentroBean != null}" th:each="placa : ${PlacaLaboratorioCentroBean}">
+						<td><span th:text="${placa.id}"></span></td>					
+						<td><span th:text="">fecha creación</span></td>						
+				<!-- 	<td><span th:text="${#dates.format(placa.fechaCreacion, 'dd/MM/yyyy')}"></span></td> -->
+						<td><span th:text="${placa.estado.descripcion}"></span></td>
+						<td><span th:text="${placa.numeroMuestras}"></span></td>
+						<td>
+							<button type="button" class="btn btn-secondary">Ver distribución pocillos</button>
+						</td>
+						<td>
+					        <a style="color:black" th:href="@{/centroSalud/lote/modificar(id=${lote.id})}">
+					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>
+						</td>						
+					</tr>		
+				</tbody>
+			</table>
+		</div>
+	</form>
+
 	</div>
 	
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+
 </body>
 </html>
