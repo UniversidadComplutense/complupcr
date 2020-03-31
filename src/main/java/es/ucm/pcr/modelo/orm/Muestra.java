@@ -1,14 +1,16 @@
 package es.ucm.pcr.modelo.orm;
 // Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -37,8 +39,8 @@ public class Muestra implements java.io.Serializable {
 	private Date fechaResultado;
 	private String refInternaVisavet;
 	private String resultado;
-	private String fechaAsignada;
-	private String fechaNotificacion;
+	private Date fechaAsignada;
+	private Date fechaNotificacion;
 	private Set<UsuarioMuestra> usuarioMuestras = new HashSet<UsuarioMuestra>(0);
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<Paciente> pacientes = new HashSet<Paciente>(0);
@@ -55,7 +57,7 @@ public class Muestra implements java.io.Serializable {
 
 	public Muestra(Centro centro, EstadoMuestra estadoMuestra, Lote lote,PlacaVisavet  placaVisavet, PlacaLaboratorio  placaLaboratorio , String etiqueta, String tipoMuestra,
 			Date fechaEntrada, Date fechaEnvio, Date fechaResultado, String refInternaVisavet, String resultado,
-			String fechaAsignada, String fechaNotificacion, Set<UsuarioMuestra> usuarioMuestras,
+			Date fechaAsignada, Date fechaNotificacion, Set<UsuarioMuestra> usuarioMuestras,
 			Set<Documento> documentos, Set<Paciente> pacientes) {
 		this.centro = centro;
 		this.estadoMuestra = estadoMuestra;
@@ -201,22 +203,24 @@ public class Muestra implements java.io.Serializable {
 	public void setResultado(String resultado) {
 		this.resultado = resultado;
 	}
-
-	@Column(name = "fechaAsignada", length = 45)
-	public String getFechaAsignada() {
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaAsignada", length = 19)	
+	public Date getFechaAsignada() {
 		return this.fechaAsignada;
 	}
 
-	public void setFechaAsignada(String fechaAsignada) {
+	public void setFechaAsignada(Date fechaAsignada) {
 		this.fechaAsignada = fechaAsignada;
 	}
 
-	@Column(name = "fechaNotificacion", length = 45)
-	public String getFechaNotificacion() {
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaNotificacion", length = 19)
+	public Date getFechaNotificacion() {
 		return this.fechaNotificacion;
 	}
 
-	public void setFechaNotificacion(String fechaNotificacion) {
+	public void setFechaNotificacion(Date fechaNotificacion) {
 		this.fechaNotificacion = fechaNotificacion;
 	}
 

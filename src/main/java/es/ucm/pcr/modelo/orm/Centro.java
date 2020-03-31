@@ -33,6 +33,11 @@ public class Centro implements java.io.Serializable {
 
 	public Centro() {
 	}
+	
+	public Centro(Integer id) {
+		super();
+		this.id = id;
+	}
 
 	public Centro(String nombre, String codCentro) {
 		this.nombre = nombre;
