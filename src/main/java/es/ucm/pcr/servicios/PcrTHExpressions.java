@@ -1,8 +1,11 @@
 package es.ucm.pcr.servicios;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import es.ucm.pcr.beans.MenuBean;
 import es.ucm.pcr.modelo.orm.Centro;
 
 /**
@@ -38,5 +41,15 @@ public class PcrTHExpressions {
 		}
 		//TODO: Revisar esto. Habrá roles en los que hay que sacer el rol y roles donde hay que sacer el centro.
 	}
+	
+	/**
+	 * Método que devuelve el menu del usuario.
+	 */
+	public List<MenuBean> getMenu() {
+		List<MenuBean> menu = sesionServicio.getMenu();
+		return menu;
+	}
+	
+	
 
 }

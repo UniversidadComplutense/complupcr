@@ -1,15 +1,22 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 25 mar. 2020 19:09:36 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,68 +28,64 @@ import javax.persistence.TemporalType;
 @Table(name = "muestra")
 public class Muestra implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4671038846103227678L;
 	private Integer id;
 	private Centro centro;
+	private EstadoMuestra estadoMuestra;
+	private Lote lote;
+	private PlacaVisavet placaVisavet;
+	private PlacaLaboratorio placaLaboratorio;
 	private String etiqueta;
 	private String tipoMuestra;
 	private Date fechaEntrada;
 	private Date fechaEnvio;
 	private Date fechaResultado;
-	private String refInterna;
+	private String refInternaVisavet;
 	private String resultado;
-	private Integer idEstado;
-	private int idLote;
-	private String nhc;
-	private boolean recogerDatosNotif;
-	private boolean avisosAuto;
-	private String nombreApellidos;
-	private String correo;
-	private String telefono;
-	private boolean avisoSms;
+	private Date fechaAsignada;
 	private Date fechaNotificacion;
+	private Set<UsuarioMuestra> usuarioMuestras = new HashSet<UsuarioMuestra>(0);
+	private Set<Documento> documentos = new HashSet<Documento>(0);
+	private Paciente paciente;
 
 	public Muestra() {
 	}
 
-	public Muestra(Centro centro, String etiqueta, String tipoMuestra, int idLote, boolean recogerDatosNotif,
-			boolean avisosAuto, String nombreApellidos, boolean avisoSms) {
+	public Muestra(Centro centro, EstadoMuestra estadoMuestra, String etiqueta, String tipoMuestra) {
 		this.centro = centro;
+		this.estadoMuestra = estadoMuestra;
 		this.etiqueta = etiqueta;
 		this.tipoMuestra = tipoMuestra;
-		this.idLote = idLote;
-		this.recogerDatosNotif = recogerDatosNotif;
-		this.avisosAuto = avisosAuto;
-		this.nombreApellidos = nombreApellidos;
-		this.avisoSms = avisoSms;
 	}
 
-	public Muestra(Centro centro, String etiqueta, String tipoMuestra, Date fechaEntrada, Date fechaEnvio,
-			Date fechaResultado, String refInterna, String resultado, Integer idEstado, int idLote, String nhc,
-			boolean recogerDatosNotif, boolean avisosAuto, String nombreApellidos, String correo, String telefono,
-			boolean avisoSms, Date fechaNotificacion) {
+	public Muestra(Centro centro, EstadoMuestra estadoMuestra, Lote lote,PlacaVisavet  placaVisavet, PlacaLaboratorio  placaLaboratorio , String etiqueta, String tipoMuestra,
+			Date fechaEntrada, Date fechaEnvio, Date fechaResultado, String refInternaVisavet, String resultado,
+			Date fechaAsignada, Date fechaNotificacion, Set<UsuarioMuestra> usuarioMuestras,
+			Set<Documento> documentos, Paciente paciente) {
 		this.centro = centro;
+		this.estadoMuestra = estadoMuestra;
+		this.lote = lote;
+		this.placaVisavet = placaVisavet; 
+		this.placaLaboratorio = placaLaboratorio ;
 		this.etiqueta = etiqueta;
 		this.tipoMuestra = tipoMuestra;
 		this.fechaEntrada = fechaEntrada;
 		this.fechaEnvio = fechaEnvio;
 		this.fechaResultado = fechaResultado;
-		this.refInterna = refInterna;
+		this.refInternaVisavet = refInternaVisavet;
 		this.resultado = resultado;
-		this.idEstado = idEstado;
-		this.idLote = idLote;
-		this.nhc = nhc;
-		this.recogerDatosNotif = recogerDatosNotif;
-		this.avisosAuto = avisosAuto;
-		this.nombreApellidos = nombreApellidos;
-		this.correo = correo;
-		this.telefono = telefono;
-		this.avisoSms = avisoSms;
+		this.fechaAsignada = fechaAsignada;
 		this.fechaNotificacion = fechaNotificacion;
+		this.usuarioMuestras = usuarioMuestras;
+		this.documentos = documentos;
+		this.paciente = paciente;
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-
 	@Column(name = "id", unique = true, nullable = false)
 	public Integer getId() {
 		return this.id;
@@ -92,7 +95,7 @@ public class Muestra implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "idCentro", nullable = false)
 	public Centro getCentro() {
 		return this.centro;
@@ -102,6 +105,44 @@ public class Muestra implements java.io.Serializable {
 		this.centro = centro;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "idEstadoMuestra", nullable = false)
+	public EstadoMuestra getEstadoMuestra() {
+		return this.estadoMuestra;
+	}
+
+	public void setEstadoMuestra(EstadoMuestra estadoMuestra) {
+		this.estadoMuestra = estadoMuestra;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "idLote")
+	public Lote getLote() {
+		return this.lote;
+	}
+
+	public void setLote(Lote lote) {
+		this.lote = lote;
+	}
+	@ManyToOne
+	@JoinColumn(name = "idPlacaVisavet")
+	public PlacaVisavet getPlacaVisavet() {
+		return this.placaVisavet;
+	}
+
+	public void setPlacaVisavet(PlacaVisavet placaVisavet) {
+		this.placaVisavet = placaVisavet;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name = "idPlacaLaboratorio")
+	public PlacaLaboratorio getPlacaLaboratorio() {
+		return this.placaLaboratorio;
+	}
+
+	public void setPlacaLaboratorio(PlacaLaboratorio placaLaboratorio) {
+		this.placaLaboratorio = placaLaboratorio;
+	}
 	@Column(name = "etiqueta", nullable = false, length = 100)
 	public String getEtiqueta() {
 		return this.etiqueta;
@@ -150,13 +191,13 @@ public class Muestra implements java.io.Serializable {
 		this.fechaResultado = fechaResultado;
 	}
 
-	@Column(name = "refInterna", length = 100)
-	public String getRefInterna() {
-		return this.refInterna;
+	@Column(name = "refInternaVisavet", length = 100)
+	public String getRefInternaVisavet() {
+		return this.refInternaVisavet;
 	}
 
-	public void setRefInterna(String refInterna) {
-		this.refInterna = refInterna;
+	public void setRefInternaVisavet(String refInternaVisavet) {
+		this.refInternaVisavet = refInternaVisavet;
 	}
 
 	@Column(name = "resultado", length = 25)
@@ -167,86 +208,15 @@ public class Muestra implements java.io.Serializable {
 	public void setResultado(String resultado) {
 		this.resultado = resultado;
 	}
-
-	@Column(name = "idEstado")
-	public Integer getIdEstado() {
-		return this.idEstado;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaAsignada", length = 19)	
+	public Date getFechaAsignada() {
+		return this.fechaAsignada;
 	}
 
-	public void setIdEstado(Integer idEstado) {
-		this.idEstado = idEstado;
-	}
-
-	@Column(name = "idLote", nullable = false)
-	public int getIdLote() {
-		return this.idLote;
-	}
-
-	public void setIdLote(int idLote) {
-		this.idLote = idLote;
-	}
-
-	@Column(name = "NHC", length = 100)
-	public String getNhc() {
-		return this.nhc;
-	}
-
-	public void setNhc(String nhc) {
-		this.nhc = nhc;
-	}
-
-	@Column(name = "recogerDatosNotif", nullable = false)
-	public boolean isRecogerDatosNotif() {
-		return this.recogerDatosNotif;
-	}
-
-	public void setRecogerDatosNotif(boolean recogerDatosNotif) {
-		this.recogerDatosNotif = recogerDatosNotif;
-	}
-
-	@Column(name = "avisosAuto", nullable = false)
-	public boolean isAvisosAuto() {
-		return this.avisosAuto;
-	}
-
-	public void setAvisosAuto(boolean avisosAuto) {
-		this.avisosAuto = avisosAuto;
-	}
-
-	@Column(name = "nombreApellidos", nullable = false, length = 200)
-	public String getNombreApellidos() {
-		return this.nombreApellidos;
-	}
-
-	public void setNombreApellidos(String nombreApellidos) {
-		this.nombreApellidos = nombreApellidos;
-	}
-
-	@Column(name = "correo", length = 100)
-	public String getCorreo() {
-		return this.correo;
-	}
-
-	public void setCorreo(String correo) {
-		this.correo = correo;
-	}
-
-	@Column(name = "telefono", length = 25)
-	public String getTelefono() {
-		return this.telefono;
-	}
-
-	public void setTelefono(String telefono) {
-		this.telefono = telefono;
-	}
-
-	@Column(name = "avisoSMS", nullable = false)
-	public boolean isAvisoSms() {
-		return this.avisoSms;
-	}
-
-	public void setAvisoSms(boolean avisoSms) {
-		this.avisoSms = avisoSms;
+	public void setFechaAsignada(Date fechaAsignada) {
+		this.fechaAsignada = fechaAsignada;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -257,6 +227,35 @@ public class Muestra implements java.io.Serializable {
 
 	public void setFechaNotificacion(Date fechaNotificacion) {
 		this.fechaNotificacion = fechaNotificacion;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "muestra")
+	public Set<UsuarioMuestra> getUsuarioMuestras() {
+		return this.usuarioMuestras;
+	}
+
+	public void setUsuarioMuestras(Set<UsuarioMuestra> usuarioMuestras) {
+		this.usuarioMuestras = usuarioMuestras;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "muestra")
+	public Set<Documento> getDocumentos() {
+		return this.documentos;
+	}
+
+	public void setDocumentos(Set<Documento> documentos) {
+		this.documentos = documentos;
+	}
+
+	@OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL,
+            mappedBy = "muestra")
+	public Paciente getPaciente() {
+		return this.paciente;
+	}
+
+	public void setPaciente(Paciente paciente) {
+		this.paciente = paciente;
 	}
 
 }

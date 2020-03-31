@@ -27,6 +27,7 @@ import es.ucm.pcr.servicios.ServicioLaboratorioUni;
 
 
 @Controller
+@RequestMapping(value="/laboratorioUni")
 public class LaboratorioUniController {
 	@Autowired
 	ServicioLaboratorioUni servicioLaboratorioUni;
@@ -36,7 +37,7 @@ public class LaboratorioUniController {
 	
 	
 	// presenta la pagina con unos criterios de busqueda iniciales
-	@RequestMapping(value = "/laboratorioUni/buscar", method = RequestMethod.GET)
+	@RequestMapping(value = "/buscar", method = RequestMethod.GET)
 	public ModelAndView buscarGet(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) {
          // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
 		BusquedaLotesBean busquedaLotes= new BusquedaLotesBean();
@@ -53,7 +54,7 @@ public class LaboratorioUniController {
 		return vista;
 	}
 	// buscar lotes segun los criterios de busqueda 
-	@RequestMapping(value = "/laboratorioUni/buscar", method = RequestMethod.POST)
+	@RequestMapping(value = "/buscar", method = RequestMethod.POST)
 	public ModelAndView buscarPost(Model model, HttpServletRequest request, HttpSession session) {
         // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
 		ModelAndView vista = new ModelAndView("listadoLotes");
