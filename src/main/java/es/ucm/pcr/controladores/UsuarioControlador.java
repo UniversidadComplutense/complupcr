@@ -102,6 +102,7 @@ public class UsuarioControlador {
 			 								@RequestParam(value = "roles" , required = false) int[] roles,
 											HttpSession session) throws Exception {
 		
+		System.out.println("Habilitado: " + beanUsuario.getHabilitado());
 		// Damos de alta nuevo usuario
 		if (beanUsuario.getAccion().equals("A"))
 		{
