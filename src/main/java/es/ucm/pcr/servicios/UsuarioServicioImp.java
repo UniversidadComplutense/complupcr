@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.ucm.pcr.beans.BeanUsuario;
+import es.ucm.pcr.beans.BeanUsuarioGestion;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
@@ -45,9 +45,9 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	}
 	
 	@Override
-	public BeanUsuario mapeoEntidadBeanUsuario (Usuario usuario) throws Exception
+	public BeanUsuarioGestion mapeoEntidadBeanUsuario (Usuario usuario) throws Exception
 	{
-		BeanUsuario beanUsuario =  new BeanUsuario();
+		BeanUsuarioGestion beanUsuario =  new BeanUsuarioGestion();
 		
 		beanUsuario.setId(usuario.getId());
 		beanUsuario.setAcertadas(usuario.getAcertadas());
@@ -70,7 +70,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	}
 	
 	@Override
-	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuario beanUsuario) throws Exception{
+	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuarioGestion beanUsuario) throws Exception{
 	
 		Usuario usuario = new Usuario();
 		
@@ -104,7 +104,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	}
 	
 	@Override
-	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuario beanUsuario, Usuario usuario) throws Exception {
+	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuarioGestion beanUsuario, Usuario usuario) throws Exception {
 		
 		// No asigno el id del usuario
 		usuario.setAcertadas(beanUsuario.getAcertadas());

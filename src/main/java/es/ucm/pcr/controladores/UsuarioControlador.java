@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import es.ucm.pcr.beans.BeanUsuario;
+import es.ucm.pcr.beans.BeanUsuarioGestion;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
 import es.ucm.pcr.servicios.UsuarioServicio;
@@ -37,10 +37,10 @@ public class UsuarioControlador {
 		ModelAndView vista = new ModelAndView("VistaGestionUsuario");
 	
 		// cargo todos los usuarios de BBDD
-		List<BeanUsuario> listaUsuarios = new ArrayList<BeanUsuario>();
+		List<BeanUsuarioGestion> listaUsuarios = new ArrayList<BeanUsuarioGestion>();
 		for (Usuario usuario: usuarioRepositorio.findAll())
 		{
-			listaUsuarios.add(new BeanUsuario(
+			listaUsuarios.add(new BeanUsuarioGestion(
 								usuario.getId(), 
 								usuario.getCentro(),
 								usuario.getNombre(), 
@@ -71,7 +71,7 @@ public class UsuarioControlador {
 	public ModelAndView AltaUsuario(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaUsuario");
 	
-		BeanUsuario beanUsuario = new BeanUsuario();
+		BeanUsuarioGestion beanUsuario = new BeanUsuarioGestion();
 		// le indicamos la acción a relizar: A alta de un usuario
 		beanUsuario.setAccion("A");
 		vista.addObject("formBeanUsuario", beanUsuario);
@@ -81,7 +81,7 @@ public class UsuarioControlador {
 	
    // Alta/modificación de usuario 
 	@RequestMapping(value="/gestor/altaUsuario", method=RequestMethod.POST)	
-	public ModelAndView grabarAltaUsuario ( @ModelAttribute("formBeanUsuario") BeanUsuario beanUsuario, HttpSession session) throws Exception {
+	public ModelAndView grabarAltaUsuario ( @ModelAttribute("formBeanUsuario") BeanUsuarioGestion beanUsuario, HttpSession session) throws Exception {
 
 		// Damos de alta nuevo usuario
 		if (beanUsuario.getAccion().equals("A"))
@@ -129,7 +129,7 @@ public class UsuarioControlador {
 //		beanUsuario.setAp1(usuario.get().getApellido1());
 //		beanUsuario.setAp2(usuario.get().getApellido2());
 //		beanUsuario.setNom(usuario.get().getNombre());
-		BeanUsuario beanUsuario = usuarioServicio.mapeoEntidadBeanUsuario(usuario.get());
+		BeanUsuarioGestion beanUsuario = usuarioServicio.mapeoEntidadBeanUsuario(usuario.get());
 		
 		// le indicamos la acción a relizar: M modificación de un usuario
 		beanUsuario.setAccion("M");

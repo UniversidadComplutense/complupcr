@@ -9,7 +9,7 @@ import es.ucm.pcr.modelo.orm.Documento;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.UsuarioMuestra;
 
-public class BeanUsuario implements Comparable<BeanUsuario>{
+public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 
 	private Integer id;
 	private Centro centro;
@@ -29,14 +29,14 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 	private String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA DE USUARIOS
 	
 	
-	public BeanUsuario() {
+	public BeanUsuarioGestion() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	
 
-	public BeanUsuario(Integer id, Centro centro, String nombre, String apellido1, String apellido2, String email,
+	public BeanUsuarioGestion(Integer id, Centro centro, String nombre, String apellido1, String apellido2, String email,
 			String password, Integer idLaboratorioVisavet, Integer idLaboratorioCentro, Integer asignadas,
 			Integer acertadas, Set<Documento> documentos, Set<UsuarioMuestra> usuarioMuestras, Set<Rol> rols,
 			Byte habilitado, String accion) {
@@ -265,7 +265,7 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 
 
 	@Override
-    public int compareTo(BeanUsuario o) {
+    public int compareTo(BeanUsuarioGestion o) {
 		String p1 = o.getApellido1() + o.getApellido2() + o.getNombre();
 		String p2 = getApellido1() + getApellido2() + getNombre();
         String l1 = Utilidades.limpiarStringParaOrdenacion(p1);

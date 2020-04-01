@@ -5,7 +5,7 @@ import java.util.Calendar;
 public class BeanAsignacion {
 	
 	//asignación del usuario a la muestra
-	private BeanUsuario beanUsuario; //los usuarios con rol analista, voluntario o jefe de servicio serán asignados para valorar la muestra
+	private BeanUsuarioGestion beanUsuario; //los usuarios con rol analista, voluntario o jefe de servicio serán asignados para valorar la muestra
 	private Calendar fechaAsignacion; //fecha de asignacion del usuario a la muestra
 	private String valoracion; //Valoración final de la muestra (N,P,R,A)
 	private Calendar fechaValoracion; //fecha valoracion
@@ -17,12 +17,12 @@ public class BeanAsignacion {
 	}
 
 
-	public BeanUsuario getBeanUsuario() {
+	public BeanUsuarioGestion getBeanUsuario() {
 		return beanUsuario;
 	}
 
 
-	public void setBeanUsuario(BeanUsuario beanUsuario) {
+	public void setBeanUsuario(BeanUsuarioGestion beanUsuario) {
 		this.beanUsuario = beanUsuario;
 	}
 

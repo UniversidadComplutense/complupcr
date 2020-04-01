@@ -2,7 +2,7 @@ package es.ucm.pcr.servicios;
 
 import java.util.Set;
 
-import es.ucm.pcr.beans.BeanUsuario;
+import es.ucm.pcr.beans.BeanUsuarioGestion;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 
@@ -30,15 +30,15 @@ public interface UsuarioServicio {
 	 * @param Usuario
 	 * @return BeanUsuario
 	 */	
-	public BeanUsuario mapeoEntidadBeanUsuario (Usuario usuario) throws Exception;
+	public BeanUsuarioGestion mapeoEntidadBeanUsuario (Usuario usuario) throws Exception;
 	
 	/**
 	 * Realiza el mapeo del bean a la entidad Usuario
 	 * 
-	 * @param BeanUsuario
+	 * @param BeanUsuarioGestion
 	 * @return Usuario
 	 */	
-	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuario beanUsuario) throws Exception;
+	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuarioGestion beanUsuario) throws Exception;
 	
 	/**
 	 * Realiza el mapeo del bean a la entidad Usuario para modificar
@@ -46,6 +46,6 @@ public interface UsuarioServicio {
 	 * @param BeanUsuario, Usuario
 	 * @return Usuario
 	 */	
-	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuario beanUsuario, Usuario usuario) throws Exception;
+	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuarioGestion beanUsuario, Usuario usuario) throws Exception;
 	
 }
