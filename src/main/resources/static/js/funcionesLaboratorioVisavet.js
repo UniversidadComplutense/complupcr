@@ -114,7 +114,6 @@ function confirmarLote(){
 	
 	var id=$("#id").val();
 	url =  '/laboratorioUni/confirmarReciboLote?id='+id;
-	alert(url);
 	window.location=url;
 }
 
@@ -132,7 +131,6 @@ function consultarMuestras(lote,centroProcedencia,id){
         dataType: 'html',
         data:  sBody
 	}).done(function(respuesta) {
-		alert(respuesta);
 		$("#trMuestra").html(respuesta);
 	});
 	
@@ -206,7 +204,7 @@ function asignarPlaca(){
         dataType: 'html',
         data:  sBody
 	}).done(function(respuesta) {
-		alert (respuesta);
+		
 		eliminaFilas();
 		
 	    $("#trGroup").html(respuesta);
