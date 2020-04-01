@@ -142,14 +142,18 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	
 	public void createPasswordResetTokenForUser(Usuario user, String token) {
 	    PasswordResetToken myToken = new PasswordResetToken(user,token);
+	    user.setHabilitado("E");
+		usurep.save(user);
 	    passwordTokenRepositorio.save(myToken);
 	}
 
 	@Override
-	public void cambiarContrasena(Usuario user, String contrasena) {
-		 user.setPassword(passwordEncoder.encode(contrasena));
-		 usurep.save(user);
-		 passwordTokenRepositorio.deleteByUsuario(user);
+	public void cambiarContrasena(String email, String contrasena) {
+		Usuario user = buscarUsuarioPorEmail(email);
+		user.setPassword(passwordEncoder.encode(contrasena));
+		user.setHabilitado("A");
+		usurep.save(user);
+		passwordTokenRepositorio.deleteByUsuario(user);
 		
 	}
 	
