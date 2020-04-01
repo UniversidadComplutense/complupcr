@@ -213,14 +213,14 @@ public class LaboratorioVisavetUCMController {
 			//BeanBusquedaLotes busquedaLotes=(BeanBusquedaLotes) model.getAttribute("busquedaLotes");
 			ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 			busquedaLotes.setIdCentro(0);
-			paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, pageable);
+			// cuando tere me diga q esta paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, pageable);
 			// para probar
-			/*List<LoteBeanPlacaVisavet> list= new ArrayList();
+			List<LoteBeanPlacaVisavet> list= new ArrayList();
 			for (int i = 0; i<20; i++) {
 				list.add(getBean(i));
 			}		
 			paginaLotes = new PageImpl<LoteBeanPlacaVisavet>(list, pageable,pageable.getPageSize());
-			*/
+			
 			// fin para probar 
 			model.addAttribute("paginaLotes", paginaLotes);
 			vista.addObject("paginaLotes", paginaLotes);
