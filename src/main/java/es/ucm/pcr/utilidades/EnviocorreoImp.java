@@ -101,7 +101,7 @@ public class EnviocorreoImp implements Enviocorreo {
  
             MimeMessageHelper helper = new MimeMessageHelper(msg, true, "UTF-8");
             helper = new MimeMessageHelper(msg, true);
-			helper.setFrom("preinscripcion-no-reply@ucm.es");
+			helper.setFrom("no-reply@ucm.es");
 			if (destinatarios == null){
 				helper.setTo(to);
 			}else {				
@@ -123,17 +123,19 @@ public class EnviocorreoImp implements Enviocorreo {
 			String quote = "\"";
 			
 			String paginahtml = 
-			//Pongo texto de correo para Titulos propios
-			"<html><head> <title>Covit 19 </title>"
-			+ "<meta http-equiv=" + quote + "Content-Type" + quote + " content=" + quote + "text/html" + quote + "; charset=utf-8" + quote + "/>"
-			+ "</head> <body> <h2 style=\"background-color: #9B021A;color: #fff;font-size: 3em;font-family: Verdana;font-size: 32px;padding: 0.2em 1em;text-align: center;margin: 0;\">Covit 19</h2>"
-			+ "<div style=\"color:#9B021A;text-align: center;border-bottom: 1px solid #2279b4;border-top: 1px solid #2279b4;font-family: Verdana;font-size: 25px;margin-bottom:1em\">Aviso"			
-//			+ convocatoria +  "</div> " +			
-			+ " <p> "  + 	cabecera + " </p>	" +  
-			" <p> "  +     texto + " </p>	" +
-			" <p+> "  + 	pie + " </p>	" +  
-			"</body> </html>";
-			
+					//Pongo texto de correo para Titulos propios
+					"<html><head> <title>Coovid 19</title>"
+					+ "<meta http-equiv=" + quote + "Content-Type" + quote + " content=" + quote + "text/html" + quote + "; charset=utf-8" + quote + "/>"
+					+ "</head> <body> <h2 style=\"background-color: orange;color: white;font-size: 3em;font-family: Verdana;font-size: 32px;padding: 0.2em 1em;text-align: center;margin: 0;\">Covid 19</h2>"
+					+ "<div style=\"text-align: center;border-bottom: 1px solid #2279b4;border-top: 1px solid #2279b4;font-family: Verdana;font-size: 25px;margin-bottom:1em\">Notificaci&oacute;n "			
+				+
+				//	+ convocatoria +  "</div> " +			
+					" <p> "  + 	cabecera + " </p>	" +  
+					" <p> "  +     texto + " </p>	" +
+					" <p> "  + 	pie + " </p>	" +  
+					"</body> </html>";
+					
+					
 			
 			helper.setText(paginahtml, true);
 

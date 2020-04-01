@@ -3,6 +3,7 @@ package es.ucm.pcr.controladores;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +21,9 @@ public class PruebasControlador {
 	
 	@Autowired
 	private Enviocorreo envioCorreoImp;	
-	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/correo", method=RequestMethod.GET)
-	public ModelAndView AltaCentro(HttpSession session) throws Exception {
+	public ModelAndView PruebaCorreo(HttpSession session) throws Exception {
 		
 		/*
 		 * String txtAviso = String.format("En el lote con codnum: %s" +
