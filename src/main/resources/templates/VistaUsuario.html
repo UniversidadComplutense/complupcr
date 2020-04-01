@@ -74,6 +74,18 @@
 			</div>
 
  -->			
+ 
+ <!-- roles del usuario -->
+          <tr>
+             <td>Roles</td>
+             <td>
+               <th:block th:each="rol : ${listaRoles}">
+                <input type="checkbox" name="roles" th:value="${rol.id}"/>
+                 <label th:text="${rol.nombre}"></label>
+               </th:block>
+             </td>
+           </tr>
+ 
  			<!--  Los campos id y acción van ocultos en la pantalla 
 			-->
 			<div class="form-group">

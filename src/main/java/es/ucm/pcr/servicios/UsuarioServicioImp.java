@@ -1,5 +1,6 @@
 package es.ucm.pcr.servicios;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,6 +17,7 @@ import es.ucm.pcr.modelo.orm.PasswordResetToken;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.PasswordTokenRepositorio;
+import es.ucm.pcr.repositorio.RolRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
 
 @Service
@@ -27,6 +29,9 @@ public class UsuarioServicioImp implements UsuarioServicio {
 
 	@Autowired
 	UsuarioRepositorio usurep;
+	
+	@Autowired
+	RolRepositorio rolRepositorio;
 	
 	@Autowired
 	PasswordTokenRepositorio passwordTokenRepositorio;
@@ -81,7 +86,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	}
 	
 	@Override
-	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuarioGestion beanUsuario) throws Exception{
+	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuarioGestion beanUsuario, int[] roles) throws Exception{
 	
 		Usuario usuario = new Usuario();
 		
@@ -107,7 +112,21 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		{
 			usuario.setPassword(beanUsuario.getPassword());
 		}
-		usuario.setRols(beanUsuario.getRols());
+		
+		// Añado los roles seleccionado
+		Set<Rol> rolesSeleccionados = new HashSet<Rol>(0);
+		if(roles != null) 
+		{
+		    for (int i = 0; i < roles.length; i++)  
+		    {
+		    	System.out.println("Roles: " + roles[i]);
+		    	Optional<Rol> rol = rolRepositorio.findById(roles[i]);
+		    	rolesSeleccionados.add(rol.get());
+		    }
+		}
+		usuario.setRols(rolesSeleccionados);
+		//
+		
 		usuario.setUsuarioMuestras(beanUsuario.getUsuarioMuestras());
 		
 		return usuario;

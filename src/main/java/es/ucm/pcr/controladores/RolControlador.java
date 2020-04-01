@@ -66,7 +66,7 @@ public class RolControlador {
 		if (beanRol.getAccion().equals("A"))
 		{
 			Rol rol = new Rol();
-			rol.setNombre(beanRol.getRol());
+			rol.setNombre(beanRol.getNombre());
 			rolRepositorio.save(rol);
 		}
 		// Modificamos rol existente, menos mail
@@ -77,7 +77,7 @@ public class RolControlador {
 			// Buscamos el rol a modificar, y volcamos los datos recogidos por el formulario
 			Optional<Rol> rol = rolRepositorio.findById(beanRol.getId());
 			// añadimos campos del formulario
-			rol.get().setNombre(beanRol.getRol());
+			rol.get().setNombre(beanRol.getNombre());
 			rolRepositorio.save(rol.get());
 		}
 
@@ -97,7 +97,7 @@ public class RolControlador {
 		// cargo el beanRol con lo datos del rol a modificar
 		BeanRol beanRol = new BeanRol();
 		beanRol.setId(rol.get().getId());
-		beanRol.setRol(rol.get().getNombre());
+		beanRol.setNombre(rol.get().getNombre());
 		
 		// le indicamos la acción a relizar: M modificación de un rol
 		beanRol.setAccion("M");

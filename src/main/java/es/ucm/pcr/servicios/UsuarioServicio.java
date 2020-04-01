@@ -38,7 +38,7 @@ public interface UsuarioServicio {
 	 * @param BeanUsuarioGestion
 	 * @return Usuario
 	 */	
-	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuarioGestion beanUsuario) throws Exception;
+	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuarioGestion beanUsuario, int[] roles) throws Exception;
 	
 	/**
 	 * Realiza el mapeo del bean a la entidad Usuario para modificar
