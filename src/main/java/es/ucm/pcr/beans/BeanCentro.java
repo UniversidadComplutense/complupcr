@@ -161,6 +161,7 @@ public class BeanCentro implements Comparable<BeanCentro> {
 				+ ", email=" + email + ", direccion=" + direccion + ", usuarios=" + usuarios + ", muestras=" + muestras
 				+ ", documentos=" + documentos + ", lotes=" + lotes + ", accion=" + accion + "]";
 	}
+	
 
 
 	@Override

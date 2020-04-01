@@ -7,7 +7,7 @@ public class PlacaLaboratorioVisavetBean {
 	private String id;
 	private String capacidad;
 	private BeanEstado BeanEstado;
-	private List<LoteBean> lotes;
+	private List<LotePlacaVisavetBean> lotes;
 	private List<DocumentoBean> documentos;
 
 	
@@ -35,11 +35,11 @@ public class PlacaLaboratorioVisavetBean {
 		BeanEstado = beanEstado;
 	}
 
-	public List<LoteBean> getLotes() {
+	public List<LotePlacaVisavetBean> getLotes() {
 		return lotes;
 	}
 
-	public void setLotes(List<LoteBean> lotes) {
+	public void setLotes(List<LotePlacaVisavetBean> lotes) {
 		this.lotes = lotes;
 	}
 

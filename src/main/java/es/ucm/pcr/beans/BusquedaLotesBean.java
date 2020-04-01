@@ -10,12 +10,12 @@ public class BusquedaLotesBean {
 private String idLaboratorio;
 private String nombreLaboratorio;
 private  String numLote;
-private String fechaEntrada;
+private Date fechaEntrada;
 private String muestra;
-private List<BeanElemento> listaBeanEstado;
-private String codNumEstadoSeleccionado;
+private List<BeanEstado> listaBeanEstado;
+private Integer codNumEstadoSeleccionado;
 private List<CentroBean> listaCentros;
-private int idCentro;
+private Integer idCentro;
 private String urlPaginada="/laboratorioUni/buscarLotesGet";
 private String orden;
 private String sentidoOrden;
@@ -38,10 +38,10 @@ public String getNumLote() {
 public void setNumLote(String numLote) {
 	this.numLote = numLote;
 }
-public String getFechaEntrada() {
+public Date getFechaEntrada() {
 	return fechaEntrada;
 }
-public void setFechaEntrada(String fechaEntrada) {
+public void setFechaEntrada(Date fechaEntrada) {
 	this.fechaEntrada = fechaEntrada;
 }
 public String getMuestra() {
@@ -50,16 +50,16 @@ public String getMuestra() {
 public void setMuestra(String muestra) {
 	this.muestra = muestra;
 }
-public List<BeanElemento> getListaBeanEstado() {
+public List<BeanEstado> getListaBeanEstado() {
 	return listaBeanEstado;
 }
-public void setListaBeanEstado(List<BeanElemento> listaBeanEstado) {
+public void setListaBeanEstado(List<BeanEstado> listaBeanEstado) {
 	this.listaBeanEstado = listaBeanEstado;
 }
-public String getCodNumEstadoSeleccionado() {
+public Integer getCodNumEstadoSeleccionado() {
 	return codNumEstadoSeleccionado;
 }
-public void setCodNumEstadoSeleccionado(String codNumEstadoSeleccionado) {
+public void setCodNumEstadoSeleccionado(Integer codNumEstadoSeleccionado) {
 	this.codNumEstadoSeleccionado = codNumEstadoSeleccionado;
 }
 public List<CentroBean> getListaCentros() {
@@ -68,10 +68,10 @@ public List<CentroBean> getListaCentros() {
 public void setListaCentros(List<CentroBean> listaCentros) {
 	this.listaCentros = listaCentros;
 }
-public int getIdCentro() {
+public Integer getIdCentro() {
 	return idCentro;
 }
-public void setIdCentro(int idCentro) {
+public void setIdCentro(Integer idCentro) {
 	this.idCentro = idCentro;
 }
 public String getUrlPaginada() {
