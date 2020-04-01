@@ -77,11 +77,9 @@
 					<label >Resultado</label>
 				 	<select class="form-control form-control-sm" th:field="${beanBusquedaMuestra.estadoMuestra}"  th:value="${beanBusquedaMuestra.estadoMuestra}">
 				 		<option value="">Seleccione</option>
-				 		<option value="PENDIENTE">Pendiente</option>
-				 		<option value="POSITIVO">Positivo</option>
-				 		<option value="NEGATIVO">Negativo</option>
-				 		<option value="DEBIL">Débil</option>
-				 		<option value="REPETIR">Repetir</option>
+				 		<option th:each="var: ${listaResultadosMuestra}"
+									th:value="${var.resultadoMuestra.cod}" th:text="${var.resultadoMuestra.descripcion}"
+									th:select="${beanBusquedaMuestra.estadoMuestra}">Estado</option>
 				 	</select>
 				</div>										
 			</div>

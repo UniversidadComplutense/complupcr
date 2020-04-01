@@ -2,9 +2,12 @@ package es.ucm.pcr.beans;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
+import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.Paciente;
 
@@ -236,9 +239,23 @@ public class MuestraCentroBean implements java.io.Serializable {
 		muestra.setTipoMuestra(muestraBean.getTipoMuestra());
 		muestra.setFechaEntrada(muestraBean.getFechaEntrada());
 		muestra.setFechaAsignada(muestraBean.getFechaAsignada());
-		muestra.setEstadoMuestra(new EstadoMuestra(muestraBean.getEstado().getEstado().getCodNum()));
+		if (muestraBean.getEstado() != null) {
+			muestra.setEstadoMuestra(new EstadoMuestra(muestraBean.getEstado().getEstado().getCodNum()));
+		}
 		muestra.setCentro(new Centro(muestraBean.getIdCentro()));	
+		if (muestraBean.getIdLote() != null) {
+			muestra.setLote(new Lote(muestraBean.getIdLote()));
+		} else {
+			muestra.setLote(null);
+		}
 		
+		if (StringUtils.isNotEmpty(muestraBean.getResultado())) {
+			BeanResultado beanResultado = new BeanResultado();
+			beanResultado.asignarTipoEstadoDescripcion(muestraBean.getResultado());		
+			muestra.setResultado(beanResultado.getResultadoMuestra().getCod());
+		}
+		
+		paciente.setId(muestraBean.getIdPaciente());
 		paciente.setNombrePaciente(muestraBean.getNombre());
 		paciente.setApellido1paciente(muestraBean.getPrimerApellido());
 		paciente.setApellido2paciente(muestraBean.getSegundoApellido());
@@ -267,8 +284,15 @@ public class MuestraCentroBean implements java.io.Serializable {
 		muestraBean.setFechaAsignada(muestra.getFechaAsignada());
 		BeanEstado beanEstado = new BeanEstado();
 		muestraBean.setEstado(beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, muestra.getEstadoMuestra().getId()));
-		muestraBean.setIdCentro(muestra.getCentro().getId());	
+		muestraBean.setIdCentro(muestra.getCentro().getId());
+		if (muestra.getLote() != null) {
+			muestraBean.setIdLote(muestra.getLote().getId());
+		}
 		
+		BeanResultado beanResultado = new BeanResultado();
+		muestraBean.setResultado(beanResultado.asignarTipoEstadoYCodNum(muestra.getResultado()).getResultadoMuestra().getDescripcion());		
+		
+		muestraBean.setIdPaciente(paciente.getId());
 		muestraBean.setNombre(paciente.getNombrePaciente());
 		muestraBean.setPrimerApellido(paciente.getApellido1paciente());
 		muestraBean.setSegundoApellido(paciente.getApellido2paciente());

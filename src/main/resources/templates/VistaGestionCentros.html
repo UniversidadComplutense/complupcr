@@ -2,7 +2,7 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>PCR-COVID19 - GESTION USUARIOS</title>
+<title>PCR-COVID19 - GESTION CENTROS</title>
 <object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
 </head>
 <body>
@@ -11,9 +11,9 @@
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	
 	<div class="container">
-		<h4>GESTIÓN DE USUARIOS</h4>
+		<h4>GESTIÓN DE CENTROS</h4>
 
-		<a th:href="@{/gestor/altaUsuario}" class="btn btn-primary eBtn">Añadir usuario</a>
+		<a th:href="@{/gestor/altaCentro}" class="btn btn-primary eBtn">Añadir Centro</a>
 
 		</p>
 
@@ -22,20 +22,17 @@
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th>Nombre</th>
-							<th>Primer apellido</th>
-							<th>Segundo apellido</th>
+							<th>Centro</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="users :${listaUsuarios}">
-							<td th:text="${users.nombre}"></td>
-							<td th:text="${users.apellido1}"></td>
-							<td th:text="${users.apellido2}"></td>
+						<tr th:each="centro :${listaCentros}">
+							<td th:text="${centro.codCentro}"></td>
+							<td th:text="${centro.nombre}"></td>							
 							<td>							
- 								<a th:href="@{/gestor/borrarUsuario(idUsuario=${users.id})}" class="btn btn-danger delBtn">Borrar</a>
-								<a th:href="@{/gestor/editarUsuario(idUsuario=${users.id})}" class="btn btn-primary eBtn">Editar</a>
+ 								<a th:href="@{/gestor/borrarCentro(idCentro=${centro.id})}" class="btn btn-danger delBtn">Borrar</a>
+								<a th:href="@{/gestor/editarCentro(idCentro=${centro.id})}" class="btn btn-primary eBtn">Editar</a>
 							</td>
 						</tr>
 					</tbody>
@@ -49,6 +46,5 @@
 
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
-		
 </body>
 </html>

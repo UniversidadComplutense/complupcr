@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import es.ucm.pcr.beans.BeanUsuarioGestion;
 import es.ucm.pcr.modelo.orm.PasswordResetToken;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
@@ -52,6 +53,91 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		} else {
 			return null;
 		}
+	}
+	
+	@Override
+	public BeanUsuarioGestion mapeoEntidadBeanUsuario (Usuario usuario) throws Exception
+	{
+		BeanUsuarioGestion beanUsuario =  new BeanUsuarioGestion();
+		
+		beanUsuario.setId(usuario.getId());
+		beanUsuario.setAcertadas(usuario.getAcertadas());
+		beanUsuario.setApellido1(usuario.getApellido1());
+		beanUsuario.setApellido2(usuario.getApellido2());
+		beanUsuario.setAsignadas(usuario.getAsignadas());
+		beanUsuario.setCentro(usuario.getCentro());
+		beanUsuario.setDocumentos(usuario.getDocumentos());
+		beanUsuario.setEmail(usuario.getEmail());
+		beanUsuario.setHabilitado(usuario.getHabilitado());
+		beanUsuario.setId(usuario.getId());
+		beanUsuario.setIdLaboratorioCentro(usuario.getIdLaboratorioCentro());
+		beanUsuario.setIdLaboratorioVisavet(usuario.getIdLaboratorioVisavet());
+		beanUsuario.setNombre(usuario.getNombre());
+		beanUsuario.setPassword(usuario.getPassword());
+		beanUsuario.setRols(usuario.getRols());
+		beanUsuario.setUsuarioMuestras(usuario.getUsuarioMuestras());				
+		
+		return beanUsuario;
+	}
+	
+	@Override
+	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuarioGestion beanUsuario) throws Exception{
+	
+		Usuario usuario = new Usuario();
+		
+		usuario.setAcertadas(beanUsuario.getAcertadas());
+		usuario.setApellido1(beanUsuario.getApellido1());
+		usuario.setApellido2(beanUsuario.getApellido2());
+		usuario.setAsignadas(beanUsuario.getAsignadas());
+		usuario.setCentro(beanUsuario.getCentro());
+		usuario.setDocumentos(beanUsuario.getDocumentos());
+		usuario.setDocumentos(beanUsuario.getDocumentos());
+		usuario.setEmail(beanUsuario.getEmail());
+		usuario.setHabilitado(beanUsuario.getHabilitado());
+		usuario.setId(beanUsuario.getId());
+		usuario.setIdLaboratorioCentro(beanUsuario.getIdLaboratorioCentro());
+		usuario.setIdLaboratorioVisavet(beanUsuario.getIdLaboratorioVisavet());
+		usuario.setNombre(beanUsuario.getNombre());
+		// el Pwd se asigna por otros medios, pero no puede ir vacio
+		if (beanUsuario.getPassword() == null)
+		{
+			usuario.setPassword("PWD");
+		}
+		else
+		{
+			usuario.setPassword(beanUsuario.getPassword());
+		}
+		usuario.setRols(beanUsuario.getRols());
+		usuario.setUsuarioMuestras(beanUsuario.getUsuarioMuestras());
+		
+		return usuario;
+		
+	}
+	
+	@Override
+	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuarioGestion beanUsuario, Usuario usuario) throws Exception {
+		
+		// No asigno el id del usuario
+		usuario.setAcertadas(beanUsuario.getAcertadas());
+		usuario.setApellido1(beanUsuario.getApellido1());
+		usuario.setApellido2(beanUsuario.getApellido2());
+		usuario.setAsignadas(beanUsuario.getAsignadas());
+		usuario.setCentro(beanUsuario.getCentro());
+		usuario.setDocumentos(beanUsuario.getDocumentos());
+		usuario.setDocumentos(beanUsuario.getDocumentos());
+		//  El mail es único, y asociado al usuario, no poemos modifciarlo
+//		usuario.setEmail(beanUsuario.getEmail());
+		usuario.setHabilitado(beanUsuario.getHabilitado());
+		usuario.setId(beanUsuario.getId());
+		usuario.setIdLaboratorioCentro(beanUsuario.getIdLaboratorioCentro());
+		usuario.setIdLaboratorioVisavet(beanUsuario.getIdLaboratorioVisavet());
+		usuario.setNombre(beanUsuario.getNombre());
+		// el Pwd se asigna por otros medios, no podemos modificarlo
+//		usuario.setPassword(beanUsuario.getPassword());
+		usuario.setRols(beanUsuario.getRols());
+		usuario.setUsuarioMuestras(beanUsuario.getUsuarioMuestras());
+		
+		return usuario;
 	}
 	
 	public void createPasswordResetTokenForUser(Usuario user, String token) {

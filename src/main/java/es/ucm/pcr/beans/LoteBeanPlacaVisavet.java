@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class LoteBeanPlacaVisavet{
-	private String id;
+	private Integer id;
 	private String numLote;
 	private String centroProcedencia;
 	private int capacidad;
@@ -18,10 +18,10 @@ public class LoteBeanPlacaVisavet{
 	private String funcionEjecutar;
 	private String test;
 	private Integer idPlacaVisavet; 
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getNumLote() {

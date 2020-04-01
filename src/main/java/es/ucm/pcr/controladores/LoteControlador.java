@@ -70,10 +70,10 @@ public class LoteControlador {
 	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session) throws Exception {  
 		binder.setValidator(validadorLote);
 	}
-	/*
-	@InitBinder
+	
+	@InitBinder("beanLote")
 	public void initBinder(ServletRequestDataBinder binder) {
-	    binder.registerCustomEditor(BeanEstado.class, "idEstado", new PropertyEditorSupport() {
+	    binder.registerCustomEditor(BeanEstado.class, "estado", new PropertyEditorSupport() {
 	    	public void setAsText(String text) {
 	            Integer id = Integer.parseInt(text);
 	            BeanEstado beanEstado = new BeanEstado();
@@ -82,10 +82,10 @@ public class LoteControlador {
 	        }
 	    });
 
-	}*/
+	}
 	
 	@RequestMapping(value="/lote", method=RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView buscador(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLoteListado");
 	
@@ -97,7 +97,7 @@ public class LoteControlador {
 	}
 	
 	@RequestMapping(value="/lote/list", method=RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView buscar(HttpSession session, @ModelAttribute LoteBusquedaBean beanBusqueda) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLoteListado");
 		
@@ -111,7 +111,7 @@ public class LoteControlador {
 	}
 	
 	@RequestMapping(value="/lote/nuevo", method=RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView nuevo(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLote");
 	
@@ -124,7 +124,7 @@ public class LoteControlador {
 	}
 	
 	@RequestMapping(value="/lote/modificar", method=RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView modificar(HttpSession session, @RequestParam(value = "id", required = true) Integer id) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLote");
 		
@@ -136,7 +136,7 @@ public class LoteControlador {
 	}
 	
 	@RequestMapping(value="/lote/{id}", method=RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView consultar(HttpSession session, @PathVariable Integer id) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLote");
 		
@@ -148,15 +148,11 @@ public class LoteControlador {
 	}
 	
 	@RequestMapping(value="/lote/guardar", method=RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView guardar(@Valid @ModelAttribute("beanLote") LoteCentroBean beanLote, BindingResult result) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLote");
 	
 		if (result.hasErrors()) {
-			// TODO - VER SI PODEMOS EVITAR ESTO CON EL INIT BINDER
-			BeanEstado beanEstado = new BeanEstado();
-            beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoLote, beanLote.getIdEstado());
-            beanLote.setEstado(beanEstado);
 			vista.addObject("editable", loteEditable(beanLote));
 			vista.addObject("beanLote", beanLote);
 			return vista;			

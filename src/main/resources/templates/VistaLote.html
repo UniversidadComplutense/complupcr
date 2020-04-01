@@ -8,17 +8,12 @@
 <body>
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
 	
 	<form action="#" th:action="@{/centroSalud/lote/guardar}" method="post" th:object="${beanLote}" id="formGuardar" role="form">
 		<input type="hidden" th:field="${beanLote.id}"  th:value="${beanLote.id}" />
-		<!-- <input type="hidden" th:field="${beanLote.estado}"  th:value="${beanLote.estado}" /> -->
-		<!-- 
-		<input type="hidden" th:field="${beanLote.estado.estado.codNum}"  th:value="${beanLote.estado.estado.codNum}" />
-		<input type="hidden" th:field="${beanLote.estado.estado.descripcion}"  th:value="${beanLote.estado.estado.descripcion}" />
-		-->
-		 
-		<input type="hidden" name="idEstado" th:value="${beanLote.estado.estado.codNum}" /> 
+		<input type="hidden" name="estado" th:value="${beanLote.estado.estado.codNum}" th:if="${beanLote.estado} != null"/> 
 		<fieldset id="datosLote" class="form-group border p-2" th:disabled="!${editable}">
 			<legend class="w-auto">Lote</legend>
 			<div class="row">
@@ -29,7 +24,7 @@
 				</div>
 				<div class="col-4 form-group">
 					<label>Capacidad</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanLote.capacidad}"  th:value="${beanLote.capacidad}" pattern="[0-9]{3}" required/>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanLote.capacidad}"  th:value="${beanLote.capacidad}" pattern="[0-9]+" maxlength="3" required/>
 				</div>					
 				<div class="col-3 form-group">
 					<label>Laboratorio</label>

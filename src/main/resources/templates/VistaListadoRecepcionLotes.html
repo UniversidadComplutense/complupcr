@@ -53,7 +53,7 @@
 								th:field="*{codNumEstadoSeleccionado}">
 
 								<option th:each="var: ${busquedaLotes.listaBeanEstado}"
-									th:value="${var.codigo}" th:text="${var.descripcion}"
+									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
 									th:selected="${busquedaLotes.codNumEstadoSeleccionado}">Estado</option>
 							</select>
 						</div>
@@ -64,10 +64,8 @@
 				<div class="col-4 form-group">
 			
 						<label class="col-xs-2">Fecha de Entrada:</label>
-						
-									<input type="date" class="form-control" id="fechaEntrada"
-								
-								th:field="${busquedaLotes.fechaEntrada}" />
+						 		<input type="date" class="form-control" id="fechaEntrada"
+								th:field="*{fechaEntrada}" th:value="${busquedaLotes.fechaEntrada}" />
 						
                    </div>
                    <div class="col-4 form-group">
@@ -87,9 +85,10 @@
 			</div>
 		</div>	
 		</fieldset>
-		<!-- campos hidden para permitir ordenar y para paginar -->
+		<!-- campos hidden para permitir ordenar y para paginar 
 		<input type="hidden" class="form-control" id="orden" th:field="*{orden}" />
 		<input type="hidden" class="form-control" id="sentidoOrden" th:field="*{sentidoOrden}" />
+		-->
 		</form>
 		</div>
 		
@@ -130,7 +129,8 @@
 								</td>
 
 								<td id="mensajes_log" width="1%">
-								<span th:text="${#dates.format(unResultado.fechaEntrada, 'dd-mm-yyyy')}"></span>
+							<!--  	<span th:text="${#dates.format(unResultado.fechaEntrada, 'dd-mm-yyyy')}"></span>
+								-->
 								</td>
                               <td id="mensajes_log" style="text-align: center;" width="1%">
                                                                                      
