@@ -164,7 +164,7 @@
 			<!-- enviamos el mismo formulario a la misma url con este hidden voy a saber que quiere hacer el usuairo -->
 			<!--  si grabar o grabar y pasar a estado finalizado -->
 			<input type="hidden" th:field="${lotePlacaVisavetBean.accion}" id="accion" />
-			<button type="submit" th:onClick="|seleccionAccion('grabar'); return false|"  class="btn btn-secondary">Grabar</button>
+			<button type="submit" th:onClick="|seleccionAccion('grabar'); return false|"  class="btn btn-secondary">Grabar</button>&nbsp;
 			<button type="submit" th:onClick="|seleccionAccion('grabaryFinalizar'); return false|"  class="btn btn-secondary">Grabar y Finalizar</button>
 			</div>
 		
@@ -177,6 +177,7 @@
 	
 
 <object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+<object th:include="fragmentos :: scripts" th:remove="tag"></object>
 <!--  contenedor de todo -->
 	<!--  
 	<script th:src="@{/js/util.js}" src="static/js/util.js"
