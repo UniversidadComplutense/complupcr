@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
+import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
@@ -89,4 +90,18 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	}
 
 
+	//Diana- metodos para jefe de servicio (replica de metodos de Javi con mi bean)
+	@Override
+	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda,
+			Pageable pageable) {
+		
+		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();		
+		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = laboratorioCentroRepositorio.findByParams(criteriosBusqueda, pageable); 		
+		for (PlacaLaboratorio placa : PagePlacasLaboratorioCentro.getContent()) {
+			listaPlacasLaboratorioCentroBean.add(PlacaLaboratorioCentroBean.modelToBean(placa));
+		}		
+		Page<PlacaLaboratorioCentroBean> placasLaboratorioCentro = new PageImpl<>(listaPlacasLaboratorioCentroBean, pageable, PagePlacasLaboratorioCentro.getTotalElements());		
+		return placasLaboratorioCentro;
+	}
+	//Fin Diana- metodos para jefe de servicio
 }
