@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.modelo.orm.Lote;
+
 
 public class LoteListadoBean {
 
@@ -16,6 +18,9 @@ public class LoteListadoBean {
 	private Integer capacidad;
 
 	private List<MuestraListadoBean> muestras;
+	
+	private CentroBean centroBean;
+	private BeanEstado beanEstado;
 
 	public Integer getId() {
 		return id;
@@ -75,6 +80,21 @@ public class LoteListadoBean {
 	public void setCapacidad(Integer capacidad) {
 		this.capacidad = capacidad;
 	}
+	public CentroBean getCentroBean() {
+		return centroBean;
+	}
+
+	public void setCentroBean(CentroBean centroBean) {
+		this.centroBean = centroBean;
+	}
+	
+	public BeanEstado getBeanEstado() {
+		return beanEstado;
+	}
+
+	public void setBeanEstado(BeanEstado beanEstado) {
+		this.beanEstado = beanEstado;
+	}
 
 	public static LoteListadoBean modelToBean(Lote lote) {
 		// TODO - LABORATORIO, FECHA ENVIO		
@@ -86,8 +106,14 @@ public class LoteListadoBean {
 		bean.setCapacidad(lote.getCapacidad());
 		//bean.setFechaEnvio(lote.getFechaEnvio());
 		bean.setDescEstado(lote.getEstadoLote().getDescripcion());
-		
+		//añadido por yoli
+	    bean.setCentroBean(CentroBean.modelToBean(lote.getCentro()));
+	    BeanEstado estado = new BeanEstado();
+	    estado.asignarTipoEstadoYCodNum(TipoEstado.EstadoLote, lote.getEstadoLote().getId());
+	    bean.setBeanEstado(estado);
 		return bean;
 	}
+
+	
 
 }

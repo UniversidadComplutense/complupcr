@@ -55,5 +55,6 @@ public class BeanCentro {
 				+ ", telefonoCentro=" + telefonoCentro + ", responsableCentro=" + responsableCentro
 				+ ", telefonoResponsableCentro=" + telefonoResponsableCentro + "]";
 	}
+	
 
 }

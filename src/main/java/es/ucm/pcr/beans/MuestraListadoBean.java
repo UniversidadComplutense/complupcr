@@ -49,6 +49,9 @@ public class MuestraListadoBean extends MuestraBusquedaBean {
 	public void setFechaEntrada(Date fechaEntrada) {
 		this.fechaEntrada = fechaEntrada;
 	}
+	
+
+	
 
 	public static MuestraListadoBean modelToBean(Muestra muestra) {
 		Paciente paciente = muestra.getPaciente();

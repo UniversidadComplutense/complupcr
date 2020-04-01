@@ -17,6 +17,7 @@ public class MuestraBusquedaBean {
 	private Date fechaResultadoMuestraIni;
 	private Date fechaResultadoMuestraFin;
 	private Integer idCentro;
+	private String tipoMuestra;
 	
 	// TODO - ENUMERADO?
 	private String estadoMuestra;
@@ -87,6 +88,11 @@ public class MuestraBusquedaBean {
 	public Date getFechaResultadoMuestraFin() {
 		return fechaResultadoMuestraFin;
 	}
+	
+	public String getTipoMuestra() {
+		return tipoMuestra;
+	}
+	
 	public void setFechaResultadoMuestraFin(Date fechaResultadoMuestraFin) {
 		this.fechaResultadoMuestraFin = fechaResultadoMuestraFin;
 	}
@@ -102,7 +108,9 @@ public class MuestraBusquedaBean {
 	public void setIdCentro(Integer idCentro) {
 		this.idCentro = idCentro;
 	}
-	
+	public void setTipoMuestra(String tipoMuestra) {
+		this.tipoMuestra = tipoMuestra;
+	}
 	public String getCriterioNombre() {
 		return StringUtils.isBlank(nombrePaciente) ? null : "%" + nombrePaciente + "%";
 	}
