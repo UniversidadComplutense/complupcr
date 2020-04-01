@@ -38,7 +38,7 @@ import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 
 import es.ucm.pcr.beans.BusquedaLotesBean;
-
+import es.ucm.pcr.beans.BusquedaPlacasVisavetBean;
 import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
@@ -213,14 +213,14 @@ public class LaboratorioVisavetUCMController {
 			//BeanBusquedaLotes busquedaLotes=(BeanBusquedaLotes) model.getAttribute("busquedaLotes");
 			ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 			busquedaLotes.setIdCentro(0);
-			paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, pageable);
+			// cuando tere me diga q esta paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, pageable);
 			// para probar
-			/*List<LoteBeanPlacaVisavet> list= new ArrayList();
+			List<LoteBeanPlacaVisavet> list= new ArrayList();
 			for (int i = 0; i<20; i++) {
 				list.add(getBean(i));
 			}		
 			paginaLotes = new PageImpl<LoteBeanPlacaVisavet>(list, pageable,pageable.getPageSize());
-			*/
+			
 			// fin para probar 
 			model.addAttribute("paginaLotes", paginaLotes);
 			vista.addObject("paginaLotes", paginaLotes);
@@ -237,11 +237,12 @@ public class LaboratorioVisavetUCMController {
 	public ModelAndView confirmarReciboLote(@RequestParam("id") String id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
 	// llamar al servicio lotes y cambiar el estado de id a Recibido
 		// para probar
+		
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 				List<LoteBeanPlacaVisavet> list=new ArrayList();
 					for (int i = 0; i<20; i++) {
 						list.add(getBean(i));
-						if (list.get(i).getId().equals(id)) {
+						if (list.get(i).getId().equals(0)) {
 							// cambiamos estado
 							BeanEstado estado= new BeanEstado();
 							estado.setTipoEstado(TipoEstado.EstadoLote);
@@ -249,7 +250,7 @@ public class LaboratorioVisavetUCMController {
 							list.get(i).setEstado(estado);
 						}
 						//para que tenga mas de dos lotes 
-						if (list.get(i).getId().equals("3")) {
+						if (list.get(i).getId().equals(3)) {
 							// cambiamos estado
 							BeanEstado estado= new BeanEstado();
 							estado.setTipoEstado(TipoEstado.EstadoLote);
@@ -265,6 +266,7 @@ public class LaboratorioVisavetUCMController {
 					model.addAttribute("busquedaLotes", session.getAttribute("busquedaLotes"));
 					vista.addObject("paginaLotes", paginaLotes);
 					vista.addObject("busquedaLotes", session.getAttribute("busquedaLotes"));
+				
 				    return vista;	
 	}
 	
@@ -392,11 +394,15 @@ public class LaboratorioVisavetUCMController {
 		@RequestMapping(value = "/laboratorioUni/buscarPlacas", method = RequestMethod.GET)
 		public ModelAndView buscarPlacasGet(Model model, HttpServletRequest request, HttpSession session) {
 	     // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
-		ModelAndView vista = new ModelAndView("VistaBuscarPlacas");
-		
+		ModelAndView vista = new ModelAndView("VistaListadoPlacasVisavet");
+		BusquedaPlacasVisavetBean busquedaPlacasVisavetBean = new BusquedaPlacasVisavetBean();
+		busquedaPlacasVisavetBean.setListaBeanEstado(BeanEstado.estadosPlacaVisavet());
 		//
-		
-		List<LoteBeanPlacaVisavet> list=new ArrayList();
+		// fin para probar 
+		vista.addObject("pagina", null);
+		vista.addObject("busqueda", busquedaPlacasVisavetBean);
+	  
+		/*List<LoteBeanPlacaVisavet> list=new ArrayList();
 			for (int i = 0; i<20; i++) {
 				list.add(getBean(i));
 				if (list.get(i).getId().equals('1')) {
@@ -408,7 +414,7 @@ public class LaboratorioVisavetUCMController {
 				}
 			}	
 			
-		/*	Page<BeanLote> paginaLotes = null;
+			Page<BeanLote> paginaLotes = null;
 			paginaLotes = new PageImpl<BeanLote>(list, pageable,pageable.getPageSize());
 			// fin para probar 
 			model.addAttribute("paginaLotes", paginaLotes);
