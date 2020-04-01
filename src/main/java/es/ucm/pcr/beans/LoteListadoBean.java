@@ -89,6 +89,9 @@ public class LoteListadoBean {
 		bean.setCapacidad(lote.getCapacidad());
 		//bean.setFechaEnvio(lote.getFechaEnvio());
 		bean.setDescEstado(lote.getEstadoLote().getDescripcion());
+		if (lote.getLaboratorioVisavet() != null) {
+			bean.setDescLaboratorio(lote.getLaboratorioVisavet().getNombre());
+		}
 		
 		// Si el lote tiene muestras
 		if (!CollectionUtils.isEmpty(lote.getMuestras())) {

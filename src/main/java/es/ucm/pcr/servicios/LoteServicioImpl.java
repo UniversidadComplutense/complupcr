@@ -12,16 +12,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
-import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.modelo.orm.EstadoLote;
+import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.Lote;
+import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.repositorio.LoteRepositorio;
+import es.ucm.pcr.repositorio.MuestraRepositorio;
 
 @Service
 public class LoteServicioImpl implements LoteServicio {
@@ -31,6 +34,9 @@ public class LoteServicioImpl implements LoteServicio {
 	
 	@Autowired
 	private LoteRepositorio loteRepositorio;
+	
+	@Autowired
+	private MuestraRepositorio muestraRepositorio;
 	
 	@Override
 	public Page<LoteListadoBean> findLoteByParam(LoteBusquedaBean params, Pageable pageable) {
@@ -77,24 +83,9 @@ public class LoteServicioImpl implements LoteServicio {
 	public LoteCentroBean guardar(LoteCentroBean loteBean) {
 		Lote lote = null;
 		
-		// Lote nuevo
-		if (loteBean.getId() == null) {
-			// TODO - COMPLETAR MUESTRAS
-			loteBean.setEstado(new BeanEstado(TipoEstado.EstadoLote, Estado.LOTE_INICIADO));
-			if (loteBean.getIdLaboratorio() != null) {
-				loteBean.setEstado(new BeanEstado(TipoEstado.EstadoLote, Estado.LOTE_ASIGNADO_CENTRO_ANALISIS));
-			}
-			lote = LoteCentroBean.beanToModel(loteBean);
-		} else {
-			// Existe lote
-			lote = findByIdLote(loteBean.getId());
-			if (lote != null) {
-				lote.setNumeroLote(loteBean.getNumLote());
-				lote.setCapacidad(loteBean.getCapacidad());				
-				// TODO - puede cambiar laboratorio
-			}
-		}
-		
+		lote = LoteCentroBean.beanToModel(loteBean);
+				
+		lote.setEstadoLote(new EstadoLote(Estado.LOTE_INICIADO.getCodNum()));
 		if (loteBean.getIdLaboratorio() != null) {
 			lote.setEstadoLote(new EstadoLote(Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum()));
 		}
@@ -121,6 +112,15 @@ public class LoteServicioImpl implements LoteServicio {
 			if (estadoActualizar.getEstado().getCodNum() == Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum()) {
 				lote.setEstadoLote(new EstadoLote(Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum()));
 				lote.setFechaEnvio(new Date());
+
+				// se actualiza el estado y la fecha de cada muestra del lote
+				if (!CollectionUtils.isEmpty(lote.getMuestras())) {
+					for (Muestra m : lote.getMuestras()) {
+						m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS.getCodNum()));
+						m.setFechaEnvio(new Date());
+					}
+					muestraRepositorio.saveAll(lote.getMuestras());
+				}
 			}
 			
 			if (estadoActualizar.getEstado().getCodNum() == Estado.LOTE_RECIBIDO_CENTRO_ANALISIS.getCodNum()) {
@@ -133,7 +133,7 @@ public class LoteServicioImpl implements LoteServicio {
 			}
 		}	
 		loteRepositorio.save(lote);
-	}
+	}	
 	
 	/**
 	 * Recupera el lote

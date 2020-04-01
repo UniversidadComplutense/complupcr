@@ -15,9 +15,10 @@
 		<input type="hidden" th:field="${beanMuestra.id}"  th:value="${beanMuestra.id}" />
 		<input type="hidden" th:field="${beanMuestra.idPaciente}"  th:value="${beanMuestra.idPaciente}" />
 		<input type="hidden" th:field="${beanMuestra.resultado}"  th:value="${beanMuestra.resultado}" />
+		<input type="hidden" th:field="${beanMuestra.fechaAsignada}"  th:value="${beanMuestra.fechaAsignada}" />
 		<fieldset id="datosPaciente" class="form-group border p-2" th:disabled="!${editable}">
 			<!-- DATOS PACIENTE -->
-			<legend class="w-auto">Paciente</legend>
+			<legend class="w-auto font-weight-bold">Paciente</legend>
 			<div class="row">
 				<div class="col-4 form-group">
 					<label>Nombre</label>
@@ -70,7 +71,7 @@
 		
 		<!-- DATOS MUESTRA -->
 		<fieldset id="datosMuestras" class="form-group border p-2" th:disabled="!${editable}">
-			<legend class="w-auto">Muestra</legend>
+			<legend class="w-auto font-weight-bold">Muestra</legend>
 			<div class="row">
 				<div class="col-4 form-group">
 					<label>Etiqueta</label>

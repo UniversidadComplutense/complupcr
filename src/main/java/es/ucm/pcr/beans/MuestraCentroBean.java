@@ -238,15 +238,17 @@ public class MuestraCentroBean implements java.io.Serializable {
 		muestra.setEtiqueta(muestraBean.getEtiqueta());
 		muestra.setTipoMuestra(muestraBean.getTipoMuestra());
 		muestra.setFechaEntrada(muestraBean.getFechaEntrada());
-		muestra.setFechaAsignada(muestraBean.getFechaAsignada());
+		
 		if (muestraBean.getEstado() != null) {
 			muestra.setEstadoMuestra(new EstadoMuestra(muestraBean.getEstado().getEstado().getCodNum()));
 		}
 		muestra.setCentro(new Centro(muestraBean.getIdCentro()));	
 		if (muestraBean.getIdLote() != null) {
 			muestra.setLote(new Lote(muestraBean.getIdLote()));
+			muestra.setFechaAsignada(muestraBean.getFechaAsignada() != null ? muestraBean.getFechaAsignada() : new Date());			
 		} else {
 			muestra.setLote(null);
+			muestra.setFechaAsignada(new Date());
 		}
 		
 		if (StringUtils.isNotEmpty(muestraBean.getResultado())) {
