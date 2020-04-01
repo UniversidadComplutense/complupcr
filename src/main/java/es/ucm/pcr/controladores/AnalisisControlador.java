@@ -53,13 +53,18 @@ import es.ucm.pcr.beans.MuestraBean;
 //import es.ucm.pcr.beans.BeanMuestraCentro;
 //import es.ucm.pcr.validadores.ValidadorMuestra;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
+import es.ucm.pcr.config.security.PcrUserDetails;
+import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
+import es.ucm.pcr.servicios.UsuarioServicio;
 
 
 @Controller
 @RequestMapping(value = "/analisis")
 public class AnalisisControlador {
 	
+	@Autowired
+	private UsuarioServicio usuarioServicio;
 	
 	@Autowired
 	private LaboratorioCentroServicio laboratorioCentroServicio;
@@ -376,16 +381,28 @@ public class AnalisisControlador {
 		public ModelAndView buscarPlacasinAsignarYBajoResponsabilidadGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
 
 			ModelAndView vista = new ModelAndView("ListadoPlacasSinAsignarYBajoResponsabilidad");
+			
+			//recupero el usuario logado
+			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
+			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 
 			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
+			// del centro del usuario jefe logado
 			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
 			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
+			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
 			List<PlacaLaboratorioCentroBean> listaPlacasListasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaListaParaAnalisis, pageable).getContent();
 			System.out.println("listaPlacasListasParaAnalisis tiene: "+ listaPlacasListasParaAnalisis.size());
 			
 			// Buscamos las placas con estado 'Asignada para análisis' (un jefe ya las ha puesto bajo su responsabilidad)
+			// del centro del usuario jefe logado 
+			// y que esten asignadas al jefe logado
 			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaAsignadaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
 			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
+			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
+			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdJefe(user.getId());
 			List<PlacaLaboratorioCentroBean> listaPlacasAsignadasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaAnalisis, pageable).getContent();
 			System.out.println("listaPlacasAsignadasParaAnalisis tiene: "+ listaPlacasAsignadasParaAnalisis.size());
 			//TODO de estas placas asignadas para analisis hay que coger solo las asignadas a este jefe

@@ -83,6 +83,7 @@ public class PlacaLaboratorioCentroBean {
 		LaboratorioCentroBean laboratorioCentroBean = new LaboratorioCentroBean();
 		// TODO rellenar laboratorioCentroBean
 		// laboratorioCentroBean.setId(String.valueOf((placaLaboratorio.getLaboratorioCentro().getId())));
+		laboratorioCentroBean.setNombre(placaLaboratorio.getLaboratorioCentro().getNombre());
 		// laboratorioCentroBean.setCapacidad(loteBean.getCapacidad() != null ?
 		// loteBean.getCapacidad() : 0);
 		bean.setLaboratorioCentro(laboratorioCentroBean);
