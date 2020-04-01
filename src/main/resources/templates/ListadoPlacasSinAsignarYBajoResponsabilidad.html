@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-Covid19</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+	
+<div class="container">	
+
+<fieldset class="form-group border p-2">
+	<div id="placasSinAsignar" class="container">
+		<div class="row justify-content-center mt-1, titulo-menu">
+			<h5>PLACAS SIN ASIGNAR</h5>
+		</div>
+		<div class="row justify-content-center mt-3">
+		    <div class="col-lg-12">
+				<table class="table">
+				  <thead class="thead-light">
+				    <tr>
+				      <th scope="col"><input class="form-check-input, justify-content-center" type="checkbox" value="" id="" disabled></th>
+				      <th scope="col">Identificador</th>
+				      <th scope="col">Laboratorio</th>
+				      <th scope="col">Fecha creación</th>
+				      <th scope="col">Nº de muestras</th>
+				     <!--  <th scope="col"></th> -->
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr>
+				      <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td>
+				      <td>#1</td>
+				      <td>Labo Biológicas</td>
+				      <td>20/03/2020</td>
+				      <td>20</td>
+				      <td>
+				      	<button type="button" class="btn btn-secondary">Ver distribución pocillos</button>
+				      </td>
+				    </tr>
+				    <tr>
+				      <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td>
+				      <td>#2</td>
+				      <td>Labo Visavet</td>
+				      <td>21/03/2020</td>
+				      <td>20</td>
+				      <td>
+				      	<button type="button" class="btn btn-secondary">Ver distribución pocillos</button>
+				      </td>
+				    </tr>
+				    <tr>
+				      <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td>
+				      <td>#3</td>
+				      <td>Labo Visavet</td>
+				      <td>21/03/2020</td>
+				      <td>96</td>
+				      <td>
+				      	<button type="button" class="btn btn-secondary">Ver distribución pocillos</button>
+				      </td>
+				    </tr>
+				    <tr>
+				      <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td>
+				      <td>#4</td>
+				      <td>Labo Opticas</td>
+				      <td>21/03/2020</td>
+				      <td>96</td>
+				      <!-- <td>
+				      	<button type="button" class="btn btn-secondary">Ver distribución pocillos</button>
+				      </td> -->
+				    </tr>
+				  </tbody>
+				</table>
+				<div class="container">
+					<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalMarcarPlacaParaResultados">Reclamar los seleccionados</button>			    
+				</div>
+			</div>									  		
+	  </div>
+	</div>
+</fieldset>
+<fieldset class="form-group border p-2">	
+	<div id="placasBajoTuResponsabilidad" class="container">
+		<div class="row justify-content-center mt-1, titulo-menu">
+			<h5>PLACAS BAJO TU RESPONSABILIDAD</h5>
+		</div>
+		<div class="row justify-content-center mt-3">
+		    <div class="col-lg-12">
+				<table class="table">
+				  <thead class="thead-light">
+				    <tr>
+				      <th scope="col"><input class="form-check-input, justify-content-center" type="checkbox" value="" id="" disabled></th>
+				      <th scope="col">Identificador</th>
+				      <th scope="col">Laboratorio</th>
+				      <th scope="col">Fecha creación</th>
+				      <th scope="col">Nº de muestras</th>
+				      <!-- <th scope="col"></th> -->
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr>
+				      <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td>
+				      <td>#5</td>
+				      <td>Labo Biológicas</td>
+				      <td>20/03/2020</td>
+				      <td>20</td>
+				      <td>
+				      	<button type="button" class="btn btn-secondary">Ver distribución pocillos</button>
+				      </td>
+				    </tr>
+				    <tr>
+				      <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td>
+				      <td>#7</td>
+				      <td>Labo Visavet</td>
+				      <td>21/03/2020</td>
+				      <td>20</td>
+				      <!-- <td>
+				      	<button type="button" class="btn btn-secondary">Ver distribución pocillos</button>
+				      </td> -->
+				    </tr>				    
+				  </tbody>
+				</table>
+				<div class="container">
+					<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalMarcarPlacaParaResultados">Devolver los seleccionados</button>			    
+				</div>
+			</div>									  		
+	  </div>
+	</div>
+</fieldset>	
+	
+	
+	<!-- Modal Marcar placa para resultados-->
+	<div class="modal fade" id="modalMarcarPlacaParaResultados" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="MarcarPlacaParaResultadosLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="MarcarPlacaParaResultadosLabel">PCR Completa</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <h6>Esperando resultado</h6>
+	        <button type="button" class="btn btn-secondary">Cargar CSV</button>
+	        <button type="button" class="btn btn-secondary">Cargar HOJA DE TRABAJO</button>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+</div>
+		
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+</body>
+</html>

@@ -16,6 +16,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -44,15 +46,22 @@ import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanListaAsignaciones;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.BeanUsuario;
+import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.GuardarAsignacionMuestraBean;
 import es.ucm.pcr.beans.MuestraBean;
 //import es.ucm.pcr.beans.BeanMuestraCentro;
 //import es.ucm.pcr.validadores.ValidadorMuestra;
+import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
+import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 
 
 @Controller
 @RequestMapping(value = "/analisis")
 public class AnalisisControlador {
+	
+	
+	@Autowired
+	private LaboratorioCentroServicio laboratorioCentroServicio;
 	
 	// TODO - INCLUIR EL ROL DEL CENTRO
 	
@@ -358,6 +367,51 @@ public class AnalisisControlador {
 		}
 		
 
+		
+		//gestionar lotes (en realidad es gestionar placas)
+		//@RequestMapping(value = "/gestionPlacas/resultados", method = RequestMethod.GET)
+		@RequestMapping(value = "/gestionarPlacas", method = RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public ModelAndView buscarPlacasinAsignarYBajoResponsabilidadGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+
+			ModelAndView vista = new ModelAndView("ListadoPlacasSinAsignarYBajoResponsabilidad");
+
+			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
+			BusquedaPlacaLaboratorioBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioBean();			
+			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(String.valueOf(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum()));
+			List<PlacaLaboratorioCentroBean> listaPlacasListasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaListaParaAnalisis, pageable).getContent();
+			
+			// Buscamos las placas con estado 'Asignada para análisis' (un jefe ya las ha puesto bajo su responsabilidad)
+			BusquedaPlacaLaboratorioBean criteriosBusquedaPlacaAsignadaParaAnalisis = new BusquedaPlacaLaboratorioBean();			
+			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(String.valueOf(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum()));
+			List<PlacaLaboratorioCentroBean> listaPlacasAsignadasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaAnalisis, pageable).getContent();
+			//TODO de estas placas asignadas para analisis hay que coger solo las asignadas a este jefe
+			
+			//this.agregarListasDesplegables(vista);
+			//vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
+			vista.addObject("listaPlacasListasParaAnalisis", listaPlacasListasParaAnalisis);
+			vista.addObject("listaPlacasAsignadasParaAnalisis", listaPlacasAsignadasParaAnalisis);
+			return vista;
+
+		}
+		
+		/*
+		@RequestMapping(value = "/gestionPlacas/resultados", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
+		public ModelAndView buscarPlacasEsperandoResultadosPOST(HttpSession session, 
+				@ModelAttribute BusquedaPlacaLaboratorioBean criteriosBusqueda, 
+				@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+
+			ModelAndView vista = new ModelAndView("ListadoPlacasEsperandoResultadosPCR");
+			List<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, pageable).getContent();
+
+			vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
+			vista.addObject("listaPlacas", listaPlacas);
+			return vista;
+		}
+		*/
+		
+		
 		/*
 		@GetMapping("/consultaAnalistas")
 		public String consultaAnalistas(@RequestParam("id") String id, Model modelo, HttpSession session) {
