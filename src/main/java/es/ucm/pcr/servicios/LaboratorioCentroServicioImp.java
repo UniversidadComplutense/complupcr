@@ -1,9 +1,23 @@
 package es.ucm.pcr.servicios;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
+import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
+import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
+import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.repositorio.PlacaLaboratorioRepositorio;
 
 @Service
 public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
@@ -12,7 +26,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	private static final Logger log = LoggerFactory.getLogger(LaboratorioCentroServicioImp.class);
 
 	@Autowired
-	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
+	PlacaLaboratorioRepositorio laboratorioCentroRepositorio;
 	
 	public LaboratorioCentro mapeoBeanEntidadLaboratorioCentro(BeanLaboratorioCentro beanLaboratorioCentro) throws Exception{
 		

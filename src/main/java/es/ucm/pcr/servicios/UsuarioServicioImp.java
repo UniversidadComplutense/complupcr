@@ -68,7 +68,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		beanUsuario.setCentro(usuario.getCentro());
 		beanUsuario.setDocumentos(usuario.getDocumentos());
 		beanUsuario.setEmail(usuario.getEmail());
-		beanUsuario.setHabilitado(usuario.getHabilitado());
+		beanUsuario.setHabilitado(usuario.isHabilitado());
 		beanUsuario.setId(usuario.getId());
 		beanUsuario.setIdLaboratorioCentro(usuario.getIdLaboratorioCentro());
 		beanUsuario.setIdLaboratorioVisavet(usuario.getIdLaboratorioVisavet());

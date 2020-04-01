@@ -1,6 +1,6 @@
 package es.ucm.pcr.beans;
 
-import es.uc.pcr.utilidades.Utilidades;
+import es.ucm.pcr.utilidades.Utilidades;
 
 public class BeanRol implements Comparable<BeanRol>{
 	

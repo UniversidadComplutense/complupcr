@@ -3,7 +3,7 @@ package es.ucm.pcr.beans;
 import java.util.HashSet;
 import java.util.Set;
 
-import es.uc.pcr.utilidades.Utilidades;
+import es.ucm.pcr.utilidades.Utilidades;
 import es.ucm.pcr.modelo.orm.Documento;
 import es.ucm.pcr.modelo.orm.Equipo;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;

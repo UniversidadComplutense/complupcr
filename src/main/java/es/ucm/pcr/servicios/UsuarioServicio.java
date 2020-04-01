@@ -54,7 +54,7 @@ public interface UsuarioServicio {
 	 * 
 	 * @param user
 	 * @param token
-	 */type filter text
+	 */
 	public void createPasswordResetTokenForUser(Usuario user, String token);
 	
 	/**

@@ -1,8 +1,11 @@
 package es.ucm.pcr.servicios;
 
-import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
+import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
+import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 
 public interface LaboratorioCentroServicio {
