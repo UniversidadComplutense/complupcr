@@ -25,7 +25,7 @@ public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<UsuarioMuestra> usuarioMuestras = new HashSet<UsuarioMuestra>(0);
 	private Set<Rol> rols = new HashSet<Rol>(0);
-	private Boolean habilitado;
+	private String habilitado;
 	private String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA DE USUARIOS
 	
 	
@@ -39,7 +39,7 @@ public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 	public BeanUsuarioGestion(Integer id, Centro centro, String nombre, String apellido1, String apellido2, String email,
 			String password, Integer idLaboratorioVisavet, Integer idLaboratorioCentro, Integer asignadas,
 			Integer acertadas, Set<Documento> documentos, Set<UsuarioMuestra> usuarioMuestras, Set<Rol> rols,
-			Boolean habilitado, String accion) {
+			String habilitado, String accion) {
 		super();
 		this.id = id;
 		this.centro = centro;
@@ -229,13 +229,13 @@ public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 
 
 
-	public Boolean getHabilitado() {
+	public String getHabilitado() {
 		return habilitado;
 	}
 
 
 
-	public void setHabilitado(Boolean habilitado) {
+	public void setHabilitado(String habilitado) {
 		this.habilitado = habilitado;
 	}
 

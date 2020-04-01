@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.util.CollectionUtils;
-
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 
@@ -19,6 +19,9 @@ public class LoteListadoBean {
 	private Integer capacidad;
 
 	private List<MuestraListadoBean> muestras;
+	
+	private CentroBean centroBean;
+	private BeanEstado beanEstado;
 
 	public Integer getId() {
 		return id;
@@ -78,6 +81,25 @@ public class LoteListadoBean {
 	public void setCapacidad(Integer capacidad) {
 		this.capacidad = capacidad;
 	}
+	
+	
+	
+	public CentroBean getCentroBean() {
+		return centroBean;
+	}
+
+	public void setBeanEstado(BeanEstado beanEstado) {
+		this.beanEstado = beanEstado;
+	}
+
+	public void setCentroBean(CentroBean centroBean) {
+		this.centroBean = centroBean;
+	}
+	
+	public BeanEstado getBeanEstado() {
+		return beanEstado;
+	}
+
 
 	public static LoteListadoBean modelToBean(Lote lote) {
 		// TODO - LABORATORIO, FECHA ENVIO		
@@ -92,6 +114,11 @@ public class LoteListadoBean {
 		if (lote.getLaboratorioVisavet() != null) {
 			bean.setDescLaboratorio(lote.getLaboratorioVisavet().getNombre());
 		}
+		//añadido por yoli
+	    bean.setCentroBean(CentroBean.modelToBean(lote.getCentro()));
+	    BeanEstado estado = new BeanEstado();
+	    estado.asignarTipoEstadoYCodNum(TipoEstado.EstadoLote, lote.getEstadoLote().getId());
+	    bean.setBeanEstado(estado);
 		
 		// Si el lote tiene muestras
 		if (!CollectionUtils.isEmpty(lote.getMuestras())) {
@@ -99,6 +126,8 @@ public class LoteListadoBean {
 				bean.getMuestras().add(MuestraListadoBean.modelToBean(m));
 			}
 		}
+		
+		
 		
 		return bean;
 	}

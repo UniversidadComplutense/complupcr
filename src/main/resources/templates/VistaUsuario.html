@@ -8,6 +8,7 @@
 <body>
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>	
 
 	<div class="container">
 
@@ -99,7 +100,9 @@
 		</form>
 
 	</div>
-	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+	
 </body>
 </html>
