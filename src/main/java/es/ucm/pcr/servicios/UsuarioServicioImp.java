@@ -1,5 +1,6 @@
 package es.ucm.pcr.servicios;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -142,8 +143,6 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	
 	public void createPasswordResetTokenForUser(Usuario user, String token) {
 	    PasswordResetToken myToken = new PasswordResetToken(user,token);
-	    user.setHabilitado("E");
-		usurep.save(user);
 	    passwordTokenRepositorio.save(myToken);
 	}
 
@@ -156,5 +155,18 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		passwordTokenRepositorio.deleteByUsuario(user);
 		
 	}
+
+	@Override
+	public List<Usuario> buscarUsuarioInhabilitados() {
+		return usurep.findByHabilitadoOrderById("I");
+	}
+
+	@Override
+	public Usuario guardar(Usuario usuario) {
+		usurep.save(usuario);
+		return usuario;
+	}
+	
+
 	
 }

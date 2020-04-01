@@ -134,10 +134,12 @@ public class InicioControlador {
 	// ============== Metodos privados ============
 	
 	@Scheduled(cron ="${cron.expression}")
-	public void scheduleTaskUsingCronExpression() {
+	public void scheduleEnvioMailInicio() {
 		List<Usuario> userList = usuarioServicio.buscarUsuarioInhabilitados();
 		for (Usuario user :userList) {
 			mailSender.send(constructWelcomeEmail(env.getProperty("app.url"),user));
+			user.setHabilitado("E");
+			usuarioServicio.guardar(user);
 		}
 		
 	}
@@ -155,8 +157,8 @@ public class InicioControlador {
 		String url = contextPath + "/regenerarContrasena";
 		String message = "Este es un correo automático enviado por la aplicación COVID-19.\n"
 				+ "No contestes a este mensaje.\r\n\n\n"
-				+ user.getNombre()+"ha sido dado de alta en la aplicación COVID-19.\\r\\n"+
-				" Para poder acceder debe solicitar el cambio de contraseña, idicando su e-mail ("+user.getEmail()+") a través del siguente enlace:";
+				+ "Bien venido "+user.getNombre()+",\n\nHa sido dado de alta en la aplicación COVID-19.\r\n"+
+				"Para poder acceder debe solicitar el cambio de contraseña, indicando su e-mail ("+user.getEmail()+") a través del siguente enlace:";
 		return constructEmail("Bien venido COVID-19",
 				message + " \r\n\n" + url + " \r\n\n\n Un cordial saludo.", user);
 	}

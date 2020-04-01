@@ -1,5 +1,6 @@
 package es.ucm.pcr.servicios;
 
+import java.util.List;
 import java.util.Set;
 
 import es.ucm.pcr.beans.BeanUsuarioGestion;
@@ -64,4 +65,18 @@ public interface UsuarioServicio {
 	 * @param contrasena
 	 */
 	public void cambiarContrasena(String email, String contrasena);
+	
+	/**
+	 * Obtener usarios inhabilitados.
+	 * 
+	 * @return
+	 */
+	public List<Usuario> buscarUsuarioInhabilitados();
+	
+	/**
+	 * Guarda el usuario
+	 * 
+	 * @return
+	 */
+	public Usuario guardar(Usuario usuario);
 }
