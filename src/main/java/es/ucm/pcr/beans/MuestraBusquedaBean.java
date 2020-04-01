@@ -18,8 +18,6 @@ public class MuestraBusquedaBean {
 	private Date fechaResultadoMuestraFin;
 	private Integer idCentro;
 	private String tipoMuestra;
-	
-	// TODO - ENUMERADO?
 	private String estadoMuestra;
 	
 	public MuestraBusquedaBean() {

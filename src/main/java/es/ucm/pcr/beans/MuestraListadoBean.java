@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.sun.net.httpserver.Authenticator.Result;
+
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.Paciente;
 
@@ -58,7 +60,7 @@ public class MuestraListadoBean extends MuestraBusquedaBean {
 		
 		MuestraListadoBean bean = new MuestraListadoBean();
 		bean.setId(muestra.getId());
-		bean.setNombrePaciente(paciente.getNombrePaciente() + " " + (StringUtils.isNotEmpty(paciente.getApellido1paciente()) ? paciente.getApellido1paciente() : ""));
+		bean.setNombrePaciente(nombreCompletoPaciente(muestra.getPaciente()));
 		bean.setNhcPaciente(paciente.getNhc());
 		bean.setEtiquetaMuestra(muestra.getEtiqueta());
 		bean.setRefInternaMuestra(muestra.getRefInternaVisavet());
@@ -66,8 +68,23 @@ public class MuestraListadoBean extends MuestraBusquedaBean {
 		bean.setFechaEnvioMuestraIni(muestra.getFechaEnvio());
 		bean.setFechaResultadoMuestraIni(muestra.getFechaResultado());
 		bean.setCodNumLote(muestra.getLote() != null ? muestra.getLote().getNumeroLote() : "");
+		bean.setNotificado(muestra.getFechaNotificacion() != null);
+		
+		BeanResultado beanResultado = new BeanResultado();
+		bean.setEstadoMuestra(beanResultado.asignarTipoEstadoYCodNum(muestra.getResultado()).getResultadoMuestra().getDescripcion());		
 		
 		return bean;
+	}
+	
+	private static String nombreCompletoPaciente(Paciente paciente) {
+		String nombreCompleto = paciente.getNombrePaciente();
+		if (StringUtils.isNotEmpty(paciente.getApellido1paciente())) {
+			nombreCompleto = nombreCompleto.concat(" ").concat(paciente.getApellido1paciente());
+		}
+		if (StringUtils.isNotEmpty(paciente.getApellido2paciente())) {
+			nombreCompleto = nombreCompleto.concat(" ").concat(paciente.getApellido2paciente());
+		}
+		return nombreCompleto;
 	}
 
 }

@@ -14,27 +14,28 @@
 	<form action="#" th:action="@{/centroSalud/muestra/guardar}" method="post" th:object="${beanMuestra}" id="formGuardar" role="form">
 		<input type="hidden" th:field="${beanMuestra.id}"  th:value="${beanMuestra.id}" />
 		<input type="hidden" th:field="${beanMuestra.idPaciente}"  th:value="${beanMuestra.idPaciente}" />
+		<input type="hidden" th:field="${beanMuestra.resultado}"  th:value="${beanMuestra.resultado}" />
 		<fieldset id="datosPaciente" class="form-group border p-2" th:disabled="!${editable}">
 			<!-- DATOS PACIENTE -->
 			<legend class="w-auto">Paciente</legend>
 			<div class="row">
 				<div class="col-4 form-group">
 					<label>Nombre</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nombre}"  th:value="${beanMuestra.nombre}" required maxlength="50"/>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nombre}"  th:value="${beanMuestra.nombre}" required maxlength="45"/>
 				</div>	
 				<div class="col-4 form-group">
 					<label>Primer apellido</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.primerApellido}"  th:value="${beanMuestra.primerApellido}" required maxlength="50"/>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.primerApellido}"  th:value="${beanMuestra.primerApellido}" required maxlength="45"/>
 				</div>	
 				<div class="col-4 form-group">
 					<label>Segundo apellido</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.segundoApellido}"  th:value="${beanMuestra.segundoApellido}" required maxlength="50"/>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.segundoApellido}"  th:value="${beanMuestra.segundoApellido}" required maxlength="45"/>
 				</div>
 			</div>
 			<div class="row">					
 				<div class="col-4 form-group">
 					<label>Correo</label>
-				 	<input type="email" class="form-control form-control-sm" th:field="${beanMuestra.correo}"  th:value="${beanMuestra.correo}" required maxlength="50" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
+				 	<input type="email" class="form-control form-control-sm" th:field="${beanMuestra.correo}"  th:value="${beanMuestra.correo}" required maxlength="200" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
 				</div>
 				
 				<div class="col-4 form-group">
@@ -45,7 +46,7 @@
 			<div class="row">	
 				<div class="col-4 form-group">
 					<label>NHC</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nhc}"  th:value="${beanMuestra.nhc}" required maxlength="20"/>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nhc}"  th:value="${beanMuestra.nhc}" required maxlength="45"/>
 				</div>											
 			</div>
 			<div class="row">	
@@ -90,29 +91,27 @@
 				<div class="col-3 form-group">
 					<label>Lote</label>
 				 	<select class="form-control form-control-sm" th:field="${beanMuestra.idLote}"  th:value="${beanMuestra.idLote}">
-				 		<option value="0">Seleccione</option>
-				 		<option value="1">Lote1</option>
-				 		<option value="2">Lote2</option>
-				 		<option value="3">Lote3</option>
-				 		<option value="4">Lote4</option>
-				 		<option value="5">Lote5</option>
+				 		<option value="">Seleccione</option>
+				 		<option th:each="var: ${listaLotes}"
+									th:value="${var.id}" th:text="${var.numLote}"
+									th:select="${beanMuestra.idLote}"></option>
 				 	</select>					
 				</div>	
 			</div>
 			
-			<!-- SI LA MUESTRA NO SE PUEDE EDITAR SE MUESTRAN DATOS DE RESULTADOS DE LAS MUESTRAS Y NOTIFICAION -->
-			<div class="row" th:if="!${editable}">
+			<!-- DATOS DE RESULTADOS DE LAS MUESTRAS Y NOTIFICAION NO EDITABLE -->
+			<div class="row">
 				<div class="col-4 form-group">
 					<label>Resultado</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanMuestra.resultado}"  th:value="${beanMuestra.resultado}" required/>				 	
+				 	<input type="text" class="form-control form-control-sm" disabled th:field="${beanMuestra.resultado}"  th:value="${beanMuestra.resultado}" required/>				 	
 				</div>	
 				<div class="col-4 form-group">
 					<label>Fecha Resultado</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanMuestra.fechaResultado}"  th:value="${beanMuestra.fechaResultado}" required/>
+				 	<input  type="date" class="form-control form-control-sm" disabled th:field="${beanMuestra.fechaResultado}"  th:value="${beanMuestra.fechaResultado}" required/>
 				</div>
 				<div class="col-4 form-group">
 					<label>Fecha Notificacion</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanMuestra.fechaNotificacion}"  th:value="${beanMuestra.fechaNotificacion}" required/>
+				 	<input  type="date" class="form-control form-control-sm" disabled th:field="${beanMuestra.fechaNotificacion}"  th:value="${beanMuestra.fechaNotificacion}" required/>
 				</div>	
 			</div>
 		</fieldset>

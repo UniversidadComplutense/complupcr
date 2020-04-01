@@ -31,7 +31,8 @@ public interface MuestraRepositorio extends PagingAndSortingRepository<Muestra, 
 			+ "(:#{#params.fechaEnvioMuestraIni} is null or muestra.fechaEnvio >= :#{#params.fechaEnvioMuestraIni}) and "
 			+ "(:#{#params.fechaEnvioMuestraFin} is null or muestra.fechaEnvio <= :#{#params.fechaEnvioMuestraFin}) and "
 			+ "(:#{#params.fechaResultadoMuestraIni} is null or muestra.fechaResultado >= :#{#params.fechaResultadoMuestraIni}) and "
-			+ "(:#{#params.fechaResultadoMuestraFin} is null or muestra.fechaResultado <= :#{#params.fechaResultadoMuestraFin}) ")
+			+ "(:#{#params.fechaResultadoMuestraFin} is null or muestra.fechaResultado <= :#{#params.fechaResultadoMuestraFin}) and "
+			+ "(:#{#params.estadoMuestra} is null or :#{#params.estadoMuestra} ='' or muestra.resultado = :#{#params.estadoMuestra})")
 	public Page<Muestra> findByParams(@Param("params") MuestraBusquedaBean params,
 			Pageable pageable);	
 	

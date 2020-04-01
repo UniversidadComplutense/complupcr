@@ -2,6 +2,7 @@ package es.ucm.pcr.controladores;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -27,12 +28,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import es.ucm.pcr.beans.LoteCentroBean;
+import es.ucm.pcr.beans.BeanEstado;
+import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.BeanResultado;
 import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
-import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.servicios.LoteServicio;
 import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.validadores.MuestraValidador;
@@ -54,6 +57,9 @@ public class MuestraControlador {
 	private MuestraServicio muestraServicio;
 	
 	@Autowired
+	private LoteServicio loteServicio;
+	
+	@Autowired
 	private MuestraValidador validadorMuestra;
 	
 	@InitBinder
@@ -67,32 +73,39 @@ public class MuestraControlador {
 		binder.setValidator(validadorMuestra);
 	}
 	
+	@ModelAttribute("listaLotes")
+    public List<LoteListadoBean> lotes() {
+        return loteServicio.findLoteByEstados(sesionServicio.getCentro().getId(), BeanEstado.getEstadosLotesDisponiblesCentro());
+    }	
+	
 	@RequestMapping(value="/muestra", method=RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView buscador(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestraListado");
 	
 		MuestraBusquedaBean beanBusqueda = new MuestraBusquedaBean();
 		
+		addListsToView(vista);
 		vista.addObject("beanBusquedaMuestra", beanBusqueda);
 		return vista;
 	}
 	
 	@RequestMapping(value="/muestra/list", method=RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView buscar(HttpSession session, @ModelAttribute MuestraBusquedaBean beanBusqueda) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestraListado");
 		
 		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
 		Page<MuestraListadoBean> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
 		
+		addListsToView(vista);
 		vista.addObject("beanBusquedaMuestra", beanBusqueda);
 		vista.addObject("listadoMuestras", muestrasPage.getContent());
 		return vista;
 	}
 	
 	@RequestMapping(value="/muestra/nueva", method=RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView nueva(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
 	
@@ -105,7 +118,7 @@ public class MuestraControlador {
 	}
 	
 	@RequestMapping(value="/muestra/{id}", method=RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView consulta(HttpSession session, @PathVariable Integer id) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
 		
@@ -120,7 +133,7 @@ public class MuestraControlador {
 	}
 	
 	@RequestMapping(value="/muestra/modificar", method=RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView modificar(HttpSession session, @RequestParam(value = "id", required = true) Integer id) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
 		
@@ -133,7 +146,7 @@ public class MuestraControlador {
 	}
 	
 	@RequestMapping(value="/muestra/guardar", method=RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView guardar(@Valid @ModelAttribute("beanMuestra") MuestraCentroBean beanMuestra, BindingResult result) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
 	
@@ -150,7 +163,7 @@ public class MuestraControlador {
 	}
 	
 	@RequestMapping(value="/notificarTelefono/{id}", method=RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView notificarTelefono(HttpSession session, @PathVariable Integer id) throws Exception {
 		// TODO - llamada servicio rellenar fecha notificacion
 		
@@ -160,7 +173,7 @@ public class MuestraControlador {
 	}
 	
 	@RequestMapping(value="/notificarCorreo/{id}", method=RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView notificarCorreo(HttpSession session, @PathVariable Integer id) throws Exception {
 		// TODO - llamada servicio envio correo y rellenar fecha notificacion		
 		
@@ -170,9 +183,7 @@ public class MuestraControlador {
 	}
 	
 	/**
-	 * TODO - ESTADOS MUESTRA
-	 * La muestra es editable mientras tenga estado pendiente
-	 * No se puede editar si esta en un lote enviado o esta resuelta
+	 * La muestra es editable mientras tenga estado iniciada o asignada a lote
 	 * Si esta resuelta se muestran acciones de notificacion
 	 * @param beanMuestra
 	 * @return
@@ -183,14 +194,20 @@ public class MuestraControlador {
 						|| beanMuestra.getEstado().getEstado().getCodNum() == Estado.MUESTRA_ASIGNADA_LOTE.getCodNum())));	
 	}
 	
+	private void addListsToView(ModelAndView vista) {
+		vista.addObject("listaResultadosMuestra", BeanResultado.resultadosMuestra());
+	}
+	
 	/**
-	 * La muestra es noficable si ya se ha resuelto y no tiene fecha de notificacion
+	 * La muestra es noficable si ya se ha resuelto sin estar pendiente y no tiene fecha de notificacion
 	 * @param beanMuestra
 	 * @return
 	 */
 	private boolean muestraNotificable(MuestraCentroBean beanMuestra) {
-		// TODO - PENDIETE MUESTRA NOTIFICABLE
-		return beanMuestra.getId() != null && beanMuestra.getResultado() != null && beanMuestra.getResultado().equals("Resuelta") && beanMuestra.getFechaNotificacion() == null;
+		return beanMuestra.getId() != null 
+				&& beanMuestra.getResultado() != null 
+				&& !beanMuestra.getResultado().equals(BeanResultado.ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE.getDescripcion()) 
+				&& beanMuestra.getFechaNotificacion() == null;
 	}
 	
 }

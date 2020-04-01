@@ -1,6 +1,7 @@
 package es.ucm.pcr.beans;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BeanEstado {
@@ -31,7 +32,7 @@ public class BeanEstado {
 		
 				
 		;
-
+				
 		private int codNum;
 		public String descripcion;
 
@@ -204,7 +205,6 @@ public class BeanEstado {
 		return estadosLote;
 	}
 	
-
 	/**
 	 * Estados de una placa de laboratorio de un centro
 	 * @return
@@ -220,7 +220,15 @@ public class BeanEstado {
 		
 		return estadosPlacaLabCentro;
 	}
-			
+	
+	
+	/**
+	 * Para los centros, solo se pueden asignar muestras a lotes iniciados o asignado centro analisis (laboratorio)
+	 * @return
+	 */
+	public static List<Integer> getEstadosLotesDisponiblesCentro() {
+		return Arrays.asList(new Integer[] {Estado.LOTE_INICIADO.getCodNum(), Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum()});
+	}
 
 	@Override
 	public String toString() {

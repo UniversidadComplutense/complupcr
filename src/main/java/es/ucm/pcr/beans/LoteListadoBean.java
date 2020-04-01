@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.util.CollectionUtils;
+
+
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.modelo.orm.Lote;
-
+import es.ucm.pcr.modelo.orm.Muestra;
 
 public class LoteListadoBean {
 
@@ -106,6 +109,15 @@ public class LoteListadoBean {
 		bean.setCapacidad(lote.getCapacidad());
 		//bean.setFechaEnvio(lote.getFechaEnvio());
 		bean.setDescEstado(lote.getEstadoLote().getDescripcion());
+		
+		// Si el lote tiene muestras
+		if (!CollectionUtils.isEmpty(lote.getMuestras())) {
+			for (Muestra m : lote.getMuestras()) {
+				bean.getMuestras().add(MuestraListadoBean.modelToBean(m));
+			}
+		}
+		
+		
 		//añadido por yoli
 	    bean.setCentroBean(CentroBean.modelToBean(lote.getCentro()));
 	    BeanEstado estado = new BeanEstado();
@@ -113,7 +125,5 @@ public class LoteListadoBean {
 	    bean.setBeanEstado(estado);
 		return bean;
 	}
-
-	
 
 }
