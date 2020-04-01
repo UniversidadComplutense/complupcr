@@ -103,22 +103,25 @@ public class InicioControlador {
 	}
 
 	@RequestMapping(value = "/modificarContrasena", method = RequestMethod.GET)
-	public String modificarContrasena(Model model, @RequestParam("id") long id,
-			@RequestParam("token") String token) {
+	public String modificarContrasena(Model model, @RequestParam("id") long id, @RequestParam("token") String token,
+			HttpSession session) {
 		String result = pcrUserDetailsService.validarPasswordResetToken(id, token);
 		if (result != null) {
+			session.invalidate();
 			model.addAttribute("mensajeError", "Login incorrecto.");
-			return "redirect:/acceso";
+			return "redirect:/acceso?error";
 		}
 		return "actualizarContrasena";
 	}
 
 	@RequestMapping(value = "/modificarContrasena", method = RequestMethod.POST)
-	public String modificarContrasenaPost(HttpServletRequest request, @RequestParam("newPassword") String matchPassword) {
+	public String modificarContrasenaPost(HttpServletRequest request, @RequestParam("newPassword") String matchPassword,
+			HttpSession session) {
 		PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 		Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
-		usuarioServicio.cabiarContrasena(user, matchPassword);
+		usuarioServicio.cambiarContrasena(user, matchPassword);
+		session.invalidate();
 		return "redirect:/acceso";
 	}
 
@@ -126,10 +129,11 @@ public class InicioControlador {
 
 	private SimpleMailMessage constructResetTokenEmail(String contextPath, String token, Usuario user) {
 		String url = contextPath + "/modificarContrasena?id=" + user.getId() + "&token=" + token;
-		String message = "Este es un correo automático enviado por la aplicación COVID-19.\n"+
-						 "No contestes a este mensaje.\r\n\n\n"+
-						 "Puede realizar el cambio de contraseña a través del siguente enlace:";
-		return constructEmail("Restablecer contraseña COVID-19", message + " \r\n\n" + url+" \r\n\n\n Un cordial saludo.", user);
+		String message = "Este es un correo automático enviado por la aplicación COVID-19.\n"
+				+ "No contestes a este mensaje.\r\n\n\n"
+				+ "Puede realizar el cambio de contraseña a través del siguente enlace:";
+		return constructEmail("Restablecer contraseña COVID-19",
+				message + " \r\n\n" + url + " \r\n\n\n Un cordial saludo.", user);
 	}
 
 	private SimpleMailMessage constructEmail(String subject, String body, Usuario user) {

@@ -20,16 +20,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import es.ucm.pcr.beans.BusquedaLotesBean;
-import es.ucm.pcr.beans.LoteBean;
-import es.ucm.pcr.servicios.ServicioLaboratorioUni;
 
 
 
 @Controller
 @RequestMapping(value="/laboratorioUni")
 public class LaboratorioUniController {
-	@Autowired
+/*	@Autowired
 	ServicioLaboratorioUni servicioLaboratorioUni;
 	@SuppressWarnings("unused")
 	private final static Logger log = LoggerFactory.getLogger(LaboratorioUniController.class);
@@ -60,6 +57,6 @@ public class LaboratorioUniController {
 		ModelAndView vista = new ModelAndView("listadoLotes");
 		return vista;
 	}
-	
+	*/
 	
 }

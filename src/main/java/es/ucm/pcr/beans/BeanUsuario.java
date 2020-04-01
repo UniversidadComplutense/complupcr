@@ -114,6 +114,84 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 		this.rol = rol;
 	}
 
+	
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((ap1 == null) ? 0 : ap1.hashCode());
+		result = prime * result + ((ap2 == null) ? 0 : ap2.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((internoExterno == null) ? 0 : internoExterno.hashCode());
+		result = prime * result + ((mail == null) ? 0 : mail.hashCode());
+		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
+		result = prime * result + ((rol == null) ? 0 : rol.hashCode());
+		result = prime * result + ((telFijo == null) ? 0 : telFijo.hashCode());
+		result = prime * result + ((telMovil == null) ? 0 : telMovil.hashCode());
+		return result;
+	}
+
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BeanUsuario other = (BeanUsuario) obj;
+		if (ap1 == null) {
+			if (other.ap1 != null)
+				return false;
+		} else if (!ap1.equals(other.ap1))
+			return false;
+		if (ap2 == null) {
+			if (other.ap2 != null)
+				return false;
+		} else if (!ap2.equals(other.ap2))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (internoExterno == null) {
+			if (other.internoExterno != null)
+				return false;
+		} else if (!internoExterno.equals(other.internoExterno))
+			return false;
+		if (mail == null) {
+			if (other.mail != null)
+				return false;
+		} else if (!mail.equals(other.mail))
+			return false;
+		if (nom == null) {
+			if (other.nom != null)
+				return false;
+		} else if (!nom.equals(other.nom))
+			return false;
+		if (rol == null) {
+			if (other.rol != null)
+				return false;
+		} else if (!rol.equals(other.rol))
+			return false;
+		if (telFijo == null) {
+			if (other.telFijo != null)
+				return false;
+		} else if (!telFijo.equals(other.telFijo))
+			return false;
+		if (telMovil == null) {
+			if (other.telMovil != null)
+				return false;
+		} else if (!telMovil.equals(other.telMovil))
+			return false;
+		return true;
+	}
+
 
 
 	@Override

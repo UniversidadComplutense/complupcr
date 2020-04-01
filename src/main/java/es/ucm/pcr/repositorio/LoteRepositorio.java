@@ -39,4 +39,12 @@ public interface LoteRepositorio extends PagingAndSortingRepository<Lote, Intege
 			+ "(:#{#params.fechaEnvioFin} is null or lote.fechaEnvio <= :#{#params.fechaEnvioFin}) and "
 			+ "(:#{#params.idEstado} is null or estadoLote.id = :#{#params.idEstado}) ")
 	public List<Lote> findByParams(@Param("params") LoteBusquedaBean params);
+	
+	@Query("SELECT lote FROM Lote lote "
+			+ "JOIN lote.centro centro "
+			+ "JOIN lote.estadoLote estadoLote "
+			+ "WHERE 1=1 and "
+			+ "(:idCentro is null or centro.id = :idCentro) and "
+			+ "(estadoLote.id IN (:idsEstado)) ")	
+	public List<Lote> findByEstado(@Param("idCentro") Integer idCentro, @Param("idsEstado")List<Integer> idsEstado);
 }

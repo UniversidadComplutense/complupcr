@@ -1,12 +1,13 @@
 package es.ucm.pcr.beans;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BeanEstado {
 
 	public enum TipoEstado {
-		EstadoLote, EstadoMuestra
+		EstadoLote, EstadoMuestra, EstadoPlacaLabCentro
 	};
 
 	public enum Estado {
@@ -21,8 +22,17 @@ public class BeanEstado {
 		MUESTRA_INICIADA(1, "Iniciada"), MUESTRA_ASIGNADA_LOTE(2, "Asignada lote"),
 		MUESTRA_ENVIADA_CENTRO_ANALISIS(3, "Enviada centro análisis"),
 		MUESTRA_PENDIENTE_ANALIZAR(4, "Pendiente analizar"), MUESTRA_ASIGNADA_ANALISTA(5, "Asignada analista"),
-		MUESTRA_RESUELTA(6, "Resuelta");
-
+		MUESTRA_RESUELTA(6, "Resuelta"),
+		
+		
+		// ESTADOS PLACA LABORATORIO CENTRO
+		PLACA_INICIADA (1, "Iniciada"), PLACA_PREPARADA_PARA_PCR (2, "Preparada para PCR"),					
+		PLACA_FINALIZADA_PCR (3, "Finalizada PCR"), PLACA_LISTA_PARA_ANALISIS (4, "Lista para análisis"), 
+		PLACA_ASIGNADA_PARA_ANALISIS (5, "Asignada para análisis"),
+		
+				
+		;
+				
 		private int codNum;
 		public String descripcion;
 
@@ -131,6 +141,32 @@ public class BeanEstado {
 				}
 				break;				
 			}
+			case EstadoPlacaLabCentro: {
+				this.setTipoEstado(TipoEstado.EstadoPlacaLabCentro);
+				switch (codNumEstado) {				
+					case 1: {
+						this.setEstado(Estado.PLACA_INICIADA);
+						break;
+					}
+					case 2: {
+						this.setEstado(Estado.PLACA_PREPARADA_PARA_PCR);
+						break;
+					}
+					case 3: {
+						this.setEstado(Estado.PLACA_FINALIZADA_PCR);
+						break;
+					}
+					case 4: {
+						this.setEstado(Estado.PLACA_LISTA_PARA_ANALISIS);
+						break;
+					}
+					case 5: {
+						this.setEstado(Estado.PLACA_ASIGNADA_PARA_ANALISIS);
+						break;
+					}
+				}
+			break;
+			}
 		}
 
 		return this;
@@ -167,6 +203,31 @@ public class BeanEstado {
 		estadosLote.add(new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_RESUELTA));
 		
 		return estadosLote;
+	}
+	
+	/**
+	 * Estados de una placa de laboratorio de un centro
+	 * @return
+	 */
+	public static List<BeanEstado> estadosPlacaLabCentro() {
+
+		List<BeanEstado> estadosPlacaLabCentro = new ArrayList<>();
+		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_INICIADA));
+		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_PREPARADA_PARA_PCR));
+		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_FINALIZADA_PCR));
+		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_LISTA_PARA_ANALISIS));
+		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_ASIGNADA_PARA_ANALISIS));
+		
+		return estadosPlacaLabCentro;
+	}
+	
+	
+	/**
+	 * Para los centros, solo se pueden asignar muestras a lotes iniciados o asignado centro analisis (laboratorio)
+	 * @return
+	 */
+	public static List<Integer> getEstadosLotesDisponiblesCentro() {
+		return Arrays.asList(new Integer[] {Estado.LOTE_INICIADO.getCodNum(), Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum()});
 	}
 
 	@Override

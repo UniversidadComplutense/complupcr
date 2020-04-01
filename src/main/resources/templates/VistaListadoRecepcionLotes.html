@@ -2,170 +2,292 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
-<title>Búsqueda de Lotes</title>
+<title>Búsqueda de Lotes-covid19</title>
 <object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
-<style>
-/*
-.selected {fa-bar-chart-ofa-bar-chart-o
-    background: #eaeaea;
-    color: rgba(0, 0, 0, 0.9);
-}
-*/
-</style>
+
 </head>
 <body>
-	
 
-	<div id="fondo-nav-ini-non-responsive" class="container-fluid">&nbsp;</div>
-<!--  
-	<div th:fragment="botonera-herramientas-fondo"
-		id="botonera-herramientas-fondo" class="container-non-responsive">
-		<div class="row">
-			<div class="col-xs-2"></div>
-			<div id="botonera-herramientas" class="col-xs-10">
-				<ul>
-					<li th:if="${formUserSecretaria.rol== 'ROLE_SECCION'}"><a
-						href="/gestor/generarExcelTitulosConFechas.xls"><i
-							class="fa fa-file-o" aria-hidden="true"></i><span>Excel
-								fechas</span></a></li>
-					<li><a href="/gestor/nuevaPreinscripcionSecretaria"><i
-							class="fa fa-file-o" aria-hidden="true"></i><span>Nueva</span></a></li>
-					<li><a href="/coordinador/estadisticasTitulo"
-						th:href="@{/coordinador/estadisticasTitulo}"><i
-							class="fa fa-bar-chart-o" aria-hidden="true"></i><span>Estadísticas</span></a></li>
-					<li th:if="${formUserSecretaria.rol== 'ROLE_SECCION'}"><a
-						href="/coordinador/plazoPreinscripcion"
-						th:href="@{/coordinador/plazoPreinscripcion}"><i
-							class="fa fa-calendar-check-o" aria-hidden="true"></i><span>Plazos</span></a></li>
-
-					<li th:if="${(beanListaPreinscripciones != null)}"><a
-						href="/gestor/generarExcelBusqueda.xls" target="_blank"><i
-							class="fa fa-file-excel-o" aria-hidden="true"></i><span>Excel</span></a></li>
-					<li th:if="${formUserSecretaria.rol== 'ROLE_SECCION'}"><a
-						href="/gestor/gestionAutExcepcional"><i
-							class="fa fa-exclamation" aria-hidden="true"></i><span>Gestión
-								Aut. Excepcional</span></a></li>
-
-				</ul>
-			</div>
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+<div id="lotesRecibidos" class="container">
+	<div class="row justify-content-center mt-1, titulo-menu">
+			<h5>Gestión de lotes</h5>
+    </div>
+    <div class="row justify-content-left mt-3">
+    	<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">		      
+				<div class="list-group">
+				  <a href="/laboratorioUni/buscarLotes" class="list-group-item list-group-item-action text-white bg-secondary">Gestión lotes centros de salud</a>
+				  <a href="/laboratorioUni/buscarPlacas" class="list-group-item list-group-item-action">Gestión placas Visavet</a>
+				  <a href="#" class="list-group-item list-group-item-action">Salir</a>
+				</div>
 		</div>
-	</div>
--->
 
 
-
-
-	<div class="container-non-responsive" id="contenido-general">
-
-		
-		<h2 th:if="${formUserSecretaria.rol == 'ROLE_SECCION'}">Gestión de Lotes</h2>
-
-		<!-- Muestro mensaje si se ha borrado correctamente una preinscripcion (DIANA-FALTA COLOCAR ESTE DIV BIEN)-->
-		<div class="error">
-			<div th:if="${borradaPreins}">
-				<h3>Lote eliminado correctamente.</h3>
-			</div>
-		</div>
-	<form action="#" th:action="@{/laboratorioUni/buscar}"
+   <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">		      
+	<form action="#" th:action="@{/laboratorioUni/buscarLotes}"
 			id="formularioPrueba" method="post" th:object="${busquedaLotes}"
 			class="form-horizontal">
-			<div class="row formPnl1">
-             	<div class="col-xs-12">
-					<div class="form-group">
-						<label class="col-xs-2">Centro de procedencia:</label>
-						<div class="col-xs-7 text-left">
-							<select class="form-control" id="centro"
-								th:field="*{idCentro}">
-								<option th:each="var: ${busquedaLotes.listaCentros}"
+			<fieldset id="criteriosBusqueda" class="form-group border p-2">
+		    <legend class="w-auto">Búsqueda Lotes</legend>
+			  <div class="row">
+				<div class="col-4 form-group">
+				<label class="col-xs-2">Centro de procedencia:</label>
+			    <select class="form-control form-control-sm" id="centro" th:field="*{idCentro}">
+					<option th:each="var: ${busquedaLotes.listaCentros}"
 									th:value="${var.id}" th:text="${var.nombre}"
 									th:select="${busquedaLotes.idCentro}">Estado</option>
-							</select>
-						</div>
-					</div>
-	                </div>
-					
+				</select>
 				</div>
-         		<div class="col-xs-12">
-					<div class="form-group">
-						<label class="col-xs-2">Número de Lote:</label>
+				<div class="col-4 form-group">
+				<label class="col-xs-2">Número de Lote:</label>
 						<div class="col-xs-7">
-								<input type="text" class="form-control" id="numLote"
+								<input type="text" class="form-control form-control-sm" id="numLote"
 								th:value="${busquedaLotes.numLote}"
 								th:field="*{numLote}" />
 						</div>
-                   </div>
-                   <div class="form-group">
-						<label class="col-xs-2">Fecha de Entrada:</label>
-						<div class="col-xs-7">
-									<input type="text" class="form-control" id="fechaEntrada"
-								th:value="${busquedaLotes.fechaEntrada}"
-								th:field="*{fechaEntrada}" />
-						</div>
-                   </div>
-			</div>
-                 
-			
-			<div class="row formPnl1">
-
-				<div class="col-xs-4">
-					<div class="form-group">
-						<label class="col-xs-4">Muestra:</label>
-						<div class="col-xs-8">
-							<input type="text" class="form-control" id="muestra"
-								th:value="${busquedaLotes.muestra}"
-								th:field="*{muestra}" />
-						</div>
-					</div>
-					
-					
-				</div>
-
-					<div class="form-group">
+			    </div>
+			     <div class="col-4 form-group">
 						<label class="col-xs-3">Estado:</label>
 						<div class="col-xs-9">
-							<select class="form-control" id="estado"
+							<select class="form-control form-control-sm" id="estado"
 								th:field="*{codNumEstadoSeleccionado}">
 
-								<option th:each="var: ${formListaEstados}"
-									th:value="${var.codigo}" th:text="${var.descripcion}"
+								<option th:each="var: ${busquedaLotes.listaBeanEstado}"
+									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
 									th:selected="${busquedaLotes.codNumEstadoSeleccionado}">Estado</option>
 							</select>
 						</div>
-						<label class="error"
-							th:if="${#fields.hasErrors('codNumEstadoSeleccionado')}"
-							th:errors="${busquedaLotes.codNumEstadoSeleccionado}"></label>
+						
 					</div>
-
-				</div>
-
-				<div class="col-xs-12 text-center">
-
-
-					<input type="button" class="btn btn-default" value="Buscar"
-						th:onClick="|enviarFormulario('${busquedaLotes.urlPaginada}'); return false|" />
-					<input type="reset" class="btn btn-default" value="Limpiar"
-						th:onClick="|vaciar('form'); return false|" />
-				</div>
-
-				<!-- <div class="col-xs-12 text-center">
-					<label class="alert alert-info"
-						th:if="${beanBusqueda.mensaje != null}"
-						th:text="${beanBusqueda.mensaje}">mensaje</label> <label
-						class="error" th:if="${#fields.hasErrors('mensaje')}"
-						th:errors="${beanBusqueda.mensaje}"></label>
-				</div>
-
-    -->
+			  </div>
+			  <div class="row">
+				<div class="col-4 form-group">
 			
+						<label class="col-xs-2">Fecha de Entrada:</label>
+						 		<input type="date" class="form-control" id="fechaEntrada"
+								th:field="*{fechaEntrada}" th:value="${busquedaLotes.fechaEntrada}" />
+						
+                   </div>
+                   <div class="col-4 form-group">
+			
+                   	<label class="col-xs-4">Muestra:</label>
+					<input type="text" class="form-control" id="muestra"
+								th:value="${busquedaLotes.muestra}"
+								th:field="*{muestra}" />
+						</div>
+                 </div>  
 
-
-
-
+        <div class="row justify-content-end mt-3">
+			<div class="col-2">
+			 <button type="submit"  class="btn btn-secondary">Buscar</button>
+			
+			<!--  <button type="button" th:onClick="|buscarResultados('lote','DESC','2','20'); return false|"  class="btn btn-secondary">Buscar</button>-->
+			</div>
+		</div>	
+		</fieldset>
+		<!-- campos hidden para permitir ordenar y para paginar 
+		<input type="hidden" class="form-control" id="orden" th:field="*{orden}" />
+		<input type="hidden" class="form-control" id="sentidoOrden" th:field="*{sentidoOrden}" />
+		-->
 		</form>
-		<!-- Aqui vienen los resultados -->
 		</div>
 		
+		<!-- Aqui vienen los resultados -->
+		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
+	<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">	
+		<div id="capaResultados" 
+			class="row formPnl1"  th:unless="${(paginaLotes == null)}">
+		 	<table class="col-xs-12 table" th:id="tablaResultadosCabecera" >
+			 <thead class="thead-light">
+				<tr>
+				<th  style="text-align: left;"></th>
+					<th  style="text-align: left;">#Lotes
+				
+					</th>
+					<th style="text-align: left;">Centro</th>
+					<th  style="text-align: left;">F.Entrada</th>
+					<th  style="text-align: left;">#Muestras</th>
+					<th  style="text-align: left;">Test</th>
+					<th  style="text-align: left;">Estado</th>
+				
+				</tr>
+				</thead>
+				</table>
+			
+					<table class="col-xs-12 table" th:id="tablaResultadosLotes" >
+						
+			 	<tr th:id="trGroup+${count.index}"  th:each="unResultado,count : ${paginaLotes.getContent()}">
+					
+							<td width="1%">
+								<input type="checkbox" name="seleccionado" th:disabled="${#strings.toString(unResultado.estado.Estado) != 'LOTE_RECIBIDO_CENTRO_ANALISIS'}" th:id="seleccionado+${count.index}" th:value="${unResultado.id}" />
+								</td>
+								<td width="1%">
+								<span th:text="${unResultado.numLote}"></span>
+								</td>
+                            <td width="10%">
+								<span th:text="${unResultado.centroProcedencia}"></span>
+								</td>
 
+								<td id="mensajes_log" width="1%">
+							<!--  	<span th:text="${#dates.format(unResultado.fechaEntrada, 'dd-mm-yyyy')}"></span>
+								-->
+								</td>
+                              <td id="mensajes_log" style="text-align: center;" width="1%">
+                                                                                     
+                              <a  data-toggle="modal" href="#modalConsultarMuestras" th:data-lote="${unResultado.numLote}" th:data-centro="${unResultado.centroProcedencia}" th:data-id="${unResultado.id}"  th:onClick="|consultarMuestras(this.getAttribute('data-lote'),this.getAttribute('data-centro'),this.getAttribute('data-id'));|">
+                        <i class="fa fa-table" aria-hidden="true"
+										style="font-size: 1.2em;"></i>
+							</a>
+                           <!--    <a
+									th:attr="data-target='#modalMuestras'+${unResultado.id}"
+									data-toggle="modal"
+									th:href="'#modalMuestras'+${unResultado.id}">
+										<i class="fa fa-table" aria-hidden="true"
+										style="font-size: 1.2em;"></i>
+								</a>  -->
+								</td>
+								<td id="mensajes_log" width="1%">
+								<span>Covid19</span>
+								</td>
+								<td width="16%">
+								<span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
+
+							  <a  th:if="${#strings.toString(unResultado.estado.Estado) == 'LOTE_ENVIADO_CENTRO_ANALISIS'}" href="#modalConfirmRecibido" data-toggle="modal" th:data-lote="${unResultado.numLote}" th:data-centro="${unResultado.centroProcedencia}" th:data-id="${unResultado.id}" th:onclick="|loadConfirmarEnvio(this.getAttribute('data-id'),this.getAttribute('data-lote'),this.getAttribute('data-centro'))|">
+							Confirmar recibido
+							</a>
+								  </td>
+								  
+					</tr>	
+					
+			</table>
+			
+			<!--  Confirmar Recibido -->
+<div id="modalConfirmRecibido" class="modal fade modal1 in" role="dialog">
+   <div id="ventanaConfirmRecibido" class="modal-dialog ">
+    
+	<div class="modal-content">
+         <div class="modal-header" id="modal-header">
+         <button class="close" data-dismiss="modal" type="button">×</button>
+	
+         <h4 class="modal-title"> <span id="modalTitleNombre" class="info">Confirmar lote recibido</span>
+         </h4>
+        </div>
+
+	<div id="mensajeSinSeleccionarTit" style="display: block; height: 70px;">
+		<span style="text-align: center; padding-top: 30px; padding-left: 30px;">Confirmar como recibido el siguiente lote:</span>
+	
+						<label>Número de lote:</label><span id="mensajeConfirmar"></span>
+						<label>Centro de procedencia:</label><span id="mensajeCentroProcedencia"></span>
+									<div class="modal-footer">
+									<input type="hidden" id="id" value=""></input>
+									    <button type="button" id="aceptarConfirmacion" data-dismiss="modal"  th:onclick="|confirmarLote()|">Aceptar</button>
+										<button type="button" id="cerrarConfirmacion" data-dismiss="modal">Cerrar</button>
+										
+									</div>
+						
+
+							</div>
+
+
+
+
+						</div>
+						</div>
+	</div> 		
+			
+<!--  	 fin  Recibido -->
+			
+				
+		
+		</div> <!--  capa de resultados -->
+		<div th:include="fragmentos :: paginador(${busquedaLotes.urlPaginada},${paginaLotes},${busquedaLotes.orden},${busquedaLotes.sentidoOrden},'0')"></div>
+		
+		<input id="procesarBoton"   type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" onclick="procesarLotes()"/>
+		</div>
+
+	</div>
+		</div> 	
+	<!-- Empiezan los modales -->
+		
+	<!-- consultar Muestras -->
+	<div id="modalConsultarMuestras" class="modal fade modal1 in" role="dialog">
+   <div id="ventanaConfirmRecibido" class="modal-dialog ">
+    
+	<div class="modal-content">
+         <div class="modal-header" id="modal-header">
+         <button class="close" data-dismiss="modal" type="button">×</button>
+	
+         <h4 class="modal-title"> <span id="modalTitleNombre" class="info">Muestras incluidas en el Lote</span>
+         </h4>
+        </div>
+
+	<div id="mensajeSinSeleccionarTit" style="display: block; height: 70px;">
+		<span style="text-align: center; padding-top: 30px; padding-left: 30px;"></span>
+	
+						<label>Número muestra de lote:</label><span id="mensajeConfirmar"></span>
+						<label>Centro muestra de procedencia:</label><span id="mensajeCentroProcedencia"></span>
+							    <div id="capaMuestrasMostrar">
+							<table class="col-xs-12 table" th:id="tablamuestras" >
+					     	<tr id="trMuestra">	</tr>
+			            	<tr id="trMuestra"  th:each="unaMuestra, count : ${muestras}">
+			            	
+				              <td><span th:text="${#strings.toString(unaMuestra.etiqueta)}"></td>
+				              <td><span th:text="${#strings.toString(unaMuestra.referenciaInterna)}"></td>
+				            </tr>
+							    
+							   
+							    </table>
+							    </div>	
+									<div class="modal-footer">
+									<input type="hidden" id="id" value=""></input>
+									  	<button type="button" id="cerrarConfirmacion" data-dismiss="modal">Cerrar</button>
+										
+									</div>
+						
+
+							</div>
+
+
+
+
+						</div>
+						</div>
+	</div> 	
+	<!--  <div id="modalConsultarMuestras"   class="modal fade modal1 in" role="dialog">
+    
+	<div class="modal-content">
+         <div class="modal-header" id="modal-header">
+	<button class="close" data-dismiss="modal" type="button">×</button>
+         <h4 class="modal-title"> <span id="modalTitleNombreMuestra" class="info">Muestras incluidas en el Lote </span>
+         </h4>
+        </div>
+
+	<div id="mensajeSinSeleccionarTit" style="display: block; height: 70px;">
+		<span style="text-align: center; padding-top: 30px; padding-left: 30px;"></span>
+			
+						<label>Centro de procedencia:</label><span id="mensajeCentroProcedenciaMuestra"></span>
+						<div id="capaMuestras"></div>
+									<div class="modal-footer">
+						
+										<button class="btn btn-default" data-dismiss="modal"
+														type="button">Cancelar</button>	
+									</div>
+						
+
+							</div>
+
+
+
+
+						</div>
+						</div>
+		</div>
+		</div>			-->
+	<!-- fin consultar Muestras -->
+	
+	
+<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+<!--  contenedor de todo -->
 	<!--  
 	<script th:src="@{/js/util.js}" src="static/js/util.js"
 		type="text/javascript"></script>
@@ -173,5 +295,6 @@
 		src="static/js/funcionesLotes.js" type="text/javascript"></script>
 	<object th:include="fragmentos :: scriptsBootstrap" th:remove="tag"></object>
 	-->
+	
 </body>
 </html>

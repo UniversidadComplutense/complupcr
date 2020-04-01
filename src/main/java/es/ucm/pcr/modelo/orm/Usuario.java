@@ -39,7 +39,7 @@ public class Usuario implements java.io.Serializable {
 	private Integer idLaboratorioCentro;
 	private Integer asignadas;
 	private Integer acertadas;
-	private boolean habilitado;
+	private String habilitado;
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<UsuarioMuestra> usuarioMuestras = new HashSet<UsuarioMuestra>(0);
 	private Set<Rol> rols = new HashSet<Rol>(0);
@@ -47,7 +47,7 @@ public class Usuario implements java.io.Serializable {
 	public Usuario() {
 	}
 
-	public Usuario(String nombre, String apellido1, String email, String password, boolean habilitado) {
+	public Usuario(String nombre, String apellido1, String email, String password, String habilitado) {
 		this.nombre = nombre;
 		this.apellido1 = apellido1;
 		this.email = email;
@@ -57,7 +57,7 @@ public class Usuario implements java.io.Serializable {
 
 	public Usuario(Centro centro, String nombre, String apellido1, String apellido2, String email, String password,
 			Integer idLaboratorioVisavet, Integer idLaboratorioCentro, Integer asignadas, Integer acertadas,
-			boolean habilitado, Set<Documento> documentos,
+			String habilitado, Set<Documento> documentos,
 			Set<UsuarioMuestra> usuarioMuestras, Set<Rol> rols) {
 		this.centro = centro;
 		this.nombre = nombre;
@@ -179,11 +179,11 @@ public class Usuario implements java.io.Serializable {
 	}
 
 	@Column(name = "habilitado", nullable = false)
-	public boolean isHabilitado() {
+	public String getHabilitado() {
 		return this.habilitado;
 	}
 
-	public void setHabilitado(boolean habilitado) {
+	public void setHabilitado(String habilitado) {
 		this.habilitado = habilitado;
 	}
 

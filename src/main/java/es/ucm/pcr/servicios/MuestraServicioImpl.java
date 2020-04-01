@@ -15,11 +15,12 @@ import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
-import es.ucm.pcr.beans.BeanEstado.TipoEstado;
+import es.ucm.pcr.beans.BeanResultado;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
+import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.Paciente;
 import es.ucm.pcr.repositorio.MuestraRepositorio;
@@ -54,27 +55,21 @@ public class MuestraServicioImpl implements MuestraServicio {
 
 	@Override
 	public MuestraCentroBean guardar(MuestraCentroBean muestraBean) {
-		Muestra muestra = null;
+		Muestra muestra = null;						
 		
-		// Lote nuevo
+		muestra = MuestraCentroBean.beanToModel(muestraBean);
+
+		// Lote nuevo, resultado pendiente
 		if (muestraBean.getId() == null) {
-			// TODO - COMPLETAR MUESTRAS
-			muestraBean.setEstado(new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_INICIADA));
-			if (muestraBean.getIdLote() != null) {
-				muestraBean.setEstado(new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_ASIGNADA_LOTE));
-			}
-			muestra = MuestraCentroBean.beanToModel(muestraBean);
-		} else {
-			// Existe lote
-			muestra = findByIdMuestra(muestraBean.getId());
-			if (muestra != null) {
-				// TODO - CAMPOS MODIFICABLES DE MUESTRA
-			}
+			muestra.setResultado(BeanResultado.ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE.getCod());		
 		}
 		
+		muestra.setLote(null);
+		muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_INICIADA.getCodNum()));
 		if (muestraBean.getIdLote() != null) {
 			muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ASIGNADA_LOTE.getCodNum()));
-		}
+			muestra.setLote(new Lote(muestraBean.getIdLote()));
+		} 
 		
 		Paciente paciente = muestra.getPaciente();
 		muestra = muestraRepositorio.save(muestra);

@@ -1,6 +1,7 @@
 package es.ucm.pcr.beans;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -9,12 +10,16 @@ public class BusquedaLotesBean {
 private String idLaboratorio;
 private String nombreLaboratorio;
 private  String numLote;
-private Calendar fechaEntrada;
+private Date fechaEntrada;
 private String muestra;
 private List<BeanEstado> listaBeanEstado;
-private String codNumEstadoSeleccionado;
+private Integer codNumEstadoSeleccionado;
 private List<CentroBean> listaCentros;
-private int idCentro;
+private Integer idCentro;
+private String urlPaginada="/laboratorioUni/buscarLotesGet";
+private String orden;
+private String sentidoOrden;
+
 public String getIdLaboratorio() {
 	return idLaboratorio;
 }
@@ -33,10 +38,10 @@ public String getNumLote() {
 public void setNumLote(String numLote) {
 	this.numLote = numLote;
 }
-public Calendar getFechaEntrada() {
+public Date getFechaEntrada() {
 	return fechaEntrada;
 }
-public void setFechaEntrada(Calendar fechaEntrada) {
+public void setFechaEntrada(Date fechaEntrada) {
 	this.fechaEntrada = fechaEntrada;
 }
 public String getMuestra() {
@@ -51,10 +56,10 @@ public List<BeanEstado> getListaBeanEstado() {
 public void setListaBeanEstado(List<BeanEstado> listaBeanEstado) {
 	this.listaBeanEstado = listaBeanEstado;
 }
-public String getCodNumEstadoSeleccionado() {
+public Integer getCodNumEstadoSeleccionado() {
 	return codNumEstadoSeleccionado;
 }
-public void setCodNumEstadoSeleccionado(String codNumEstadoSeleccionado) {
+public void setCodNumEstadoSeleccionado(Integer codNumEstadoSeleccionado) {
 	this.codNumEstadoSeleccionado = codNumEstadoSeleccionado;
 }
 public List<CentroBean> getListaCentros() {
@@ -63,11 +68,29 @@ public List<CentroBean> getListaCentros() {
 public void setListaCentros(List<CentroBean> listaCentros) {
 	this.listaCentros = listaCentros;
 }
-public int getIdCentro() {
+public Integer getIdCentro() {
 	return idCentro;
 }
-public void setIdCentro(int idCentro) {
+public void setIdCentro(Integer idCentro) {
 	this.idCentro = idCentro;
+}
+public String getUrlPaginada() {
+	return urlPaginada;
+}
+public void setUrlPaginada(String urlPaginada) {
+	this.urlPaginada = urlPaginada;
+}
+public String getOrden() {
+	return orden;
+}
+public void setOrden(String orden) {
+	this.orden = orden;
+}
+public String getSentidoOrden() {
+	return sentidoOrden;
+}
+public void setSentidoOrden(String sentidoOrden) {
+	this.sentidoOrden = sentidoOrden;
 }
 
 }
