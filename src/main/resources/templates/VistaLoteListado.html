@@ -101,7 +101,7 @@
 								<div class="modal-dialog modal-lg" role="document">
 							    	<div class="modal-content">
 							      		<div class="modal-header">
-							        		<h5 class="modal-title" id="exampleModalLabel">Muestras Lote <span th:text="${lote.numLote}"/></h5>
+							        		<h5 class="modal-title" id="exampleModalLabel">Muestras Lote - <b><span th:text="${lote.numLote}"/></b></h5>
 							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							          			<span aria-hidden="true">&times;</span>
 							        		</button>
@@ -123,7 +123,7 @@
 													<tbody>
 														<tr th:if="${lote.muestras != null}" th:each="muestra : ${lote.muestras}">
 															<td><span th:text="${muestra.nombrePaciente}"></span></td>					
-															<td><span th:text="${muestra.refInternaMuestra}"></span></td>
+															<td><span th:text="${muestra.nhcPaciente}"></span></td>
 															<td><span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/mm/yyyy')}"></span></td>
 															<td><span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/mm/yyyy')}"></span></td>
 															<td><span th:text="${muestra.estadoMuestra}"></span></td>		

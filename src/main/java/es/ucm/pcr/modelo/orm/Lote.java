@@ -36,6 +36,11 @@ public class Lote implements java.io.Serializable {
 
 	public Lote() {
 	}
+	
+	public Lote(int id) {
+		super();
+		this.id = id;
+	}
 
 	public Lote(int id, Centro centro, EstadoLote estadoLote, String numeroLote, int capacidad) {
 		this.id = id;

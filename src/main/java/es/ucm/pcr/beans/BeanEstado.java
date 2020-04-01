@@ -1,6 +1,7 @@
 package es.ucm.pcr.beans;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BeanEstado {
@@ -22,7 +23,7 @@ public class BeanEstado {
 		MUESTRA_ENVIADA_CENTRO_ANALISIS(3, "Enviada centro análisis"),
 		MUESTRA_PENDIENTE_ANALIZAR(4, "Pendiente analizar"), MUESTRA_ASIGNADA_ANALISTA(5, "Asignada analista"),
 		MUESTRA_RESUELTA(6, "Resuelta");
-
+				
 		private int codNum;
 		public String descripcion;
 
@@ -167,6 +168,14 @@ public class BeanEstado {
 		estadosLote.add(new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_RESUELTA));
 		
 		return estadosLote;
+	}
+	
+	/**
+	 * Para los centros, solo se pueden asignar muestras a lotes iniciados o asignado centro analisis (laboratorio)
+	 * @return
+	 */
+	public static List<Integer> getEstadosLotesDisponiblesCentro() {
+		return Arrays.asList(new Integer[] {Estado.LOTE_INICIADO.getCodNum(), Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum()});
 	}
 
 	@Override

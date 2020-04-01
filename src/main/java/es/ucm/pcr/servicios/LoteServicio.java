@@ -27,6 +27,14 @@ public interface LoteServicio {
 	public List<LoteListadoBean> findLoteByParam(LoteBusquedaBean params);
 	
 	/**
+	 * Busca los lotes de un centro en un determinado estado
+	 * @param idCentro id centro
+	 * @param idsEstado estados lote
+	 * @return
+	 */
+	public List<LoteListadoBean> findLoteByEstados(Integer idCentro, List<Integer> idsEstado);
+	
+	/**
 	 * Guardar lote
 	 * @param loteBean
 	 * @return lote guardado
