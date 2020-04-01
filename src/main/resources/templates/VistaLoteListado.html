@@ -20,7 +20,8 @@
 				<div class="col-3 form-group">
 					<label>Código</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="${beanBusquedaLote.numLote}"  th:value="${beanBusquedaLote.numLote}" maxlength="100"/>
-				</div>	
+				</div>
+				<!-- 	
 				<div class="col-3 form-group">
 					<label>Laboratorio</label>
 				 	<select class="form-control form-control-sm" th:field="${beanBusquedaLote.idLaboratorio}"  th:value="${beanBusquedaLote.idLaboratorio}">
@@ -29,6 +30,7 @@
 				 		<option value="2">LAB 2</option>
 				 	</select>
 				</div>
+				 -->
 			</div>
 			<div class="row">			
 				<div class="col-3 form-group">
@@ -124,8 +126,8 @@
 														<tr th:if="${lote.muestras != null}" th:each="muestra : ${lote.muestras}">
 															<td><span th:text="${muestra.nombrePaciente}"></span></td>					
 															<td><span th:text="${muestra.nhcPaciente}"></span></td>
-															<td><span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/mm/yyyy')}"></span></td>
-															<td><span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/mm/yyyy')}"></span></td>
+															<td><span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span></td>
+															<td><span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/MM/yyyy')}"></span></td>
 															<td><span th:text="${muestra.estadoMuestra}"></span></td>		
 															<td><span th:text="${muestra.notificado} ? 'Sí' : 'No'"></span></td>															
 														</tr>		

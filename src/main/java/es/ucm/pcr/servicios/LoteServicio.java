@@ -54,6 +54,6 @@ public interface LoteServicio {
 	 * @param id identificador estado
 	 * @param estadoActualizar estado a actualizar
 	 */
-	public void actualizarEstadoLote(Integer id, BeanEstado estadoActualizar);
+	public void actualizarEstadoLote(LoteCentroBean loteBean, BeanEstado estadoActualizar);
 
 }

@@ -174,15 +174,15 @@ public class LoteControlador {
 		}
 	}
 	
-	@RequestMapping(value="/lote/enviado/{id}", method=RequestMethod.GET)
+	@RequestMapping(value="/lote/enviado", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView envido(HttpSession session, @PathVariable Integer id) throws Exception {
+	public ModelAndView loteEnviado(@ModelAttribute("beanLote") LoteCentroBean beanLote) throws Exception {
 		
 		BeanEstado beanEstado = new BeanEstado();
 		beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum());
-		loteServicio.actualizarEstadoLote(id, beanEstado);		
+		loteServicio.actualizarEstadoLote(beanLote, beanEstado);		
 		// redirige a la consulta
-		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/" + id, true));
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/" + beanLote.getId(), true));
 		return respuesta;
 	}
 	

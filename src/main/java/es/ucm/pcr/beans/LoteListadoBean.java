@@ -109,7 +109,7 @@ public class LoteListadoBean {
 		bean.setId(lote.getId());
 		bean.setNumLote(lote.getNumeroLote());
 		bean.setCapacidad(lote.getCapacidad());
-		//bean.setFechaEnvio(lote.getFechaEnvio());
+		bean.setFechaEnvio(lote.getFechaEnvio());
 		bean.setDescEstado(lote.getEstadoLote().getDescripcion());
 		if (lote.getLaboratorioVisavet() != null) {
 			bean.setDescLaboratorio(lote.getLaboratorioVisavet().getNombre());

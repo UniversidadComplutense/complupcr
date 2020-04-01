@@ -13,7 +13,7 @@
 	
 	<form action="#" th:action="@{/centroSalud/lote/guardar}" method="post" th:object="${beanLote}" id="formGuardar" role="form">
 		<input type="hidden" th:field="${beanLote.id}"  th:value="${beanLote.id}" />
-		<input type="hidden" name="estado" th:value="${beanLote.estado.estado.codNum}" th:if="${beanLote.estado} != null"/> 
+		<input type="hidden" name="estado" th:value="${beanLote.estado.estado.codNum}" th:if="${beanLote.estado} != null"/>		
 		<fieldset id="datosLote" class="form-group border p-2" th:disabled="!${editable}">
 			<legend class="w-auto font-weight-bold" th:if="${beanLote.tieneMuestras}">Lote con muestras</legend>
 			<legend class="w-auto font-weight-bold" th:if="!${beanLote.tieneMuestras}">Lote sin muestras</legend>
@@ -74,11 +74,18 @@
 			<div class="col-2">
 				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>
 			</div>
-			<div class="col-2" th:if="${beanLote.tieneMuestras}">
-				<a id="accionEnviado" th:classappend="${beanLote.idLaboratorio == null} ? disabled : ''" th:href="@{/centroSalud/lote/enviado/{id}(id=${beanLote.id})}" class="btn btn-secondary">Enviado</a>
+			<div class="col-2">
+				<button id="accionEnviado" th:disabled="!${beanLote.tieneMuestras} or ${beanLote.idLaboratorio == null} or !${editable}" type="button" class="btn btn-secondary">Enviado</button>
 			</div>			
 		</div>					
 	</form>
+	
+	<!-- formuario para envio de lote -->
+	<form action="#" th:action="@{/centroSalud/lote/enviado}" method="post" th:object="${beanLote}" id="formGuardarEnviado" role="form">
+		<input type="hidden" th:field="${beanLote.id}"  th:value="${beanLote.id}" />
+		<input type="hidden" id="idLaboratorioEnviado" name="idLaboratorio" th:value="${beanLote.idLaboratorio}" />
+	</form>
+	
 
 	</div>
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
@@ -92,9 +99,19 @@
 	        		$("#accionEnviado").addClass('disabled');
 		        } else {
 	        		$("#accionEnviado").removeClass('disabled');
-		        }		        
+	        		$("#accionEnviado").removeAttr('disabled');
+		        }		
+		        $("#idLaboratorioEnviado").val(radioValue);      
 	        });
 	    });
+
+    	// lote enviado
+	    $(function () {
+	        $("#accionEnviado").click(function () {
+		    	$("#formGuardarEnviado").submit();
+	        });
+	    });
+	    
     </script>
 </body>
 </html>

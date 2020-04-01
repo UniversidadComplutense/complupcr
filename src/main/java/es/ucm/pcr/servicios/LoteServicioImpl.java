@@ -21,6 +21,7 @@ import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.modelo.orm.EstadoLote;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
+import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.repositorio.LoteRepositorio;
@@ -104,8 +105,8 @@ public class LoteServicioImpl implements LoteServicio {
 	}
 
 	@Override
-	public void actualizarEstadoLote(Integer id, BeanEstado estadoActualizar) {
-		Lote lote = findByIdLote(id);
+	public void actualizarEstadoLote(LoteCentroBean loteBean, BeanEstado estadoActualizar) {
+		Lote lote = findByIdLote(loteBean.getId());
 		if (lote != null) {
 			
 			// si actualizamos el lote a envidado ademas rellenamos la fecha de envio
@@ -121,6 +122,7 @@ public class LoteServicioImpl implements LoteServicio {
 					}
 					muestraRepositorio.saveAll(lote.getMuestras());
 				}
+				lote.setLaboratorioVisavet(new LaboratorioVisavet(loteBean.getIdLaboratorio()));
 			}
 			
 			if (estadoActualizar.getEstado().getCodNum() == Estado.LOTE_RECIBIDO_CENTRO_ANALISIS.getCodNum()) {

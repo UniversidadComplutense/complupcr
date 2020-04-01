@@ -89,7 +89,7 @@ public class Lote implements java.io.Serializable {
 		this.centro = centro;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idEstadoLote", nullable = false)
 	public EstadoLote getEstadoLote() {
 		return this.estadoLote;

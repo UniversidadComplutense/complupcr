@@ -115,7 +115,7 @@ public class Muestra implements java.io.Serializable {
 		this.estadoMuestra = estadoMuestra;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idLote")
 	public Lote getLote() {
 		return this.lote;

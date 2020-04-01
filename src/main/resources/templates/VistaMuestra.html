@@ -89,7 +89,7 @@
 				</div>										
 			</div>				
 			<div class="row">
-				<div class="col-3 form-group">
+				<div class="col-4 form-group">
 					<label>Lote</label>
 				 	<select class="form-control form-control-sm" th:field="${beanMuestra.idLote}"  th:value="${beanMuestra.idLote}">
 				 		<option value="">Seleccione</option>
@@ -97,6 +97,10 @@
 									th:value="${var.id}" th:text="${var.numLote}"
 									th:select="${beanMuestra.idLote}"></option>
 				 	</select>					
+				</div>
+				<div class="col-4 form-group">
+					<label>Fecha envio</label>
+				 	<input  type="date" class="form-control form-control-sm" disabled th:field="${beanMuestra.fechaEnvio}"  th:value="${beanMuestra.fechaEnvio}" required/>
 				</div>	
 			</div>
 			
