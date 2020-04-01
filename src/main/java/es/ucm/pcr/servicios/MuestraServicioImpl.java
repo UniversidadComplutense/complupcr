@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,14 @@ import es.ucm.pcr.beans.BeanResultado;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
+import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.Paciente;
 import es.ucm.pcr.repositorio.MuestraRepositorio;
 import es.ucm.pcr.repositorio.PacienteRepositorio;
+import es.ucm.pcr.utilidades.Enviocorreo;
 
 @Service
 public class MuestraServicioImpl implements MuestraServicio {
@@ -38,7 +41,8 @@ public class MuestraServicioImpl implements MuestraServicio {
 	@Autowired
 	private PacienteRepositorio pacienteRepositorio;
 	
-	
+	@Autowired
+	private Enviocorreo envioCorreoImp;	
 	
 	@Override
 	public Page<MuestraListadoBean> findMuestraByParam(MuestraBusquedaBean params, Pageable pageable) {
@@ -118,13 +122,12 @@ public class MuestraServicioImpl implements MuestraServicio {
 		Muestra muestra = findByIdMuestra(id);
 		if (muestra != null) {
 			muestra.setFechaNotificacion(new Date());
-		}
-		
-		if (enviarMail) {
+			muestraRepositorio.save(muestra);
 			
-		}
-		
-		muestraRepositorio.save(muestra);
+			if (enviarMail) {
+				envioCorreoImp.send(muestra.getPaciente().getEmail(), "Notificación", mensajeEmail(muestra), null, "",pieEmail(muestra.getCentro()),""); 
+			}			
+		}		
 	}
 	
 	/**
@@ -141,5 +144,43 @@ public class MuestraServicioImpl implements MuestraServicio {
 		muestra.getLote();
 		muestra.getLote().getEstadoLote();
 		return muestra;
+	}
+	
+	private String mensajeEmail(Muestra muestra) {
+		
+		StringBuffer mensaje = new StringBuffer("<div style='font-size: 12px !important;text-align:justify !important;'>");
+		
+		if (muestra != null) {
+
+			BeanResultado resultado = new BeanResultado();
+			resultado.asignarTipoEstadoYCodNum(muestra.getResultado());
+			
+			mensaje.append("El análisis de la muestra del paciente <b>").append(muestra.getPaciente().getNombrePaciente()).append("</b>");
+			if (StringUtils.isNotEmpty(muestra.getPaciente().getApellido1paciente())) {
+				mensaje.append(" <b>").append(muestra.getPaciente().getApellido1paciente()).append("</b>");
+			}
+			if (StringUtils.isNotEmpty(muestra.getPaciente().getApellido2paciente())) {
+				mensaje.append(" <b>").append(muestra.getPaciente().getApellido2paciente()).append("</b>");
+			}
+			mensaje.append(", con número de historial clínico <b>").append(muestra.getPaciente().getNhc()).append("</b>");
+			mensaje.append(" ha resultado <b>").append(resultado.getResultadoMuestra().getDescripcion()).append("</b>");
+			mensaje.append("<br><br> Si tiene cualquier consulta no dude en contactarnos");
+		}
+		mensaje.append("</div>");
+		return mensaje.toString();
+	}
+	
+	private String pieEmail(Centro centro) {
+		
+		
+		StringBuffer mensaje = new StringBuffer("<div style='font-size: 12px !important;text-align:justify !important;margin-top:20px'>");
+		if (centro != null) {
+			mensaje.append("Centro de salud <b>").append(centro.getNombre()).append("</b><br>");
+			mensaje.append("&nbsp;Dirección <b>").append(centro.getDireccion()).append("</b><br>");
+			mensaje.append("&nbsp;Email <b>").append(centro.getEmail()).append("</b><br>");
+			mensaje.append("&nbsp;Teléfono <b>").append(centro.getTelefono()).append("</b><br>");
+		}
+		mensaje.append("</div>");
+		return mensaje.toString();
 	}
 }

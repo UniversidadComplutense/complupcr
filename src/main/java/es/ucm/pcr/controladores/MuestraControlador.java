@@ -162,7 +162,7 @@ public class MuestraControlador {
 		}
 	}
 	
-	@RequestMapping(value="/notificarTelefono/{id}", method=RequestMethod.GET)
+	@RequestMapping(value="/muestra/notificarTelefono/{id}", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView notificarTelefono(HttpSession session, @PathVariable Integer id) throws Exception {
 		
@@ -173,7 +173,7 @@ public class MuestraControlador {
 		return respuesta;
 	}
 	
-	@RequestMapping(value="/notificarCorreo/{id}", method=RequestMethod.GET)
+	@RequestMapping(value="/muestra/notificarCorreo/{id}", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView notificarCorreo(HttpSession session, @PathVariable Integer id) throws Exception {
 		

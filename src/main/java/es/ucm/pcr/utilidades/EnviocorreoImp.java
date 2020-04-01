@@ -111,7 +111,7 @@ public class EnviocorreoImp implements Enviocorreo {
 //			if (perfilesEjecucionActivos.equals("desarrollo") || perfilesEjecucionActivos.equals("integracion"))
 			if (perfilesEjecucionActivos.contains("desarrollo") || perfilesEjecucionActivos.contains("integracion"))
 			{
-				helper.setTo("dades@ucm.es");
+				helper.setTo("tsanz01@ucm.es");
 			}
 			
 			helper.setSubject(MimeUtility.encodeText("string", "UTF-8", "Q"));

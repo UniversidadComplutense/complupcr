@@ -71,8 +71,8 @@
 			
 			<div class="row">
 				<div class="col-3">
-					<label >Ref. interna</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.refInternaMuestra}"  th:value="${beanBusquedaMuestra.refInternaMuestra}" maxlength="10"/>
+					<!-- <label >Ref. interna</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.refInternaMuestra}"  th:value="${beanBusquedaMuestra.refInternaMuestra}" maxlength="10"/> -->
 				</div>	
 				<div class="col-3">
 					<label >Fecha resultado</label>
@@ -112,7 +112,7 @@
 	      				<th scope="col">Nombre</th>
 						<th scope="col">NHC</th>
 						<th scope="col">Etiqueta</th>
-						<th scope="col">Ref. interna</th>
+						<!-- <th scope="col">Ref. interna</th> -->
 						<th scope="col">Fecha envío</th>
 						<th scope="col">Fecha resultado</th>
 						<th scope="col">Resultado</th>
@@ -132,9 +132,9 @@
 						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">							
 							<span th:text="${muestra.etiquetaMuestra}"></span>							
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<!-- <td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
 							<span th:text="${muestra.refInternaMuestra}"></span>							
-						</td>
+						</td>-->
 						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
 							<span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span>
 						</td>
