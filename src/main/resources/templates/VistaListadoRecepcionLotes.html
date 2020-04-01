@@ -129,8 +129,8 @@
 								</td>
 
 								<td id="mensajes_log" width="1%">
-							<!--  	<span th:text="${#dates.format(unResultado.fechaEntrada, 'dd-mm-yyyy')}"></span>
-								-->
+							 	<span th:text="${#dates.format(unResultado.fechaEntrada, 'dd-mm-yyyy')}"></span>
+								
 								</td>
                               <td id="mensajes_log" style="text-align: center;" width="1%">
                                                                                      
@@ -151,7 +151,6 @@
 								</td>
 								<td width="16%">
 								<span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
-
 							  <a  th:if="${#strings.toString(unResultado.estado.Estado) == 'LOTE_ENVIADO_CENTRO_ANALISIS'}" href="#modalConfirmRecibido" data-toggle="modal" th:data-lote="${unResultado.numLote}" th:data-centro="${unResultado.centroProcedencia}" th:data-id="${unResultado.id}" th:onclick="|loadConfirmarEnvio(this.getAttribute('data-id'),this.getAttribute('data-lote'),this.getAttribute('data-centro'))|">
 							Confirmar recibido
 							</a>
@@ -287,6 +286,8 @@
 	
 	
 <object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+<object th:include="fragmentos :: scripts" th:remove="tag"></object>
+
 <!--  contenedor de todo -->
 	<!--  
 	<script th:src="@{/js/util.js}" src="static/js/util.js"

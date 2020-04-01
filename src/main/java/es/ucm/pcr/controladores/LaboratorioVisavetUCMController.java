@@ -237,11 +237,12 @@ public class LaboratorioVisavetUCMController {
 	public ModelAndView confirmarReciboLote(@RequestParam("id") String id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
 	// llamar al servicio lotes y cambiar el estado de id a Recibido
 		// para probar
+		
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 				List<LoteBeanPlacaVisavet> list=new ArrayList();
 					for (int i = 0; i<20; i++) {
 						list.add(getBean(i));
-						if (list.get(i).getId().equals(id)) {
+						if (list.get(i).getId().equals(0)) {
 							// cambiamos estado
 							BeanEstado estado= new BeanEstado();
 							estado.setTipoEstado(TipoEstado.EstadoLote);
@@ -249,7 +250,7 @@ public class LaboratorioVisavetUCMController {
 							list.get(i).setEstado(estado);
 						}
 						//para que tenga mas de dos lotes 
-						if (list.get(i).getId().equals("3")) {
+						if (list.get(i).getId().equals(3)) {
 							// cambiamos estado
 							BeanEstado estado= new BeanEstado();
 							estado.setTipoEstado(TipoEstado.EstadoLote);
@@ -265,6 +266,7 @@ public class LaboratorioVisavetUCMController {
 					model.addAttribute("busquedaLotes", session.getAttribute("busquedaLotes"));
 					vista.addObject("paginaLotes", paginaLotes);
 					vista.addObject("busquedaLotes", session.getAttribute("busquedaLotes"));
+				
 				    return vista;	
 	}
 	
