@@ -134,7 +134,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	}
 	
 	@Override
-	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuarioGestion beanUsuario, Usuario usuario) throws Exception {
+	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuarioGestion beanUsuario, Usuario usuario, int[] roles) throws Exception {
 		
 		// No asigno el id del usuario
 		usuario.setAcertadas(beanUsuario.getAcertadas());
@@ -153,7 +153,20 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		usuario.setNombre(beanUsuario.getNombre());
 		// el Pwd se asigna por otros medios, no podemos modificarlo
 //		usuario.setPassword(beanUsuario.getPassword());
-		usuario.setRols(beanUsuario.getRols());
+		// Añado los roles seleccionado
+		Set<Rol> rolesSeleccionados = new HashSet<Rol>(0);
+		if(roles != null) 
+		{
+		    for (int i = 0; i < roles.length; i++)  
+		    {
+		    	System.out.println("Roles: " + roles[i]);
+		    	Optional<Rol> rol = rolRepositorio.findById(roles[i]);
+		    	rolesSeleccionados.add(rol.get());
+		    }
+		}
+		usuario.setRols(rolesSeleccionados);
+		//		
+//		usuario.setRols(beanUsuario.getRols());
 		usuario.setUsuarioMuestras(beanUsuario.getUsuarioMuestras());
 		
 		return usuario;

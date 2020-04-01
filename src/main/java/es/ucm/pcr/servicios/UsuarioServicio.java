@@ -46,7 +46,7 @@ public interface UsuarioServicio {
 	 * @param BeanUsuario, Usuario
 	 * @return Usuario
 	 */	
-	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuarioGestion beanUsuario, Usuario usuario) throws Exception;
+	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuarioGestion beanUsuario, Usuario usuario, int[] roles) throws Exception;
 	
 	
 	/**

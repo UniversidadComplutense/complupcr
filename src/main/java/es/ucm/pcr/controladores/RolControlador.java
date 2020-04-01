@@ -36,7 +36,7 @@ public class RolControlador {
 		List<BeanRol> listaRoles = new ArrayList<BeanRol>();
 		for (Rol rol: rolRepositorio.findAll())
 		{
-			listaRoles.add(new BeanRol(rol.getId(), rol.getNombre(), "L"));
+			listaRoles.add(new BeanRol(rol.getId(), rol.getNombre(), true, "L"));
 		}
 		//	Ordeno por ap1, ap2, nombre
 		Collections.sort(listaRoles);

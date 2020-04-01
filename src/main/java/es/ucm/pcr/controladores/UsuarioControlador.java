@@ -90,6 +90,9 @@ public class UsuarioControlador {
 		List<BeanRol> listaRoles = rolServicio.generarListaRoles();
 		vista.addObject("listaRoles", listaRoles);
 		
+		boolean seleccionado = true;
+		vista.addObject("seleccionado", seleccionado);
+		
 		return vista;
 	}
 	
@@ -112,7 +115,7 @@ public class UsuarioControlador {
 			// Buscamos el usuario a modificar, y volcamos los datos recogidos por el formulario
 			Optional<Usuario> usuario = usuarioRepositorio.findById(beanUsuario.getId());
 			// añadimos campos del formulario
-			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get()));
+			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get(), roles));
 		}
 
 		// Volvemos a grabar mas centros
@@ -135,7 +138,7 @@ public class UsuarioControlador {
 		beanUsuario.setAccion("M");
 		
 		// Añadimos los roles en BBDD
-		List<BeanRol> listaRoles = rolServicio.generarListaRoles();
+		List<BeanRol> listaRoles = rolServicio.generarListaRolesUsuario(usuario.get());
 		vista.addObject("listaRoles", listaRoles);
 		
 		vista.addObject("formBeanUsuario", beanUsuario);
