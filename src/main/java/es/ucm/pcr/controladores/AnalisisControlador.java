@@ -47,18 +47,24 @@ import es.ucm.pcr.beans.BeanListaAsignaciones;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
+import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.GuardarAsignacionMuestraBean;
 import es.ucm.pcr.beans.MuestraBean;
 //import es.ucm.pcr.beans.BeanMuestraCentro;
 //import es.ucm.pcr.validadores.ValidadorMuestra;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
+import es.ucm.pcr.config.security.PcrUserDetails;
+import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
+import es.ucm.pcr.servicios.UsuarioServicio;
 
 
 @Controller
 @RequestMapping(value = "/analisis")
 public class AnalisisControlador {
 	
+	@Autowired
+	private UsuarioServicio usuarioServicio;
 	
 	@Autowired
 	private LaboratorioCentroServicio laboratorioCentroServicio;
@@ -375,17 +381,30 @@ public class AnalisisControlador {
 		public ModelAndView buscarPlacasinAsignarYBajoResponsabilidadGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
 
 			ModelAndView vista = new ModelAndView("ListadoPlacasSinAsignarYBajoResponsabilidad");
+			
+			//recupero el usuario logado
+			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
+			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 
 			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
-			BusquedaPlacaLaboratorioBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioBean();			
-			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(String.valueOf(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum()));
+			// del centro del usuario jefe logado
+			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
+			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
+			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
 			List<PlacaLaboratorioCentroBean> listaPlacasListasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaListaParaAnalisis, pageable).getContent();
+			System.out.println("listaPlacasListasParaAnalisis tiene: "+ listaPlacasListasParaAnalisis.size());
 			
 			// Buscamos las placas con estado 'Asignada para análisis' (un jefe ya las ha puesto bajo su responsabilidad)
-			BusquedaPlacaLaboratorioBean criteriosBusquedaPlacaAsignadaParaAnalisis = new BusquedaPlacaLaboratorioBean();			
-			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(String.valueOf(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum()));
+			// del centro del usuario jefe logado 
+			// y que esten asignadas al jefe logado
+			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaAsignadaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
+			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
+			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
+			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdJefe(user.getId());
 			List<PlacaLaboratorioCentroBean> listaPlacasAsignadasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaAnalisis, pageable).getContent();
-			//TODO de estas placas asignadas para analisis hay que coger solo las asignadas a este jefe
+			System.out.println("listaPlacasAsignadasParaAnalisis tiene: "+ listaPlacasAsignadasParaAnalisis.size());			
 			
 			//this.agregarListasDesplegables(vista);
 			//vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
@@ -394,6 +413,114 @@ public class AnalisisControlador {
 			return vista;
 
 		}
+		
+		
+		
+		//ANALISTA O VOLUNTARIOS (SOLO ANALIZAN)
+		
+				
+		@RequestMapping(value = "/listarMuestrasAnalista", method = RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO')")
+		public ModelAndView listarMuestrasAsignadasAnalistaGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+
+			ModelAndView vista = new ModelAndView("ListadoMuestrasARevisarAnalista");
+			
+			System.out.println("estoy en listarMuestrasAsignadasAnalistaGET");
+			//recupero el usuario logado
+			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
+			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
+
+			/*
+			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
+			// del centro del usuario jefe logado
+			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
+			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
+			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
+			List<PlacaLaboratorioCentroBean> listaPlacasListasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaListaParaAnalisis, pageable).getContent();
+			System.out.println("listaPlacasListasParaAnalisis tiene: "+ listaPlacasListasParaAnalisis.size());
+			
+			// Buscamos las placas con estado 'Asignada para análisis' (un jefe ya las ha puesto bajo su responsabilidad)
+			// del centro del usuario jefe logado 
+			// y que esten asignadas al jefe logado
+			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaAsignadaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
+			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
+			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
+			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdJefe(user.getId());
+			List<PlacaLaboratorioCentroBean> listaPlacasAsignadasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaAnalisis, pageable).getContent();
+			System.out.println("listaPlacasAsignadasParaAnalisis tiene: "+ listaPlacasAsignadasParaAnalisis.size());			
+			
+			//this.agregarListasDesplegables(vista);
+			//vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
+			vista.addObject("listaPlacasListasParaAnalisis", listaPlacasListasParaAnalisis);
+			vista.addObject("listaPlacasAsignadasParaAnalisis", listaPlacasAsignadasParaAnalisis);
+			*/
+			return vista;
+
+		}
+		
+		
+		
+		
+		//muestra pantalla al analista para que resuelva la muestra
+		@RequestMapping(value="/revisarAnalista", method=RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO')")
+		public ModelAndView revisarMuestraAnalista(HttpSession session, HttpServletRequest request, @RequestParam("idMuestra") Integer idMuestra) throws Exception {
+			ModelAndView vista = new ModelAndView("VistaRevisarMuestraAnalista");
+						
+			String mensaje = null;
+			// Comprobamos si hay mensaje enviado desde guardarAsignacion.
+			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+			if (inputFlashMap != null) {
+				mensaje = (String) inputFlashMap.get("mensaje");
+				System.out.println("mensaje vale: " + mensaje);
+			}
+			vista.addObject("mensaje", mensaje);
+
+			
+			MuestraBean beanMuestra = getBeanMuestra(idMuestra);
+			//beanMuestra.setResultado("P");
+			
+			List<BeanElemento> beanListadoPosiblesResultadosMuestra = getBeanListadoPosiblesResultadosMuestra();
+			System.out.println("el beanListadoPosiblesResultadosMuestra tiene: " + beanListadoPosiblesResultadosMuestra.toString());
+			
+			vista.addObject("beanMuestra", beanMuestra);
+			vista.addObject("beanListadoPosiblesResultadosMuestra", beanListadoPosiblesResultadosMuestra);	
+		
+		
+			return vista;
+		}
+		
+		
+		@RequestMapping(value = "/guardarRevisionAnalista", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public RedirectView guardarRevisionAnalista(@ModelAttribute("beanMuestra") MuestraBean beanMuestra,
+				HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
+			
+			System.out.println("muestra id: " + beanMuestra.getId());
+			System.out.println("resultado seleccionado por el analista: " + beanMuestra.getResultado());			
+			
+			//TODO llamar a metodo de servicio que a partir de beanMuestra recupere la muestra y le asigne el resultado escogido por el jefe
+			
+			//la muestra se cierra desde la pagina principal (creo) alli habrá que 
+			//cambiar el estado de la muestra a resuelta (cerrada) con su fecha de resolucion
+			//TODO actualizar estadisticas de aciertos a los asignados a la muestra
+			
+			//muestraSevicio.guardarResultado (beanMuestra);
+						
+			//vuelvo al formulario de asignacion de la muestra
+			String idMuestra = String.valueOf(beanMuestra.getId());
+			redirectAttributes.addFlashAttribute("mensaje", "Resultado de muestra guardado");
+			return new RedirectView("/analisis/revisarAnalista?idMuestra="+idMuestra, true);
+		}
+		
+		//FIN ANALISTA O VOLUNTARIOS (SOLO ANALIZAN)
+		
+		
+		
+		
+		
 		
 		/*
 		@RequestMapping(value = "/gestionPlacas/resultados", method = RequestMethod.POST)
