@@ -2,6 +2,7 @@ package es.ucm.pcr.servicios;
 
 import java.util.Set;
 
+import es.ucm.pcr.beans.BeanUsuarioGestion;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 
@@ -22,6 +23,31 @@ public interface UsuarioServicio {
 	 * @return Set<Rol>
 	 */
 	public Set<Rol> getRoles(Usuario usuario);
+	
+	/**
+	 * Realiza el mapeo de la entidad al bean Usuario
+	 * 
+	 * @param Usuario
+	 * @return BeanUsuario
+	 */	
+	public BeanUsuarioGestion mapeoEntidadBeanUsuario (Usuario usuario) throws Exception;
+	
+	/**
+	 * Realiza el mapeo del bean a la entidad Usuario
+	 * 
+	 * @param BeanUsuarioGestion
+	 * @return Usuario
+	 */	
+	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuarioGestion beanUsuario) throws Exception;
+	
+	/**
+	 * Realiza el mapeo del bean a la entidad Usuario para modificar
+	 * 
+	 * @param BeanUsuario, Usuario
+	 * @return Usuario
+	 */	
+	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuarioGestion beanUsuario, Usuario usuario) throws Exception;
+	
 	
 	/**
 	 * Crea un token unico para que el usuario restablezca la contraseña.
