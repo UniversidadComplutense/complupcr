@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - MUESTRAS</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+	<div class="container">	
+	
+	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/guardar}" method="post" th:object="${placa}" id="formGuardar" role="form">
+		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
+		<input type="hidden" name="estado" th:value="${placa.beanEstado.estado.codNum}" th:if="${placa.beanEstado} != null"/> 
+		<fieldset id="datosPlaca" class="form-group border p-2" th:disabled="!${editable}">
+			<legend class="w-auto">Placa</legend>
+			<div class="row">
+				<div class="col-4 form-group" th:if="${placa.id} != null">
+					<label>Identificador</label>
+				 	<input type="text" class="form-control form-control-sm" th:value="${placa.id}"/>
+				</div>				
+				<div class="col-3 form-group">
+					<label>Capacidad</label>
+				 	<select class="form-control form-control-sm" th:field="${placa.numeroMuestras}"  th:value="${placa.numeroMuestras}">
+				 		<option value="">Seleccione</option>
+				 		<option value="20">20</option>
+				 		<option value="96">96</option>
+				 	</select>
+				</div>				
+			</div>
+			<div class="row" th:if="${placa.id} != null">
+				<div class="col-4 form-group">
+					<label>Estado</label>
+				 	<input type="text" class="form-control form-control-sm" disabled th:value="${placa.beanEstado.estado.descripcion}"></input>
+				</div>
+				<div class="col-4 form-group">
+					<label>Fecha de Creación</label>
+				 	<input type="text" class="form-control form-control-sm" disabled th:value="${#dates.format(placa.fechaCreacion, 'dd/MM/yyyy')}"></input>
+				</div>				
+			</div>					
+		</fieldset>
+		
+
+		<!-- ACCCIONES -->
+		<div class="row justify-content-center mt-3">
+			<div class="col-2">
+				<a th:href="@{/laboratorioCentro/gestionPlacas/preparacion}" class="btn btn-secondary">Volver</a>				
+			</div>
+			<div class="col-2">
+				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>
+			</div>			
+		</div>					
+	</form>
+
+	</div>
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+    <object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+</body>
+</html>
