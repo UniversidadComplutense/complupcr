@@ -43,6 +43,7 @@ public class Usuario implements java.io.Serializable {
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<UsuarioMuestra> usuarioMuestras = new HashSet<UsuarioMuestra>(0);
 	private Set<Rol> rols = new HashSet<Rol>(0);
+	private Set<PlacaLaboratorio> placasLaboratorio = new HashSet<PlacaLaboratorio>(0);
 
 	public Usuario() {
 	}
@@ -216,5 +217,17 @@ public class Usuario implements java.io.Serializable {
 	public void setRols(Set<Rol> rols) {
 		this.rols = rols;
 	}
+	
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
+	public Set<PlacaLaboratorio> getPlacasLaboratorio() {
+		return placasLaboratorio;
+	}
+
+	public void setPlacasLaboratorio(Set<PlacaLaboratorio> placasLaboratorio) {
+		this.placasLaboratorio = placasLaboratorio;
+	}
+	
+	
 
 }

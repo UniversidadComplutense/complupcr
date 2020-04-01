@@ -1,6 +1,3 @@
-/**
- * 
- */
 function eliminaFilas()
 {
 //OBTIENE EL NÚMERO DE FILAS DE LA TABLA
@@ -102,42 +99,27 @@ function cambiarOrdenColumna(orden,sentidoOrden,numPagina,sizePagina){
 	});
 
 }
-/* carga el modal de  Confirmar Lote Recibido */
+// carga el modal de  Confirmar Lote Recibido 
 function loadConfirmarEnvio(id, numLote, centroProcedencia){
 	
 	$("#mensajeConfirmar").html(numLote);
 	$("#mensajeCentroProcedenciaCentro").html(centroProcedencia);
 	$("#id").val(id);
 }
-/* funcion que  realia una llamada ajax para cambiar el estado de un lote y recargar tabla de resultados */
+// funcion que  realia una llamada ajax para cambiar el estado de un lote y recargar tabla de resultados 
 function confirmarLote(){
-	/* por ajax var url = "";
-	//var urlAbs = getAbsolutePath();
-	var id=$("#id").val();
-	url =  '/laboratorioUni/confirmarReciboLote?id='+id;
-	sBody=$('#formularioPrueba').serialize();
 
-	$.ajax({
-        type:  'GET',
-        url:   url,
-        dataType: 'html',
-        data:  sBody
-	}).done(function(respuesta) {
-		$("#capaResultados").html(respuesta);
-		habilitarBotonProcesar();
-	});
-	*/
 	var url = "";
 	//var urlAbs = getAbsolutePath();
 	
 	var id=$("#id").val();
 	url =  '/laboratorioUni/confirmarReciboLote?id='+id;
-	alert(url);
 	window.location=url;
 }
+
 function consultarMuestras(lote,centroProcedencia,id){
 	var url = "";
-	//var urlAbs = getAbsolutePath();
+
 	
 	url =  '/laboratorioUni/mostrarMuestras?id='+id;
 	
@@ -149,7 +131,6 @@ function consultarMuestras(lote,centroProcedencia,id){
         dataType: 'html',
         data:  sBody
 	}).done(function(respuesta) {
-		alert(respuesta);
 		$("#trMuestra").html(respuesta);
 	});
 	
@@ -159,6 +140,7 @@ function consultarMuestras(lote,centroProcedencia,id){
 	
 	
 }
+
 //funcion que obtiene los checkbox pulsados y se los envia al controlador
 function procesarLotes() {
 	var nFilas = $("#tablaResultadosLotes tr").length;
@@ -222,7 +204,7 @@ function asignarPlaca(){
         dataType: 'html',
         data:  sBody
 	}).done(function(respuesta) {
-		alert (respuesta);
+		
 		eliminaFilas();
 		
 	    $("#trGroup").html(respuesta);

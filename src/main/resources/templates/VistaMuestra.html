@@ -15,9 +15,10 @@
 		<input type="hidden" th:field="${beanMuestra.id}"  th:value="${beanMuestra.id}" />
 		<input type="hidden" th:field="${beanMuestra.idPaciente}"  th:value="${beanMuestra.idPaciente}" />
 		<input type="hidden" th:field="${beanMuestra.resultado}"  th:value="${beanMuestra.resultado}" />
+		<input type="hidden" th:field="${beanMuestra.fechaAsignada}"  th:value="${beanMuestra.fechaAsignada}" />
 		<fieldset id="datosPaciente" class="form-group border p-2" th:disabled="!${editable}">
 			<!-- DATOS PACIENTE -->
-			<legend class="w-auto">Paciente</legend>
+			<legend class="w-auto font-weight-bold">Paciente</legend>
 			<div class="row">
 				<div class="col-4 form-group">
 					<label>Nombre</label>
@@ -29,7 +30,7 @@
 				</div>	
 				<div class="col-4 form-group">
 					<label>Segundo apellido</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.segundoApellido}"  th:value="${beanMuestra.segundoApellido}" required maxlength="45"/>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.segundoApellido}"  th:value="${beanMuestra.segundoApellido}" maxlength="45"/>
 				</div>
 			</div>
 			<div class="row">					
@@ -70,7 +71,7 @@
 		
 		<!-- DATOS MUESTRA -->
 		<fieldset id="datosMuestras" class="form-group border p-2" th:disabled="!${editable}">
-			<legend class="w-auto">Muestra</legend>
+			<legend class="w-auto font-weight-bold">Muestra</legend>
 			<div class="row">
 				<div class="col-4 form-group">
 					<label>Etiqueta</label>
@@ -88,7 +89,7 @@
 				</div>										
 			</div>				
 			<div class="row">
-				<div class="col-3 form-group">
+				<div class="col-4 form-group">
 					<label>Lote</label>
 				 	<select class="form-control form-control-sm" th:field="${beanMuestra.idLote}"  th:value="${beanMuestra.idLote}">
 				 		<option value="">Seleccione</option>
@@ -96,6 +97,10 @@
 									th:value="${var.id}" th:text="${var.numLote}"
 									th:select="${beanMuestra.idLote}"></option>
 				 	</select>					
+				</div>
+				<div class="col-4 form-group">
+					<label>Fecha envio</label>
+				 	<input  type="date" class="form-control form-control-sm" disabled th:field="${beanMuestra.fechaEnvio}"  th:value="${beanMuestra.fechaEnvio}" required/>
 				</div>	
 			</div>
 			
@@ -124,11 +129,11 @@
 			<div class="col-2">
 				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>
 			</div>
-			<div class="col-2" th:if="${notificable}">
-				<a th:disabled="${beanMuestra.avisosAuto}" th:href="@{/centroSalud/muestra/notificarTelefono/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Ya he llamado</a>
+			<div class="col-2">
+				<a th:classappend="!${notificable} or ${beanMuestra.avisosAuto} ? 'disabled' : ''" th:href="@{/centroSalud/muestra/notificarTelefono/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Ya he llamado</a>
 			</div>
-			<div class="col-2" th:if="${notificable}">
-				<a th:disabled="${beanMuestra.avisosAuto}" th:href="@{/centroSalud/muestra/notificarCorreo/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Enviar correo</a>
+			<div class="col-2">
+				<a th:classappend="!${notificable} or ${beanMuestra.avisosAuto} ? 'disabled' : ''" th:href="@{/centroSalud/muestra/notificarCorreo/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Enviar correo</a>
 			</div>
 		</div>					
 	</form>

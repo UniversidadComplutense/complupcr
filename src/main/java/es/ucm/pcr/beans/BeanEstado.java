@@ -7,7 +7,7 @@ import java.util.List;
 public class BeanEstado {
 
 	public enum TipoEstado {
-		EstadoLote, EstadoMuestra, EstadoPlacaLabCentro
+		EstadoLote, EstadoMuestra, EstadoPlacaLaboratorioVisavet, EstadoPlacaLabCentro
 	};
 
 	public enum Estado {
@@ -30,7 +30,11 @@ public class BeanEstado {
 		PLACA_FINALIZADA_PCR (3, "Finalizada PCR"), PLACA_LISTA_PARA_ANALISIS (4, "Lista para análisis"), 
 		PLACA_ASIGNADA_PARA_ANALISIS (5, "Asignada para análisis"),
 		
-				
+		
+		//ESTADOS PLACA VISAVET
+		PLACAVISAVET_INICIADA (1, "Iniciada"), PLACAVISAVET_PREPARADA (2, "Preparada para laboratorio"),					
+		PLACAVISAVET_FINALIZADA (3, "Finalizada"),
+		PLACAVISAVET_ASIGNADA (4, "Asignada a Laboratorio"),		
 		;
 				
 		private int codNum;
@@ -167,6 +171,30 @@ public class BeanEstado {
 				}
 			break;
 			}
+			
+			case EstadoPlacaLaboratorioVisavet: {
+				this.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
+				switch (codNumEstado) {				
+					case 1: {
+						this.setEstado(Estado.PLACAVISAVET_INICIADA);
+						break;
+					}
+					case 2: {
+						this.setEstado(Estado.PLACAVISAVET_PREPARADA);
+						break;
+					}
+					case 3: {
+						this.setEstado(Estado.PLACAVISAVET_FINALIZADA);
+						break;
+					}
+					case 4: {
+						this.setEstado(Estado.PLACAVISAVET_ASIGNADA);
+						break;
+					}
+					
+				}
+			break;
+			}
 		}
 
 		return this;
@@ -219,6 +247,21 @@ public class BeanEstado {
 		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_ASIGNADA_PARA_ANALISIS));
 		
 		return estadosPlacaLabCentro;
+	}
+	
+	/**
+	 * Estados de una placa de Visavet
+	 * @return
+	 */
+	public static List<BeanEstado> estadosPlacaVisavet() {
+
+		List<BeanEstado> estadosPlacaVisavet = new ArrayList<>();
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_INICIADA));
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_PREPARADA));
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_FINALIZADA));
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_ASIGNADA));
+		
+		return estadosPlacaVisavet;
 	}
 	
 	

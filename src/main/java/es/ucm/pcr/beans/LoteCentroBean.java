@@ -2,9 +2,12 @@ package es.ucm.pcr.beans;
 
 import java.util.Date;
 
+import org.springframework.util.CollectionUtils;
+
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.EstadoLote;
+import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Lote;
 
 public class LoteCentroBean {
@@ -16,6 +19,7 @@ public class LoteCentroBean {
 	private Integer capacidad;
 	private Date fechaEnvio;
 	private Integer idEstado;
+	private boolean tieneMuestras;
 	
 	public LoteCentroBean() {
 		super();	
@@ -90,14 +94,28 @@ public class LoteCentroBean {
 	public void setIdEstado(Integer idEstado) {
 		this.idEstado = idEstado;
 	}
+	
+	public boolean isTieneMuestras() {
+		return tieneMuestras;
+	}
+
+	public void setTieneMuestras(boolean tieneMuestras) {
+		this.tieneMuestras = tieneMuestras;
+	}
 
 	public static Lote beanToModel(LoteCentroBean loteBean) {
 		Lote lote = new Lote();
+		lote.setId(loteBean.getId());
 		lote.setNumeroLote(loteBean.getNumLote());
 		lote.setCentro(new Centro(loteBean.getIdCentro()));		
-		lote.setEstadoLote(new EstadoLote(loteBean.getEstado().getEstado().getCodNum()));
+		if (loteBean.getEstado() != null) {
+			lote.setEstadoLote(new EstadoLote(loteBean.getEstado().getEstado().getCodNum()));
+		}
 		lote.setCapacidad(loteBean.getCapacidad() != null ? loteBean.getCapacidad() : 0);
-		// TODO - COMPLETAR MUESTRAS
+		lote.setLaboratorioVisavet(null);
+		if (loteBean.getIdLaboratorio() != null) {
+			lote.setLaboratorioVisavet(new LaboratorioVisavet(loteBean.getIdLaboratorio()));
+		}
 		return lote;
 	}
 	
@@ -109,6 +127,10 @@ public class LoteCentroBean {
 		BeanEstado beanEstado = new BeanEstado();
 		loteBean.setEstado(beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoLote, lote.getEstadoLote().getId()));
 		loteBean.setFechaEnvio(lote.getFechaEnvio());
+		if (lote.getLaboratorioVisavet() != null) {
+			loteBean.setIdLaboratorio(lote.getLaboratorioVisavet().getId());
+		}
+		loteBean.setTieneMuestras(!CollectionUtils.isEmpty(lote.getMuestras()));
 		// TODO - COMPLETAR MUESTRAS
 		return loteBean;
 	}
