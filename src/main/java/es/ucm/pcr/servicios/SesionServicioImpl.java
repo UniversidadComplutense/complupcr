@@ -139,7 +139,7 @@ public class SesionServicioImpl implements SesionServicio {
 //			Analista
 		if (this.tieneRol("ADMIN") || this.tieneRol("ANALISTALABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Revisar miestra", "", null);
+			opcionSecundaria = new MenuBean("Revisar muestras", "/analisis/listarMuestrasAnalista", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Analista", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
