@@ -107,15 +107,6 @@ public class EnviocorreoImp implements Enviocorreo {
 			}else {				
 				helper.setTo(destinatarios);
 			}
-			
-			
-			// Fernando 13/11/2018
-			// DES-3202
-			// Correos de Integracion y desarrollo revisar para que todos se envien a dades@ucm.es y asi asegurarnos de que no llegan al alumno o al director
-			//
-			//20/11/2018
-			// En las maquinas de integracion tenemos como perfil "desarrollo, ftpgea", por lo que cambiamos los "equals" por "contains"
-			//
 			String perfilesEjecucionActivos = System.getProperty("spring.profiles.active");
 //			if (perfilesEjecucionActivos.equals("desarrollo") || perfilesEjecucionActivos.equals("integracion"))
 			if (perfilesEjecucionActivos.contains("desarrollo") || perfilesEjecucionActivos.contains("integracion"))
@@ -133,20 +124,14 @@ public class EnviocorreoImp implements Enviocorreo {
 			
 			String paginahtml = 
 			//Pongo texto de correo para Titulos propios
-			"<html><head> <title>T&iacute;tulos Propios</title>"
+			"<html><head> <title>Covit 19 </title>"
 			+ "<meta http-equiv=" + quote + "Content-Type" + quote + " content=" + quote + "text/html" + quote + "; charset=utf-8" + quote + "/>"
-			+ "</head> <body> <h2 style=\"background-color: #9B021A;color: #fff;font-size: 3em;font-family: Verdana;font-size: 32px;padding: 0.2em 1em;text-align: center;margin: 0;\">TITULOS PROPIOS</h2>"
-			+ "<div style=\"color:#9B021A;text-align: center;border-bottom: 1px solid #2279b4;border-top: 1px solid #2279b4;font-family: Verdana;font-size: 25px;margin-bottom:1em\">Preinscripci&oacute;n "			
-//			+ "2017" +  "</div> " + 
-//			FERNANDO 30/05/2017			
-//			Para 2016/2017 nos quedamos con 2017
-//			+ convocatoria.substring(5,9) +  "</div> " +
-//			DIANA 27/06/2017
-//			La convocatoria en los correos se mostrará 2017-18 (2016-17 en integracion) porque hemos rellenado previamente el beanCorreo con la convocatoria con guión
-			+ convocatoria +  "</div> " +			
-			" <p> "  + 	cabecera + " </p>	" +  
+			+ "</head> <body> <h2 style=\"background-color: #9B021A;color: #fff;font-size: 3em;font-family: Verdana;font-size: 32px;padding: 0.2em 1em;text-align: center;margin: 0;\">Covit 19</h2>"
+			+ "<div style=\"color:#9B021A;text-align: center;border-bottom: 1px solid #2279b4;border-top: 1px solid #2279b4;font-family: Verdana;font-size: 25px;margin-bottom:1em\">Aviso"			
+//			+ convocatoria +  "</div> " +			
+			+ " <p> "  + 	cabecera + " </p>	" +  
 			" <p> "  +     texto + " </p>	" +
-			" <p> "  + 	pie + " </p>	" +  
+			" <p+> "  + 	pie + " </p>	" +  
 			"</body> </html>";
 			
 			
