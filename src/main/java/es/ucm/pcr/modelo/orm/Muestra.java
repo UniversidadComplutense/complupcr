@@ -28,6 +28,10 @@ import javax.persistence.TemporalType;
 @Table(name = "muestra")
 public class Muestra implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4671038846103227678L;
 	private Integer id;
 	private Centro centro;
 	private EstadoMuestra estadoMuestra;

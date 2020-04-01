@@ -1,0 +1,97 @@
+
+	<!-- <div class="container">	 -->
+	
+	<!-- <form action="#" th:action="@{/analisis/list}" method="post" th:object="${beanBusquedaMuestra}" id="formBusqueda" role="form">  -->
+		
+		
+		<!-- Diana, metemos un div hidden con un imput con los codnum's de muestras que se han ido marcando para cerrar -->
+		<!-- 
+		<div class="row" >
+			<label>				
+				listaCodnumMuestrasMarcadasParaCerrar 
+			</label>
+			<input  type="text" id="idListaCodnumMuestrasMarcadasParaCerrar" style="width: 400px !important;" />
+		</div> 
+		 -->
+		<!-- fin input con codnums -->
+		
+		<!-- TABLA CON LA LISTA DE MUESTRAS MARCADAS PARA BORRAR -->
+		<div class="row">
+			<table class="table">
+				<thead class="thead-light">	
+	    			<tr>	    			   
+	    				<th scope="col">A</th>
+	      				<th scope="col">Nombre</th>
+						<th scope="col">NHC</th>
+						<th scope="col">Etiqueta</th>
+						<!-- <th scope="col">Ref. interna</th> -->
+						<!-- <th scope="col">Fecha envío</th> -->
+						<th scope="col">Fecha resultado</th>
+						<th scope="col">Resultado</th>
+						<!-- <th scope="col">Lote</th> -->						
+					</tr>
+				</thead>
+				<tbody th:if="${listadoMuestras != null}" th:each="muestra : ${listadoMuestras}">	
+					<!-- data-target="#group-of-rows-1" -->			
+					<tr >						
+						<td class="clickable" data-toggle="collapse" th:data-target="${'#analistasMuestraCerrar'+ muestra.id}" aria-expanded="false" th:aria-controls="${'analistasMuestraCerrar'+ muestra.id}">
+							<i class="fa fa-folder"></i>
+						</td>
+					
+						<td>
+							<span th:text="${muestra.nombrePaciente}"></span>
+						</td>					
+						<td>
+							<span th:text="${muestra.nhcPaciente}"></span>							
+						</td>
+						<td>							
+							<span th:text="${muestra.etiquetaMuestra}"></span>							
+						</td>
+						<!-- <td>
+							<span th:text="${muestra.refInternaMuestra}"></span>							
+						</td> -->
+						<!-- <td>
+							<span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/mm/yyyy')}"></span>
+						</td> -->
+						<td>
+							<span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/mm/yyyy')}"></span>
+						</td>
+						<td>
+							<span th:text="${muestra.estadoMuestra}"></span>
+						</td>
+						<!-- <td>
+							<span th:text="${muestra.codNumLote}"></span>
+						</td>	 -->					
+					</tr>				
+					<!-- id="group-of-rows-1" -->	
+					<tr th:id="${'analistasMuestraCerrar'+ muestra.id}" class="collapse table-warning">						
+						<td><i class="fa fa-folder-open"></i></td>
+						<td colspan="3">							
+							<label>Analistas asignados</label>
+							<ul th:each="analistaLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
+								<li><span th:text="${analistaLab.beanUsuario.nom}"></span>; 
+									<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
+									<span th:text="${analistaLab.valoracion}"></span> 
+								</li>
+							</ul>						
+						</td>
+						<td colspan="2">							
+							<label>Voluntarios asignados</label>
+							<ul th:each="voluntarioLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
+								<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span>; 
+									<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
+									<span th:text="${voluntarioLab.valoracion}"></span> 
+								</li>
+							</ul>						
+						</td>
+					</tr>	
+			
+			</tbody>
+			
+			</table>
+		</div>		
+		
+	<!-- </form>  -->
+
+<!-- 	</div> -->
+<!-- fin popup -->	

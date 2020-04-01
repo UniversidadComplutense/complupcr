@@ -22,4 +22,20 @@ public interface UsuarioServicio {
 	 * @return Set<Rol>
 	 */
 	public Set<Rol> getRoles(Usuario usuario);
+	
+	/**
+	 * Crea un token unico para que el usuario restablezca la contraseña.
+	 * 
+	 * @param user
+	 * @param token
+	 */
+	public void createPasswordResetTokenForUser(Usuario user, String token);
+	
+	/**
+	 * Modifica la contraseña del usuario.
+	 * 
+	 * @param user
+	 * @param contrasena
+	 */
+	public void cambiarContrasena(Usuario user, String contrasena);
 }

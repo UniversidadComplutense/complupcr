@@ -2,15 +2,15 @@ package es.ucm.pcr.beans;
 
 import java.util.List;
 
-public class LaboratorioUniBean {
-private List<LoteBean> listaLotes;
+public class BeanLaboratorioVisavetUCM {
+private List<LoteBeanPlacaVisavet> listaLotes;
 private String nombre;
 private String id;
 private String universidad;
-public List<LoteBean> getListaLotes() {
+public List<LoteBeanPlacaVisavet> getListaLotes() {
 	return listaLotes;
 }
-public void setListaLotes(List<LoteBean> listaLotes) {
+public void setListaLotes(List<LoteBeanPlacaVisavet> listaLotes) {
 	this.listaLotes = listaLotes;
 }
 public String getNombre() {

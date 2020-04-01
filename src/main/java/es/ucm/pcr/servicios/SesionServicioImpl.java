@@ -56,7 +56,8 @@ public class SesionServicioImpl implements SesionServicio {
 
 	@Override
 	public Boolean tieneRol(String rol) {
-		return this.getRoles().contains(rol);
+		String rolSprSec = "ROLE_" + rol;
+		return this.getRoles().contains(rolSprSec);
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class SesionServicioImpl implements SesionServicio {
 
 		menuPrincipal = new ArrayList<MenuBean>();
 //	Centro de Salud	
-		if (this.tieneRol("ROLE_ADMIN") || this.tieneRol("CENTROSALUD")) {
+		if (this.tieneRol("ADMIN") || this.tieneRol("CENTROSALUD")) {
 			menuSecundario = new ArrayList<MenuBean>();
 			opcionSecundaria = new MenuBean("Gestión muestras", "/centroSalud/muestra", null);
 			menuSecundario.add(opcionSecundaria);
@@ -85,8 +86,16 @@ public class SesionServicioImpl implements SesionServicio {
 			opcionPrincipal = new MenuBean("Centro de salud", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
+//  Recepcion Laboratorio
+		if (this.tieneRol("ADMIN") || this.tieneRol("RECEPCIONLABORATORIO")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Gestionar entregas", null, null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Recepción laboratorio", null, menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
 //	Tecnico laboratorio
-		if (this.tieneRol("ROLE_ADMIN") || this.tieneRol("TECNICO")) {
+		if (this.tieneRol("ADMIN") || this.tieneRol("TECNICOLABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
 			opcionSecundaria = new MenuBean("Gestionar entregas", "", null);
 			menuSecundario.add(opcionSecundaria);
@@ -98,28 +107,28 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Laboratorios", "", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionPrincipal = new MenuBean("Tecnico laboratorio", "", menuSecundario);
+			opcionPrincipal = new MenuBean("Tecnico laboratorio", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
 //		Responsable PCR
-		if (this.tieneRol("ROLE_ADMIN")) {
+		if (this.tieneRol("ADMIN") || this.tieneRol("RESPONSABLEPCR")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Placas recepcionads", "", null);
+			opcionSecundaria = new MenuBean("Recepción placas", "/laboratorioCentro/recepcionPlacas", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Placas listas para PCR", "", null);
+			opcionSecundaria = new MenuBean("Placas listas para PCR", "/laboratorioCentro/gestionPlacas/preparacion", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Placas esperando resultado PCR", "", null);
+			opcionSecundaria = new MenuBean("Placas esperando resultado PCR", "/laboratorioCentro/gestionPlacas/resultados", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Responsable PCR", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
 //		Jefe de servicio
-		if (this.tieneRol("ROLE_ADMIN")) {
+		if (this.tieneRol("ADMIN") || this.tieneRol("JEFESERVICIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Asignar muestras", "", null);
+			opcionSecundaria = new MenuBean("Asignar y revisar muestras", "/analisis/", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Revisar  muestras", "", null);
-			menuSecundario.add(opcionSecundaria);
+			//opcionSecundaria = new MenuBean("Revisar  muestras", "", null);
+			//menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Estado  muestras", "", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Coger  lotes", "", null);
@@ -128,13 +137,28 @@ public class SesionServicioImpl implements SesionServicio {
 			menuPrincipal.add(opcionPrincipal);
 		}
 //			Analista
-		if (this.tieneRol("ROLE_ADMIN")) {
+		if (this.tieneRol("ADMIN") || this.tieneRol("ANALISTALABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
 			opcionSecundaria = new MenuBean("Revisar miestra", "", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Analista", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
+//	GESTOR
+		if (this.tieneRol("ADMIN") || this.tieneRol("GESTOR")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Centros de salud", "/gestor/listaCentros", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Laboratorios Centros UCM","/gestor/listaLaboratorioCentro",null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Laboratorios Logísticos","/gestor/listaLaboratorioVisavet",null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Usuarios","/gestor/listaUsuarios",null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Gestor", "", menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
+		
 		return menuPrincipal;
 	}
 

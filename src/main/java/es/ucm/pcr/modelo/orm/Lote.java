@@ -6,6 +6,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,6 +26,10 @@ import javax.persistence.TemporalType;
 @Table(name = "lote")
 public class Lote implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5514642009608260822L;
 	private int id;
 	private Centro centro;
 	private EstadoLote estadoLote;
@@ -112,7 +117,7 @@ public class Lote implements java.io.Serializable {
 		this.numeroLote = numeroLote;
 	}
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fechaEnvio", length = 10)
 	public Date getFechaEnvio() {
 		return this.fechaEnvio;

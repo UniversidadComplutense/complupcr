@@ -5,9 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BusquedaLotesBean;
-import es.ucm.pcr.beans.LoteBean;
+import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 @Service
-public interface ServicioLaboratorioUni {
-	public Page<LoteBean> buscarLotes(BusquedaLotesBean busquedaLotes, Pageable pageable);
+public interface ServicioLaboratorioVisavetUCM {
+	public Page<LoteBeanPlacaVisavet> buscarLotes(BusquedaLotesBean busquedaLotes, Pageable pageable);
 
 }

@@ -1,11 +1,11 @@
 package es.ucm.pcr.modelo.orm;
 // Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,6 +18,10 @@ import javax.persistence.Table;
 @Table(name = "passwordResetToken")
 public class PasswordResetToken implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9153093404833993227L;
 	private Integer idpasswordResetToken;
 	private Usuario usuario;
 	private String token;
