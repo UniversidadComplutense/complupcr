@@ -1,5 +1,8 @@
 package es.ucm.pcr.beans;
 
+import es.ucm.pcr.modelo.orm.Centro;
+import es.ucm.pcr.modelo.orm.Lote;
+
 public class CentroBean {
 private int id;
 private String nombre;
@@ -22,5 +25,11 @@ public String getCodCentro() {
 public void setCodCentro(String codCentro) {
 	this.codCentro = codCentro;
 }
-
+public static CentroBean modelToBean(Centro centro) {
+	CentroBean beanCentro= new CentroBean();
+	beanCentro.setId(centro.getId());
+	beanCentro.setNombre(centro.getNombre());
+	beanCentro.setCodCentro(centro.getCodCentro());
+	return beanCentro;
+}
 }
