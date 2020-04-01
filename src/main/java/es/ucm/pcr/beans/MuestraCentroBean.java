@@ -2,6 +2,8 @@ package es.ucm.pcr.beans;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
@@ -247,9 +249,11 @@ public class MuestraCentroBean implements java.io.Serializable {
 			muestra.setLote(null);
 		}
 		
-		BeanResultado beanResultado = new BeanResultado();
-		beanResultado.asignarTipoEstadoDescripcion(muestraBean.getResultado());		
-		muestra.setResultado(beanResultado.getResultadoMuestra().getCod());
+		if (StringUtils.isNotEmpty(muestraBean.getResultado())) {
+			BeanResultado beanResultado = new BeanResultado();
+			beanResultado.asignarTipoEstadoDescripcion(muestraBean.getResultado());		
+			muestra.setResultado(beanResultado.getResultadoMuestra().getCod());
+		}
 		
 		paciente.setId(muestraBean.getIdPaciente());
 		paciente.setNombrePaciente(muestraBean.getNombre());

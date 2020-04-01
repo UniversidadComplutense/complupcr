@@ -56,13 +56,13 @@ public class MuestraServicioImpl implements MuestraServicio {
 	@Override
 	public MuestraCentroBean guardar(MuestraCentroBean muestraBean) {
 		Muestra muestra = null;						
+		
+		muestra = MuestraCentroBean.beanToModel(muestraBean);
 
 		// Lote nuevo, resultado pendiente
 		if (muestraBean.getId() == null) {
-			muestraBean.setResultado(BeanResultado.ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE.getCod());		
-		} 
-		
-		muestra = MuestraCentroBean.beanToModel(muestraBean);
+			muestra.setResultado(BeanResultado.ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE.getCod());		
+		}
 		
 		muestra.setLote(null);
 		muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_INICIADA.getCodNum()));
