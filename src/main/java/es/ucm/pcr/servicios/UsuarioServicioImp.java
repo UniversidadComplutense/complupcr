@@ -1,6 +1,7 @@
 package es.ucm.pcr.servicios;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -178,11 +179,26 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	}
 
 	@Override
-	public void cambiarContrasena(Usuario user, String contrasena) {
-		 user.setPassword(passwordEncoder.encode(contrasena));
-		 usurep.save(user);
-		 passwordTokenRepositorio.deleteByUsuario(user);
+	public void cambiarContrasena(String email, String contrasena) {
+		Usuario user = buscarUsuarioPorEmail(email);
+		user.setPassword(passwordEncoder.encode(contrasena));
+		user.setHabilitado("A");
+		usurep.save(user);
+		passwordTokenRepositorio.deleteByUsuario(user);
 		
 	}
+
+	@Override
+	public List<Usuario> buscarUsuarioInhabilitados() {
+		return usurep.findByHabilitadoOrderById("I");
+	}
+
+	@Override 
+	public Usuario guardar(Usuario usuario) {
+		usurep.save(usuario);
+		return usuario;
+	}
+	
+
 	
 }

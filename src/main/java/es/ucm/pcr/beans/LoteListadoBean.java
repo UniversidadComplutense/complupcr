@@ -9,7 +9,6 @@ import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 
-
 public class LoteListadoBean {
 
 	private Integer id;
@@ -82,8 +81,15 @@ public class LoteListadoBean {
 	public void setCapacidad(Integer capacidad) {
 		this.capacidad = capacidad;
 	}
+	
+	
+	
 	public CentroBean getCentroBean() {
 		return centroBean;
+	}
+
+	public void setBeanEstado(BeanEstado beanEstado) {
+		this.beanEstado = beanEstado;
 	}
 
 	public void setCentroBean(CentroBean centroBean) {
@@ -94,9 +100,6 @@ public class LoteListadoBean {
 		return beanEstado;
 	}
 
-	public void setBeanEstado(BeanEstado beanEstado) {
-		this.beanEstado = beanEstado;
-	}
 
 	public static LoteListadoBean modelToBean(Lote lote) {
 		// TODO - LABORATORIO, FECHA ENVIO		
@@ -119,6 +122,8 @@ public class LoteListadoBean {
 				bean.getMuestras().add(MuestraListadoBean.modelToBean(m));
 			}
 		}
+		
+		
 		
 		return bean;
 	}
