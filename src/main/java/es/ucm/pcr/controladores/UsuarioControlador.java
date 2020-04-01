@@ -55,7 +55,7 @@ public class UsuarioControlador {
 								usuario.getDocumentos(),
 								usuario.getUsuarioMuestras(),
 								usuario.getRols(),
-								usuario.isHabilitado(),
+								usuario.getHabilitado(),
 								"L"
 								));
 		}
