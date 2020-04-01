@@ -159,7 +159,7 @@ public class InicioControlador {
 				+ "No contestes a este mensaje.\r\n\n\n"
 				+ "Bien venido "+user.getNombre()+",\n\nHa sido dado de alta en la aplicación COVID-19.\r\n"+
 				"Para poder acceder debe solicitar el cambio de contraseña, indicando su e-mail ("+user.getEmail()+") a través del siguente enlace:";
-		return constructEmail("Bien venido COVID-19",
+		return constructEmail("Sistema de seguimiento de muestras COVID-19",
 				message + " \r\n\n" + url + " \r\n\n\n Un cordial saludo.", user);
 	}
 	private SimpleMailMessage constructEmail(String subject, String body, Usuario user) {
