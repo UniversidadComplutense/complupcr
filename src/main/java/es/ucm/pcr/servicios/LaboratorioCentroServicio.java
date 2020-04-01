@@ -22,5 +22,8 @@ public interface LaboratorioCentroServicio {
 	 * @return BeanLaboratorioCentro
 	 */
 	public BeanLaboratorioCentro mapeoEntidadBeanLaboratorioCentro(LaboratorioCentro laboratorioCentro) throws Exception;
-	
+
+	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable);
+	PlacaLaboratorioCentroBean buscarPlaca (Integer id);
+	PlacaLaboratorioCentroBean guardarPlaca (PlacaLaboratorioCentroBean placaLaboratorioCentroBean);	
 }	

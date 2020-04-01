@@ -1,5 +1,5 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 30 mar. 2020 12:25:35 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,11 +19,16 @@ import javax.persistence.Table;
 @Table(name = "laboratorioCentro")
 public class LaboratorioCentro implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1926505598965721696L;
 	private Integer id;
 	private String nombre;
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<PlacaLaboratorio> placaLaboratorios = new HashSet<PlacaLaboratorio>(0);
 	private Set<Equipo> equipos = new HashSet<Equipo>(0);
+	private Set<Equipo> equipos_1 = new HashSet<Equipo>(0);
 
 	public LaboratorioCentro() {
 	}
@@ -33,11 +38,12 @@ public class LaboratorioCentro implements java.io.Serializable {
 	}
 
 	public LaboratorioCentro(String nombre, Set<Documento> documentos, Set<PlacaLaboratorio> placaLaboratorios,
-			Set<Equipo> equipos) {
+			Set<Equipo> equipos, Set<Equipo> equipos_1) {
 		this.nombre = nombre;
 		this.documentos = documentos;
 		this.placaLaboratorios = placaLaboratorios;
 		this.equipos = equipos;
+		this.equipos_1 = equipos_1;
 	}
 
 	@Id
@@ -86,6 +92,15 @@ public class LaboratorioCentro implements java.io.Serializable {
 
 	public void setEquipos(Set<Equipo> equipos) {
 		this.equipos = equipos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "laboratorioCentro")
+	public Set<Equipo> getEquipos_1() {
+		return this.equipos_1;
+	}
+
+	public void setEquipos_1(Set<Equipo> equipos_1) {
+		this.equipos_1 = equipos_1;
 	}
 
 }

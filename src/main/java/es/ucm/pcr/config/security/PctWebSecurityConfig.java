@@ -43,16 +43,16 @@ public class PctWebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.csrf().disable().authorizeRequests().antMatchers("/acceso").permitAll()			
-			.and().authorizeRequests().antMatchers("/regenerarContrasena").permitAll()
+			.and().authorizeRequests().antMatchers("/regenerarContrasena*").permitAll()
 			.and().authorizeRequests().antMatchers("/css/**").permitAll()
 			.and().authorizeRequests().antMatchers("/img/**").permitAll()
 			.and().authorizeRequests().antMatchers("/fonts/**").permitAll()
 			.and().authorizeRequests().antMatchers("/js/**").permitAll()
-			.and().authorizeRequests().antMatchers("/modificarContrasena").permitAll()
+			.and().authorizeRequests().antMatchers("/modificarContrasena*").permitAll()
 			.and().authorizeRequests().antMatchers("/**").authenticated()
 			.and().formLogin().loginPage("/acceso").usernameParameter("email")
 				.passwordParameter("password").failureUrl("/acceso?error")				
 				.permitAll().and().logout()
-				.logoutUrl("/cerrarSession").deleteCookies("JSESSIONID").permitAll();
+				.logoutUrl("/cerrarSesion").deleteCookies("JSESSIONID").permitAll();
 	}
 }

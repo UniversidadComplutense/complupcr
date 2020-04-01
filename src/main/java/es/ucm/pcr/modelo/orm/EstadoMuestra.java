@@ -1,5 +1,5 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 30 mar. 2020 12:25:35 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,11 +19,20 @@ import javax.persistence.Table;
 @Table(name = "estadoMuestra")
 public class EstadoMuestra implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3775363044138173600L;
 	private Integer id;
 	private String descripcion;
 	private Set<Muestra> muestras = new HashSet<Muestra>(0);
 
 	public EstadoMuestra() {
+	}
+	
+	public EstadoMuestra(Integer id) {
+		super();
+		this.id = id;
 	}
 
 	public EstadoMuestra(String descripcion) {

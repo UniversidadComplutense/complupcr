@@ -1,5 +1,5 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 30 mar. 2020 12:25:35 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,11 +19,20 @@ import javax.persistence.Table;
 @Table(name = "estadoLote")
 public class EstadoLote implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4883812162441140189L;
 	private Integer id;
 	private String descripcion;
 	private Set<Lote> lotes = new HashSet<Lote>(0);
 
 	public EstadoLote() {
+	}
+	
+	public EstadoLote(Integer id) {
+		super();
+		this.id = id;
 	}
 
 	public EstadoLote(String descripcion) {

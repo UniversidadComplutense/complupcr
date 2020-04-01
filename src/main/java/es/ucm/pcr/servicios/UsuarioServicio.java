@@ -48,4 +48,20 @@ public interface UsuarioServicio {
 	 */	
 	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuarioGestion beanUsuario, Usuario usuario) throws Exception;
 	
+	
+	/**
+	 * Crea un token unico para que el usuario restablezca la contraseña.
+	 * 
+	 * @param user
+	 * @param token
+	 */type filter text
+	public void createPasswordResetTokenForUser(Usuario user, String token);
+	
+	/**
+	 * Modifica la contraseña del usuario.
+	 * 
+	 * @param user
+	 * @param contrasena
+	 */
+	public void cambiarContrasena(Usuario user, String contrasena);
 }

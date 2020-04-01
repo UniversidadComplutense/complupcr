@@ -1,5 +1,5 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 30 mar. 2020 12:25:35 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +24,10 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "usuario", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class Usuario implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4869922886448788928L;
 	private Integer id;
 	private Centro centro;
 	private String nombre;
@@ -35,24 +39,26 @@ public class Usuario implements java.io.Serializable {
 	private Integer idLaboratorioCentro;
 	private Integer asignadas;
 	private Integer acertadas;
+	private boolean habilitado;
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<UsuarioMuestra> usuarioMuestras = new HashSet<UsuarioMuestra>(0);
 	private Set<Rol> rols = new HashSet<Rol>(0);
-	private Byte habilitado;
 
 	public Usuario() {
 	}
 
-	public Usuario(String nombre, String apellido1, String email, String password) {
+	public Usuario(String nombre, String apellido1, String email, String password, boolean habilitado) {
 		this.nombre = nombre;
 		this.apellido1 = apellido1;
 		this.email = email;
 		this.password = password;
+		this.habilitado = habilitado;
 	}
 
 	public Usuario(Centro centro, String nombre, String apellido1, String apellido2, String email, String password,
 			Integer idLaboratorioVisavet, Integer idLaboratorioCentro, Integer asignadas, Integer acertadas,
-			Set<Documento> documentos, Set<UsuarioMuestra> usuarioMuestras, Set<Rol> rols, Byte habilitado) {
+			boolean habilitado, Set<Documento> documentos,
+			Set<UsuarioMuestra> usuarioMuestras, Set<Rol> rols) {
 		this.centro = centro;
 		this.nombre = nombre;
 		this.apellido1 = apellido1;
@@ -63,10 +69,10 @@ public class Usuario implements java.io.Serializable {
 		this.idLaboratorioCentro = idLaboratorioCentro;
 		this.asignadas = asignadas;
 		this.acertadas = acertadas;
+		this.habilitado = habilitado;
 		this.documentos = documentos;
 		this.usuarioMuestras = usuarioMuestras;
 		this.rols = rols;
-		this.habilitado = habilitado;
 	}
 
 	@Id
@@ -172,6 +178,15 @@ public class Usuario implements java.io.Serializable {
 		this.acertadas = acertadas;
 	}
 
+	@Column(name = "habilitado", nullable = false)
+	public boolean isHabilitado() {
+		return this.habilitado;
+	}
+
+	public void setHabilitado(boolean habilitado) {
+		this.habilitado = habilitado;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
 	public Set<Documento> getDocumentos() {
 		return this.documentos;
@@ -200,15 +215,6 @@ public class Usuario implements java.io.Serializable {
 
 	public void setRols(Set<Rol> rols) {
 		this.rols = rols;
-	}
-	
-	@Column(name = "habilitado")
-	public Byte getHabilitado() {
-		return this.habilitado;
-	}
-
-	public void setHabilitado(Byte habilitado) {
-		this.habilitado = habilitado;
 	}
 
 }

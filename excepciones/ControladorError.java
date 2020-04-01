@@ -1,0 +1,81 @@
+package es.ucm.titulos.preinscripcion.excepciones;
+
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import es.ucm.titulos.preinscripcion.beans.BeanCabecera;
+import es.ucm.titulos.preinscripcion.utilidades.AppUtil;
+
+/**
+ * Based on the helpful answer at http://stackoverflow.com/q/25356781/56285,
+ * with error details in response body added.
+ * 
+ * @author Joni Karppinen
+ * @since 20.2.2015
+ */
+
+@RestController
+public class ControladorError implements ErrorController {
+
+	@Autowired
+	private ErrorAttributes errorAttributes;
+	
+	protected Logger log;
+
+	public ControladorError() {
+		log = LoggerFactory.getLogger(getClass());
+	}
+	
+	
+	@RequestMapping(value ="/error")
+	public ModelAndView cargaError(WebRequest webRequest, HttpServletRequest request, HttpServletResponse response){
+		
+		SimpleDateFormat dateParser = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
+		log.error("Controlador de errores: " + errorAttributes.getErrorAttributes(webRequest , false).toString() );
+		
+        dateParser.setLenient(false);
+        Date fecha = (Date) errorAttributes.getErrorAttributes(webRequest , false).get("timestamp");
+        String exErrorTimestamptuneado = dateParser.format(fecha);
+
+			
+		ModelAndView vista = new ModelAndView();
+		vista.setViewName("VistaError");
+		vista.addObject("exErrorMessage", " Error genérico en la aplicación");
+		vista.addObject("exErrorTimestamptuneado", exErrorTimestamptuneado);
+		vista.addObject("exErrorNode", AppUtil.devolverNodo(request.getLocalAddr()));
+		vista.addObject("exErrorPeticion", errorAttributes.getErrorAttributes(webRequest , false).get("path"));
+		vista.addObject("formBeanCabecera", getBeanCabecera(request.getSession()));
+	
+		
+		return vista;
+	}
+	
+	@Override
+	public String getErrorPath() {
+		return "/error";
+	}
+
+	public BeanCabecera getBeanCabecera(HttpSession session) {
+		BeanCabecera beanCabecera = (BeanCabecera) session.getAttribute("beanCabecera");
+		if (beanCabecera == null)
+			beanCabecera = new BeanCabecera();
+		return beanCabecera;
+	}
+}

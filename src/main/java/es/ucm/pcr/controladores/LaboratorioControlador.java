@@ -12,9 +12,10 @@ import org.springframework.web.servlet.view.RedirectView;
 import es.ucm.pcr.beans.BeanLaboratorio;
 
 @Controller
+@RequestMapping(value="/gestor/laboratorio")
 public class LaboratorioControlador {
 	
-	@RequestMapping(value="AltaLaboratorio", method=RequestMethod.GET)
+	@RequestMapping(value="/alta", method=RequestMethod.GET)
 	public ModelAndView AltaLaboratorio(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLaboratorio");
 	
@@ -25,7 +26,7 @@ public class LaboratorioControlador {
 	}
 	
    // Alta de centro 
-	@RequestMapping(value="AltaLaboratorio", method=RequestMethod.POST)	
+	@RequestMapping(value="/alta", method=RequestMethod.POST)	
 	public ModelAndView grabarAltaLaboratorio ( @ModelAttribute("formBeanLaboratorio") BeanLaboratorio beanLaboratorio, HttpSession session) throws Exception {
 
 //		System.out.println("Laboratorio a grabar: " + beanLaboratorio.toString());
@@ -35,5 +36,4 @@ public class LaboratorioControlador {
 		return vista;
 		
 	}	
-
 }

@@ -1,14 +1,15 @@
 package es.ucm.pcr.modelo.orm;
-// Generated 30 mar. 2020 12:25:35 by Hibernate Tools 5.2.12.Final
+// Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -19,6 +20,10 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "paciente", uniqueConstraints = @UniqueConstraint(columnNames = "idMuestra"))
 public class Paciente implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2594666827737578739L;
 	private Integer id;
 	private Muestra muestra;
 	private String nombrePaciente;
@@ -52,7 +57,6 @@ public class Paciente implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-
 	@Column(name = "id", unique = true, nullable = false)
 	public Integer getId() {
 		return this.id;
@@ -62,8 +66,8 @@ public class Paciente implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "idMuestra", unique = true, nullable = false)
+	@OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idMuestra", nullable = false)
 	public Muestra getMuestra() {
 		return this.muestra;
 	}
