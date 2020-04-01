@@ -370,7 +370,7 @@ public class AnalisisControlador {
 		
 		//gestionar lotes (en realidad es gestionar placas)
 		//@RequestMapping(value = "/gestionPlacas/resultados", method = RequestMethod.GET)
-		@RequestMapping(value = "/gestionarPlacas", method = RequestMethod.GET)
+		@RequestMapping(value = "/cogerPlacas", method = RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView buscarPlacasinAsignarYBajoResponsabilidadGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
 

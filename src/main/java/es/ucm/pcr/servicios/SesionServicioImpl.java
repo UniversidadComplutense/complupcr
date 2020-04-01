@@ -129,9 +129,9 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario.add(opcionSecundaria);
 			//opcionSecundaria = new MenuBean("Revisar  muestras", "", null);
 			//menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Estado  muestras", "", null);
-			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Coger  lotes", "", null);
+			//opcionSecundaria = new MenuBean("Estado  muestras", "", null);
+			//menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Coger placas", "/analisis/cogerPlacas", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Jefe de servicio", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
