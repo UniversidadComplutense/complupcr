@@ -4,7 +4,14 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 
+import es.ucm.pcr.beans.BeanEstado.Estado;
+
 public class MuestraBusquedaBean {
+	
+	private static final Integer RESUELTA_SIN_NOTIFICAR = 1;
+	private static final Integer RESUELTA_NOTIFICADA = 2;
+	private static final Integer RESUELTA = 3;
+	
 	private String nombrePaciente;
 	private String primerApellido;
 	private String segundoApellido;
@@ -19,6 +26,9 @@ public class MuestraBusquedaBean {
 	private Integer idCentro;
 	private String tipoMuestra;
 	private String estadoMuestra;
+	private Integer idEstado;
+	private Integer estadoResueltaNoticado;
+	private Boolean estaNotificada;
 	
 	public MuestraBusquedaBean() {
 		super();
@@ -85,12 +95,10 @@ public class MuestraBusquedaBean {
 	}
 	public Date getFechaResultadoMuestraFin() {
 		return fechaResultadoMuestraFin;
-	}
-	
+	}	
 	public String getTipoMuestra() {
 		return tipoMuestra;
-	}
-	
+	}	
 	public void setFechaResultadoMuestraFin(Date fechaResultadoMuestraFin) {
 		this.fechaResultadoMuestraFin = fechaResultadoMuestraFin;
 	}
@@ -108,6 +116,40 @@ public class MuestraBusquedaBean {
 	}
 	public void setTipoMuestra(String tipoMuestra) {
 		this.tipoMuestra = tipoMuestra;
+	}
+	public Integer getEstadoResueltaNoticado() {
+		return estadoResueltaNoticado;
+	}
+	public void setEstadoResueltaNoticado(Integer estadoResueltaNoticado) {
+		this.estadoResueltaNoticado = estadoResueltaNoticado;
+	}
+	public Integer getIdEstado() {
+		if (idEstado != null) {
+			return idEstado;
+		} else if (estadoResueltaNoticado != null) {
+			// si nos llega del buscador que quiere buscar las resueltas
+			return Estado.MUESTRA_RESUELTA.getCodNum();
+		}
+		return idEstado;
+	}
+	public void setIdEstado(Integer idEstado) {
+		this.idEstado = idEstado;
+	}
+	public Boolean getEstaNotificada() {
+		if (estaNotificada != null) {
+			return estaNotificada;
+		} else if (estadoResueltaNoticado != null) {
+			if (estadoResueltaNoticado.equals(RESUELTA_NOTIFICADA)) {
+				return Boolean.TRUE;
+			}
+			if (estadoResueltaNoticado.equals(RESUELTA_SIN_NOTIFICAR)) {
+				return Boolean.FALSE;
+			}
+		}
+		return estaNotificada;
+	}
+	public void setEstaNotificada(Boolean estaNotificada) {
+		this.estaNotificada = estaNotificada;
 	}
 	public String getCriterioNombre() {
 		return StringUtils.isBlank(nombrePaciente) ? null : "%" + nombrePaciente + "%";

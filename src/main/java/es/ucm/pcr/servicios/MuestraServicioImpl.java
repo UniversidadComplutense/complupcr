@@ -38,6 +38,8 @@ public class MuestraServicioImpl implements MuestraServicio {
 	@Autowired
 	private PacienteRepositorio pacienteRepositorio;
 	
+	
+	
 	@Override
 	public Page<MuestraListadoBean> findMuestraByParam(MuestraBusquedaBean params, Pageable pageable) {
 		List<MuestraListadoBean> listLotesBean = new ArrayList<MuestraListadoBean>();
@@ -75,7 +77,7 @@ public class MuestraServicioImpl implements MuestraServicio {
 		muestra = muestraRepositorio.save(muestra);
 		paciente.setMuestra(muestra);
 		pacienteRepositorio.save(paciente);
-		return MuestraCentroBean.modelToBean(muestra);
+		return MuestraCentroBean.modelToBean(findByIdMuestra(muestra.getId()));
 	}
 	
 	@Override
@@ -111,16 +113,33 @@ public class MuestraServicioImpl implements MuestraServicio {
 		muestraRepositorio.save(muestra);
 	}
 	
+	@Override
+	public void actualizarNotificacionMuestra(Integer id, boolean enviarMail) {
+		Muestra muestra = findByIdMuestra(id);
+		if (muestra != null) {
+			muestra.setFechaNotificacion(new Date());
+		}
+		
+		if (enviarMail) {
+			
+		}
+		
+		muestraRepositorio.save(muestra);
+	}
+	
 	/**
 	 * Recupera el lote
 	 * @param id
 	 * @return
 	 */
 	private Muestra findByIdMuestra(Integer id) {
+		Muestra muestra = null;
 		Optional<Muestra> loteOptional = muestraRepositorio.findById(id);
 		if (loteOptional.isPresent()) {
-			return loteOptional.get();
+			muestra = loteOptional.get();
 		}
-		return null;
+		muestra.getLote();
+		muestra.getLote().getEstadoLote();
+		return muestra;
 	}
 }

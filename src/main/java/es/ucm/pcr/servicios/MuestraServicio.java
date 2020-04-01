@@ -39,5 +39,13 @@ public interface MuestraServicio {
 	 * @param estadoActualizar estado a actualizar
 	 */
 	public void actualizarEstadoMuestra(Integer id, BeanEstado estadoActualizar);
+	
+	/**
+	 * Actualiza la muestra rellenando la fecha de notificacion de la muestra
+	 * si enviarMail, envio de mail
+	 * @param id idenficador muestra
+	 * @param enviarMail envio mail si true, no envio en caso contrario
+	 */
+	public void actualizarNotificacionMuestra(Integer id, boolean enviarMail);
 
 }

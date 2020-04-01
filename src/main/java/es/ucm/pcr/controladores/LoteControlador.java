@@ -31,10 +31,12 @@ import org.springframework.web.servlet.view.RedirectView;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
+import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.servicios.LoteServicio;
+import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
 import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.validadores.LoteValidador;
 
@@ -55,6 +57,9 @@ public class LoteControlador {
 	
 	@Autowired
 	private LoteServicio loteServicio;
+	
+	@Autowired
+	private ServicioLaboratorioVisavetUCM servicioLaboratorioVisavetUCM;
 	
 	@Autowired
 	private LoteValidador validadorLote;
@@ -118,6 +123,7 @@ public class LoteControlador {
 		// estado iniciado para nuevo lote
 		LoteCentroBean beanLote = new LoteCentroBean();		
 		
+		vista.addObject("listaLaboratorios", servicioLaboratorioVisavetUCM.findAll());
 		vista.addObject("editable", loteEditable(beanLote));		
 		vista.addObject("beanLote", beanLote);
 		return vista;
@@ -130,6 +136,7 @@ public class LoteControlador {
 		
 		LoteCentroBean beanLote = loteServicio.findById(id);
 	
+		vista.addObject("listaLaboratorios", servicioLaboratorioVisavetUCM.findAll());
 		vista.addObject("editable", loteEditable(beanLote));	
 		vista.addObject("beanLote", beanLote);
 		return vista;
@@ -142,6 +149,7 @@ public class LoteControlador {
 		
 		LoteCentroBean beanLote = loteServicio.findById(id);
 	
+		vista.addObject("listaLaboratorios", servicioLaboratorioVisavetUCM.findAll());
 		vista.addObject("editable", loteEditable(beanLote));	
 		vista.addObject("beanLote", beanLote);
 		return vista;
@@ -164,6 +172,18 @@ public class LoteControlador {
 			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/" + lote.getId(), true));
 			return respuesta;
 		}
+	}
+	
+	@RequestMapping(value="/lote/enviado", method=RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
+	public ModelAndView loteEnviado(@ModelAttribute("beanLote") LoteCentroBean beanLote) throws Exception {
+		
+		BeanEstado beanEstado = new BeanEstado();
+		beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum());
+		loteServicio.actualizarEstadoLote(beanLote, beanEstado);		
+		// redirige a la consulta
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/" + beanLote.getId(), true));
+		return respuesta;
 	}
 	
 	private void addListsToView(ModelAndView vista) {

@@ -8,15 +8,15 @@
 </head>
 <body>
 
-	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+  <object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
-	
 <div id="lotesRecibidos" class="container">
-	<div class="row justify-content-center mt-1">
-			<h5>Gestión de lotes</h5>
+	<div class="row justify-content-center mt-1 ">
+			<h5>Gestión de Placas</h5>
     </div>
     <div class="row justify-content-left mt-3">
-   <!-- <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">		      
+     
+    <!-- 	<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">		      
 				<div class="list-group">
 				  <a href="/laboratorioUni/buscarLotes" class="list-group-item list-group-item-action text-white bg-secondary">Gestión lotes centros de salud</a>
 				  <a href="/laboratorioUni/buscarPlacas" class="list-group-item list-group-item-action">Gestión placas Visavet</a>
@@ -27,24 +27,24 @@
 
    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">		      
 	<form action="#" th:action="@{/laboratorioUni/buscarLotes}"
-			id="formularioPrueba" method="post" th:object="${busquedaLotes}"
+			id="formularioPrueba" method="post" th:object="${busqueda}"
 			class="form-horizontal">
 			<fieldset id="criteriosBusqueda" class="form-group border p-2">
-		    <legend class="w-auto">Búsqueda Lotes</legend>
+		    <legend class="w-auto">Búsqueda Placas</legend>
 			  <div class="row">
 				<div class="col-4 form-group">
-				<label class="col-xs-2">Centro de procedencia:</label>
-			    <select class="form-control form-control-sm" id="centro" th:field="*{idCentro}">
-					<option th:each="var: ${busquedaLotes.listaCentros}"
-									th:value="${var.id}" th:text="${var.nombre}"
-									th:select="${busquedaLotes.idCentro}">Estado</option>
+				<label class="col-xs-2">Laboratorio asignado:</label>
+			    <select class="form-control form-control-sm" id="centro" th:field="*{idLaboratorioCentro}">
+					<option th:each="var: ${busqueda.listaLaboratorioCentro}"
+									th:value="${var.idLaboratorio}" th:text="${var.desLaboratorio}"
+									th:select="${busqueda.idLaboratorioCentro}">Laboratorio</option>
 				</select>
 				</div>
 				<div class="col-4 form-group">
 				<label class="col-xs-2">Número de Lote:</label>
 						<div class="col-xs-7">
 								<input type="text" class="form-control form-control-sm" id="numLote"
-								th:value="${busquedaLotes.numLote}"
+								th:value="${busqueda.numLote}"
 								th:field="*{numLote}" />
 						</div>
 			    </div>
@@ -54,9 +54,9 @@
 							<select class="form-control form-control-sm" id="estado"
 								th:field="*{codNumEstadoSeleccionado}">
 
-								<option th:each="var: ${busquedaLotes.listaBeanEstado}"
+								<option th:each="var: ${busqueda.listaBeanEstado}"
 									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
-									th:selected="${busquedaLotes.codNumEstadoSeleccionado}">Estado</option>
+									th:selected="${busqueda.codNumEstadoSeleccionado}">Estado</option>
 							</select>
 						</div>
 						
@@ -65,16 +65,16 @@
 			  <div class="row">
 				<div class="col-4 form-group">
 			
-						<label class="col-xs-2">Fecha de Entrada:</label>
-						 		<input type="date" class="form-control" id="fechaEntrada"
-								th:field="*{fechaEntrada}" th:value="${busquedaLotes.fechaEntrada}" />
+						<label class="col-xs-2">Fecha de Creación:</label>
+						 		<input type="date" class="form-control" id="fechaCreacion"
+								th:field="*{fechaCreacion}" th:value="${busqueda.fechaCreacion}" />
 						
                    </div>
                    <div class="col-4 form-group">
 			
                    	<label class="col-xs-4">Muestra:</label>
 					<input type="text" class="form-control" id="muestra"
-								th:value="${busquedaLotes.muestra}"
+								th:value="${busqueda.muestra}"
 								th:field="*{muestra}" />
 						</div>
                  </div>  
@@ -87,15 +87,12 @@
 			</div>
 		</div>	
 		</fieldset>
-		<!-- campos hidden para permitir ordenar y para paginar 
-		<input type="hidden" class="form-control" id="orden" th:field="*{orden}" />
-		<input type="hidden" class="form-control" id="sentidoOrden" th:field="*{sentidoOrden}" />
-		-->
+		
 		</form>
 		</div>
 		
 		<!-- Aqui vienen los resultados -->
-		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
+	<!-- 	<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
 	<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">	
 		<div id="capaResultados" 
 			class="row formPnl1"  th:unless="${(paginaLotes == null)}">
@@ -103,10 +100,9 @@
 			 <thead class="thead-light">
 				<tr>
 				<th  style="text-align: left;"></th>
-					<th  style="text-align: left;">#Lotes
+					<th  style="text-align: left;">#Placa
 				
 					</th>
-					<th style="text-align: left;">Centro</th>
 					<th  style="text-align: left;">F.Entrada</th>
 					<th  style="text-align: left;">#Muestras</th>
 					<th  style="text-align: left;">Test</th>
@@ -140,13 +136,7 @@
                         <i class="fa fa-table" aria-hidden="true"
 										style="font-size: 1.2em;"></i>
 							</a>
-                           <!--    <a
-									th:attr="data-target='#modalMuestras'+${unResultado.id}"
-									data-toggle="modal"
-									th:href="'#modalMuestras'+${unResultado.id}">
-										<i class="fa fa-table" aria-hidden="true"
-										style="font-size: 1.2em;"></i>
-								</a>  -->
+                         
 								</td>
 								<td id="mensajes_log" width="1%">
 								<span>Covid19</span>
@@ -162,7 +152,7 @@
 					
 			</table>
 			
-			<!--  Confirmar Recibido -->
+			
 <div id="modalConfirmRecibido" class="modal fade modal1 in" role="dialog">
    <div id="ventanaConfirmRecibido" class="modal-dialog ">
     
@@ -196,17 +186,16 @@
 						</div>
 	</div> 		
 			
-<!--  	 fin  Recibido -->
+
 			
 				
 		
-		</div> <!--  capa de resultados -->
+		</div> 
 		<div th:include="fragmentos :: paginador(${busquedaLotes.urlPaginada},${paginaLotes},${busquedaLotes.orden},${busquedaLotes.sentidoOrden},'0')"></div>
 		
-		<input id="procesarBoton"   type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" onclick="procesarLotes()"/>
 		</div>
 
-	</div>
+	</div>-->
 		</div> 	
 	<!-- Empiezan los modales -->
 		
@@ -281,14 +270,15 @@
 
 
 						</div>
-						</div>
+						</div>-->
 		</div>
-		</div>			-->
+		</div>			
 	<!-- fin consultar Muestras -->
 	
 	
 <object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 <object th:include="fragmentos :: scripts" th:remove="tag"></object>
+
 
 	
 </body>

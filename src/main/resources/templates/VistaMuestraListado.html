@@ -15,7 +15,7 @@
 		
 		<!-- CRITERIOS BUSQUEDA PACIENTE -->
 		<fieldset id="datosPaciente" class="form-group border p-2">
-			<legend class="w-auto">Paciente</legend>
+			<legend class="w-auto font-weight-bold">Paciente</legend>
 			<div class="row">
 				<div class="col-3 form-group">
 					<label >Nombre</label>
@@ -44,7 +44,7 @@
 		
 		<!-- CRITERIOS BUSQUEDA MUESTRAS -->
 		<fieldset id="datosMuestras" class="form-group border p-2">
-			<legend class="w-auto">Muestra</legend>
+			<legend class="w-auto font-weight-bold">Muestra</legend>
 			<div class="row">
 				<div class="col-3 form-group">
 					<label >Etiqueta</label>
@@ -57,7 +57,16 @@
 				<div class="col-3 form-group">
 					<label >a</label>
 				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaEnvioMuestraFin}"  th:value="${beanBusquedaMuestra.fechaEnvioMuestraFin}"/>
-				</div>											
+				</div>				
+				<div class="col-3 form-group">
+					<label>Estado de la muestra</label>
+					<select class="form-control form-control-sm" th:field="${beanBusquedaMuestra.estadoResueltaNoticado}"  th:value="${beanBusquedaMuestra.estadoResueltaNoticado}">
+				 		<option value="">Seleccione</option>
+				 		<option value="1">Resuelta sin notificar</option>
+				 		<option value="2">Resuelta notificada</option>
+				 		<option value="3">Resuelta</option>
+				 	</select>
+				</div>							
 			</div>
 			
 			<div class="row">
