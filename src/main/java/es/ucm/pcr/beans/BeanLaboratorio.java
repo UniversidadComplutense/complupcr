@@ -2,12 +2,12 @@ package es.ucm.pcr.beans;
 
 public class BeanLaboratorio {
 
-	public Integer idLaboratorio;
-	public String codLaboratorio;
-	public String desLaboratorio;
-	public String telefonoLaboratorio;
-	public String responsableLaboratorio;
-	public String telefonoResponsableLaboratorio;
+	private Integer idLaboratorio;
+	private String codLaboratorio;
+	private String desLaboratorio;
+	private String telefonoLaboratorio;
+	private String responsableLaboratorio;
+	private String telefonoResponsableLaboratorio;
 	
 	public BeanLaboratorio() {
 		super();

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - ALTA LABORATORIO VISAVET</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+		
+	<div class="container">
+
+		<form action="#" th:action="@{/gestor/altaLaboratorioVisavet}"
+			method="post" th:object="${formBeanLaboratorioVisavet}"
+			id="ALTALaboratorioVisavet" role="form">
+
+			<h4>ALTA LABORATORIO VISAVET</h4>
+
+			<div class="form-group">
+				<label class="text_formulario">Laboratorio Visabet</label> <input
+					type="text" class="form-control"
+					th:field="${formBeanLaboratorioVisavet.nombre}"
+					th:value="${formBeanLaboratorioVisavet.nombre}" required="required" />
+			</div>
+			
+			<div class="form-group">
+				<label class="text_formulario">Capacidad</label> <input
+					type="text" class="form-control"
+					th:field="${formBeanLaboratorioVisavet.capacidad}"
+					th:value="${formBeanLaboratorioVisavet.capacidad}" required="required" />
+			</div>
+
+			<!--  Los campos id y acción van ocultos en la pantalla 
+			-->
+			<div class="form-group">
+				<label class="text_formulario"></label> <input type="hidden"
+					class="form-control" th:field="${formBeanLaboratorioVisavet.accion}"
+					th:value="${formBeanLaboratorioVisavet.accion}" />
+			</div>
+			<div class="form-group">
+				<label class="text_formulario"></label> <input type="hidden"
+					class="form-control" th:field="${formBeanLaboratorioVisavet.id}"
+					th:value="${formBeanLaboratorioVisavet.id}" />
+			</div>
+			<!--  Los campos id y acción van ocultos en la pantalla 
+			-->
+
+			<div class="row align-content-center">
+				<div class="col-4 mx-auto">
+					<button type="submit" class="btn btn-primary">Alta
+						Laboratorio Visavet</button>
+				</div>
+			</div>
+
+		</form>
+
+	</div>
+	
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+
+</body>
+</html>

@@ -1,206 +1,133 @@
 package es.ucm.pcr.controladores;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.ServletRequestDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import es.ucm.pcr.beans.BeanEstado;
-import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
-import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
-import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
+import es.ucm.pcr.beans.BeanLaboratorioCentro;
+import es.ucm.pcr.modelo.orm.LaboratorioCentro;
+import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
-import es.ucm.pcr.validadores.LaboratorioCentroValidador;
 
 @Controller
-@RequestMapping(value = "/laboratorioCentro")
 public class LaboratorioCentroControlador {
 
-	@SuppressWarnings("unused")
-	private final static Logger log = LoggerFactory.getLogger(InicioControlador.class);
-
 	@Autowired
-	private LaboratorioCentroServicio laboratorioCentroServicio;
+	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
 	
 	@Autowired
-	private LaboratorioCentroValidador laboratorioCentroValidador;
+	LaboratorioCentroServicio laboratorioCentroServicio;
 	
+	//	Muestra una lista ordenada ap1, ap2,nombre con los laboratorioCentros
+	// Punto de entrada a la gestión de laboratorioCentros
+	@RequestMapping(value="/gestor/listaLaboratorioCentro", method=RequestMethod.GET)
+	public ModelAndView GestionLaboratorioCentro(HttpSession session) throws Exception {
+		ModelAndView vista = new ModelAndView("VistaGestionLaboratorioCentro");
 	
-	private void agregarListasDesplegables (ModelAndView vista) {
-		
-		// Estados de una placa de laboratorio
-		List<BeanEstado> estadosPlacaLaboratorio = BeanEstado.estadosPlacaLabCentro();	
-		vista.addObject("estadosPlacaLaboratorio", estadosPlacaLaboratorio);
-	}
-
-	
-	@InitBinder("LaboratorioCentroBean")
-	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session)
-			throws Exception {
-		binder.setValidator(laboratorioCentroValidador);
-	}
-	
-	
-	@RequestMapping(value = "/recepcionPlacas", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView buscarPlacasVisavetGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
-
-		ModelAndView vista = new ModelAndView("ListadoRecepcionPlacasVisavet");
-
-		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = new BusquedaRecepcionPlacasVisavetBean();
-
-		// TODO Inicializar los criterios de búsqueda con las placas VISAVET asignadas al laboratorio
-
-		// Page<PlacaLaboratorioVisavetBean> paginaPlacasVisavet = servicioLaboratorioUni.buscarPlacas(criteriosBusqueda, pageable);
-
-		vista.addObject("BusquedaRecepcionPlacasVisavetBean", criteriosBusqueda);
-		//vista.addObject("paginaPlacas", paginaPlacasVisavet);
-		return vista;
-
-	}
-
-	
-	@RequestMapping(value = "/recepcionPlacas", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView buscarPlacasVisavetPOST(HttpSession session, @ModelAttribute BusquedaPlacaLaboratorioBean criteriosBusqueda,
-			@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
-
-		ModelAndView vista = new ModelAndView("ListadoRecepcionPlacasVisavet");
-		//Page<PlacaLaboratorioVisavetBean> paginaPlacasVisavet = servicioLaboratorioUni.buscarPlacas(criteriosBusqueda, pageable);
-
-		vista.addObject("BusquedaPlacaLaboratorioBean", criteriosBusqueda);
-		//vista.addObject("paginaPlacas", paginaPlacasVisavet);
-		return vista;
-	}
-	
-	
-	@RequestMapping(value = "/gestionPlacas/preparacion", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView buscarPlacasListasParaPcrGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
-
-		ModelAndView vista = new ModelAndView("ListadoPlacasListasParaPCR");
-
-		BusquedaPlacaLaboratorioBean criteriosBusqueda = new BusquedaPlacaLaboratorioBean();
-		
-		// Inicializamos búsqueda con estado 'PreparadaParaPCR'
-		criteriosBusqueda.setIdEstadoPlaca(String.valueOf(BeanEstado.Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()));
-
-		List<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, pageable).getContent();
-		this.agregarListasDesplegables(vista);
-		vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
-		vista.addObject("listaPlacas", listaPlacas);
-		return vista;
-
-	}
-
-	
-	@RequestMapping(value = "/gestionPlacas/preparacion", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView buscarPlacasListasParaPcrPOST(HttpSession session, 
-			@ModelAttribute BusquedaPlacaLaboratorioBean criteriosBusqueda, 
-			@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
-
-		ModelAndView vista = new ModelAndView("ListadoPlacasListasParaPCR");
-		List<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, pageable).getContent();
-
-		vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
-		vista.addObject("listaPlacas", listaPlacas);
-		return vista;
-	}
-	
-	
-	@RequestMapping(value = "/gestionPlacas/resultados", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView buscarPlacasEsperandoResultadosGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
-
-		ModelAndView vista = new ModelAndView("ListadoPlacasEsperandoResultadosPCR");
-
-		BusquedaPlacaLaboratorioBean criteriosBusqueda = new BusquedaPlacaLaboratorioBean();
-
-		// Inicializamos búsqueda con estado 'FinalizadoPCR'
-		criteriosBusqueda.setIdEstadoPlaca(String.valueOf(BeanEstado.Estado.PLACA_FINALIZADA_PCR.getCodNum()));
-
-		List<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, pageable).getContent();
-		this.agregarListasDesplegables(vista);
-		vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
-		vista.addObject("listaPlacas", listaPlacas);
-		return vista;
-
-	}
-
-	
-	@RequestMapping(value = "/gestionPlacas/resultados", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView buscarPlacasEsperandoResultadosPOST(HttpSession session, 
-			@ModelAttribute BusquedaPlacaLaboratorioBean criteriosBusqueda, 
-			@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
-
-		ModelAndView vista = new ModelAndView("ListadoPlacasEsperandoResultadosPCR");
-		List<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, pageable).getContent();
-
-		vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
-		vista.addObject("listaPlacas", listaPlacas);
-		return vista;
-	}
-
-	
-	@RequestMapping(value = "/gestionPlacas/{id}", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView consultarPlaca(HttpSession session, @PathVariable Integer idPlaca) throws Exception {
-
-		return new ModelAndView("PlacaLaboratorio").addObject("placa", laboratorioCentroServicio.buscarPlaca(idPlaca));
-	}
-	
-	
-	@RequestMapping(value = "/gestionPlacas/guardar", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView guardarPlaca(@Valid @ModelAttribute("placa") PlacaLaboratorioCentroBean placa, BindingResult result) throws Exception {
-
-		if (!result.hasErrors()) {
-			placa = laboratorioCentroServicio.guardarPlaca(placa);
-			return new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/preparacion", true));
-		} else {
-			return new ModelAndView("PlacaLaboratorio").addObject("placa", placa);
+		// cargo todos los laboratorioCentros de BBDD
+		List<BeanLaboratorioCentro> listaLaboratorioCentro = new ArrayList<BeanLaboratorioCentro>();
+		for (LaboratorioCentro laboratorioCentro: laboratorioCentroRepositorio.findAll())
+		{
+			listaLaboratorioCentro.add(new BeanLaboratorioCentro(
+					laboratorioCentro.getId(), 
+					laboratorioCentro.getNombre(),
+					laboratorioCentro.getDocumentos(),
+					laboratorioCentro.getPlacaLaboratorios(),
+					laboratorioCentro.getEquipos(),
+					"L"));
 		}
+		//	Ordeno por ap1, ap2, nombre
+		Collections.sort(listaLaboratorioCentro);
+		vista.addObject("listaLaboratorioCentro", listaLaboratorioCentro);
+	
+		return vista;
+	}	
+
+	// da de alta un nuevo rol
+	@RequestMapping(value="/gestor/altaLaboratorioCentro", method=RequestMethod.GET)
+	public ModelAndView AltaLaboratorioCentro(HttpSession session) throws Exception {
+		ModelAndView vista = new ModelAndView("VistaLaboratorioCentro");
+	
+		BeanLaboratorioCentro beanLaboratorioCentro = new BeanLaboratorioCentro();
+		// le indicamos la acción a relizar: A alta de un rol
+		beanLaboratorioCentro.setAccion("A");
+		vista.addObject("formBeanLaboratorioCentro", beanLaboratorioCentro);
+
+		return vista;
 	}
 	
-	
-	@RequestMapping(value = "/gestionPlacas/nueva", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView nuevaPlaca(HttpSession session) throws Exception {
-	
-		return new ModelAndView("PlacaLaboratorio").addObject("placa", new PlacaLaboratorioCentroBean());
-	}
-	
+	   // Alta/modificación de laboratorioCentro 
+		@RequestMapping(value="/gestor/altaLaboratorioCentro", method=RequestMethod.POST)	
+		public ModelAndView grabarAltaLaboratorioCentro ( @ModelAttribute("formBeanLaboratorioCentro") BeanLaboratorioCentro beanLaboratorioCentro, HttpSession session) throws Exception {
 
-	@RequestMapping(value = "/gestionPlacas/nueva", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView nuevaPlaca(@Valid @ModelAttribute("placa") PlacaLaboratorioCentroBean placa, BindingResult result) throws Exception {
+			// Damos de alta nuevo laboratorioCentro
+			if (beanLaboratorioCentro.getAccion().equals("A"))
+			{
+//				LaboratorioCentro laboratorioCentro = new LaboratorioCentro();
+//				laboratorioCentro.setNombre(beanLaboratorioCentro.getNombre());
+//				laboratorioCentroRepositorio.save(laboratorioCentro);
+				laboratorioCentroRepositorio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
+				
+			}
+			// Modificamos laboratorioCentro existente
+			if (beanLaboratorioCentro.getAccion().equals("M"))
+			{	
+				// Buscamos el laboratorioCentro a modificar, y volcamos los datos recogidos por el formulario
+				Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroRepositorio.findById(beanLaboratorioCentro.getId());
+				// añadimos campos del formulario
+//				laboratorioCentro.get().setNombre(beanLaboratorioCentro.getNombre());
+//				laboratorioCentroRepositorio.save(laboratorioCentro.get());
+				laboratorioCentroRepositorio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
+			}
 
-		if (!result.hasErrors()) {
-			placa = laboratorioCentroServicio.guardarPlaca(placa);
-			return new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/preparacion", true));
-		} else {
-			return new ModelAndView("PlacaLaboratorio").addObject("placa", placa);
+			// Volvemos a grabar mas laboratorioCentro
+			ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaLaboratorioCentro",true));	
+			return vista;		
+		}	
+		
+		// Modificamos un laboratorioCentro
+		@RequestMapping(value = "/gestor/editarLaboratorioCentro", method = RequestMethod.GET)
+		public ModelAndView editarLaboratorioCentro(@RequestParam("idLaboratorioCentro") Integer idLaboratorioCentro) throws Exception {
+
+			ModelAndView vista = new ModelAndView("VistaLaboratorioCentro");
+			
+			// Busco el laboratorioCentro a modificar
+			Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroRepositorio.findById(idLaboratorioCentro);
+			// cargo el beanLaboratorioCentro con lo datos del laboratorioCentro a modificar
+//			BeanLaboratorioCentro beanLaboratorioCentro = new BeanLaboratorioCentro();
+//			beanLaboratorioCentro.setId(laboratorioCentro.get().getId());
+//			beanLaboratorioCentro.setNombre(laboratorioCentro.get().getNombre());
+			 
+			BeanLaboratorioCentro beanLaboratorioCentro = laboratorioCentroServicio.mapeoEntidadBeanLaboratorioCentro(laboratorioCentro.get());
+			
+			// le indicamos la acción a relizar: M modificación de un laboratorioCentro
+			beanLaboratorioCentro.setAccion("M");
+			
+			vista.addObject("formBeanLaboratorioCentro", beanLaboratorioCentro);
+		
+			return vista;
+		}	
+
+		@RequestMapping(value = "/gestor/borrarLaboratorioCentro", method = RequestMethod.GET)
+		public ModelAndView borrarLaboratorioCentro(@RequestParam("idLaboratorioCentro") Integer idLaboratorioCentro) throws Exception {
+			
+			laboratorioCentroRepositorio.deleteById(idLaboratorioCentro);
+			
+			// Volvemos a grabar mas centros
+			ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaLaboratorioCentro",true));	
+			return vista;
 		}
-	}
-
+		
 }
