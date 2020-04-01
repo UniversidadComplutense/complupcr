@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Profile;
  * Clase de configuración del conector tomcat en producción para ponerlo detrás de F5 con certificado SSL y que las redirecciones
  * las haga a https.
  * 
- * @author desarrollo
+ * @author pmarrasant
  *
  */
 public class ConfiguracionTomcatIntegracion {

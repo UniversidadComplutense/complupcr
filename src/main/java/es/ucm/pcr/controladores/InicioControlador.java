@@ -28,6 +28,12 @@ import es.ucm.pcr.config.security.PcrUserDetailsService;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.servicios.UsuarioServicio;
 
+/**
+ * Controladores de inicio del portal
+ * 
+ * @author pmarrasant
+ *
+ */
 @Controller
 public class InicioControlador {
 
@@ -75,12 +81,6 @@ public class InicioControlador {
 	@RequestMapping(value = "/cerrarSesion")
 	public String cerrarSesion() {
 		return "logout";
-	}
-
-	@RequestMapping(value = "/tecnico", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('TECNICO','ADMIN')")
-	public String tecnico() {
-		return "inicioTecnico";
 	}
 
 	@RequestMapping(value = "/regenerarContrasena", method = RequestMethod.GET)
