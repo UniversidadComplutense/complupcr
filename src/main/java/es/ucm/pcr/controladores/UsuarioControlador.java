@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import es.ucm.pcr.beans.BeanRol;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
+import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
+import es.ucm.pcr.repositorio.RolRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
+import es.ucm.pcr.servicios.RolServicio;
 import es.ucm.pcr.servicios.UsuarioServicio;
 
 @Controller
@@ -28,7 +32,13 @@ public class UsuarioControlador {
 	UsuarioRepositorio usuarioRepositorio;
 	
 	@Autowired
+	RolRepositorio rolRepositorio;
+	
+	@Autowired
 	UsuarioServicio usuarioServicio;
+	
+	@Autowired
+	RolServicio rolServicio;
 	
 	//	Muestra una lista ordenada ap1, ap2,nombre con los usuarios
 	// Punto de entrada a la gestión de usuarios
@@ -75,25 +85,28 @@ public class UsuarioControlador {
 		// le indicamos la acción a relizar: A alta de un usuario
 		beanUsuario.setAccion("A");
 		vista.addObject("formBeanUsuario", beanUsuario);
-
+		
+		// Añadimos los roles en BBDD
+		List<BeanRol> listaRoles = rolServicio.generarListaRoles();
+		vista.addObject("listaRoles", listaRoles);
+		
+		boolean seleccionado = true;
+		vista.addObject("seleccionado", seleccionado);
+		
 		return vista;
 	}
 	
    // Alta/modificación de usuario 
 	@RequestMapping(value="/gestor/altaUsuario", method=RequestMethod.POST)	
-	public ModelAndView grabarAltaUsuario ( @ModelAttribute("formBeanUsuario") BeanUsuarioGestion beanUsuario, HttpSession session) throws Exception {
-
+	public ModelAndView grabarAltaUsuario ( @ModelAttribute("formBeanUsuario") BeanUsuarioGestion beanUsuario, 
+			 								@RequestParam(value = "roles" , required = false) int[] roles,
+											HttpSession session) throws Exception {
+		
+		System.out.println("Habilitado: " + beanUsuario.getHabilitado());
 		// Damos de alta nuevo usuario
 		if (beanUsuario.getAccion().equals("A"))
 		{
-//			Usuario usuario = new Usuario();
-//			usuario.setApellido1(beanUsuario.getAp1());
-//			usuario.setApellido2(beanUsuario.getAp2());
-//			usuario.setNombre(beanUsuario.getNom());
-//			usuario.setEmail(beanUsuario.getMail());
-//			usuario.setPassword(beanUsuario.getMail());
-//			usuarioRepositorio.save(usuario);
-			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioAlta(beanUsuario));
+			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioAlta(beanUsuario, roles));
 		}
 		// Modificamos usuario existente, menos mail
 		if (beanUsuario.getAccion().equals("M"))
@@ -103,11 +116,7 @@ public class UsuarioControlador {
 			// Buscamos el usuario a modificar, y volcamos los datos recogidos por el formulario
 			Optional<Usuario> usuario = usuarioRepositorio.findById(beanUsuario.getId());
 			// añadimos campos del formulario
-//			usuario.get().setApellido1(beanUsuario.getAp1());
-//			usuario.get().setApellido2(beanUsuario.getAp2());
-//			usuario.get().setNombre(beanUsuario.getNom());
-//			usuarioRepositorio.save(usuario.get());
-			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get()));
+			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get(), roles));
 		}
 
 		// Volvemos a grabar mas centros
@@ -124,15 +133,14 @@ public class UsuarioControlador {
 		// Busco el usuario a modificar
 		Optional<Usuario> usuario = usuarioRepositorio.findById(idUsuario);
 		// cargo el beanUsuario con lo datos del usuario a modificar
-//		BeanUsuario beanUsuario = new BeanUsuario();
-//		beanUsuario.setId(usuario.get().getId());
-//		beanUsuario.setAp1(usuario.get().getApellido1());
-//		beanUsuario.setAp2(usuario.get().getApellido2());
-//		beanUsuario.setNom(usuario.get().getNombre());
 		BeanUsuarioGestion beanUsuario = usuarioServicio.mapeoEntidadBeanUsuario(usuario.get());
 		
 		// le indicamos la acción a relizar: M modificación de un usuario
 		beanUsuario.setAccion("M");
+		
+		// Añadimos los roles en BBDD
+		List<BeanRol> listaRoles = rolServicio.generarListaRolesUsuario(usuario.get());
+		vista.addObject("listaRoles", listaRoles);
 		
 		vista.addObject("formBeanUsuario", beanUsuario);
 	

@@ -30,7 +30,7 @@
 				</div>	
 				<div class="col-4 form-group">
 					<label>Segundo apellido</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.segundoApellido}"  th:value="${beanMuestra.segundoApellido}" required maxlength="45"/>
+				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.segundoApellido}"  th:value="${beanMuestra.segundoApellido}" maxlength="45"/>
 				</div>
 			</div>
 			<div class="row">					
@@ -129,11 +129,11 @@
 			<div class="col-2">
 				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>
 			</div>
-			<div class="col-2" th:if="${notificable}">
-				<a th:disabled="${beanMuestra.avisosAuto}" th:href="@{/centroSalud/muestra/notificarTelefono/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Ya he llamado</a>
+			<div class="col-2">
+				<a th:classappend="!${notificable} or ${beanMuestra.avisosAuto} ? 'disabled' : ''" th:href="@{/centroSalud/muestra/notificarTelefono/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Ya he llamado</a>
 			</div>
-			<div class="col-2" th:if="${notificable}">
-				<a th:disabled="${beanMuestra.avisosAuto}" th:href="@{/centroSalud/muestra/notificarCorreo/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Enviar correo</a>
+			<div class="col-2">
+				<a th:classappend="!${notificable} or ${beanMuestra.avisosAuto} ? 'disabled' : ''" th:href="@{/centroSalud/muestra/notificarCorreo/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Enviar correo</a>
 			</div>
 		</div>					
 	</form>

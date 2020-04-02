@@ -1,14 +1,21 @@
 package es.ucm.pcr.servicios;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanCentro;
-import es.ucm.pcr.beans.BeanCentro;
 import es.ucm.pcr.modelo.orm.Centro;
-import es.ucm.pcr.modelo.orm.Centro;
+import es.ucm.pcr.repositorio.CentroRepositorio;
 
 @Service
 public class CentroServicioImp implements CentroServicio{
+	
+	@Autowired
+	CentroRepositorio centroRepositorio;
 	
 	public Centro mapeoBeanEntidadCentro(BeanCentro beanCentro) throws Exception{
 		Centro centro = new Centro();
@@ -40,10 +47,31 @@ public class CentroServicioImp implements CentroServicio{
 		beanCentro.setLotes(centro.getLotes());
 		beanCentro.setMuestras(centro.getMuestras());
 		beanCentro.setTelefono(centro.getTelefono());
-		
-		
-		
 		return beanCentro;	
+	}
+	public List<BeanCentro> listaCentrosOrdenada() throws Exception{
+		// cargo todos los rols de BBDD
+		List<BeanCentro> listaCentros = new ArrayList<BeanCentro>();
+		for (Centro centro: centroRepositorio.findAll())
+		{
+			listaCentros.add( 
+					new BeanCentro(
+							centro.getId(), 
+							centro.getNombre(), 
+							centro.getCodCentro(), 
+							centro.getTelefono(), 
+							centro.getEmail(), 
+							centro.getDireccion(),
+							centro.getUsuarios(),
+							centro.getMuestras(),
+							centro.getDocumentos(),
+							centro.getLotes(),
+							"L")
+			);
+		}
+		//	Ordeno por ap1, ap2, nombre
+		Collections.sort(listaCentros);
+		return listaCentros;
 	}
 	
 }

@@ -26,7 +26,9 @@ import org.springframework.web.servlet.view.RedirectView;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
+import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
+import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.validadores.LaboratorioCentroValidador;
 
@@ -169,6 +171,21 @@ public class LabCentroControlador {
 
 		return new ModelAndView("PlacaLaboratorio").addObject("placa", laboratorioCentroServicio.buscarPlaca(idPlaca));
 	}
+		
+	
+	@RequestMapping(value = "/gestionPlacas/nueva", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
+	public ModelAndView nuevaPlaca(HttpSession session) throws Exception {
+	
+		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
+		
+		PlacaLaboratorioCentroBean placa = new PlacaLaboratorioCentroBean();		
+		
+		vista.addObject("editable", esEditable(placa));
+		vista.addObject("placa", new PlacaLaboratorioCentroBean());
+		
+		return vista;
+	}
 	
 	
 	@RequestMapping(value = "/gestionPlacas/guardar", method = RequestMethod.POST)
@@ -183,25 +200,9 @@ public class LabCentroControlador {
 		}
 	}
 	
-	
-	@RequestMapping(value = "/gestionPlacas/nueva", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView nuevaPlaca(HttpSession session) throws Exception {
-	
-		return new ModelAndView("PlacaLaboratorio").addObject("placa", new PlacaLaboratorioCentroBean());
+	private boolean esEditable(PlacaLaboratorioCentroBean placa) {
+		return (placa.getId() == null);		
 	}
 	
-
-	@RequestMapping(value = "/gestionPlacas/nueva", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView nuevaPlaca(@Valid @ModelAttribute("placa") PlacaLaboratorioCentroBean placa, BindingResult result) throws Exception {
-
-		if (!result.hasErrors()) {
-			placa = laboratorioCentroServicio.guardarPlaca(placa);
-			return new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/preparacion", true));
-		} else {
-			return new ModelAndView("PlacaLaboratorio").addObject("placa", placa);
-		}
-	}
 
 }
