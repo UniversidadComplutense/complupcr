@@ -7,6 +7,13 @@ import org.springframework.security.core.userdetails.User;
 
 import es.ucm.pcr.modelo.orm.Centro;
 
+/**
+ * Clase de UsuarioSecurity. Extiende la clase User de Spring Security y nos permite añadirle 
+ * los atributos que necesitamos. 
+ * 
+ * @author pmarrasant
+ *
+ */
 public class UsuarioSecurity extends User {
 
 	private static final long serialVersionUID = -7451641204353137229L;

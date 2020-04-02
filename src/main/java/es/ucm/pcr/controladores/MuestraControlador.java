@@ -3,6 +3,7 @@ package es.ucm.pcr.controladores;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanEstado;
@@ -61,6 +64,9 @@ public class MuestraControlador {
 	
 	@Autowired
 	private MuestraValidador validadorMuestra;
+	
+	public static final Integer ACCION_GUARDAR_MUESTRA = 1;
+	public static final Integer ACCION_NOTIFICAR_MUESTRA = 2;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -119,13 +125,12 @@ public class MuestraControlador {
 	
 	@RequestMapping(value="/muestra/{id}", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView consulta(HttpSession session, @PathVariable Integer id) throws Exception {
+	public ModelAndView consulta(HttpSession session, HttpServletRequest request, @PathVariable Integer id) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
 		
 		MuestraCentroBean beanMuestra = muestraServicio.findById(id);
 	
-		// TODO - consulta/modificacion
-		//vista.addObject("editable", muestraEditable(beanMuestra));
+		recuperarMensaje(request, vista);
 		vista.addObject("editable", false);
 		vista.addObject("notificable", muestraNotificable(beanMuestra));
 		vista.addObject("beanMuestra", beanMuestra);
@@ -134,11 +139,12 @@ public class MuestraControlador {
 	
 	@RequestMapping(value="/muestra/modificar", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView modificar(HttpSession session, @RequestParam(value = "id", required = true) Integer id) throws Exception {
+	public ModelAndView modificar(HttpSession session, HttpServletRequest request, @RequestParam(value = "id", required = true) Integer id) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
 		
 		MuestraCentroBean beanMuestra = muestraServicio.findById(id);
 	
+		recuperarMensaje(request, vista);
 		vista.addObject("editable", muestraEditable(beanMuestra));
 		vista.addObject("notificable", muestraNotificable(beanMuestra));
 		vista.addObject("beanMuestra", beanMuestra);
@@ -147,7 +153,7 @@ public class MuestraControlador {
 	
 	@RequestMapping(value="/muestra/guardar", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView guardar(@Valid @ModelAttribute("beanMuestra") MuestraCentroBean beanMuestra, BindingResult result) throws Exception {
+	public ModelAndView guardar(@Valid @ModelAttribute("beanMuestra") MuestraCentroBean beanMuestra, BindingResult result, RedirectAttributes redirectAttributes) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
 	
 		if (result.hasErrors()) {
@@ -157,29 +163,35 @@ public class MuestraControlador {
 			beanMuestra.setIdCentro(sesionServicio.getCentro().getId());
 			MuestraCentroBean muestra = muestraServicio.guardar(beanMuestra);
 			// TODO - VER A DONDE REDIRIGIR AL GUARDAR LOTE 
-			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/" + muestra.getId(), true));
+			
+			redirectAttributes.addFlashAttribute("mensaje", mensajesAccion(ACCION_GUARDAR_MUESTRA));
+			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/modificar?id=" + muestra.getId(), true));
 			return respuesta;
 		}
 	}
 	
 	@RequestMapping(value="/muestra/notificarTelefono/{id}", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView notificarTelefono(HttpSession session, @PathVariable Integer id) throws Exception {
+	public ModelAndView notificarTelefono(HttpSession session, @PathVariable Integer id, RedirectAttributes redirectAttributes) throws Exception {
 		
 		muestraServicio.actualizarNotificacionMuestra(id, false);
 		
 		// redirige a la consulta
+		
+		redirectAttributes.addFlashAttribute("mensaje", mensajesAccion(ACCION_NOTIFICAR_MUESTRA));
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/" + id, true));
 		return respuesta;
 	}
 	
 	@RequestMapping(value="/muestra/notificarCorreo/{id}", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView notificarCorreo(HttpSession session, @PathVariable Integer id) throws Exception {
+	public ModelAndView notificarCorreo(HttpSession session, @PathVariable Integer id, RedirectAttributes redirectAttributes) throws Exception {
 		
 		muestraServicio.actualizarNotificacionMuestra(id, true);
 		
 		// redirige a la consulta		
+		
+		redirectAttributes.addFlashAttribute("mensaje", mensajesAccion(ACCION_NOTIFICAR_MUESTRA));
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/" + id, true));
 		return respuesta;
 	}
@@ -213,6 +225,30 @@ public class MuestraControlador {
 				&& beanMuestra.getResultado() != null 
 				&& beanMuestra.getEstado().getEstado().getCodNum() == (Estado.MUESTRA_RESUELTA.getCodNum()) 	
 				&& beanMuestra.getFechaNotificacion() == null;
+	}
+	
+	private String mensajesAccion(Integer accion) {
+		String msg = "";
+		switch (accion) {
+		case 1:
+			msg = "Muestra guardada correctamente";
+			break;
+		case 2:
+			msg = "Muestra notificada correctamente";
+			break;	
+		default:
+			break;
+		}
+		return msg;
+	}
+	
+	private void recuperarMensaje(HttpServletRequest request, ModelAndView vista) {
+		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+		if (inputFlashMap != null) {
+			String mensaje = "";
+			mensaje = (String) inputFlashMap.get("mensaje");
+			vista.addObject("mensaje", mensaje);
+		}		
 	}
 	
 }

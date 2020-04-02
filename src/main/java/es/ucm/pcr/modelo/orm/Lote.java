@@ -30,7 +30,7 @@ public class Lote implements java.io.Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 5514642009608260822L;
-	private int id;
+	private Integer id;
 	private Centro centro;
 	private EstadoLote estadoLote;
 	private PlacaVisavet placaVisavet;
@@ -43,12 +43,12 @@ public class Lote implements java.io.Serializable {
 	public Lote() {
 	}
 	
-	public Lote(int id) {
+	public Lote(Integer id) {
 		super();
 		this.id = id;
 	}
 
-	public Lote(int id, Centro centro, EstadoLote estadoLote, String numeroLote, int capacidad) {
+	public Lote(Integer id, Centro centro, EstadoLote estadoLote, String numeroLote, int capacidad) {
 		this.id = id;
 		this.centro = centro;
 		this.estadoLote = estadoLote;
@@ -56,7 +56,7 @@ public class Lote implements java.io.Serializable {
 		this.capacidad = capacidad;
 	}
 
-	public Lote(int id, Centro centro, EstadoLote estadoLote, PlacaVisavet placaVisavet, String numeroLote,
+	public Lote(Integer id, Centro centro, EstadoLote estadoLote, PlacaVisavet placaVisavet, String numeroLote,
 			Date fechaEnvio, int capacidad, Set<Muestra> muestras) {
 		this.id = id;
 		this.centro = centro;
@@ -71,11 +71,11 @@ public class Lote implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

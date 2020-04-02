@@ -111,7 +111,7 @@ public class EnviocorreoImp implements Enviocorreo {
 //			if (perfilesEjecucionActivos.equals("desarrollo") || perfilesEjecucionActivos.equals("integracion"))
 			if (perfilesEjecucionActivos.contains("desarrollo") || perfilesEjecucionActivos.contains("integracion"))
 			{
-				helper.setTo("tsanz01@ucm.es");
+				helper.setTo("dades@ucm.es");
 			}
 			
 			helper.setSubject(MimeUtility.encodeText("string", "UTF-8", "Q"));
@@ -124,15 +124,14 @@ public class EnviocorreoImp implements Enviocorreo {
 			
 			String paginahtml = 
 					//Pongo texto de correo para Titulos propios
-					"<html><head> <title>Coovid 19</title>"
+					"<html><head> <title>COVID-19</title>"
 					+ "<meta http-equiv=" + quote + "Content-Type" + quote + " content=" + quote + "text/html" + quote + "; charset=utf-8" + quote + "/>"
-					+ "</head> <body> <h2 style=\"background-color: orange;color: white;font-size: 3em;font-family: Verdana;font-size: 32px;padding: 0.2em 1em;text-align: center;margin: 0;\">Covid 19</h2>"
-					+ "<div style=\"text-align: center;border-bottom: 1px solid #2279b4;border-top: 1px solid #2279b4;font-family: Verdana;font-size: 25px;margin-bottom:1em\">Notificaci&oacute;n "			
-				+
-				//	+ convocatoria +  "</div> " +			
+					+ "</head> <body> <h2 style=\"background-color: orange;color: white;font-size: 3em;font-family: Verdana;font-size: 32px;padding: 0.2em 1em;text-align: center;margin: 10;\">COVID-19</h2>"
+					+	"<div align=\"center\">"+		
 					" <p> "  + 	cabecera + " </p>	" +  
 					" <p> "  +     texto + " </p>	" +
 					" <p> "  + 	pie + " </p>	" +  
+					"</div>"+
 					"</body> </html>";
 					
 					

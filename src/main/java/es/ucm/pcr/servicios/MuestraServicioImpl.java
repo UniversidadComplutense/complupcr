@@ -25,6 +25,7 @@ import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.Paciente;
+import es.ucm.pcr.repositorio.LoteRepositorio;
 import es.ucm.pcr.repositorio.MuestraRepositorio;
 import es.ucm.pcr.repositorio.PacienteRepositorio;
 import es.ucm.pcr.utilidades.Enviocorreo;
@@ -40,6 +41,9 @@ public class MuestraServicioImpl implements MuestraServicio {
 	
 	@Autowired
 	private PacienteRepositorio pacienteRepositorio;
+	
+	@Autowired
+	private LoteRepositorio loteRepositorio;
 	
 	@Autowired
 	private Enviocorreo envioCorreoImp;	
@@ -140,9 +144,17 @@ public class MuestraServicioImpl implements MuestraServicio {
 		Optional<Muestra> loteOptional = muestraRepositorio.findById(id);
 		if (loteOptional.isPresent()) {
 			muestra = loteOptional.get();
+			
+			// TODO - algo pasa con el lazy que no me trae el estado del lote...¿?¿?	
+			if (muestra.getLote() != null) {
+				Lote l = loteRepositorio.findById(muestra.getLote().getId()).get();
+				muestra.setLote(l);
+			}
 		}
-		muestra.getLote();
-		muestra.getLote().getEstadoLote();
+		
+		// TODO - algo pasa con el lazy que no me trae el estado del lote...
+		/*muestra.getLote().getId();
+		muestra.getLote().getEstadoLote().getId();*/
 		return muestra;
 	}
 	

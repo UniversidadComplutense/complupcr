@@ -22,6 +22,13 @@ import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.PasswordTokenRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
 
+/**
+ * Servicio PcrUserDetailsService. Nos permite interceptar el login de Spring Security 
+ * para inicializar nuestra PcrUserDetails.
+ * 
+ * @author pmarrasant
+ *
+ */
 @Service
 public class PcrUserDetailsService implements UserDetailsService {
 

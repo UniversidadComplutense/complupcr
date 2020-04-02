@@ -11,6 +11,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+/**
+ * Clase de configuración general de Spring Security.
+ * 
+ * Definimos nuestro passwordEncoder, PcrUserDetailsService y configuramos el elemento HttpSecurity
+ * con nuestras url's, roles, página de login, etc.
+ * 
+ * @author pmarrasant
+ *
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true, prePostEnabled = true)
