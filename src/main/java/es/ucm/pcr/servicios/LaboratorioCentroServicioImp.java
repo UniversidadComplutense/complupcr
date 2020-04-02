@@ -35,11 +35,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(LaboratorioCentroServicioImp.class);
 
-	/*
-	@Autowired
-	PlacaLaboratorioRepositorio laboratorioCentroRepositorio;
-	*/
-	
+		
 	@Autowired
 	PlacaLaboratorioRepositorio placaLaboratorioRepositorio;
 	
@@ -159,7 +155,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	public PlacaLaboratorioCentroBean guardarCogerODevolverPlaca(Integer idPlaca, Integer idUsuario, String accion) {
 	//metodo que recibe el idPlaca, y el id de usuario que la quiere coger
 	
-		PlacaLaboratorio placa = laboratorioCentroRepositorio.getOne(idPlaca);		
+		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);		
 				
 		if(accion.equals("coger")) {
 			//asocia la placa al usuario, le cambia el estado de la placa a PLACA_ASIGNADA_PARA_ANALISIS y pone a todas sus muestras a estado pendente de analizar
@@ -176,7 +172,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			System.out.println("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
 			placa.setEstadoPlacaLaboratorio(estadoPlacaLab);
 		}
-		placa = laboratorioCentroRepositorio.save(placa);			
+		placa = placaLaboratorioRepositorio.save(placa);			
 		
 		
 		return PlacaLaboratorioCentroBean.modelToBean(placa);
