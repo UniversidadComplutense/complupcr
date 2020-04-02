@@ -30,13 +30,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanResultado;
-import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
