@@ -1,14 +1,15 @@
 package es.ucm.pcr.beans;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class BeanAsignacion {
 	
 	//asignación del usuario a la muestra
 	private BeanUsuario beanUsuario; //los usuarios con rol analista, voluntario o jefe de servicio serán asignados para valorar la muestra
-	private Calendar fechaAsignacion; //fecha de asignacion del usuario a la muestra
+	private Date fechaAsignacion; //fecha de asignacion del usuario a la muestra
 	private String valoracion; //Valoración final de la muestra (N,P,R,A)
-	private Calendar fechaValoracion; //fecha valoracion
+	private Date fechaValoracion; //fecha valoracion
 	
 	
 	public BeanAsignacion() {
@@ -27,13 +28,20 @@ public class BeanAsignacion {
 	}
 
 
-	public Calendar getFechaAsignacion() {
+	
+
+	public Date getFechaAsignacion() {
 		return fechaAsignacion;
 	}
 
 
-	public void setFechaAsignacion(Calendar fechaAsignacion) {
+	public void setFechaAsignacion(Date fechaAsignacion) {
 		this.fechaAsignacion = fechaAsignacion;
+	}
+
+
+	public void setFechaValoracion(Date fechaValoracion) {
+		this.fechaValoracion = fechaValoracion;
 	}
 
 
@@ -47,14 +55,6 @@ public class BeanAsignacion {
 	}
 
 
-	public Calendar getFechaValoracion() {
-		return fechaValoracion;
-	}
-
-
-	public void setFechaValoracion(Calendar fechaValoracion) {
-		this.fechaValoracion = fechaValoracion;
-	}
 
 
 	@Override

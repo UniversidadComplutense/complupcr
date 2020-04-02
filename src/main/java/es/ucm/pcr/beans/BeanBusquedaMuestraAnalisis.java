@@ -3,11 +3,16 @@ package es.ucm.pcr.beans;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
 public class BeanBusquedaMuestraAnalisis {
-	
+	//para buscar por datos de paciente
 	private String nombrePaciente;
+	private String primerApellido;
+	private String segundoApellido;
 	private String emailPaciente;
 	private String nhcPaciente;
+	
 	private String etiquetaMuestra;
 	private String refInternaMuestra;
 	private Date fechaEnvioMuestraIni;
@@ -15,9 +20,15 @@ public class BeanBusquedaMuestraAnalisis {
 	private Date fechaResultadoMuestraIni;
 	private Date fechaResultadoMuestraFin;
 	
-	// TODO - ENUMERADO?
 	private String estadoMuestra;
+	private Integer idEstado;
+	private Integer estadoResueltaNoticado;
+	private Boolean estaNotificada;
 	
+	private Integer idPlacaLaboratorio;
+	private Integer idJefePlaca; //será el jefe que ha cogido la placa bajo su responsabilidad
+	
+		
 	public BeanBusquedaMuestraAnalisis() {
 		super();
 	}
@@ -26,6 +37,18 @@ public class BeanBusquedaMuestraAnalisis {
 	}
 	public void setNombrePaciente(String nombrePaciente) {
 		this.nombrePaciente = nombrePaciente;
+	}	
+	public String getPrimerApellido() {
+		return primerApellido;
+	}
+	public void setPrimerApellido(String primerApellido) {
+		this.primerApellido = primerApellido;
+	}
+	public String getSegundoApellido() {
+		return segundoApellido;
+	}
+	public void setSegundoApellido(String segundoApellido) {
+		this.segundoApellido = segundoApellido;
 	}
 	public String getEmailPaciente() {
 		return emailPaciente;
@@ -74,15 +97,69 @@ public class BeanBusquedaMuestraAnalisis {
 	}
 	public void setFechaResultadoMuestraFin(Date fechaResultadoMuestraFin) {
 		this.fechaResultadoMuestraFin = fechaResultadoMuestraFin;
-	}
+	}	
 	public String getEstadoMuestra() {
 		return estadoMuestra;
 	}
 	public void setEstadoMuestra(String estadoMuestra) {
 		this.estadoMuestra = estadoMuestra;
+	}
+	public Integer getIdEstado() {
+		return idEstado;
+	}
+	public void setIdEstado(Integer idEstado) {
+		this.idEstado = idEstado;
+	}
+	public Integer getEstadoResueltaNoticado() {
+		return estadoResueltaNoticado;
+	}
+	public void setEstadoResueltaNoticado(Integer estadoResueltaNoticado) {
+		this.estadoResueltaNoticado = estadoResueltaNoticado;
+	}
+	public Boolean getEstaNotificada() {
+		return estaNotificada;
+	}
+	public void setEstaNotificada(Boolean estaNotificada) {
+		this.estaNotificada = estaNotificada;
+	}
+	public Integer getIdPlacaLaboratorio() {
+		return idPlacaLaboratorio;
+	}
+	public void setIdPlacaLaboratorio(Integer idPlacaLaboratorio) {
+		this.idPlacaLaboratorio = idPlacaLaboratorio;
+	}
+	public Integer getIdJefePlaca() {
+		return idJefePlaca;
+	}
+	public void setIdJefePlaca(Integer idJefePlaca) {
+		this.idJefePlaca = idJefePlaca;
 	}	
 
+	public String getCriterioNombre() {
+		return StringUtils.isBlank(nombrePaciente) ? null : "%" + nombrePaciente + "%";
+	}	
+	public String getCriterioPrimerApellido() {
+		return StringUtils.isBlank(primerApellido) ? null : "%" + primerApellido + "%";
+	}
 	
+	public String getCriterioSegundoApellido() {
+		return StringUtils.isBlank(segundoApellido) ? null : "%" + segundoApellido + "%";
+	}	
+	public String getCriterioCorreo() {
+		return StringUtils.isBlank(emailPaciente) ? null : "%" + emailPaciente + "%";
+	}
+	
+	public String getCriterioNHC() {
+		return StringUtils.isBlank(nhcPaciente) ? null : "%" + nhcPaciente + "%";
+	}
+	
+	public String getCriterioEtiqueta() {
+		return StringUtils.isBlank(etiquetaMuestra) ? null : "%" + etiquetaMuestra + "%";
+	}
+	
+	public String getCriterioRefInterna() {
+		return StringUtils.isBlank(refInternaMuestra) ? null : "%" + refInternaMuestra + "%";
+	}
 		
 
 }

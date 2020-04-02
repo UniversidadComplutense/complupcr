@@ -3,7 +3,9 @@ package es.ucm.pcr.servicios;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import es.ucm.pcr.beans.BeanBusquedaMuestraAnalisis;
 import es.ucm.pcr.beans.BeanEstado;
+import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
@@ -17,6 +19,14 @@ public interface MuestraServicio {
 	 * @return
 	 */
 	public Page<MuestraListadoBean> findMuestraByParam(MuestraBusquedaBean params, Pageable pageable);
+	
+	/**
+	 * Recupera todos las muestras en funcion de los parametros de busqueda
+	 * @param params
+	 * @param pageable
+	 * @return
+	 */
+	public Page<BeanListadoMuestraAnalisis> findMuestraByParam(BeanBusquedaMuestraAnalisis params, Pageable pageable);
 	
 	/**
 	 * Guardar muestra
