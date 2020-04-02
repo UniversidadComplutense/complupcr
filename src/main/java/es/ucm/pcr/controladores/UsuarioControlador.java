@@ -79,7 +79,7 @@ public class UsuarioControlador {
 								usuario.getRols(),
 								usuario.getHabilitado(),
 								"L",
-								0
+								usuario.getCentro().getId() // Centro seleccionado
 								));
 		}
 		//	Ordeno por ap1, ap2, nombre
@@ -142,7 +142,7 @@ public class UsuarioControlador {
 			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get(), roles));
 		}
 
-		// Volvemos a grabar mas centros
+		// Volvemos a centros
 		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaUsuarios",true));	
 		return vista;		
 	}	
