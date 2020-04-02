@@ -34,6 +34,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanResultado;
+import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
@@ -102,12 +103,30 @@ public class MuestraControlador {
 		ModelAndView vista = new ModelAndView("VistaMuestraListado");
 		
 		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
-		Page<MuestraListadoBean> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
+		session.setAttribute("beanBusquedaMuestras", beanBusqueda);
 		
+		buscarMuestras(beanBusqueda, vista);
+		return vista;
+	}
+	
+	@RequestMapping(value="/muestra/list", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
+	public ModelAndView buscar(HttpSession session) throws Exception {
+		ModelAndView vista = new ModelAndView("VistaMuestraListado");
+		
+		MuestraBusquedaBean beanBusqueda = (MuestraBusquedaBean)session.getAttribute("beanBusquedaMuestras");
+		beanBusqueda = beanBusqueda != null ? beanBusqueda : new MuestraBusquedaBean();
+		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
+		
+		buscarMuestras(beanBusqueda, vista);
+		return vista;
+	}
+	
+	private void buscarMuestras(MuestraBusquedaBean beanBusqueda, ModelAndView vista) {
+		Page<MuestraListadoBean> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
 		addListsToView(vista);
 		vista.addObject("beanBusquedaMuestra", beanBusqueda);
 		vista.addObject("listadoMuestras", muestrasPage.getContent());
-		return vista;
 	}
 	
 	@RequestMapping(value="/muestra/nueva", method=RequestMethod.GET)

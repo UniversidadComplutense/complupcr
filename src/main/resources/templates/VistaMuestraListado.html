@@ -10,8 +10,12 @@
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
-	
+	<br>
 	<form action="#" th:action="@{/centroSalud/muestra/list}" method="post" th:object="${beanBusquedaMuestra}" id="formBusqueda" role="form">
+		
+		<div class="alert alert-secondary" role="alert">
+		  	<label>Gestión muestras</label>
+		</div>
 		
 		<!-- CRITERIOS BUSQUEDA PACIENTE -->
 		<fieldset id="datosPaciente" class="form-group border p-2">
