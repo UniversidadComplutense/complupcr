@@ -33,4 +33,6 @@ public interface LaboratorioCentroServicio {
 	
 	
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda, Pageable pageable); 
+	
+	public PlacaLaboratorioCentroBean guardarCogerODevolverPlaca(Integer idPlaca, Integer idUsuario, String accion);
 }	
