@@ -1,7 +1,6 @@
 package es.ucm.pcr.config.security;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -10,6 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.Usuario;
 
+/**
+ * UserDetails del proyecto. Implementa la UserDetails de Spring Security y nos permite utilizar nuestro 
+ * UsuarioSecurity
+ * 
+ * @author pmarrasant
+ *
+ */
 public class PcrUserDetails implements UserDetails {
 
 	/**

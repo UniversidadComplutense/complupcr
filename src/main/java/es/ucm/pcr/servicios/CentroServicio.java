@@ -1,5 +1,7 @@
 package es.ucm.pcr.servicios;
 
+import java.util.List;
+
 import es.ucm.pcr.beans.BeanCentro;
 import es.ucm.pcr.modelo.orm.Centro;
 
@@ -21,5 +23,11 @@ public interface CentroServicio {
 	 */
 	public BeanCentro mapeoEntidadBeanCentro(Centro centro) throws Exception;
 
-
+	/**
+	 * Lista de centros ordenada
+	 * 
+	 * @param 
+	 * @return List<BeanCentro>
+	 */
+	public List<BeanCentro> listaCentrosOrdenada() throws Exception;
 }

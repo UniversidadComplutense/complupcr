@@ -32,6 +32,10 @@ public class LaboratorioCentro implements java.io.Serializable {
 
 	public LaboratorioCentro() {
 	}
+	
+	public LaboratorioCentro(Integer id) {
+		this.id = id;
+	}
 
 	public LaboratorioCentro(String nombre) {
 		this.nombre = nombre;
