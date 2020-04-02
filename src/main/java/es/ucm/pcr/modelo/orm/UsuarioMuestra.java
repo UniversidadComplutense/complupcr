@@ -32,7 +32,7 @@ public class UsuarioMuestra implements java.io.Serializable {
 	private Usuario usuario;
 	private Date fechaAsignacion;
 	private String valoracion;
-	private String fechaValoracion;
+	private Date fechaValoracion;
 
 	public UsuarioMuestra() {
 	}
@@ -43,7 +43,7 @@ public class UsuarioMuestra implements java.io.Serializable {
 	}
 
 	public UsuarioMuestra(Muestra muestra, Usuario usuario, Date fechaAsignacion, String valoracion,
-			String fechaValoracion) {
+			Date fechaValoracion) {
 		this.muestra = muestra;
 		this.usuario = usuario;
 		this.fechaAsignacion = fechaAsignacion;
@@ -102,12 +102,13 @@ public class UsuarioMuestra implements java.io.Serializable {
 		this.valoracion = valoracion;
 	}
 
-	@Column(name = "fechaValoracion", length = 45)
-	public String getFechaValoracion() {
-		return this.fechaValoracion;
+	public Date getFechaValoracion() {
+		return fechaValoracion;
 	}
 
-	public void setFechaValoracion(String fechaValoracion) {
+	public void setFechaValoracion(Date fechaValoracion) {
 		this.fechaValoracion = fechaValoracion;
 	}
+
+	
 }

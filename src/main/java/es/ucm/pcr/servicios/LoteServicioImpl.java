@@ -149,4 +149,15 @@ public class LoteServicioImpl implements LoteServicio {
 		}
 		return null;
 	}
+
+	@Override
+	public boolean borrar(Integer id) {
+		try {
+			loteRepositorio.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			log.error("ERROR:: borrar " + e);
+			return false;
+		}
+	}
 }

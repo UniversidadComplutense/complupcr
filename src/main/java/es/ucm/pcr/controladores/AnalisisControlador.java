@@ -16,7 +16,11 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,18 +49,24 @@ import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanListaAsignaciones;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
+import es.ucm.pcr.beans.BeanResultado;
 import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.GuardarAsignacionMuestraBean;
 import es.ucm.pcr.beans.GuardarCogerYDevolverPlacasBean;
 import es.ucm.pcr.beans.MuestraBean;
+import es.ucm.pcr.beans.MuestraBusquedaBean;
+import es.ucm.pcr.beans.MuestraListadoBean;
 //import es.ucm.pcr.beans.BeanMuestraCentro;
 //import es.ucm.pcr.validadores.ValidadorMuestra;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
+import es.ucm.pcr.beans.BeanResultado.ResultadoMuestra;
 import es.ucm.pcr.config.security.PcrUserDetails;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
+import es.ucm.pcr.servicios.MuestraServicio;
+import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.servicios.UsuarioServicio;
 
 
@@ -65,12 +75,19 @@ import es.ucm.pcr.servicios.UsuarioServicio;
 public class AnalisisControlador {
 	
 	@Autowired
+	private SesionServicio sesionServicio;
+	
+	@Autowired
 	private UsuarioServicio usuarioServicio;
 	
 	@Autowired
 	private LaboratorioCentroServicio laboratorioCentroServicio;
 	
-		
+	@Autowired
+	private MuestraServicio muestraServicio;
+	
+	public static final Sort ORDENACION = Sort.by(Direction.ASC, "etiqueta");
+	
 		//@Autowired
 		//private ValidadorMuestra validadorMuestra;
 		
@@ -84,7 +101,30 @@ public class AnalisisControlador {
 //		public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session) throws Exception {  
 //			binder.setValidator(validadorMuestra);
 //		}
+				
+		
+		/**
+		 * Posibles Resultados de la muestra
+		 * 
+		 * @return
+		 */
+		public static List<BeanResultado> resultadosMuestra() {
+			// estados del lote
+			List<BeanResultado> estadosLote = new ArrayList<>();
+			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE));
+			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_NEGATIVO));
+			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_POSITIVO));
+			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_DEBIL));
+			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_REPETIR));
 
+			return estadosLote;
+		}
+		
+		private void addListsToView(ModelAndView vista) {
+			vista.addObject("listaResultadosMuestra", BeanResultado.resultadosMuestra());
+		}
+		
+		
 		
 		@RequestMapping(value="/", method=RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
@@ -97,20 +137,27 @@ public class AnalisisControlador {
 			return vista;
 		}
 		
+		
 		@RequestMapping(value="/list", method=RequestMethod.POST)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute BeanBusquedaMuestraAnalisis beanBusqueda) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 			
+			//solo mostraremos al jefe las muestras de placas que ha cogido bajo su responsabilidad
+			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)
+			Page<BeanListadoMuestraAnalisis> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
+			
+			/*
 			List<BeanListadoMuestraAnalisis> list = new ArrayList<BeanListadoMuestraAnalisis>();
 			
 			for (int i = 0; i<10; i++) {
 				list.add(getBean(i));
 			}
-			
-			
+			*/
+			addListsToView(vista);
 			vista.addObject("beanBusquedaMuestra", beanBusqueda);
-			vista.addObject("listadoMuestras", list);
+			//vista.addObject("listadoMuestras", list);
+			vista.addObject("listadoMuestras", muestrasPage);
 			return vista;
 		}
 		
@@ -398,7 +445,7 @@ public class AnalisisControlador {
 			//recupero el usuario logado
 			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
+			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 
 			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
@@ -439,7 +486,7 @@ public class AnalisisControlador {
 			//recupero el usuario logado
 			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
+			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 			
 			//recogemos las placas marcadas para coger
@@ -494,7 +541,7 @@ public class AnalisisControlador {
 			//recupero el usuario logado
 			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
+			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 
 			/*
@@ -662,6 +709,7 @@ public class AnalisisControlador {
 //			}
 //		}
 		
+
 		public BeanListadoMuestraAnalisis getBean(int i) {
 			BeanListadoMuestraAnalisis bean = new BeanListadoMuestraAnalisis();
 			bean.setId(i);
@@ -675,7 +723,7 @@ public class AnalisisControlador {
 			if (i > 2) {
 				bean.setEstadoMuestra("Negativo");
 			}
-			bean.setCodNumLote("codLote-" + i);
+			//bean.setCodNumLote("codLote-" + i);
 			
 			Date date = new Date(); // your date
 		    Calendar cal = Calendar.getInstance();
@@ -690,7 +738,7 @@ public class AnalisisControlador {
 				ana.setNom("analista-" + j);
 				ana.setRol("ANALISTA_LAB");
 				beanAsigAna.setBeanUsuario(ana);				
-				beanAsigAna.setFechaAsignacion(cal);
+				beanAsigAna.setFechaAsignacion(date);
 				beanAsigAna.setValoracion("P");
 				beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);
 				
@@ -700,7 +748,7 @@ public class AnalisisControlador {
 				vol.setNom("voluntario-" + j);
 				vol.setRol("ANALISTA_VOLUNTARIO");
 				beanAsigVol.setBeanUsuario(vol);				
-				beanAsigVol.setFechaAsignacion(cal);
+				beanAsigVol.setFechaAsignacion(date);
 				beanAsigVol.setValoracion("N");
 				beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
 			}
@@ -767,7 +815,7 @@ public class AnalisisControlador {
 				ana.setNom("analista-" + j);
 				ana.setRol("ANALISTA_LAB");
 				beanAsigAna.setBeanUsuario(ana);				
-				beanAsigAna.setFechaAsignacion(cal);
+				beanAsigAna.setFechaAsignacion(date);
 				beanAsigAna.setValoracion("P");
 				beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);
 				
@@ -777,7 +825,7 @@ public class AnalisisControlador {
 				vol.setNom("voluntario-" + j);
 				vol.setRol("ANALISTA_VOLUNTARIO");
 				beanAsigVol.setBeanUsuario(vol);				
-				beanAsigVol.setFechaAsignacion(cal);
+				beanAsigVol.setFechaAsignacion(date);
 				beanAsigVol.setValoracion("N");
 				beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
 			}

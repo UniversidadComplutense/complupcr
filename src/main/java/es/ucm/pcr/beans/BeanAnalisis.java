@@ -1,13 +1,14 @@
 package es.ucm.pcr.beans;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class BeanAnalisis {
 	
 	//bean en el que se recoge el proceso de analizar los resultados por parte de analistas (personal ucm o voluntarios) y jefes de servicio
 	
 	private String resultadoAnalisis; //Valoración final de la muestra (N,P,R,A)
-	private Calendar fechaResultadoAnalisis;
+	private Date fechaResultadoAnalisis;
 	private BeanListaAsignaciones beanListaAsignaciones; //el jefe de servicio asigna analistas a las muestras para que las valoren
 	
 	
@@ -27,12 +28,13 @@ public class BeanAnalisis {
 	}
 
 
-	public Calendar getFechaResultadoAnalisis() {
+
+	public Date getFechaResultadoAnalisis() {
 		return fechaResultadoAnalisis;
 	}
 
 
-	public void setFechaResultadoAnalisis(Calendar fechaResultadoAnalisis) {
+	public void setFechaResultadoAnalisis(Date fechaResultadoAnalisis) {
 		this.fechaResultadoAnalisis = fechaResultadoAnalisis;
 	}
 

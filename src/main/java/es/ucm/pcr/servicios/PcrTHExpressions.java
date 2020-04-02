@@ -32,14 +32,39 @@ public class PcrTHExpressions {
 	/**
 	 * Método que devuelve el centro del usuario para ponerlo en el pie de página.
 	 */
-	public String getCentro() {
-		Centro centro = sesionServicio.getCentro();
-		if (centro != null) {
-			return centro.getNombre();
-		} else {
-			return null;
+	public String getPieDerecho() {
+		//Organizamos esto por roles
+		if (sesionServicio.tieneRol("ADMIN")) {
+			return "Administrador";
 		}
-		//TODO: Revisar esto. Habrá roles en los que hay que sacer el rol y roles donde hay que sacer el centro.
+		if (sesionServicio.tieneRol("GESTOR")) {
+			return "Gestor";
+		}
+		if (sesionServicio.tieneRol("CENTROSALUD")) {
+			if (sesionServicio.getCentro() == null) {
+				return "Centro salud: Sin centro asignado";
+			}
+			return "Centro salud: " + sesionServicio.getCentro().getNombre();
+		}
+		if (sesionServicio.tieneRol("RECEPCIONLABORATORIO") || sesionServicio.tieneRol("TECNICOLABORATORIO")) {
+			if (sesionServicio.getLaboratorioVisavet() == null) {
+				return "Laboratorio: Sin laboratorio asignado";
+			}
+			return "Laboratorio: " + sesionServicio.getLaboratorioVisavet().getNombre();
+		}
+		if (sesionServicio.tieneRol("RESPONSABLEPCR") || sesionServicio.tieneRol("JEFESERVICIO") || sesionServicio.tieneRol("ANALISTALABORATORIO")) {
+			if (sesionServicio.getLaboratorioCentro() == null) {
+				return "Laboratorio: Sin laboratorio asignado";
+			}
+			return "Laboratorio: " + sesionServicio.getLaboratorioCentro().getNombre();
+		}
+		if (sesionServicio.tieneRol("VOLUNTARIO")) {
+			return "Voluntario";
+		}
+		if (sesionServicio.tieneRol("AUDITOR")) {
+			return "Auditor";
+		}
+		return "";
 	}
 	
 	/**

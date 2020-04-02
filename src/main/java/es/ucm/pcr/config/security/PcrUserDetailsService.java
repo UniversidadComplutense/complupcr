@@ -46,7 +46,7 @@ public class PcrUserDetailsService implements UserDetailsService {
 		}
 		Usuario miUser = usuario.get();
 
-		return new PcrUserDetails(miUser, getAuthorities(miUser), miUser.getCentro());
+		return new PcrUserDetails(miUser, getAuthorities(miUser));
 	}
 
 	private static Set<GrantedAuthority> getAuthorities(Usuario usuario) {
@@ -63,12 +63,11 @@ public class PcrUserDetailsService implements UserDetailsService {
 			return "invalidToken";
 		}
 
-		final Usuario user = passToken.get().getUsuario();
-		final PcrUserDetails pcrUserDetails = new PcrUserDetails(user, getAuthorities(user), user.getCentro());
+		final Usuario usuario = passToken.get().getUsuario();
+		final PcrUserDetails pcrUserDetails = new PcrUserDetails(usuario, getAuthorities(usuario));
 		final Authentication auth = new UsernamePasswordAuthenticationToken(pcrUserDetails, null,
 				Arrays.asList(new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		return null;
 	}
-
 }

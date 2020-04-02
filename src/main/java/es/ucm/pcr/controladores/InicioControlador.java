@@ -11,9 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -130,7 +128,7 @@ public class InicioControlador {
 			HttpSession session) {
 		PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
-		usuarioServicio.cambiarContrasena(pcrUserDetails.getUser().getEmail(), matchPassword);
+		usuarioServicio.cambiarContrasena(pcrUserDetails.getUser().getUsuario().getEmail(), matchPassword);
 		session.invalidate();
 		return "redirect:/acceso";
 	}
@@ -163,10 +161,10 @@ public class InicioControlador {
 	private SimpleMailMessage constructWelcomeEmail(String contextPath, Usuario user) {
 		String url = contextPath + "/regenerarContrasena";
 		String message = "<p>Bien venido " + user.getNombre()
-				+ ",</p><p>Ha sido dado de alta en la aplicación COVID-19.</p>"
+				+ ",</p><p>Ha sido dado de alta en la aplicación de gesión y seguimiento de tests PCR Covid-19.</p>"
 				+ "<p>Para poder acceder debe solicitar el cambio de contraseña, indicando su e-mail (" + user.getEmail()
 				+ ") a través del siguente enlace:</p>";
-		return constructEmail("Bien venido COVID-19", message + " <p><a href=\"" + url +"\">Cambio de contraseña<a> </p><p> Un cordial saludo.</p>", user);
+		return constructEmail("Sistema de gestión y seguimiento de tests PCR Covid-19", message + " <p><a href=\"" + url +"\">Cambio de contraseña<a> </p><p> Un cordial saludo.</p>", user);
 	}
 
 	private SimpleMailMessage constructEmail(String subject, String body, Usuario user) {
