@@ -49,6 +49,7 @@ import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.GuardarAsignacionMuestraBean;
+import es.ucm.pcr.beans.GuardarCogerYDevolverPlacasBean;
 import es.ucm.pcr.beans.MuestraBean;
 //import es.ucm.pcr.beans.BeanMuestraCentro;
 //import es.ucm.pcr.validadores.ValidadorMuestra;
@@ -69,8 +70,7 @@ public class AnalisisControlador {
 	@Autowired
 	private LaboratorioCentroServicio laboratorioCentroServicio;
 	
-	// TODO - INCLUIR EL ROL DEL CENTRO
-	
+		
 		//@Autowired
 		//private ValidadorMuestra validadorMuestra;
 		
@@ -372,20 +372,33 @@ public class AnalisisControlador {
 			
 		}
 		
-
+		//FUNCIONALIDAD JEFE: COGER PLACAS 
 		
 		//gestionar lotes (en realidad es gestionar placas)
 		//@RequestMapping(value = "/gestionPlacas/resultados", method = RequestMethod.GET)
 		@RequestMapping(value = "/cogerPlacas", method = RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public ModelAndView buscarPlacasinAsignarYBajoResponsabilidadGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+		public ModelAndView buscarPlacasinAsignarYBajoResponsabilidadGET(HttpSession session, HttpServletRequest request, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
 
 			ModelAndView vista = new ModelAndView("ListadoPlacasSinAsignarYBajoResponsabilidad");
+			
+			String mensajeCoger = null;
+			String mensajeDevolver = null;
+			// Comprobamos si hay mensajes enviados desde los posts
+			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+			if (inputFlashMap != null) {
+				mensajeCoger = (String) inputFlashMap.get("mensajeCoger");
+				System.out.println("mensajeCoger vale: " + mensajeCoger);
+				mensajeDevolver = (String) inputFlashMap.get("mensajeDevolver");
+				System.out.println("mensajeDevolver vale: " + mensajeDevolver);
+			}
+			vista.addObject("mensajeCoger", mensajeCoger);
+			vista.addObject("mensajeDevolver", mensajeDevolver);
 			
 			//recupero el usuario logado
 			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
+			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 
 			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
@@ -406,14 +419,66 @@ public class AnalisisControlador {
 			List<PlacaLaboratorioCentroBean> listaPlacasAsignadasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaAnalisis, pageable).getContent();
 			System.out.println("listaPlacasAsignadasParaAnalisis tiene: "+ listaPlacasAsignadasParaAnalisis.size());			
 			
-			//this.agregarListasDesplegables(vista);
-			//vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
+			GuardarCogerYDevolverPlacasBean guardarCogerYDevolverPlacasBean = new GuardarCogerYDevolverPlacasBean();
+			
 			vista.addObject("listaPlacasListasParaAnalisis", listaPlacasListasParaAnalisis);
 			vista.addObject("listaPlacasAsignadasParaAnalisis", listaPlacasAsignadasParaAnalisis);
+			vista.addObject("guardarCogerYDevolverPlacasBean", guardarCogerYDevolverPlacasBean);			
+			
+			
 			return vista;
 
 		}
 		
+		//boton "reclamar los seleccionados"
+		@RequestMapping(value = "/cogerPlacas", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public RedirectView cogerPlacasSeleccionadas(HttpSession session, @ModelAttribute GuardarCogerYDevolverPlacasBean guardarCogerYDevolverPlacasBean, 
+				@PageableDefault(page = 0, value = 20) Pageable pageable, RedirectAttributes redirectAttributes) throws Exception {
+
+			//recupero el usuario logado
+			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
+			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
+			
+			//recogemos las placas marcadas para coger
+			List<Integer> listaIdsPlacasSeleccionadosParaCoger = guardarCogerYDevolverPlacasBean.getListaIdsPlacasSeleccionadosParaCoger();
+			System.out.println("listaIdsPlacasSeleccionadosParaCoger: " + listaIdsPlacasSeleccionadosParaCoger.toString());
+			
+			//cogemos esas placas, les asignamos el jefe logado, fecha de asignacion, cambiar estado a PLACA_ASIGNADA_PARA_ANALISIS y guardarlas
+			//TODO coger las muestras de esa plaa y ponerles estado pendente de analizar
+			for(Integer idPlacaSeleccionada : listaIdsPlacasSeleccionadosParaCoger) {
+				laboratorioCentroServicio.guardarCogerODevolverPlaca(idPlacaSeleccionada, user.getId(), "coger");
+			}						
+			
+			redirectAttributes.addFlashAttribute("mensajeCoger", "Placas reclamadas");
+			return new RedirectView("/analisis/cogerPlacas", true);			
+			
+		}
+		
+		//boton "devolver los seleccionados"
+		@RequestMapping(value = "/devolverPlacas", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public RedirectView devolverPlacasSeleccionadas(HttpSession session, @ModelAttribute GuardarCogerYDevolverPlacasBean guardarCogerYDevolverPlacasBean, 
+				@PageableDefault(page = 0, value = 20) Pageable pageable, RedirectAttributes redirectAttributes) throws Exception {
+
+			//recogemos las placas marcadas para devolver
+			List<Integer> listaIdsPlacasSeleccionadosParaDevolver = guardarCogerYDevolverPlacasBean.getListaIdsPlacasSeleccionadosParaDevolver();
+			System.out.println("listaIdsPlacasSeleccionadosParaDevolver: " + listaIdsPlacasSeleccionadosParaDevolver.toString());
+			
+			//devolver esas placas, quitarles el jefe asignado, fecha de asignacion, cambiar estado a placa a PLACA_LISTA_PARA_ANALISIS y guardarlas
+			//TODO ¿que hacemos con las muestras?			
+			for(Integer idPlacaSeleccionada : listaIdsPlacasSeleccionadosParaDevolver) {
+				laboratorioCentroServicio.guardarCogerODevolverPlaca(idPlacaSeleccionada, null, "devolver");
+			}	
+						
+			
+			redirectAttributes.addFlashAttribute("mensajeDevolver", "Placas devueltas");
+			return new RedirectView("/analisis/cogerPlacas", true);			
+			
+		}
+		//FIN FUNCIONALIDAD JEFE: COGER PLACAS 
 		
 		
 		//ANALISTA O VOLUNTARIOS (SOLO ANALIZAN)
@@ -429,7 +494,7 @@ public class AnalisisControlador {
 			//recupero el usuario logado
 			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
+			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 
 			/*

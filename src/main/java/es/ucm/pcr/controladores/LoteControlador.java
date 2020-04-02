@@ -3,6 +3,7 @@ package es.ucm.pcr.controladores;
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanEstado;
@@ -63,6 +66,9 @@ public class LoteControlador {
 	
 	@Autowired
 	private LoteValidador validadorLote;
+		
+	public static final Integer ACCION_GUARDAR_LOTE = 1;
+	public static final Integer ACCION_ENVIAR_LOTE = 2;
 	
 	
 	@InitBinder
@@ -144,11 +150,12 @@ public class LoteControlador {
 	
 	@RequestMapping(value="/lote/{id}", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView consultar(HttpSession session, @PathVariable Integer id) throws Exception {
+	public ModelAndView consultar(HttpSession session, HttpServletRequest request, @PathVariable Integer id) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLote");
 		
 		LoteCentroBean beanLote = loteServicio.findById(id);
 	
+		recuperarMensaje(request, vista);
 		vista.addObject("listaLaboratorios", servicioLaboratorioVisavetUCM.findAll());
 		vista.addObject("editable", loteEditable(beanLote));	
 		vista.addObject("beanLote", beanLote);
@@ -157,7 +164,7 @@ public class LoteControlador {
 	
 	@RequestMapping(value="/lote/guardar", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView guardar(@Valid @ModelAttribute("beanLote") LoteCentroBean beanLote, BindingResult result) throws Exception {
+	public ModelAndView guardar(@Valid @ModelAttribute("beanLote") LoteCentroBean beanLote, BindingResult result, RedirectAttributes redirectAttributes) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLote");
 	
 		if (result.hasErrors()) {
@@ -169,6 +176,8 @@ public class LoteControlador {
 			beanLote.setIdCentro(sesionServicio.getCentro().getId());
 			LoteCentroBean lote = loteServicio.guardar(beanLote);
 			// TODO - VER A DONDE REDIRIGIR AL GUARDAR LOTE 
+			
+			redirectAttributes.addFlashAttribute("mensaje", mensajesAccion(ACCION_GUARDAR_LOTE));
 			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/" + lote.getId(), true));
 			return respuesta;
 		}
@@ -176,12 +185,14 @@ public class LoteControlador {
 	
 	@RequestMapping(value="/lote/enviado", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView loteEnviado(@ModelAttribute("beanLote") LoteCentroBean beanLote) throws Exception {
+	public ModelAndView loteEnviado(@ModelAttribute("beanLote") LoteCentroBean beanLote, RedirectAttributes redirectAttributes) throws Exception {
 		
 		BeanEstado beanEstado = new BeanEstado();
 		beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum());
 		loteServicio.actualizarEstadoLote(beanLote, beanEstado);		
 		// redirige a la consulta
+		
+		redirectAttributes.addFlashAttribute("mensaje", mensajesAccion(ACCION_ENVIAR_LOTE));
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/" + beanLote.getId(), true));
 		return respuesta;
 	}
@@ -189,6 +200,30 @@ public class LoteControlador {
 	private void addListsToView(ModelAndView vista) {
 		
 		vista.addObject("listaEstadosLote", BeanEstado.estadosLote());
+	}
+	
+	private String mensajesAccion(Integer accion) {
+		String msg = "";
+		switch (accion) {
+		case 1:
+			msg = "Lote guardado correctamente";
+			break;
+		case 2:
+			msg = "Lote enviado correctamente";
+			break;	
+		default:
+			break;
+		}
+		return msg;
+	}
+	
+	private void recuperarMensaje(HttpServletRequest request, ModelAndView vista) {
+		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+		if (inputFlashMap != null) {
+			String mensaje = "";
+			mensaje = (String) inputFlashMap.get("mensaje");
+			vista.addObject("mensaje", mensaje);
+		}		
 	}
 	
 	/**

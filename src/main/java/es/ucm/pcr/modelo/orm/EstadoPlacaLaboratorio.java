@@ -29,6 +29,11 @@ public class EstadoPlacaLaboratorio implements java.io.Serializable {
 
 	public EstadoPlacaLaboratorio() {
 	}
+	
+	public EstadoPlacaLaboratorio(Integer id) {
+		super();
+		this.id = id;
+	}
 
 	public EstadoPlacaLaboratorio(String descripcion) {
 		this.descripcion = descripcion;
