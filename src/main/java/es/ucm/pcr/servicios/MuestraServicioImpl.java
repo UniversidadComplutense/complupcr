@@ -14,7 +14,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import es.ucm.pcr.beans.BeanBusquedaMuestraAnalisis;
 import es.ucm.pcr.beans.BeanEstado;
+import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanResultado;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
@@ -61,6 +63,37 @@ public class MuestraServicioImpl implements MuestraServicio {
 		Page<MuestraListadoBean> lotesCentro = new PageImpl<>(listLotesBean, pageable, muestrasPage.getTotalElements());
 		
 		return lotesCentro;
+	}
+	
+	@Override
+	public List<MuestraListadoBean> findMuestraByParam(MuestraBusquedaBean params) {
+		List<MuestraListadoBean> muestrasListBean = new ArrayList<MuestraListadoBean>();
+		
+		List<Muestra> muestrasList = muestraRepositorio.findByParams(params); 
+		
+		for (Muestra m : muestrasList) {
+			muestrasListBean.add(MuestraListadoBean.modelToBean(m));
+		}
+		
+		return muestrasListBean;
+	}
+	
+	
+	
+	//Diana- busqueda de muestras por el jefe de servicio (replica del de Tere con mi bean)
+	@Override
+	public Page<BeanListadoMuestraAnalisis> findMuestraByParam(BeanBusquedaMuestraAnalisis params, Pageable pageable) {		
+		List<BeanListadoMuestraAnalisis> listMuestrasBean = new ArrayList<BeanListadoMuestraAnalisis>();
+		
+		Page<Muestra> muestrasPage = muestraRepositorio.findByParams(params, pageable); 
+		
+		for (Muestra m : muestrasPage.getContent()) {
+			listMuestrasBean.add(BeanListadoMuestraAnalisis.modelToBean(m));
+		}
+		
+		Page<BeanListadoMuestraAnalisis> pageMuestras = new PageImpl<>(listMuestrasBean, pageable, muestrasPage.getTotalElements());
+		
+		return pageMuestras;
 	}
 
 	@Override
@@ -156,6 +189,29 @@ public class MuestraServicioImpl implements MuestraServicio {
 		/*muestra.getLote().getId();
 		muestra.getLote().getEstadoLote().getId();*/
 		return muestra;
+	}
+	
+	@Override
+	public boolean validateBorrar(Integer id) {
+		List<Integer> estadosValidosBorrarMuestra = BeanEstado.getEstadosLotesDisponiblesCentro();
+		Muestra muestra = findByIdMuestra(id);
+		
+		// si el lote esta enviado no se puede borrar la muestra
+		if (muestra != null && muestra.getLote() != null && estadosValidosBorrarMuestra.contains(muestra.getLote().getEstadoLote().getId())) {
+			return true;
+		}
+		return false;		
+	}
+	
+	@Override
+	public boolean borrar(Integer id) {
+		try {
+			muestraRepositorio.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			log.error("ERROR:: borrar " + e);
+			return false;
+		}
 	}
 	
 	private String mensajeEmail(Muestra muestra) {

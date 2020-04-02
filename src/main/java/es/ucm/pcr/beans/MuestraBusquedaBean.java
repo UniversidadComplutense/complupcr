@@ -33,6 +33,13 @@ public class MuestraBusquedaBean {
 	public MuestraBusquedaBean() {
 		super();
 	}
+	
+	public MuestraBusquedaBean(String nhcPaciente, Integer idCentro) {
+		super();
+		this.nhcPaciente = nhcPaciente;
+		this.idCentro = idCentro;
+	}
+
 	public String getNombrePaciente() {
 		return nombrePaciente;
 	}

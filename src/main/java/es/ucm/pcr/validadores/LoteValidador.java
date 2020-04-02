@@ -34,6 +34,9 @@ public class LoteValidador implements Validator {
 		
 		// validar codigo de lote
 		validateCodigoLote(lote, errors);
+		
+		// validar capacidadd lote vs numero de muestras
+		validarCapacidad(lote, errors);
 	}
 	
 	/**
@@ -51,6 +54,20 @@ public class LoteValidador implements Validator {
 				if (loteBean == null) {
 					errors.rejectValue("numLote", "campo.invalid", "Ya existe un lote con el mismo código");
 				}
+			}
+		}
+	}
+	
+	/**
+	 * No se puede quitar capacidad de lote si tiene mas muestras
+	 * @param lote
+	 * @param errors
+	 */
+	private void validarCapacidad(LoteCentroBean lote, Errors errors) {
+		if (lote.getId() != null) {
+			Integer numeroMuestrasLote = loteServicio.findById(lote.getId()).getNumeroMuestras();
+			if (lote.getCapacidad().intValue() < numeroMuestrasLote.intValue()) {
+				errors.rejectValue("capacidad", "campo.invalid", "El lote tiene actualmente " + numeroMuestrasLote + " muestras");
 			}
 		}
 	}

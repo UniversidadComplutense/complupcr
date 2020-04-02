@@ -2,15 +2,10 @@ package es.ucm.pcr.beans;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import es.ucm.pcr.modelo.orm.Documento;
-import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
-import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 
 public class PlacaLaboratorioCentroBean {
 
@@ -90,22 +85,21 @@ public class PlacaLaboratorioCentroBean {
 		beanEstado.asignarTipoEstadoYCodNum(BeanEstado.TipoEstado.EstadoPlacaLabCentro,
 				placaLaboratorio.getEstadoPlacaLaboratorio().getId());
 		bean.setBeanEstado(beanEstado);
-
-		LaboratorioCentroBean laboratorioCentroBean = new LaboratorioCentroBean();
-		// TODO rellenar laboratorioCentroBean
-		// laboratorioCentroBean.setId(String.valueOf((placaLaboratorio.getLaboratorioCentro().getId())));
-		laboratorioCentroBean.setNombre(placaLaboratorio.getLaboratorioCentro().getNombre());
-		// laboratorioCentroBean.setCapacidad(loteBean.getCapacidad() != null ?
-		// loteBean.getCapacidad() : 0);
-		bean.setLaboratorioCentro(laboratorioCentroBean);
 		bean.setNumeroMuestras(placaLaboratorio.getNumeromuestras());
+		bean.setFechaCreacion(placaLaboratorio.getFechaCreacion());
+		
+		// TODO rellenar laboratorioCentroBean
+		LaboratorioCentroBean laboratorioCentroBean = new LaboratorioCentroBean();	
+		laboratorioCentroBean.setId(String.valueOf((placaLaboratorio.getLaboratorioCentro().getId())));
+		laboratorioCentroBean.setNombre(placaLaboratorio.getLaboratorioCentro().getNombre());
+		bean.setLaboratorioCentro(laboratorioCentroBean);
 
 		List<PlacaLaboratorioVisavetBean> placasVisavet = new ArrayList<PlacaLaboratorioVisavetBean>();
 		// TODO rellenar placasVisavet
 		bean.setPlacasVisavet(placasVisavet);
 
 		List<DocumentoBean> documentos = new ArrayList<DocumentoBean>();
-		// TODO rellenar Documento
+		// TODO rellenar Documentos
 		bean.setDocumentos(documentos);
 
 		return bean;
@@ -128,7 +122,10 @@ public class PlacaLaboratorioCentroBean {
 			placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(placaLaboratorioCentroBean.getBeanEstado().getEstado().getCodNum()));
 		}
 		
-		placa.setNumeromuestras(placaLaboratorioCentroBean.getNumeroMuestras());
+		if (placaLaboratorioCentroBean.getNumeroMuestras() != null) {
+			placa.setNumeromuestras(placaLaboratorioCentroBean.getNumeroMuestras());
+		}
+		
 
 		// TODO rellenar LaboratorioCentro
 		// placa.setLaboratorioCentro();

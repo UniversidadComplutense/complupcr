@@ -4,6 +4,8 @@ import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,7 +36,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
-import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.LoteListadoBean;
@@ -66,9 +67,18 @@ public class LoteControlador {
 	
 	@Autowired
 	private LoteValidador validadorLote;
+	
+	private Map<Integer, String> ACCIONES_MENSAJE = Stream.of(new Object[][] { 
+	    { ACCION_GUARDAR_LOTE, "Lote guardado correctamente" }, 
+	    { ACCION_ENVIAR_LOTE, "Lote enviado correctamente" }, 
+	    { ACCION_BORRAR_LOTE_OK, "Lote borrardo correctamente" },
+	    { ACCION_BORRAR_LOTE_KO, "Se ha producido un error al borrar el lote" },
+		}).collect(Collectors.toMap(d -> (Integer) d[0], d -> (String) d[1]));
 		
 	public static final Integer ACCION_GUARDAR_LOTE = 1;
 	public static final Integer ACCION_ENVIAR_LOTE = 2;
+	public static final Integer ACCION_BORRAR_LOTE_OK = 3;
+	public static final Integer ACCION_BORRAR_LOTE_KO = 4;
 	
 	
 	@InitBinder
@@ -113,12 +123,30 @@ public class LoteControlador {
 		ModelAndView vista = new ModelAndView("VistaLoteListado");
 		
 		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
-		Page<LoteListadoBean> lotesPage = loteServicio.findLoteByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION)); 
+		session.setAttribute("beanBusquedaLotes", beanBusqueda);
 		
+		buscarLotes(beanBusqueda, vista);
+		return vista;
+	}
+	
+	@RequestMapping(value="/lote/list", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
+	public ModelAndView buscarGet(HttpSession session) throws Exception {
+		ModelAndView vista = new ModelAndView("VistaLoteListado");
+		
+		LoteBusquedaBean beanBusqueda = (LoteBusquedaBean)session.getAttribute("beanBusquedaLotes");
+		beanBusqueda = beanBusqueda != null ? beanBusqueda : new LoteBusquedaBean();				
+		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
+		
+		buscarLotes(beanBusqueda, vista);
+		return vista;
+	}
+	
+	private void buscarLotes(LoteBusquedaBean beanBusqueda, ModelAndView vista) {
+		Page<LoteListadoBean> lotesPage = loteServicio.findLoteByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION)); 
 		addListsToView(vista);
 		vista.addObject("beanBusquedaLote", beanBusqueda);
 		vista.addObject("listadoLotes", lotesPage.getContent());
-		return vista;
 	}
 	
 	@RequestMapping(value="/lote/nuevo", method=RequestMethod.GET)
@@ -148,6 +176,21 @@ public class LoteControlador {
 		return vista;
 	}
 	
+	@RequestMapping(value="/lote/borrar", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
+	public ModelAndView borrar(HttpSession session, @RequestParam(value = "id", required = true) Integer id, RedirectAttributes redirectAttributes) throws Exception {
+		
+		boolean borrado = loteServicio.borrar(id);
+	
+		if (borrado) {
+			redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_BORRAR_LOTE_OK));
+		} else {
+			redirectAttributes.addFlashAttribute("mensajeError", ACCIONES_MENSAJE.get(ACCION_BORRAR_LOTE_KO));
+		}
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/list", true));
+		return respuesta;
+	}
+	
 	@RequestMapping(value="/lote/{id}", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView consultar(HttpSession session, HttpServletRequest request, @PathVariable Integer id) throws Exception {
@@ -155,7 +198,6 @@ public class LoteControlador {
 		
 		LoteCentroBean beanLote = loteServicio.findById(id);
 	
-		recuperarMensaje(request, vista);
 		vista.addObject("listaLaboratorios", servicioLaboratorioVisavetUCM.findAll());
 		vista.addObject("editable", loteEditable(beanLote));	
 		vista.addObject("beanLote", beanLote);
@@ -168,6 +210,7 @@ public class LoteControlador {
 		ModelAndView vista = new ModelAndView("VistaLote");
 	
 		if (result.hasErrors()) {
+			vista.addObject("listaLaboratorios", servicioLaboratorioVisavetUCM.findAll());
 			vista.addObject("editable", loteEditable(beanLote));
 			vista.addObject("beanLote", beanLote);
 			return vista;			
@@ -177,7 +220,7 @@ public class LoteControlador {
 			LoteCentroBean lote = loteServicio.guardar(beanLote);
 			// TODO - VER A DONDE REDIRIGIR AL GUARDAR LOTE 
 			
-			redirectAttributes.addFlashAttribute("mensaje", mensajesAccion(ACCION_GUARDAR_LOTE));
+			redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_GUARDAR_LOTE));
 			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/" + lote.getId(), true));
 			return respuesta;
 		}
@@ -192,7 +235,7 @@ public class LoteControlador {
 		loteServicio.actualizarEstadoLote(beanLote, beanEstado);		
 		// redirige a la consulta
 		
-		redirectAttributes.addFlashAttribute("mensaje", mensajesAccion(ACCION_ENVIAR_LOTE));
+		redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_ENVIAR_LOTE));
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/" + beanLote.getId(), true));
 		return respuesta;
 	}
@@ -200,31 +243,7 @@ public class LoteControlador {
 	private void addListsToView(ModelAndView vista) {
 		
 		vista.addObject("listaEstadosLote", BeanEstado.estadosLote());
-	}
-	
-	private String mensajesAccion(Integer accion) {
-		String msg = "";
-		switch (accion) {
-		case 1:
-			msg = "Lote guardado correctamente";
-			break;
-		case 2:
-			msg = "Lote enviado correctamente";
-			break;	
-		default:
-			break;
-		}
-		return msg;
-	}
-	
-	private void recuperarMensaje(HttpServletRequest request, ModelAndView vista) {
-		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
-		if (inputFlashMap != null) {
-			String mensaje = "";
-			mensaje = (String) inputFlashMap.get("mensaje");
-			vista.addObject("mensaje", mensaje);
-		}		
-	}
+	}	
 	
 	/**
 	 * El lote es editable si es nuevo o si existe y NO tiene estado INICIADO o ASIGNADO_CENTRO_ANALISIS
