@@ -10,10 +10,23 @@
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
-	
+	<BR>
 	<form action="#" th:action="@{/centroSalud/lote/guardar}" method="post" th:object="${beanLote}" id="formGuardar" role="form">
 		<input type="hidden" th:field="${beanLote.id}"  th:value="${beanLote.id}" />
-		<input type="hidden" name="estado" th:value="${beanLote.estado.estado.codNum}" th:if="${beanLote.estado} != null"/>		
+		<input type="hidden" name="estado" th:value="${beanLote.estado.estado.codNum}" th:if="${beanLote.estado} != null"/>	
+		<input type="hidden" id="tieneMuestras" th:value="${beanLote.tieneMuestras}"/>	
+		
+		<!-- MENSAJES AVISO -->
+		<div th:classappend="${mensaje == null} ? visible : d-none" class="alert alert-secondary" role="alert" id="alertInfo">
+		  	<label th:if="${editable} and ${beanLote.id == null}">Nuevo lote</label>
+		  	<label th:if="${editable} and ${beanLote.id != null}">Modificar lote</label>
+		  	<label th:if="!${editable}">Consulta lote</label>
+		</div>
+		<div th:if="${mensaje !=null}" class="alert alert-success alert-dismissible fade show" role="alert">
+			<label th:text="${mensaje}"></label>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		</div>
+		
 		<fieldset id="datosLote" class="form-group border p-2" th:disabled="!${editable}">
 			<legend class="w-auto font-weight-bold" th:if="${beanLote.tieneMuestras}">Lote con muestras</legend>
 			<legend class="w-auto font-weight-bold" th:if="!${beanLote.tieneMuestras}">Lote sin muestras</legend>
@@ -94,14 +107,18 @@
     	// habilita/deshabilita la accion enviado lote
 	    $(function () {
 	        $("input[name='idLaboratorio']").click(function () {
-	        	var radioValue = $("input[name='idLaboratorio']:checked"). val();
-	        	if (radioValue == '') {
-	        		$("#accionEnviado").addClass('disabled');
-		        } else {
-	        		$("#accionEnviado").removeClass('disabled');
-	        		$("#accionEnviado").removeAttr('disabled');
-		        }		
-		        $("#idLaboratorioEnviado").val(radioValue);      
+	        	var tieneMuestras = $('#tieneMuestras').val();
+	        	
+		        if (tieneMuestras == 'true') {
+			        var radioValue = $("input[name='idLaboratorio']:checked"). val();
+		        	if (radioValue == '') {
+		        		$("#accionEnviado").addClass('disabled');
+			        } else {
+		        		$("#accionEnviado").removeClass('disabled');
+		        		$("#accionEnviado").removeAttr('disabled');
+			        }		
+			        $("#idLaboratorioEnviado").val(radioValue);
+		        }      
 	        });
 	    });
 
@@ -110,6 +127,10 @@
 	        $("#accionEnviado").click(function () {
 		    	$("#formGuardarEnviado").submit();
 	        });
+	    });
+
+	    $('.alert').on('closed.bs.alert', function () {
+		    $('#alertInfo').removeClass('d-none');
 	    });
 	    
     </script>

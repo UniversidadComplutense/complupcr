@@ -10,12 +10,24 @@
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
-	
+	<BR>
 	<form action="#" th:action="@{/centroSalud/muestra/guardar}" method="post" th:object="${beanMuestra}" id="formGuardar" role="form">
 		<input type="hidden" th:field="${beanMuestra.id}"  th:value="${beanMuestra.id}" />
 		<input type="hidden" th:field="${beanMuestra.idPaciente}"  th:value="${beanMuestra.idPaciente}" />
 		<input type="hidden" th:field="${beanMuestra.resultado}"  th:value="${beanMuestra.resultado}" />
 		<input type="hidden" th:field="${beanMuestra.fechaAsignada}"  th:value="${beanMuestra.fechaAsignada}" />
+		
+		<!-- MENSAJES AVISO -->
+		<div th:classappend="${mensaje == null} ? visible : d-none" class="alert alert-secondary" role="alert" id="alertInfo">
+		  	<label th:if="${editable} and ${beanMuestra.id == null}">Nueva muestra</label>
+		  	<label th:if="${editable} and ${beanMuestra.id != null}">Modificar muestra</label>
+		  	<label th:if="!${editable}">Consulta muestra</label>
+		</div>
+		<div th:if="${mensaje !=null}" class="alert alert-success alert-dismissible fade show" role="alert">
+			<label th:text="${mensaje}"></label>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		</div>		
+		
 		<fieldset id="datosPaciente" class="form-group border p-2" th:disabled="!${editable}">
 			<!-- DATOS PACIENTE -->
 			<legend class="w-auto font-weight-bold">Paciente</legend>
@@ -141,5 +153,11 @@
 	</div>
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
     <object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+    
+    <script type="text/javascript">    	
+	    $('.alert').on('closed.bs.alert', function () {
+		    $('#alertInfo').removeClass('d-none');
+	    });	    
+    </script>
 </body>
 </html>
