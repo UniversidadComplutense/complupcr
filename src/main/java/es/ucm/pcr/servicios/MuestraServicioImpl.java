@@ -145,9 +145,11 @@ public class MuestraServicioImpl implements MuestraServicio {
 		if (loteOptional.isPresent()) {
 			muestra = loteOptional.get();
 			
-			// TODO - algo pasa con el lazy que no me trae el estado del lote...¿?¿?			
-			Lote l = loteRepositorio.findById(muestra.getLote().getId()).get();
-			muestra.setLote(l);
+			// TODO - algo pasa con el lazy que no me trae el estado del lote...¿?¿?	
+			if (muestra.getLote() != null) {
+				Lote l = loteRepositorio.findById(muestra.getLote().getId()).get();
+				muestra.setLote(l);
+			}
 		}
 		
 		// TODO - algo pasa con el lazy que no me trae el estado del lote...
