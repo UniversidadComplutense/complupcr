@@ -162,20 +162,22 @@ public class MuestraControlador {
 		}
 	}
 	
-	@RequestMapping(value="/notificarTelefono/{id}", method=RequestMethod.GET)
+	@RequestMapping(value="/muestra/notificarTelefono/{id}", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView notificarTelefono(HttpSession session, @PathVariable Integer id) throws Exception {
-		// TODO - llamada servicio rellenar fecha notificacion
+		
+		muestraServicio.actualizarNotificacionMuestra(id, false);
 		
 		// redirige a la consulta
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/" + id, true));
 		return respuesta;
 	}
 	
-	@RequestMapping(value="/notificarCorreo/{id}", method=RequestMethod.GET)
+	@RequestMapping(value="/muestra/notificarCorreo/{id}", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView notificarCorreo(HttpSession session, @PathVariable Integer id) throws Exception {
-		// TODO - llamada servicio envio correo y rellenar fecha notificacion		
+		
+		muestraServicio.actualizarNotificacionMuestra(id, true);
 		
 		// redirige a la consulta		
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/" + id, true));
@@ -189,9 +191,12 @@ public class MuestraControlador {
 	 * @return
 	 */
 	private boolean muestraEditable(MuestraCentroBean beanMuestra) {
-		return (beanMuestra.getId() == null || (beanMuestra.getId() != null 
-					&& (beanMuestra.getEstado().getEstado().getCodNum() == Estado.MUESTRA_INICIADA.getCodNum() 
-						|| beanMuestra.getEstado().getEstado().getCodNum() == Estado.MUESTRA_ASIGNADA_LOTE.getCodNum())));	
+		boolean nuevaMuestra = beanMuestra.getId() == null;
+		boolean tieneLote = beanMuestra.getIdLote() != null;
+		boolean tieneLoteEstado = tieneLote && (beanMuestra.getIdEstadoLote().intValue() == Estado.LOTE_INICIADO.getCodNum() 
+				|| beanMuestra.getIdEstadoLote().intValue() == Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum());
+				
+		return nuevaMuestra || (!nuevaMuestra && (!tieneLote || tieneLoteEstado));	
 	}
 	
 	private void addListsToView(ModelAndView vista) {
@@ -199,14 +204,14 @@ public class MuestraControlador {
 	}
 	
 	/**
-	 * La muestra es noficable si ya se ha resuelto sin estar pendiente y no tiene fecha de notificacion
+	 * La muestra es noficable si ya se ha resuelto y no tiene fecha de notificacion
 	 * @param beanMuestra
 	 * @return
 	 */
 	private boolean muestraNotificable(MuestraCentroBean beanMuestra) {
 		return beanMuestra.getId() != null 
 				&& beanMuestra.getResultado() != null 
-				&& !beanMuestra.getResultado().equals(BeanResultado.ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE.getDescripcion()) 
+				&& beanMuestra.getEstado().getEstado().getCodNum() == (Estado.MUESTRA_RESUELTA.getCodNum()) 	
 				&& beanMuestra.getFechaNotificacion() == null;
 	}
 	

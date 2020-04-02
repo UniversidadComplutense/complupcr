@@ -32,6 +32,10 @@ public class LaboratorioVisavet implements java.io.Serializable {
 
 	public LaboratorioVisavet() {
 	}
+	
+	public LaboratorioVisavet(Integer id) {
+		this.id = id;
+	}
 
 	public LaboratorioVisavet(String nombre) {
 		this.nombre = nombre;

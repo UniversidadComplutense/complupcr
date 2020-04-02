@@ -1,5 +1,6 @@
 package es.ucm.pcr.controladores;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,8 +9,11 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -24,6 +28,12 @@ import es.ucm.pcr.config.security.PcrUserDetailsService;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.servicios.UsuarioServicio;
 
+/**
+ * Controladores de inicio del portal
+ * 
+ * @author pmarrasant
+ *
+ */
 @Controller
 public class InicioControlador {
 
@@ -38,6 +48,9 @@ public class InicioControlador {
 
 	@Autowired
 	private PcrUserDetailsService pcrUserDetailsService;
+	
+	@Autowired
+	private Environment env;
 
 	@RequestMapping(value = "/acceso", method = RequestMethod.GET)
 	public String accesoGet(Model model, HttpServletRequest request,
@@ -68,12 +81,6 @@ public class InicioControlador {
 	@RequestMapping(value = "/cerrarSesion")
 	public String cerrarSesion() {
 		return "logout";
-	}
-
-	@RequestMapping(value = "/tecnico", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('TECNICO','ADMIN')")
-	public String tecnico() {
-		return "inicioTecnico";
 	}
 
 	@RequestMapping(value = "/regenerarContrasena", method = RequestMethod.GET)
@@ -108,7 +115,7 @@ public class InicioControlador {
 		String result = pcrUserDetailsService.validarPasswordResetToken(id, token);
 		if (result != null) {
 			session.invalidate();
-			model.addAttribute("mensajeError", "Login incorrecto.");
+			model.addAttribute("mensajeError", "El enlace esta caducado o es incorrecto.");
 			return "redirect:/acceso?error";
 		}
 		return "actualizarContrasena";
@@ -119,13 +126,23 @@ public class InicioControlador {
 			HttpSession session) {
 		PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
-		Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
-		usuarioServicio.cambiarContrasena(user, matchPassword);
+		usuarioServicio.cambiarContrasena(pcrUserDetails.getUser().getEmail(), matchPassword);
 		session.invalidate();
 		return "redirect:/acceso";
 	}
 
 	// ============== Metodos privados ============
+	
+	@Scheduled(cron ="${cron.expression}")
+	public void scheduleEnvioMailInicio() {
+		List<Usuario> userList = usuarioServicio.buscarUsuarioInhabilitados();
+		for (Usuario user :userList) {
+			mailSender.send(constructWelcomeEmail(env.getProperty("app.url"),user));
+			user.setHabilitado("E");
+			usuarioServicio.guardar(user);
+		}
+		
+	}
 
 	private SimpleMailMessage constructResetTokenEmail(String contextPath, String token, Usuario user) {
 		String url = contextPath + "/modificarContrasena?id=" + user.getId() + "&token=" + token;
@@ -136,6 +153,15 @@ public class InicioControlador {
 				message + " \r\n\n" + url + " \r\n\n\n Un cordial saludo.", user);
 	}
 
+	private SimpleMailMessage constructWelcomeEmail(String contextPath, Usuario user) {
+		String url = contextPath + "/regenerarContrasena";
+		String message = "Este es un correo automático enviado por la aplicación COVID-19.\n"
+				+ "No contestes a este mensaje.\r\n\n\n"
+				+ "Bien venido "+user.getNombre()+",\n\nHa sido dado de alta en la aplicación COVID-19.\r\n"+
+				"Para poder acceder debe solicitar el cambio de contraseña, indicando su e-mail ("+user.getEmail()+") a través del siguente enlace:";
+		return constructEmail("Sistema de seguimiento de muestras COVID-19",
+				message + " \r\n\n" + url + " \r\n\n\n Un cordial saludo.", user);
+	}
 	private SimpleMailMessage constructEmail(String subject, String body, Usuario user) {
 		SimpleMailMessage email = new SimpleMailMessage();
 		email.setSubject(subject);

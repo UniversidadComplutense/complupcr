@@ -9,12 +9,12 @@ import java.util.List;
 public class BusquedaPlacasVisavetBean {
 private String idPlaca;
 private  String numLote;
-private String fechaCreacion;
+private Date fechaCreacion;
 private String muestra;
-private List<BeanElemento> listaBeanEstado;
-private String codNumEstadoSeleccionado;
-private List<CentroBean> listaLaboratorioCentro;
-private String idLaboratorioCentro;
+private List<BeanEstado> listaBeanEstado;
+private Integer codNumEstadoSeleccionado;
+private List<BeanLaboratorio> listaLaboratorioCentro;
+private Integer idLaboratorioCentro;
 public String getIdPlaca() {
 	return idPlaca;
 }
@@ -27,10 +27,10 @@ public String getNumLote() {
 public void setNumLote(String numLote) {
 	this.numLote = numLote;
 }
-public String getFechaCreacion() {
+public Date getFechaCreacion() {
 	return fechaCreacion;
 }
-public void setFechaCreacion(String fechaCreacion) {
+public void setFechaCreacion(Date fechaCreacion) {
 	this.fechaCreacion = fechaCreacion;
 }
 public String getMuestra() {
@@ -39,28 +39,28 @@ public String getMuestra() {
 public void setMuestra(String muestra) {
 	this.muestra = muestra;
 }
-public List<BeanElemento> getListaBeanEstado() {
+public List<BeanEstado> getListaBeanEstado() {
 	return listaBeanEstado;
 }
-public void setListaBeanEstado(List<BeanElemento> listaBeanEstado) {
+public void setListaBeanEstado(List<BeanEstado> listaBeanEstado) {
 	this.listaBeanEstado = listaBeanEstado;
 }
-public String getCodNumEstadoSeleccionado() {
+public Integer getCodNumEstadoSeleccionado() {
 	return codNumEstadoSeleccionado;
 }
-public void setCodNumEstadoSeleccionado(String codNumEstadoSeleccionado) {
+public void setCodNumEstadoSeleccionado(Integer codNumEstadoSeleccionado) {
 	this.codNumEstadoSeleccionado = codNumEstadoSeleccionado;
 }
-public List<CentroBean> getListaLaboratorioCentro() {
+public List<BeanLaboratorio> getListaLaboratorioCentro() {
 	return listaLaboratorioCentro;
 }
-public void setListaLaboratorioCentro(List<CentroBean> listaLaboratorioCentro) {
+public void setListaLaboratorioCentro(List<BeanLaboratorio> listaLaboratorioCentro) {
 	this.listaLaboratorioCentro = listaLaboratorioCentro;
 }
-public String getIdLaboratorioCentro() {
+public Integer getIdLaboratorioCentro() {
 	return idLaboratorioCentro;
 }
-public void setIdLaboratorioCentro(String idLaboratorioCentro) {
+public void setIdLaboratorioCentro(Integer idLaboratorioCentro) {
 	this.idLaboratorioCentro = idLaboratorioCentro;
 }
 

@@ -1,5 +1,6 @@
 package es.ucm.pcr.servicios;
 
+import java.util.List;
 import java.util.Set;
 
 import es.ucm.pcr.beans.BeanUsuarioGestion;
@@ -38,7 +39,7 @@ public interface UsuarioServicio {
 	 * @param BeanUsuarioGestion
 	 * @return Usuario
 	 */	
-	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuarioGestion beanUsuario) throws Exception;
+	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuarioGestion beanUsuario, int[] roles) throws Exception;
 	
 	/**
 	 * Realiza el mapeo del bean a la entidad Usuario para modificar
@@ -46,7 +47,7 @@ public interface UsuarioServicio {
 	 * @param BeanUsuario, Usuario
 	 * @return Usuario
 	 */	
-	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuarioGestion beanUsuario, Usuario usuario) throws Exception;
+	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuarioGestion beanUsuario, Usuario usuario, int[] roles) throws Exception;
 	
 	
 	/**
@@ -63,5 +64,19 @@ public interface UsuarioServicio {
 	 * @param user
 	 * @param contrasena
 	 */
-	public void cambiarContrasena(Usuario user, String contrasena);
+	public void cambiarContrasena(String email, String contrasena);
+	
+	/**
+	 * Obtener usarios inhabilitados.
+	 * 
+	 * @return
+	 */
+	public List<Usuario> buscarUsuarioInhabilitados();
+	
+	/**
+	 * Guarda el usuario
+	 * 
+	 * @return
+	 */
+	public Usuario guardar(Usuario usuario);
 }

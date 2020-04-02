@@ -89,7 +89,7 @@ public class SesionServicioImpl implements SesionServicio {
 //  Recepcion Laboratorio
 		if (this.tieneRol("ADMIN") || this.tieneRol("RECEPCIONLABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Gestionar entregas", null, null);
+			opcionSecundaria = new MenuBean("Gestionar entregas", "/laboratorioUni/buscarLotes", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Recepción laboratorio", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
@@ -97,15 +97,9 @@ public class SesionServicioImpl implements SesionServicio {
 //	Tecnico laboratorio
 		if (this.tieneRol("ADMIN") || this.tieneRol("TECNICOLABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Gestionar entregas", "", null);
+			opcionSecundaria = new MenuBean("Gestionar entregas", "/laboratorioUni/buscarLotes", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Preparar", "", null);
-			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Placas en preparacion", "", null);
-			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Placas listas para laboratorio", "", null);
-			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Laboratorios", "", null);
+			opcionSecundaria = new MenuBean("Gestionar placas", "/laboratorioUni/buscarPlacas", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Tecnico laboratorio", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
@@ -139,7 +133,7 @@ public class SesionServicioImpl implements SesionServicio {
 //			Analista
 		if (this.tieneRol("ADMIN") || this.tieneRol("ANALISTALABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Revisar miestra", "", null);
+			opcionSecundaria = new MenuBean("Revisar muestras", "/analisis/listarMuestrasAnalista", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Analista", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);

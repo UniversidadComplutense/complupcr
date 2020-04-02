@@ -27,6 +27,7 @@ public class MuestraCentroBean implements java.io.Serializable {
 	private String resultado;
 	private BeanEstado estado;
 	private Integer idLote;
+	private Integer idEstadoLote;
 	private String nhc;
 	private boolean recogerDatosNotif;
 	private boolean avisosAuto;
@@ -229,6 +230,14 @@ public class MuestraCentroBean implements java.io.Serializable {
 	public void setIdPaciente(Integer idPaciente) {
 		this.idPaciente = idPaciente;
 	}
+	
+	public Integer getIdEstadoLote() {
+		return idEstadoLote;
+	}
+
+	public void setIdEstadoLote(Integer idEstadoLote) {
+		this.idEstadoLote = idEstadoLote;
+	}
 
 	public static Muestra beanToModel(MuestraCentroBean muestraBean) {
 		Muestra muestra = new Muestra();
@@ -238,15 +247,17 @@ public class MuestraCentroBean implements java.io.Serializable {
 		muestra.setEtiqueta(muestraBean.getEtiqueta());
 		muestra.setTipoMuestra(muestraBean.getTipoMuestra());
 		muestra.setFechaEntrada(muestraBean.getFechaEntrada());
-		muestra.setFechaAsignada(muestraBean.getFechaAsignada());
+		
 		if (muestraBean.getEstado() != null) {
 			muestra.setEstadoMuestra(new EstadoMuestra(muestraBean.getEstado().getEstado().getCodNum()));
 		}
 		muestra.setCentro(new Centro(muestraBean.getIdCentro()));	
 		if (muestraBean.getIdLote() != null) {
 			muestra.setLote(new Lote(muestraBean.getIdLote()));
+			muestra.setFechaAsignada(muestraBean.getFechaAsignada() != null ? muestraBean.getFechaAsignada() : new Date());			
 		} else {
 			muestra.setLote(null);
+			muestra.setFechaAsignada(null);
 		}
 		
 		if (StringUtils.isNotEmpty(muestraBean.getResultado())) {
@@ -282,11 +293,15 @@ public class MuestraCentroBean implements java.io.Serializable {
 		muestraBean.setTipoMuestra(muestra.getTipoMuestra());
 		muestraBean.setFechaEntrada(muestra.getFechaEntrada());
 		muestraBean.setFechaAsignada(muestra.getFechaAsignada());
+		muestraBean.setFechaNotificacion(muestra.getFechaNotificacion());
+		muestraBean.setFechaEnvio(muestra.getFechaEnvio());
+		muestraBean.setFechaResultado(muestra.getFechaResultado());
 		BeanEstado beanEstado = new BeanEstado();
 		muestraBean.setEstado(beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, muestra.getEstadoMuestra().getId()));
 		muestraBean.setIdCentro(muestra.getCentro().getId());
 		if (muestra.getLote() != null) {
 			muestraBean.setIdLote(muestra.getLote().getId());
+			muestraBean.setIdEstadoLote(muestra.getLote().getEstadoLote().getId());
 		}
 		
 		BeanResultado beanResultado = new BeanResultado();

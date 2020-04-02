@@ -37,6 +37,8 @@ public class PlacaLaboratorio implements java.io.Serializable {
 	private Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>(
 			0);
 	private Set<Documento> documentos = new HashSet<Documento>(0);
+	private Usuario usuario; //un jefe coge la placa para asignar sus muestras a los analistas
+	
 
 	public PlacaLaboratorio() {
 	}
@@ -117,6 +119,18 @@ public class PlacaLaboratorio implements java.io.Serializable {
 	public void setDocumentos(Set<Documento> documentos) {
 		this.documentos = documentos;
 	}
+	
+	
+	@ManyToOne
+	@JoinColumn(name = "idUsuario")
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}	
+	
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fechaCreaccion", length = 10)

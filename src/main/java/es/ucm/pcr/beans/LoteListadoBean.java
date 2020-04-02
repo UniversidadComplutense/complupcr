@@ -109,13 +109,17 @@ public class LoteListadoBean {
 		bean.setId(lote.getId());
 		bean.setNumLote(lote.getNumeroLote());
 		bean.setCapacidad(lote.getCapacidad());
-		//bean.setFechaEnvio(lote.getFechaEnvio());
+		bean.setFechaEnvio(lote.getFechaEnvio());
 		bean.setDescEstado(lote.getEstadoLote().getDescripcion());
+		if (lote.getLaboratorioVisavet() != null) {
+			bean.setDescLaboratorio(lote.getLaboratorioVisavet().getNombre());
+		}
 		//añadido por yoli
 	    bean.setCentroBean(CentroBean.modelToBean(lote.getCentro()));
 	    BeanEstado estado = new BeanEstado();
 	    estado.asignarTipoEstadoYCodNum(TipoEstado.EstadoLote, lote.getEstadoLote().getId());
 	    bean.setBeanEstado(estado);
+		
 		// Si el lote tiene muestras
 		if (!CollectionUtils.isEmpty(lote.getMuestras())) {
 			for (Muestra m : lote.getMuestras()) {

@@ -37,6 +37,7 @@ public class Lote implements java.io.Serializable {
 	private String numeroLote;
 	private Date fechaEnvio;
 	private int capacidad;
+	private LaboratorioVisavet laboratorioVisavet;
 	private Set<Muestra> muestras = new HashSet<Muestra>(0);
 
 	public Lote() {
@@ -88,7 +89,7 @@ public class Lote implements java.io.Serializable {
 		this.centro = centro;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idEstadoLote", nullable = false)
 	public EstadoLote getEstadoLote() {
 		return this.estadoLote;
@@ -96,6 +97,16 @@ public class Lote implements java.io.Serializable {
 
 	public void setEstadoLote(EstadoLote estadoLote) {
 		this.estadoLote = estadoLote;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name = "idLaboratorioVisavet", nullable = true)
+	public LaboratorioVisavet getLaboratorioVisavet() {
+		return laboratorioVisavet;
+	}
+
+	public void setLaboratorioVisavet(LaboratorioVisavet laboratorioVisavet) {
+		this.laboratorioVisavet = laboratorioVisavet;
 	}
 
 	@ManyToOne
