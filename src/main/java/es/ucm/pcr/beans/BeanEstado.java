@@ -32,9 +32,12 @@ public class BeanEstado {
 		
 		
 		//ESTADOS PLACA VISAVET
-		PLACAVISAVET_INICIADA (1, "Iniciada"), PLACAVISAVET_PREPARADA (2, "Preparada para laboratorio"),					
+		PLACAVISAVET_INICIADA (1, "Iniciada"), PLACAVISAVET_PREPARADA (2, "Preparada con muestras"),					
 		PLACAVISAVET_FINALIZADA (3, "Finalizada"),
-		PLACAVISAVET_ASIGNADA (4, "Asignada a Laboratorio"),		
+		PLACAVISAVET_ASIGNADA (4, "Asignada a Laboratorio"),	
+		PLACAVISAVET_ENVIADA (5, "Enviada"),	
+		PLACAVISAVET_RECIBIDA (6, "Recibida"),	
+		PLACAVISAVET_TRANSPASADA (7, "Transpasada"),	
 		;
 				
 		private int codNum;
@@ -191,7 +194,18 @@ public class BeanEstado {
 						this.setEstado(Estado.PLACAVISAVET_ASIGNADA);
 						break;
 					}
-					
+					case 5: {
+						this.setEstado(Estado.PLACAVISAVET_ENVIADA);
+						break;
+					}
+					case 6: {
+						this.setEstado(Estado.PLACAVISAVET_RECIBIDA);
+						break;
+					}
+					case 7: {
+						this.setEstado(Estado.PLACAVISAVET_TRANSPASADA);
+						break;
+					}
 				}
 			break;
 			}

@@ -27,3 +27,16 @@
 fieldset legend {
 	font-size: 18px;
 }
+
+#tablaMuestras.tableFixHead { 
+	overflow-y: auto; 
+	height: 500px; 
+}
+#tablaMuestras.tableFixHead thead th { 
+	position: sticky; 
+	top: 0; 
+}
+
+#tablaMuestras table  { border-collapse: collapse; width: 100%; }
+#tablaMuestras th, td { padding: 8px 16px; }
+#tablaMuestras th     { background:#eee; }

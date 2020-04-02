@@ -14,7 +14,8 @@
 	<form action="#" th:action="@{/centroSalud/lote/guardar}" method="post" th:object="${beanLote}" id="formGuardar" role="form">
 		<input type="hidden" th:field="${beanLote.id}"  th:value="${beanLote.id}" />
 		<input type="hidden" name="estado" th:value="${beanLote.estado.estado.codNum}" th:if="${beanLote.estado} != null"/>	
-		<input type="hidden" id="tieneMuestras" th:value="${beanLote.tieneMuestras}"/>	
+		<input type="hidden" th:field="${beanLote.tieneMuestras}" th:value="${beanLote.tieneMuestras}"/>	
+		<input type="hidden" th:field="${beanLote.numeroMuestras}" th:value="${beanLote.tieneMuestras}"/>
 		
 		<!-- MENSAJES AVISO -->
 		<div th:classappend="${mensaje == null} ? visible : d-none" class="alert alert-secondary" role="alert" id="alertInfo">
@@ -28,7 +29,7 @@
 		</div>
 		
 		<fieldset id="datosLote" class="form-group border p-2" th:disabled="!${editable}">
-			<legend class="w-auto font-weight-bold" th:if="${beanLote.tieneMuestras}">Lote con muestras</legend>
+			<legend class="w-auto font-weight-bold" th:if="${beanLote.tieneMuestras}">Lote con <span th:text="${beanLote.numeroMuestras}"/> muestras</legend>
 			<legend class="w-auto font-weight-bold" th:if="!${beanLote.tieneMuestras}">Lote sin muestras</legend>
 			<div class="row">
 				<div class="col-4 form-group">
@@ -39,6 +40,7 @@
 				<div class="col-4 form-group">
 					<label>Capacidad</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="${beanLote.capacidad}"  th:value="${beanLote.capacidad}" pattern="[0-9]+" maxlength="3" required/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('capacidad')}" th:errors="${beanLote.capacidad}"></label>
 				</div>
 			</div>		
 			<div class="row">			
@@ -82,7 +84,7 @@
 		<!-- ACCCIONES -->
 		<div class="row justify-content-center mt-3">
 			<div class="col-2">
-				<a th:href="@{/centroSalud/lote}" class="btn btn-secondary">Volver</a>				
+				<a th:href="@{/centroSalud/lote/list}" class="btn btn-secondary">Volver</a>				
 			</div>
 			<div class="col-2">
 				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>
