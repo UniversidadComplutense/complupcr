@@ -81,7 +81,8 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		beanUsuario.setNombre(usuario.getNombre());
 		beanUsuario.setPassword(usuario.getPassword());
 		beanUsuario.setRols(usuario.getRols());
-		beanUsuario.setUsuarioMuestras(usuario.getUsuarioMuestras());				
+		beanUsuario.setUsuarioMuestras(usuario.getUsuarioMuestras());	
+
 		
 		return beanUsuario;
 	}

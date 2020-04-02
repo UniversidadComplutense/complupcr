@@ -1,8 +1,10 @@
 package es.ucm.pcr.servicios;
 
 import java.util.List;
+import java.util.Map;
 
 import es.ucm.pcr.beans.BeanCentro;
+import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Centro;
 
 public interface CentroServicio {
@@ -30,4 +32,13 @@ public interface CentroServicio {
 	 * @return List<BeanCentro>
 	 */
 	public List<BeanCentro> listaCentrosOrdenada() throws Exception;
+	
+	/**
+	 * Mapa de Centros
+	 * 
+	 * @param List<BeanCentro>
+	 * @return Map<String,String>
+	 */
+	public Map<Integer,String> mapaCentros (List<BeanCentro> centros) throws Exception;
+
 }

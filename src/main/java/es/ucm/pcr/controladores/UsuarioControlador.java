@@ -3,6 +3,7 @@ package es.ucm.pcr.controladores;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
@@ -18,10 +19,12 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanRol;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
-import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.RolRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
+import es.ucm.pcr.servicios.CentroServicio;
+import es.ucm.pcr.servicios.LaboratorioCentroServicio;
+import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 import es.ucm.pcr.servicios.RolServicio;
 import es.ucm.pcr.servicios.UsuarioServicio;
 
@@ -39,6 +42,15 @@ public class UsuarioControlador {
 	
 	@Autowired
 	RolServicio rolServicio;
+	
+	@Autowired
+	LaboratorioVisavetServicio laboratorioVisavetServicio;
+	
+	@Autowired
+	LaboratorioCentroServicio laboratorioCentroServicio;
+	
+	@Autowired
+	CentroServicio centroServicio;
 	
 	//	Muestra una lista ordenada ap1, ap2,nombre con los usuarios
 	// Punto de entrada a la gestión de usuarios
@@ -66,7 +78,8 @@ public class UsuarioControlador {
 								usuario.getUsuarioMuestras(),
 								usuario.getRols(),
 								usuario.getHabilitado(),
-								"L"
+								"L",
+								0
 								));
 		}
 		//	Ordeno por ap1, ap2, nombre
@@ -90,8 +103,18 @@ public class UsuarioControlador {
 		List<BeanRol> listaRoles = rolServicio.generarListaRoles();
 		vista.addObject("listaRoles", listaRoles);
 		
-		boolean seleccionado = true;
-		vista.addObject("seleccionado", seleccionado);
+		// añadimos los laboratorios Visavet
+		Map<Integer,String> mapaLaboratoriosVisavet = laboratorioVisavetServicio.mapaLaboratoriosVisavet(laboratorioVisavetServicio.listaLaboratoriosVisavetOrdenada());
+		vista.addObject("mapaLaboratoriosVisavet", mapaLaboratoriosVisavet);
+		
+		// añadimos los laboratorios Centro
+		Map<Integer,String> mapaLaboratoriosCentro = laboratorioCentroServicio.mapaLaboratoriosCentro(laboratorioCentroServicio.listaLaboratoriosCentroOrdenada());
+		vista.addObject("mapaLaboratoriosCentro", mapaLaboratoriosCentro);
+		
+		// añadimos los centros
+		Map<Integer,String> mapaCentros = centroServicio.mapaCentros(centroServicio.listaCentrosOrdenada());
+		vista.addObject("mapaCentros", mapaCentros);
+
 		
 		return vista;
 	}
@@ -141,6 +164,18 @@ public class UsuarioControlador {
 		// Añadimos los roles en BBDD
 		List<BeanRol> listaRoles = rolServicio.generarListaRolesUsuario(usuario.get());
 		vista.addObject("listaRoles", listaRoles);
+		
+		// añadimos los laboratorios Visavet
+		Map<Integer,String> mapaLaboratoriosVisavet = laboratorioVisavetServicio.mapaLaboratoriosVisavet(laboratorioVisavetServicio.listaLaboratoriosVisavetOrdenada());
+		vista.addObject("mapaLaboratoriosVisavet", mapaLaboratoriosVisavet);
+		
+		// añadimos los laboratorios Centro
+		Map<Integer,String> mapaLaboratoriosCentro = laboratorioCentroServicio.mapaLaboratoriosCentro(laboratorioCentroServicio.listaLaboratoriosCentroOrdenada());
+		vista.addObject("mapaLaboratoriosCentro", mapaLaboratoriosCentro);
+		
+		// añadimos los centros
+		Map<Integer,String> mapaCentros = centroServicio.mapaCentros(centroServicio.listaCentrosOrdenada());
+		vista.addObject("mapaCentros", mapaCentros);
 		
 		vista.addObject("formBeanUsuario", beanUsuario);
 	
