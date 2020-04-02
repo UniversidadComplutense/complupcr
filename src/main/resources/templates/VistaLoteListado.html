@@ -10,8 +10,21 @@
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
-	
+	<br>
 	<form action="#" th:action="@{/centroSalud/lote/list}" method="post" th:object="${beanBusquedaLote}" id="formBusqueda" role="form">
+		
+		<div th:classappend="${mensaje == null} and ${mensajeError == null} ? visible : d-none" class="alert alert-secondary" role="alert" id="alertInfo">
+		  	<label>Gestión lotes</label>
+		</div>
+		
+		<div th:if="${mensaje !=null}" class="alert alert-success alert-dismissible fade show" role="alert">
+			<label th:text="${mensaje}"></label>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		</div>
+		<div th:if="${mensajeError !=null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+			<label th:text="${mensajeError}"></label>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		</div>
 		
 		<!-- CRITERIOS BUSQUEDA LOTE -->
 		<fieldset id="datosLote" class="form-group border p-2">
@@ -73,9 +86,9 @@
 						<th scope="col">Estado</th>
 						<th scope="col">Fecha envío</th>
 						<th scope="col">Capacidad</th>
-						<th scope="col">Numero muestras</th>
+						<!-- <th scope="col">Numero muestras</th>-->
 						<th scope="col">Muestras</th>
-						<th scope="col">Modificar</th>
+						<th scope="col">Acciones</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -85,7 +98,7 @@
 						<td><span th:text="${lote.descEstado}"></span></td>
 						<td><span th:text="${#dates.format(lote.fechaEnvio, 'dd/MM/yyyy')}"></span></td>
 						<td><span th:text="${lote.capacidad}"></span></td>
-						<td><span th:text="${#lists.size(lote.muestras)}"></span></td>
+						<!-- <td><span th:text="${#lists.size(lote.muestras)}"></span></td> -->
 						<td>
 							<div th:if="${#lists.size(lote.muestras) == 0}">
 								<a style="cursor: pointer;color:grey">
@@ -93,33 +106,34 @@
 								</a>
 							</div>
 							
-							<div th:if="${#lists.size(lote.muestras) > 0}">
-								<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${lote.id}" style="cursor: pointer;">
+							<div th:if="${#lists.size(lote.muestras) > 0}">								
+								<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${lote.id}" style="cursor: pointer;" title="Ver muestras">
 									<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
 								</a>
+								<span th:text="${#lists.size(lote.muestras)}"></span>								
 							</div>
 							<!-- MODAL MUESTRAS -->							
 							<div class="modal fade" th:id="modal-warning+${lote.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-								<div class="modal-dialog modal-lg" role="document">
+								<div class="modal-dialog modal-xl" role="document">
 							    	<div class="modal-content">
 							      		<div class="modal-header">
-							        		<h5 class="modal-title" id="exampleModalLabel">Muestras Lote - <b><span th:text="${lote.numLote}"/></b></h5>
+							        		<h5 class="modal-title" id="exampleModalLabel">Muestras Lote - <b><span th:text="${lote.numLote}"/></b> con <span th:text="${#lists.size(lote.muestras)}"/> muestras</h5>
 							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							          			<span aria-hidden="true">&times;</span>
 							        		</button>
 							      		</div>
 							      		<div class="modal-body">							        
 								        	<!-- Muestras del lote -->
-								          	<div class="justify-content-center mt-3">
-												<table class="table">
+								          	<div id="tablaMuestras" class="tableFixHead">
+												<table>
 													<thead class="thead-light">	
 									    				<tr>
-										      				<th scope="col">Nombre</th>
-															<th scope="col">NHC</th>
-															<th scope="col">Fecha envío</th>
-															<th scope="col">Fecha resultado</th>
-															<th scope="col">Resultado</th>
-															<th scope="col">Notificado</th>
+										      				<th>Nombre</th>
+															<th>NHC</th>
+															<th>Fecha envío</th>
+															<th>Fecha resultado</th>
+															<th>Resultado</th>
+															<th>Notificado</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -144,9 +158,17 @@
 							<!-- FIN MODAL MUESTRAS -->	
 						</td>
 						<td>
-							<a style="color:black" th:href="@{/centroSalud/lote/modificar(id=${lote.id})}">
+							<!-- ACCIONES -->
+							<a style="color:black" th:href="@{/centroSalud/lote/modificar(id=${lote.id})}" title="Modificar">
 					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
-					        </a>					        
+					        </a>
+					        <a th:if="${#lists.size(lote.muestras) > 0}" style="color:grey;cursor: pointer;" title="Borrar">
+					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>			        
+					        <a th:if="${#lists.size(lote.muestras) == 0}" style="color:black;cursor: pointer;" th:href="@{/centroSalud/lote/borrar(id=${lote.id})}" title="Borrar">
+					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>
+					         
 						</td>						
 					</tr>		
 				</tbody>
@@ -158,6 +180,11 @@
 	
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
-
+	<script type="text/javascript">
+    	$('.alert').on('closed.bs.alert', function () {
+		    $('#alertInfo').removeClass('d-none');
+	    });
+	    
+    </script>
 </body>
 </html>

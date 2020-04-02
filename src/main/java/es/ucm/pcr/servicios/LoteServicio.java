@@ -58,5 +58,7 @@ public interface LoteServicio {
 	
 	
 	
+	
+	public boolean borrar(Integer id);
 
 }

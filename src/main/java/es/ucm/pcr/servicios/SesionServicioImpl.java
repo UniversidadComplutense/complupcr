@@ -2,6 +2,7 @@ package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -12,13 +13,23 @@ import org.springframework.stereotype.Service;
 import es.ucm.pcr.beans.MenuBean;
 import es.ucm.pcr.config.security.PcrUserDetails;
 import es.ucm.pcr.modelo.orm.Centro;
+import es.ucm.pcr.modelo.orm.LaboratorioCentro;
+import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Usuario;
+import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
+import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
 
 @Service
 public class SesionServicioImpl implements SesionServicio {
 
 	@Autowired
 	UsuarioServicio usuarioServicio;
+	
+	@Autowired
+	LaboratorioVisavetRepositorio laboratorioVisavetRepositorio;
+	
+	@Autowired
+	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
 
 	@Override
 	public Usuario getUsuario() {
@@ -64,12 +75,11 @@ public class SesionServicioImpl implements SesionServicio {
 	public Centro getCentro() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
-		return ud.getCentro();
+		return ud.getUsuario().getCentro();
 	}
 
 	@Override
 	public List<MenuBean> getMenu() {
-		// TODO Auto-generated method stub -- AARON
 		List<MenuBean> menuPrincipal = null;
 		List<MenuBean> menuSecundario = null;
 		MenuBean opcionSecundaria = null;
@@ -156,4 +166,29 @@ public class SesionServicioImpl implements SesionServicio {
 		return menuPrincipal;
 	}
 
+	@Override
+	public LaboratorioVisavet getLaboratorioVisavet() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
+		Integer idLabV = ud.getUsuario().getIdLaboratorioVisavet();
+		Optional<LaboratorioVisavet> labV = laboratorioVisavetRepositorio.findById(idLabV);
+		if (labV.isPresent()) {
+			return labV.get();
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public LaboratorioCentro getLaboratorioCentro() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
+		Integer idLabC = ud.getUsuario().getIdLaboratorioCentro();
+		Optional<LaboratorioCentro> labC = laboratorioCentroRepositorio.findById(idLabC);
+		if (labC.isPresent()) {
+			return labC.get();
+		} else {
+			return null;
+		}
+	}
 }

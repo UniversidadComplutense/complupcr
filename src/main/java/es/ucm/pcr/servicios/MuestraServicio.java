@@ -1,5 +1,7 @@
 package es.ucm.pcr.servicios;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,6 +19,13 @@ public interface MuestraServicio {
 	 * @return
 	 */
 	public Page<MuestraListadoBean> findMuestraByParam(MuestraBusquedaBean params, Pageable pageable);
+	
+	/**
+	 * Recupera todas las muestras en funcion de los parametros de busqueda
+	 * @param params
+	 * @return
+	 */
+	public List<MuestraListadoBean> findMuestraByParam(MuestraBusquedaBean params);
 	
 	/**
 	 * Guardar muestra
@@ -47,5 +56,19 @@ public interface MuestraServicio {
 	 * @param enviarMail envio mail si true, no envio en caso contrario
 	 */
 	public void actualizarNotificacionMuestra(Integer id, boolean enviarMail);
+	
+	/**
+	 * Valida si la muestra se puede borrar
+	 * @param id
+	 * @return
+	 */
+	public boolean validateBorrar(Integer id);
+	
+	/**
+	 * Borrar muestra
+	 * @param id identificador de la muestra a borrar
+	 * @return
+	 */
+	public boolean borrar(Integer id);
 
 }

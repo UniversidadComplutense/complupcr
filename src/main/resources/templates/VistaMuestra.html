@@ -16,6 +16,8 @@
 		<input type="hidden" th:field="${beanMuestra.idPaciente}"  th:value="${beanMuestra.idPaciente}" />
 		<input type="hidden" th:field="${beanMuestra.resultado}"  th:value="${beanMuestra.resultado}" />
 		<input type="hidden" th:field="${beanMuestra.fechaAsignada}"  th:value="${beanMuestra.fechaAsignada}" />
+		<input type="hidden" th:field="${beanMuestra.idLote}"  th:value="${beanMuestra.idLote}" />
+		<input type="hidden" th:field="${beanMuestra.idEstadoLote}"  th:value="${beanMuestra.idEstadoLote}" />
 		
 		<!-- MENSAJES AVISO -->
 		<div th:classappend="${mensaje == null} ? visible : d-none" class="alert alert-secondary" role="alert" id="alertInfo">
@@ -60,6 +62,7 @@
 				<div class="col-4 form-group">
 					<label>NHC</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nhc}"  th:value="${beanMuestra.nhc}" required maxlength="45"/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('nhc')}" th:errors="${beanMuestra.nhc}"></label>
 				</div>											
 			</div>
 			<div class="row">	
@@ -108,7 +111,8 @@
 				 		<option th:each="var: ${listaLotes}"
 									th:value="${var.id}" th:text="${var.numLote}"
 									th:select="${beanMuestra.idLote}"></option>
-				 	</select>					
+				 	</select>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('idLote')}" th:errors="${beanMuestra.idLote}"></label>					
 				</div>
 				<div class="col-4 form-group">
 					<label>Fecha envio</label>
@@ -136,7 +140,7 @@
 		<!-- ACCCIONES -->
 		<div class="row justify-content-center mt-3">
 			<div class="col-2">
-				<a th:href="@{/centroSalud/muestra/}" class="btn btn-secondary">Volver</a>				
+				<a th:href="@{/centroSalud/muestra/list}" class="btn btn-secondary">Volver</a>				
 			</div>
 			<div class="col-2">
 				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>

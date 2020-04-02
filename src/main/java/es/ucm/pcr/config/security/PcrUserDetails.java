@@ -24,11 +24,9 @@ public class PcrUserDetails implements UserDetails {
 	private static final long serialVersionUID = -3134992594168099074L;
 	private UsuarioSecurity user;
 
-	public PcrUserDetails(Usuario user, Set<GrantedAuthority> grantedAuthorities, Centro centro) {
+	public PcrUserDetails(Usuario user, Set<GrantedAuthority> grantedAuthorities) {
 		
-		this.user = new UsuarioSecurity(user.getEmail(), user.getPassword(), grantedAuthorities, user.getNombre(),
-				user.getApellido1(), user.getApellido2(), user.getEmail());
-		this.user.setCentro(centro);
+		this.user = new UsuarioSecurity(user.getEmail(), user.getPassword(), grantedAuthorities, user);
 	}
 
 	@Override
@@ -66,28 +64,11 @@ public class PcrUserDetails implements UserDetails {
 		return this.user.isEnabled();
 	}
 	
-	public String getNombre() {
-		return this.user.getNombre();
-	}
-
-	public String getApellido1() {
-		return this.user.getApellido1();
-	}
-
-	public String getApellido2() {
-		return this.user.getApellido2();
-	}
-
-	public String getEmail() {
-		return this.user.getEmail();
-	}
-	
-	public Centro getCentro() {
-		return this.user.getCentro();
+	public Usuario getUsuario() {
+		return this.user.getUsuario();
 	}
 
 	public UsuarioSecurity getUser() {
 		return user;
 	}
-
 }
