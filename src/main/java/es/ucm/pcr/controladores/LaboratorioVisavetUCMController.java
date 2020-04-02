@@ -46,6 +46,7 @@ import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.BeanPlacaVisavetUCM;
 import es.ucm.pcr.beans.LotePlacaVisavetBean;
+import es.ucm.pcr.servicios.CentroServicio;
 import es.ucm.pcr.servicios.LoteServicio;
 import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
 import es.ucm.pcr.servicios.ServicioLotes;
@@ -63,6 +64,9 @@ public class LaboratorioVisavetUCMController {
 	
 	@Autowired
 	SesionServicio sesionServicio;
+	
+	@Autowired
+	CentroServicio centroServicio;
 	@SuppressWarnings("unused")
 	private final static Logger log = LoggerFactory.getLogger(LaboratorioVisavetUCMController.class);
 	public static final Sort ORDENACION = Sort.by(Direction.ASC, "fechaEnvio");
@@ -71,47 +75,16 @@ public class LaboratorioVisavetUCMController {
 	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
 	}
-	/*private List<BeanElemento> listaEstados = null;
-	private List<BeanElemento> rellenaListaEstados() throws Exception {
-		if (listaEstados == null) {
-			listaEstados = servicioLotes.buscarEstadosLotes();
-			BeanElemento estado = new BeanElemento();
 
-			
-		}
-		return listaEstados;
-	}*/
-	// para probar
-	public LoteBeanPlacaVisavet getBean(int i) {
-		LoteBeanPlacaVisavet bean = new LoteBeanPlacaVisavet();
-		bean.setId(i);
-		bean.setNumLote("33454d");
-		BeanEstado estado= new BeanEstado();
-		estado.setTipoEstado(TipoEstado.EstadoLote);
-		estado.setEstado(Estado.LOTE_ENVIADO_CENTRO_ANALISIS);
-		
-		Date date= new Date();
-		bean.setCentroProcedencia("Centro de Salud de Getafe");
-		bean.setFechaEntrada(Calendar.getInstance().getTime());
-		bean.setEstado(estado);
-		List<MuestraBeanLaboratorioVisavet>  listaMuestras = new ArrayList();
-		for (int j=0;j<30;j++) {
-			MuestraBeanLaboratorioVisavet e=new MuestraBeanLaboratorioVisavet();
-			e.setId(j);
-			e.setEtiqueta("498979");
-			
-			e.setTipoMuestra("nanofaringe");
-		
-			listaMuestras.add(e);
-		}
-		bean.setFuncionEjecutar("loadConfirmarEnvio("+bean.getId()+")");
-		bean.setListaMuestras(listaMuestras);
-		
-		
-		return bean;
-	}
+private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes) throws Exception {
+	busquedaLotes.setIdCentro(0);
 
-	public ModelAndView buscarLotes(BusquedaLotesBean busquedaLotes, HttpServletRequest request, HttpSession session, Pageable pageable) {
+	busquedaLotes.setListaBeanEstado(BeanEstado.estadosLote());
+	busquedaLotes.setListaCentros(centroServicio.listaCentrosOrdenada());
+
+	return busquedaLotes;
+}
+	public ModelAndView buscarLotes(BusquedaLotesBean busquedaLotes, HttpServletRequest request, HttpSession session, Pageable pageable) throws Exception {
 		/* ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 		// invocar al servicio que dado id De laboratorio se obtiene la entidad laboratorioUni
 		Page<LoteBeanPlacaVisavet> paginaLotes = null;
@@ -126,7 +99,8 @@ public class LaboratorioVisavetUCMController {
 		return vista; */
 		Page<LoteBeanPlacaVisavet> paginaLotes = null;
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
-		busquedaLotes.setIdCentro(0);
+	
+		busquedaLotes= this.rellenarBusquedaLotes(busquedaLotes);
 		paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), ORDENACION));
 		//model.addAttribute("paginaLotes", paginaLotes);
 		vista.addObject("paginaLotes", paginaLotes);
@@ -141,11 +115,11 @@ public class LaboratorioVisavetUCMController {
          // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
 		System.out.println("numero get "+pageable.getPageNumber());
 		BusquedaLotesBean busquedaLotes= new BusquedaLotesBean();
+		
 		// inicializamos a enviado para filtrar por estos
-		busquedaLotes.setCodNumEstadoSeleccionado(2);
-		busquedaLotes.setListaBeanEstado(BeanEstado.estadosLote());
 		// tengo que obtener los centros de los que puedo recibir muestras
-		busquedaLotes.setIdCentro(0);
+		//busquedaLotes.setIdCentro(0);
+		this.rellenarBusquedaLotes(busquedaLotes);
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 		// invocar al servicio que dado id De laboratorio se obtiene la entidad laboratorioUni
 		List<LoteBeanPlacaVisavet> list= new ArrayList();
@@ -220,7 +194,7 @@ public class LaboratorioVisavetUCMController {
 	// buscar lotes segun los criterios de busqueda 
 	
 		@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.POST)
-		public ModelAndView buscarLotesPost(@ModelAttribute("busquedaLotes") BusquedaLotesBean busquedaLotes, Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
+		public ModelAndView buscarLotesPost(@ModelAttribute("busquedaLotes") BusquedaLotesBean busquedaLotes, Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) throws Exception {
 	        // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
 		return  this.buscarLotes(busquedaLotes, request, session, pageable);
 			
@@ -230,7 +204,7 @@ public class LaboratorioVisavetUCMController {
 	
 	//@ResponseBody
 	@RequestMapping(value = "/laboratorioUni/confirmarReciboLote", method = RequestMethod.GET)
-	public ModelAndView confirmarReciboLote(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
+	public ModelAndView confirmarReciboLote(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) throws Exception {
 	// llamar al servicio lotes y cambiar el estado de id a Recibido
 		// para probar
 		
@@ -239,9 +213,10 @@ public class LaboratorioVisavetUCMController {
 		BeanEstado estado= new BeanEstado();
 		estado.setTipoEstado(TipoEstado.EstadoLote);
 		estado.setEstado(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS);
-		beanLote.setEstado(estado);
+		/*		beanLote.setEstado(estado);
+		System.out.println(beanLote.getIdCentro());
 		
-	/*			List<LoteBeanPlacaVisavet> list=new ArrayList();
+			List<LoteBeanPlacaVisavet> list=new ArrayList();
 					for (int i = 0; i<20; i++) {
 						list.add(getBean(i));
 						if (list.get(i).getId().equals(0)) {
@@ -259,7 +234,8 @@ public class LaboratorioVisavetUCMController {
 						}
 					}	
 				*/	
-		LoteCentroBean lote = loteServicio.guardar(beanLote);
+		loteServicio.actualizarEstadoLote(beanLote, estado);
+		//LoteCentroBean lote = loteServicio.guardarLotePlavaVisavet(beanLote,estado);
 		return  this.buscarLotes((BusquedaLotesBean) session.getAttribute("busquedaLotes"), request, session, pageable);
 				/*	Page<LoteBeanPlacaVisavet> paginaLotes = null;
 					paginaLotes = new PageImpl<LoteBeanPlacaVisavet>(list, pageable,pageable.getPageSize());
@@ -272,30 +248,7 @@ public class LaboratorioVisavetUCMController {
 				    return vista;	*/
 	}
 	
-		public LoteBeanPlacaVisavet getBean2(int i) {
-			LoteBeanPlacaVisavet bean = new LoteBeanPlacaVisavet();
-			bean.setId(i);
-			bean.setNumLote("44444");
-			BeanEstado estado= new BeanEstado();
-			estado.setTipoEstado(TipoEstado.EstadoLote);
-			estado.setEstado(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS);
-			
-			Date date= new Date();
-			bean.setCentroProcedencia("Centro de Salud de Getafe");
-			bean.setFechaEntrada(Calendar.getInstance().getTime());
-			bean.setEstado(estado);
-			List<MuestraBeanLaboratorioVisavet>  listaMuestras = new ArrayList();
-			for (int j=0;j<10;j++) {
-				MuestraBeanLaboratorioVisavet e=new MuestraBeanLaboratorioVisavet();
-				e.setId(j);
-				e.setEtiqueta("498979");
-				listaMuestras.add(e);
-			}
-			bean.setListaMuestras(listaMuestras);
-			
-			
-			return bean;
-		}
+	
 		// refrescar  datos con ajax
 		@RequestMapping(value = "/laboratorioUni/actualizarLote", method = RequestMethod.POST)
 		public String buscarPlacasPost(@RequestParam("id") String id, Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) {
@@ -304,7 +257,7 @@ public class LaboratorioVisavetUCMController {
 			paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, pageable);
 			List<LoteBeanPlacaVisavet> list= new ArrayList();
 			for (int i = 0; i<10; i++) {
-				list.add(getBean2(i));
+				//list.add(getBean2(i));
 			}		
 			paginaLotes = new PageImpl<LoteBeanPlacaVisavet>(list, pageable,20);
 			model.addAttribute("paginaLotes", paginaLotes);
@@ -322,7 +275,7 @@ public class LaboratorioVisavetUCMController {
 			List<MuestraBeanLaboratorioVisavet> muestras=new ArrayList();
 			List<LoteBeanPlacaVisavet> list= new ArrayList();
 			for (int i = 0; i<10; i++) {
-				list.add(getBean(i));
+				//list.add(getBean(i));
 				if (list.get(i).getId().equals(id)) {
 					muestras= list.get(i).getListaMuestras();
 				}
@@ -347,8 +300,8 @@ public class LaboratorioVisavetUCMController {
 				// cuando ya este el servicio BeanLote lote=servicioLotes.obtenerLote(idsLotes[i]);
 				// para probar
 				System.out.println("size "+i);
-				listaLotes.add(getBean(i));
-				lotePlacaVisavetBean.setTotalMuestras(getBean(i).getListaMuestras().size()+lotePlacaVisavetBean.getTotalMuestras());
+			//	listaLotes.add(getBean(i));
+		//		lotePlacaVisavetBean.setTotalMuestras(getBean(i).getListaMuestras().size()+lotePlacaVisavetBean.getTotalMuestras());
 			} 
 			
 			// para probar
