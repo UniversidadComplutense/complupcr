@@ -156,6 +156,7 @@ public class LoteServicioImpl implements LoteServicio {
 			loteRepositorio.deleteById(id);
 			return true;
 		} catch (Exception e) {
+			log.error("ERROR:: borrar " + e);
 			return false;
 		}
 	}

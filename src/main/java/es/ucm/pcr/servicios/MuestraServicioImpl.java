@@ -62,6 +62,19 @@ public class MuestraServicioImpl implements MuestraServicio {
 		
 		return lotesCentro;
 	}
+	
+	@Override
+	public List<MuestraListadoBean> findMuestraByParam(MuestraBusquedaBean params) {
+		List<MuestraListadoBean> muestrasListBean = new ArrayList<MuestraListadoBean>();
+		
+		List<Muestra> muestrasList = muestraRepositorio.findByParams(params); 
+		
+		for (Muestra m : muestrasList) {
+			muestrasListBean.add(MuestraListadoBean.modelToBean(m));
+		}
+		
+		return muestrasListBean;
+	}
 
 	@Override
 	public MuestraCentroBean guardar(MuestraCentroBean muestraBean) {
@@ -156,6 +169,29 @@ public class MuestraServicioImpl implements MuestraServicio {
 		/*muestra.getLote().getId();
 		muestra.getLote().getEstadoLote().getId();*/
 		return muestra;
+	}
+	
+	@Override
+	public boolean validateBorrar(Integer id) {
+		List<Integer> estadosValidosBorrarMuestra = BeanEstado.getEstadosLotesDisponiblesCentro();
+		Muestra muestra = findByIdMuestra(id);
+		
+		// si el lote esta enviado no se puede borrar la muestra
+		if (muestra != null && muestra.getLote() != null && estadosValidosBorrarMuestra.contains(muestra.getLote().getEstadoLote().getId())) {
+			return true;
+		}
+		return false;		
+	}
+	
+	@Override
+	public boolean borrar(Integer id) {
+		try {
+			muestraRepositorio.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			log.error("ERROR:: borrar " + e);
+			return false;
+		}
 	}
 	
 	private String mensajeEmail(Muestra muestra) {

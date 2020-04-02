@@ -13,8 +13,17 @@
 	<br>
 	<form action="#" th:action="@{/centroSalud/muestra/list}" method="post" th:object="${beanBusquedaMuestra}" id="formBusqueda" role="form">
 		
-		<div class="alert alert-secondary" role="alert">
+		<div th:classappend="${mensaje == null} and ${mensajeError == null} ? visible : d-none" class="alert alert-secondary" role="alert" id="alertInfo">
 		  	<label>Gestión muestras</label>
+		</div>
+		
+		<div th:if="${mensaje !=null}" class="alert alert-success alert-dismissible fade show" role="alert">
+			<label th:text="${mensaje}"></label>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		</div>
+		<div th:if="${mensajeError !=null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+			<label th:text="${mensajeError}"></label>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		</div>
 		
 		<!-- CRITERIOS BUSQUEDA PACIENTE -->
@@ -122,7 +131,7 @@
 						<th scope="col">Resultado</th>
 						<th scope="col">Notificado</th>
 						<th scope="col">Lote</th>
-						<th scope="col">Modificar</th>
+						<th scope="col">Acciones</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -155,8 +164,15 @@
 							<span th:text="${muestra.codNumLote}"></span>
 						</td>
 						<td>
+							<!-- ACCIONES -->
 					        <a style="color:black" th:href="@{/centroSalud/muestra/modificar(id=${muestra.id})}">
 					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>
+					        <a th:if="${muestra.fechaEnvioMuestraIni} != null" style="color:grey;cursor: pointer;" title="Borrar">
+					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>			        
+					        <a th:if="${muestra.fechaEnvioMuestraIni} == null" style="color:black;cursor: pointer;" th:href="@{/centroSalud/muestra/borrar(id=${muestra.id})}" title="Borrar">
+					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
 						</td>						
 					</tr>		
@@ -168,12 +184,11 @@
 	</div>
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
     <object th:replace="fragmentos :: scripts" th:remove="tag"></object>
-    
-    
-    
-    
-    
-    
-    
+    <script type="text/javascript">
+    	$('.alert').on('closed.bs.alert', function () {
+		    $('#alertInfo').removeClass('d-none');
+	    });
+	    
+    </script>
 </body>
 </html>
