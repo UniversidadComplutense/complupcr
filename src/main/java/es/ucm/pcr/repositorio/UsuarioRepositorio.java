@@ -10,6 +10,8 @@ import es.ucm.pcr.modelo.orm.Usuario;
 
 public interface UsuarioRepositorio extends JpaRepository<Usuario, Integer> {
 	
+	Optional<Usuario> findById(Integer id);
+	
 	Optional<Usuario> findByEmail(String email);
 	
 	@Query("select u from Usuario u left join fetch u.rols where u.email = :email")
