@@ -75,17 +75,17 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:if="${PlacaLaboratorioCentroBean != null}" th:each="placa : ${PlacaLaboratorioCentroBean}">
+					<tr th:if="${listaPlacas != null}" th:each="placa : ${listaPlacas}">
 						<td><span th:text="${placa.id}"></span></td>					
 						<td><span th:text="">fecha creación</span></td>						
-				<!-- 	<td><span th:text="${#dates.format(placa.fechaCreacion, 'dd/MM/yyyy')}"></span></td> -->
+					 	<td><span th:text="${#dates.format(placa.fechaCreacion, 'dd/MM/yyyy')}"></span></td>
 						<td><span th:text="${placa.estado.descripcion}"></span></td>
 						<td><span th:text="${placa.numeroMuestras}"></span></td>
 						<td>
 							<button type="button" class="btn btn-secondary">Ver distribución pocillos</button>
 						</td>
 						<td>
-					        <a style="color:black" th:href="@{/centroSalud/lote/modificar(id=${lote.id})}">
+					        <a style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
 					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
 						</td>						
