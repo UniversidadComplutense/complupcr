@@ -398,7 +398,7 @@ public class AnalisisControlador {
 			//recupero el usuario logado
 			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
+			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 
 			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
@@ -439,7 +439,7 @@ public class AnalisisControlador {
 			//recupero el usuario logado
 			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
+			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 			
 			//recogemos las placas marcadas para coger
@@ -494,7 +494,7 @@ public class AnalisisControlador {
 			//recupero el usuario logado
 			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getEmail());
+			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 
 			/*
