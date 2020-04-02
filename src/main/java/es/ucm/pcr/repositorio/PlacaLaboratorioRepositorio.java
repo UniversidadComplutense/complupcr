@@ -16,7 +16,7 @@ public interface PlacaLaboratorioRepositorio extends JpaRepository<PlacaLaborato
 
 
 
-	@Query("SELECT placa FROM PlacaLaboratorio placa, LaboratorioCentro laboratorioCentro, EstadoPlacaLaboratorio estadoPlacaLaboratorio "
+	@Query("SELECT placa FROM PlacaLaboratorio placa "
 			+ "JOIN placa.laboratorioCentro laboratorioCentro "
 			+ "JOIN placa.estadoPlacaLaboratorio estadoPlacaLaboratorio "
 			+ "WHERE 1=1 and "

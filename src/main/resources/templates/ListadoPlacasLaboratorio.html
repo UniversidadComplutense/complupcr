@@ -10,9 +10,12 @@
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	
-	<div class="container">	
+	<div class="container">
+	<div class="row justify-content-center mt-1, titulo-menu">
+			<h5>Gestión de placas responsable PCR</h5>
+	</div>
 	
-	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/preparacion}" method="post" th:object="${busquedaPlacaLaboratorioBean}" id="formBusqueda" role="form">
+	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas}" method="post" th:object="${busquedaPlacaLaboratorioBean}" id="formBusqueda" role="form">
 		
 		<!-- CRITERIOS BUSQUEDA -->
 		<fieldset id="criteriosBusqueda" class="form-group border p-2">
@@ -23,7 +26,7 @@
 				 	<input type="text" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.idPlaca}" th:value="${busquedaPlacaLaboratorioBean.idPlaca}" maxlength="100"/>
 				</div>	
 				<div class="col-3 form-group">
-					<label>Número de muestras</label>
+					<label>Capacidad</label>
 				 	<select class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.numeroMuestras}" th:value="${busquedaPlacaLaboratorioBean.numeroMuestras}">
 				 		<option value="">Seleccione</option>
 				 		<option value="20">20</option>
@@ -52,12 +55,13 @@
 			</div>
 		</fieldset>
 		
-
-		<div class="row justify-content-end mt-3">
-			<div class="col-1">
-				<a th:href="@{/laboratorioCentro/gestionPlacas/nueva}" class="btn btn-secondary">Nueva placa</a>				
-			</div>
-			<div class="col-1">
+		
+		<!-- ACCIONES -->
+		<div class="row justify-content-center mt-3">
+			<div class="col-2 justify-content-begin mt-3">
+				<a th:href="@{/laboratorioCentro/gestionPlacas/nueva}" class="btn btn-secondary">Nueva</a>				
+			</div>			
+			<div class="col-2 justify-content-end mt-3">
 				<button type="submit" class="btn btn-secondary">Buscar</button>
 			</div>
 		</div>	
@@ -71,18 +75,19 @@
 	      				<th scope="col">Código</th>
 						<th scope="col">Fecha creación</th>
 						<th scope="col">Estado</th>
-						<th scope="col">Número muestras</th>
+						<th scope="col">Capacidad</th>
+						<th scope="col">Número de muestras</th>
+						<th scope="col">Modificar</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:if="${listaPlacas != null}" th:each="placa : ${listaPlacas}">
-						<td><span th:text="${placa.id}"></span></td>					
-						<td><span th:text="">fecha creación</span></td>						
+						<td><span th:text="${placa.id}"></span></td>									
 					 	<td><span th:text="${#dates.format(placa.fechaCreacion, 'dd/MM/yyyy')}"></span></td>
-						<td><span th:text="${placa.estado.descripcion}"></span></td>
+						<td><span th:text="${placa.beanEstado.estado.descripcion}"></span></td>
 						<td><span th:text="${placa.numeroMuestras}"></span></td>
 						<td>
-							<button type="button" class="btn btn-secondary">Ver distribución pocillos</button>
+<!-- 							<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})} + '\''" class="btn btn-secondary">Ver</button> -->
 						</td>
 						<td>
 					        <a style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
@@ -92,6 +97,9 @@
 					</tr>		
 				</tbody>
 			</table>
+			<div class="row justify-content-center mt-3" th:if="${#lists.size(listaPlacas) == 0}">
+				<span>No hay resultados para los criterios de búsqueda seleccionados</span>
+			</div>
 		</div>
 	</form>
 

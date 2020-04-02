@@ -122,7 +122,10 @@ public class PlacaLaboratorioCentroBean {
 			placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(placaLaboratorioCentroBean.getBeanEstado().getEstado().getCodNum()));
 		}
 		
-		placa.setNumeromuestras(placaLaboratorioCentroBean.getNumeroMuestras());
+		if (placaLaboratorioCentroBean.getNumeroMuestras() != null) {
+			placa.setNumeromuestras(placaLaboratorioCentroBean.getNumeroMuestras());
+		}
+		
 
 		// TODO rellenar LaboratorioCentro
 		// placa.setLaboratorioCentro();
