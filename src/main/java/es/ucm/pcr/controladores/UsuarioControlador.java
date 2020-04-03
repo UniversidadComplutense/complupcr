@@ -79,7 +79,8 @@ public class UsuarioControlador {
 								usuario.getRols(),
 								usuario.getHabilitado(),
 								"L",
-								usuario.getCentro().getId() // Centro seleccionado
+								usuario.getCentro().getId(), // Centro seleccionado
+								"A"
 								));
 		}
 		//	Ordeno por ap1, ap2, nombre
