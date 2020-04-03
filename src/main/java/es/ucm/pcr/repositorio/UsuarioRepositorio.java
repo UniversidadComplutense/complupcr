@@ -14,8 +14,8 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Integer> {
 	
 	Optional<Usuario> findByEmail(String email);
 	
-	@Query("select u from Usuario u left join fetch u.rols where u.email = :email")
-	Optional<Usuario> findByEmailWithRoles(String email);
+//	@Query("select u from Usuario u left join fetch u.rols where u.email = :email")
+//	Optional<Usuario> findByEmailWithRoles(String email);
 	
 	List<Usuario> findByHabilitadoOrderById(String habilitado);
 }

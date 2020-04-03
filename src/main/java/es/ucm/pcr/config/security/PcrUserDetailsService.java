@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,7 +22,7 @@ import es.ucm.pcr.modelo.orm.PasswordResetToken;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.PasswordTokenRepositorio;
-import es.ucm.pcr.repositorio.UsuarioRepositorio;
+import es.ucm.pcr.servicios.UsuarioServicio;
 
 /**
  * Servicio PcrUserDetailsService. Nos permite interceptar el login de Spring Security 
@@ -32,21 +34,30 @@ import es.ucm.pcr.repositorio.UsuarioRepositorio;
 @Service
 public class PcrUserDetailsService implements UserDetailsService {
 
-	@Autowired
-	UsuarioRepositorio usuarioRepository;
+//	@Autowired
+//	UsuarioRepositorio usuarioRepository;
 
+	@Autowired
+	UsuarioServicio usuarioServ;
 	@Autowired
 	private PasswordTokenRepositorio passwordTokenRepositorio;
 
 	@Override
+	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<Usuario> usuario = usuarioRepository.findByEmailWithRoles(username);
-		if (!usuario.isPresent()) {
+//		Optional<Usuario> usuario = usuarioRepository.findByEmailWithRoles(username);
+		Usuario usuario = usuarioServ.buscarUsuarioPorEmail(username);
+//		if (!usuario.isPresent()) {
+//			throw new UsernameNotFoundException("Autenticación incorrecta.");
+//		}
+//		Usuario miUser = usuario.get();
+		if (usuario == null) {
 			throw new UsernameNotFoundException("Autenticación incorrecta.");
 		}
-		Usuario miUser = usuario.get();
 
-		return new PcrUserDetails(miUser, getAuthorities(miUser));
+//		return new PcrUserDetails(miUser, getAuthorities(miUser));
+		return new PcrUserDetails(usuario, getAuthorities(usuario));
+
 	}
 
 	private static Set<GrantedAuthority> getAuthorities(Usuario usuario) {

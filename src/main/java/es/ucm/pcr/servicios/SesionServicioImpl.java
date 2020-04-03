@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,11 +35,12 @@ public class SesionServicioImpl implements SesionServicio {
 
 	@Override
 	public Usuario getUsuario() {
-		String email = this.getEmail();
-		if (email == null) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) {
 			return null;
 		}
-		return usuarioServicio.buscarUsuarioPorEmail(email);
+		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
+		return ud.getUsuario();
 	}
 
 	@Override
@@ -72,6 +75,7 @@ public class SesionServicioImpl implements SesionServicio {
 	}
 
 	@Override
+	@Transactional
 	public Centro getCentro() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();

@@ -53,12 +53,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 
 	@Override
 	public Set<Rol> getRoles(Usuario usuario) {
-		Optional<Usuario> usuWithRoles = usurep.findByEmailWithRoles(usuario.getEmail());
-		if (usuWithRoles.isPresent()) {
-			return usuWithRoles.get().getRols();
-		} else {
-			return null;
-		}
+		return usuario.getRols();
 	}
 	
 	@Override
