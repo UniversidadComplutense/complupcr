@@ -133,7 +133,11 @@ public class AnalisisControlador {
 		
 			BeanBusquedaMuestraAnalisis beanBusqueda = new BeanBusquedaMuestraAnalisis();
 			
+			List<BeanElemento> beanListaPlacasDeJefe = laboratorioCentroServicio.buscarPlacasBeanElementoAsignadasAJefe(sesionServicio.getUsuario());			
+			System.out.println("el beanListaPlacasDeJefe tiene: " + beanListaPlacasDeJefe.size());
+			
 			vista.addObject("beanBusquedaMuestra", beanBusqueda);
+			vista.addObject("beanListaPlacasDeJefe", beanListaPlacasDeJefe);
 			return vista;
 		}
 		

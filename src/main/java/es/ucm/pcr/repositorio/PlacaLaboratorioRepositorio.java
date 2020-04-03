@@ -1,5 +1,6 @@
 package es.ucm.pcr.repositorio;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.Usuario;
 
 public interface PlacaLaboratorioRepositorio extends JpaRepository<PlacaLaboratorio, Integer> {
 
@@ -38,6 +40,8 @@ public interface PlacaLaboratorioRepositorio extends JpaRepository<PlacaLaborato
 	
 
 	Optional<PlacaLaboratorio> findById(Integer id);
+	
+	List<PlacaLaboratorio> findByUsuario(Usuario usuario);
 	
 	
 }

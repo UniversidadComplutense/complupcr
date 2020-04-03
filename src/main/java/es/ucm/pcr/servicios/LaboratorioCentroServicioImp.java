@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
@@ -177,6 +178,38 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		
 		return PlacaLaboratorioCentroBean.modelToBean(placa);
 
+	}
+	
+	
+	@Override
+	public List<PlacaLaboratorioCentroBean> buscarPlacasAsignadasAJefe(Usuario usuario) {	
+		//busca la lissta de placas que se ha asignado el Jefe (que estan bajo su responsabilidad)
+		List<PlacaLaboratorioCentroBean> listaBeanPlacasLaboratorioDeJefe = new ArrayList<PlacaLaboratorioCentroBean>();
+		List<PlacaLaboratorio> lisaPlacasJefe =  placaLaboratorioRepositorio.findByUsuario(usuario);
+		for(PlacaLaboratorio placa: lisaPlacasJefe) {
+			PlacaLaboratorioCentroBean placaBean = PlacaLaboratorioCentroBean.modelToBean(placa);
+			listaBeanPlacasLaboratorioDeJefe.add(placaBean);			
+		}		
+		return listaBeanPlacasLaboratorioDeJefe;
+	}
+	
+	@Override
+	public List<BeanElemento> buscarPlacasBeanElementoAsignadasAJefe(Usuario usuario) {	
+		//busca la lissta de placas que se ha asignado el Jefe (que estan bajo su responsabilidad)
+		List<BeanElemento> listaBeanPlacasLaboratorioDeJefe = new ArrayList<BeanElemento>();
+		List<PlacaLaboratorio> lisaPlacasJefe =  placaLaboratorioRepositorio.findByUsuario(usuario);		
+		for(PlacaLaboratorio placa: lisaPlacasJefe) {
+			BeanElemento beanElementoPlaca = new BeanElemento();
+			beanElementoPlaca.setCodigo(placa.getId());
+			beanElementoPlaca.setDescripcion("Placa " + placa.getId() + ", muestras: " + placa.getNumeromuestras());
+			listaBeanPlacasLaboratorioDeJefe.add(beanElementoPlaca);			
+		}		
+		//añado el elemento seleccione al principio
+		BeanElemento seleccione = new BeanElemento();
+		seleccione.setCodigo(null);
+		seleccione.setDescripcion("Seleccione");
+		listaBeanPlacasLaboratorioDeJefe.add(0,seleccione);
+		return listaBeanPlacasLaboratorioDeJefe;
 	}
 	
 	//Fin Diana- metodos para jefe de servicio
