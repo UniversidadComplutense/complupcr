@@ -30,11 +30,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
-import es.ucm.pcr.beans.BusquedaPlacasVisavetBean;
 import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
-import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
+import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
+import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.validadores.LaboratorioCentroValidador;
 
@@ -50,17 +50,25 @@ public class LabCentroControlador {
 	private LaboratorioCentroServicio laboratorioCentroServicio;
 	
 	@Autowired
+	private LaboratorioVisavetServicio laboratorioVisavetServicio;
+	
+	@Autowired
 	private SesionServicio sesionServicio;
 	
 	@Autowired
 	private LaboratorioCentroValidador laboratorioCentroValidador;
 	
 	
-	private void agregarListasDesplegables (ModelAndView vista) {
+	private void agregarEstadosBusquedaPlacaLaboratorio (ModelAndView vista) {
 		
-		// Estados de una placa de laboratorio
-		List<BeanEstado> estadosPlacaLaboratorio = BeanEstado.estadosPlacaLabCentro();	
-		vista.addObject("estadosPlacaLaboratorio", estadosPlacaLaboratorio);
+		// Estados de una placa de laboratorio para búsquedas (todos)
+		vista.addObject("estadosPlacaLaboratorio", BeanEstado.estadosPlacaLabCentro());
+	}
+	
+	private void agregarEstadosBusquedaPlacaVisavet (ModelAndView vista) {
+		
+		// Estados de una placa Visavet para búsquedas (sólo por los que buscará el laboratorio receptor)
+		vista.addObject("estadosPlacaVisavet", BeanEstado.estadosPlacaVisavetParaLaboratorioCentro());
 	}
 	
 	private boolean esEditable(PlacaLaboratorioCentroBean placa) {
@@ -85,16 +93,18 @@ public class LabCentroControlador {
 	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
 	public ModelAndView buscarPlacasVisavetGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
 
-		ModelAndView vista = new ModelAndView("ListadoRecepcionPlacasVisavet");
+		ModelAndView vista = new ModelAndView("ListadoRecepcionarPlacasVisavet");
 
 		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = new BusquedaRecepcionPlacasVisavetBean();
 
-		// TODO Inicializar los criterios de búsqueda con las placas VISAVET asignadas al laboratorio
+		// Inicializamos búsqueda con estado 'PLACAVISAVET_ASIGNADA' y laboratorio al que pertenece el usuario
+		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACAVISAVET_ASIGNADA.getCodNum());
+		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getCentro().getId());
 
-		// Page<PlacaLaboratorioVisavetBean> paginaPlacasVisavet = servicioLaboratorioUni.buscarPlacas(criteriosBusqueda, pageable);
-
-		vista.addObject("BusquedaRecepcionPlacasVisavetBean", criteriosBusqueda);
-		//vista.addObject("paginaPlacas", paginaPlacasVisavet);
+		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
+		this.agregarEstadosBusquedaPlacaVisavet(vista);
+		vista.addObject("busquedaPlacaVisavetBean", criteriosBusqueda);
+		vista.addObject("listaPlacas", listaPlacas.getContent());
 		return vista;
 
 	}
@@ -105,11 +115,17 @@ public class LabCentroControlador {
 	public ModelAndView buscarPlacasVisavetPOST(HttpSession session, @ModelAttribute BusquedaRecepcionPlacasVisavetBean criteriosBusqueda,
 			@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
 
-		ModelAndView vista = new ModelAndView("ListadoRecepcionPlacasVisavet");
-		//Page<PlacaLaboratorioVisavetBean> paginaPlacasVisavet = servicioLaboratorioUni.buscarPlacas(criteriosBusqueda, pageable);
-
-		vista.addObject("BusquedaPlacaLaboratorioBean", criteriosBusqueda);
-		//vista.addObject("paginaPlacas", paginaPlacasVisavet);
+		ModelAndView vista = new ModelAndView("ListadoRecepcionarPlacasVisavet");
+		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getCentro().getId());
+		
+		if (criteriosBusqueda.getNumeroMuestras() == "") {
+			criteriosBusqueda.setNumeroMuestras(null);
+		}
+		
+		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
+		this.agregarEstadosBusquedaPlacaVisavet(vista);
+		vista.addObject("busquedaPlacaVisavetBean", criteriosBusqueda);
+		vista.addObject("listaPlacas", listaPlacas.getContent());
 		return vista;
 	}
 	
@@ -122,12 +138,12 @@ public class LabCentroControlador {
 
 		BusquedaPlacaLaboratorioBean criteriosBusqueda = new BusquedaPlacaLaboratorioBean();
 		
-		// Inicializamos búsqueda con estado 'PreparadaParaPCR' y laboratorio al que pertenece el usuario
+		// Inicializamos búsqueda con estado 'PLACA_INICIADA' y laboratorio al que pertenece el usuario
 		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACA_INICIADA.getCodNum());
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getCentro().getId());
 
 		Page<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, pageable);
-		this.agregarListasDesplegables(vista);
+		this.agregarEstadosBusquedaPlacaLaboratorio(vista);
 		vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
 		vista.addObject("listaPlacas", listaPlacas.getContent());
 		return vista;
@@ -149,7 +165,7 @@ public class LabCentroControlador {
 		}
 		
 		Page<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, pageable);
-		this.agregarListasDesplegables(vista);
+		this.agregarEstadosBusquedaPlacaLaboratorio(vista);
 		vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
 		vista.addObject("listaPlacas", listaPlacas.getContent());
 		return vista;
