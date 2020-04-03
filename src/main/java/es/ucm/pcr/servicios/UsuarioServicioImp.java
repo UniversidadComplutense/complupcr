@@ -88,6 +88,27 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		beanUsuario.setRols(usuario.getRols());
 		beanUsuario.setUsuarioMuestras(usuario.getUsuarioMuestras());	
         beanUsuario.setCentroSeleccionado(usuario.getCentro().getId());
+        // Tipo de centro seleccionado
+        // Es un centro de salud
+        if (!usuario.getCentro().equals(null) && usuario.getIdLaboratorioCentro() == null && usuario.getIdLaboratorioVisavet() == null)
+        {
+        	beanUsuario.setTipoCentroSeleccionado("C");
+        }
+        // Es un laboratorio Centro UCM
+        if (usuario.getCentro().equals(null) && usuario.getIdLaboratorioCentro() != null && usuario.getIdLaboratorioVisavet() == null)
+        {
+        	beanUsuario.setTipoCentroSeleccionado("L");
+        }  
+        // Es un laboratorio Visavet
+        if (usuario.getCentro().equals(null) && usuario.getIdLaboratorioCentro() == null && usuario.getIdLaboratorioVisavet() != null)
+        {
+        	beanUsuario.setTipoCentroSeleccionado("V");
+        }  
+        // Todos null; A: A elegir
+        if (usuario.getCentro().equals(null) && usuario.getIdLaboratorioCentro() == null && usuario.getIdLaboratorioVisavet() == null)
+        {
+        	beanUsuario.setTipoCentroSeleccionado("A");
+        }  
 		
 		return beanUsuario;
 	}
@@ -95,6 +116,8 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	@Override
 	public Usuario mapeoBeanEntidadUsuarioAlta (BeanUsuarioGestion beanUsuario, int[] roles) throws Exception{
 	
+//		System.out.println("Tipos de centro: " + beanUsuario.getTipoCentroSeleccionado());
+		
 		Usuario usuario = new Usuario();
 		
 		usuario.setAcertadas(beanUsuario.getAcertadas());
@@ -107,8 +130,8 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		usuario.setEmail(beanUsuario.getEmail());
 		usuario.setHabilitado(beanUsuario.getHabilitado());
 		usuario.setId(beanUsuario.getId());
-		usuario.setIdLaboratorioCentro(beanUsuario.getIdLaboratorioCentro());
-		usuario.setIdLaboratorioVisavet(beanUsuario.getIdLaboratorioVisavet());
+//		usuario.setIdLaboratorioCentro(beanUsuario.getIdLaboratorioCentro());
+//		usuario.setIdLaboratorioVisavet(beanUsuario.getIdLaboratorioVisavet());
 		usuario.setNombre(beanUsuario.getNombre());
 		// el Pwd se asigna por otros medios, pero no puede ir vacio
 		if (beanUsuario.getPassword() == null)
@@ -125,25 +148,59 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		{
 		    for (int i = 0; i < roles.length; i++)  
 		    {
-		    	System.out.println("Roles: " + roles[i]);
 		    	Optional<Rol> rol = rolRepositorio.findById(roles[i]);
 		    	rolesSeleccionados.add(rol.get());
 		    }
 		}
 		usuario.setRols(rolesSeleccionados);
-
-		// Si el centro seleccionado corresponde a un centro existente,
-		// distinto de null, comprobamos si hay que asociarlo al usuario
-		if (centroRepositorio.existsById(beanUsuario.getCentroSeleccionado()))
+		// Centro seleccionado
+		switch (beanUsuario.getTipoCentroSeleccionado()) 
 		{
-//			// si es distinto del grabado, lo asociamos al usuario
-//			if (!beanUsuario.getCentroSeleccionado().equals(usuario.getCentro().getId()))
-//			{
-				Optional<Centro> centroGuardar = centroRepositorio.findById(beanUsuario.getCentroSeleccionado());
-				usuario.setCentro(centroGuardar.get());
-//			}
-		}
-		//
+			// Centro de salud
+			case "C":
+				// Si el centro seleccionado corresponde a un centro existente,
+				// distinto de null, comprobamos si hay que asociarlo al usuario
+				if (centroRepositorio.existsById(beanUsuario.getCentroSeleccionado()))
+				{
+						Optional<Centro> centroGuardar = centroRepositorio.findById(beanUsuario.getCentroSeleccionado());
+						usuario.setCentro(centroGuardar.get());
+				}
+				usuario.setIdLaboratorioCentro(null);
+				usuario.setIdLaboratorioVisavet(null);
+				break;
+				
+			// laboratorio centro Ucm
+			case "L":
+				usuario.setCentro(null);
+				usuario.setIdLaboratorioCentro(beanUsuario.getIdLaboratorioCentro());
+				usuario.setIdLaboratorioVisavet(null);
+				break;
+				
+			// Laboratorio Visavet
+			case "V":
+				usuario.setCentro(null);
+				usuario.setIdLaboratorioCentro(null);
+				usuario.setIdLaboratorioVisavet(beanUsuario.getIdLaboratorioVisavet());
+				break;
+				
+			// Sin centro asignado
+			default:
+				usuario.setCentro(null);
+				usuario.setIdLaboratorioCentro(null);
+				usuario.setIdLaboratorioVisavet(null);
+				break;
+		}	
+		
+//		// Si el centro seleccionado corresponde a un centro existente,
+//		// distinto de null, comprobamos si hay que asociarlo al usuario
+//		if (centroRepositorio.existsById(beanUsuario.getCentroSeleccionado()))
+//		{
+//				Optional<Centro> centroGuardar = centroRepositorio.findById(beanUsuario.getCentroSeleccionado());
+//				usuario.setCentro(centroGuardar.get());
+//		}
+//		usuario.setIdLaboratorioCentro(beanUsuario.getIdLaboratorioCentro());
+//		usuario.setIdLaboratorioVisavet(beanUsuario.getIdLaboratorioVisavet());
+		
 		usuario.setUsuarioMuestras(beanUsuario.getUsuarioMuestras());
 		
 		return usuario;
@@ -165,8 +222,8 @@ public class UsuarioServicioImp implements UsuarioServicio {
 //		usuario.setEmail(beanUsuario.getEmail());
 		usuario.setHabilitado(beanUsuario.getHabilitado());
 		usuario.setId(beanUsuario.getId());
-		usuario.setIdLaboratorioCentro(beanUsuario.getIdLaboratorioCentro());
-		usuario.setIdLaboratorioVisavet(beanUsuario.getIdLaboratorioVisavet());
+//		usuario.setIdLaboratorioCentro(beanUsuario.getIdLaboratorioCentro());
+//		usuario.setIdLaboratorioVisavet(beanUsuario.getIdLaboratorioVisavet());
 		usuario.setNombre(beanUsuario.getNombre());
 		// el Pwd se asigna por otros medios, no podemos modificarlo
 //		usuario.setPassword(beanUsuario.getPassword());
@@ -176,25 +233,62 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		{
 		    for (int i = 0; i < roles.length; i++)  
 		    {
-		    	System.out.println("Roles: " + roles[i]);
 		    	Optional<Rol> rol = rolRepositorio.findById(roles[i]);
 		    	rolesSeleccionados.add(rol.get());
 		    }
 		}
 		usuario.setRols(rolesSeleccionados);
-		//		
-
-		// Si el centro seleccionado corresponde a un centro existente,
-		// distinto de null, comprobamos si hay que asociarlo al usuario
-		if (centroRepositorio.existsById(beanUsuario.getCentroSeleccionado()))
+		
+		// Centro seleccionado
+		switch (beanUsuario.getTipoCentroSeleccionado()) 
 		{
-//			// si es distinto del grabado, lo asociamos al usuario
-//			if (!beanUsuario.getCentroSeleccionado().equals(usuario.getCentro().getId()))
-//			{
-				Optional<Centro> centroGuardar = centroRepositorio.findById(beanUsuario.getCentroSeleccionado());
-				usuario.setCentro(centroGuardar.get());
-//			}
-		}		
+			// Centro de salud
+			case "C":
+				// Si el centro seleccionado corresponde a un centro existente,
+				// distinto de null, comprobamos si hay que asociarlo al usuario
+				if (centroRepositorio.existsById(beanUsuario.getCentroSeleccionado()))
+				{
+						Optional<Centro> centroGuardar = centroRepositorio.findById(beanUsuario.getCentroSeleccionado());
+						usuario.setCentro(centroGuardar.get());
+				}
+				usuario.setIdLaboratorioCentro(null);
+				usuario.setIdLaboratorioVisavet(null);
+				break;
+				
+			// laboratorio centro Ucm
+			case "L":
+				usuario.setCentro(null);
+				usuario.setIdLaboratorioCentro(beanUsuario.getIdLaboratorioCentro());
+				usuario.setIdLaboratorioVisavet(null);
+				break;
+				
+			// Laboratorio Visavet
+			case "V":
+				usuario.setCentro(null);
+				usuario.setIdLaboratorioCentro(null);
+				usuario.setIdLaboratorioVisavet(beanUsuario.getIdLaboratorioVisavet());
+				break;
+				
+			// Sin centro asignado
+			default:
+				usuario.setCentro(null);
+				usuario.setIdLaboratorioCentro(null);
+				usuario.setIdLaboratorioVisavet(null);
+				break;
+		}
+
+
+//		// Si el centro seleccionado corresponde a un centro existente,
+//		// distinto de null, comprobamos si hay que asociarlo al usuario
+//		if (centroRepositorio.existsById(beanUsuario.getCentroSeleccionado()))
+//		{
+////			// si es distinto del grabado, lo asociamos al usuario
+////			if (!beanUsuario.getCentroSeleccionado().equals(usuario.getCentro().getId()))
+////			{
+//				Optional<Centro> centroGuardar = centroRepositorio.findById(beanUsuario.getCentroSeleccionado());
+//				usuario.setCentro(centroGuardar.get());
+////			}
+//		}		
 		
 		usuario.setUsuarioMuestras(beanUsuario.getUsuarioMuestras());
 		

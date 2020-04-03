@@ -78,10 +78,10 @@ public class UsuarioControlador {
 								usuario.getUsuarioMuestras(),
 								usuario.getRols(),
 								usuario.getHabilitado(),
-								"L",
-								usuario.getCentro().getId(), // Centro seleccionado
-								"A"
-								));
+								"L",							// Acción = L: Lista de usuarios
+								usuario.getCentro().getId(), 	// Centro seleccionado
+								"A"								// TipoCentro: A: A elegir
+								));			
 		}
 		//	Ordeno por ap1, ap2, nombre
 		Collections.sort(listaUsuarios);
@@ -126,7 +126,6 @@ public class UsuarioControlador {
 			 								@RequestParam(value = "roles" , required = false) int[] roles,
 											HttpSession session) throws Exception {
 		
-		System.out.println("Habilitado: " + beanUsuario.getHabilitado());
 		// Damos de alta nuevo usuario
 		if (beanUsuario.getAccion().equals("A"))
 		{

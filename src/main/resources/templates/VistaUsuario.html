@@ -4,8 +4,16 @@
 <head>
 <title>PCR-COVID19 - ALTA USUARIO</title>
 <object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+
+<!-- Divide el contenido en 3 columnas -->
+<style>
+    main {
+        column-count:3;
+    }
+</style>
+
 </head>
-<body>
+<body onload="ocultarCentrosInicial()">
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>	
@@ -51,6 +59,9 @@
 			</div>
  
  			<div class="form-group">
+				<label class="text_formulario">Estado de la activación</label>
+			</div>
+ 			<div class="form-group">
 				<div class="custom-control custom-radio custom-control-inline">
 					<input type="radio" id="option1" name="option1"
 						class="custom-control-input" value="S"
@@ -69,7 +80,7 @@
 			<div class="form-group">
 				<label class="text_formulario">Roles</label>
 			</div>
-			<div class="form-group">
+			<div class="form-group">				
 				<th:block th:each="rol : ${listaRoles}">
 					<input type="checkbox" name="roles" th:value="${rol.id}"
 						th:checked="${rol.seleccionado}" />
@@ -77,27 +88,56 @@
 				</th:block>
 			</div>
 			
-		 	<div class="form-group">	
-				<label class="text_formulario">Laboratorio Visavet</label>
-				<select class="form-control" id="idLaboratorioVisavet" th:field="*{idLaboratorioVisavet}">
-			     	<option th:each="var: ${mapaLaboratoriosVisavet}" th:value="${var.key}" th:text="${var.value}" th:select="${formBeanUsuario.idLaboratorioVisavet}"></option>
-			     </select>		
-			</div> 		
+			<div class="form-group">
+				<label class="text_formulario">Tipo de Centro</label>
+			</div>
 			
-			<div class="form-group">	
-				<label class="text_formulario">Laboratorio Centro</label>
-				<select class="form-control" id="idLaboratorioCentro" th:field="*{idLaboratorioCentro}">
-			     	<option th:each="var: ${mapaLaboratoriosCentro}" th:value="${var.key}" th:text="${var.value}" th:select="${formBeanUsuario.idLaboratorioCentro}"></option>
-			     </select>		
+			<div class="form-group">
+			<main>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="tipoCentroSeleccionado1" name="tipoCentroSeleccionado1"
+						class="custom-control-input" value="C"
+						th:field="*{tipoCentroSeleccionado}"> <label
+						class="custom-control-label" for="tipoCentroSeleccionado1">Centros de salud</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="tipoCentroSeleccionado2" name="tipoCentroSeleccionado2"
+						class="custom-control-input" value="L"
+						th:field="*{tipoCentroSeleccionado}"> <label
+						class="custom-control-label" for="tipoCentroSeleccionado2">Laboratorio Centros UCM</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="tipoCentroSeleccionado3" name="tipoCentroSeleccionado3"
+						class="custom-control-input" value="V"
+						th:field="*{tipoCentroSeleccionado}"> <label
+						class="custom-control-label" for="tipoCentroSeleccionado3">Laboratorio Logístico</label>
+				</div>	
+				</main>			
 			</div> 	
+				
+			<main>
+				<div class="form-group">	
+<!-- 					<label class="text_formulario">Centros de salud</label> -->
+					<select class="form-control" id="IDCENTROSALUD" th:field="*{centroSeleccionado}">
+				     	<option th:each="var: ${mapaCentros}" th:value="${var.key}" th:text="${var.value}" th:select="${formBeanUsuario.centroSeleccionado}"></option>
+				     </select>		
+				</div>				
+				
+				<div class="form-group">	
+<!-- 					<label class="text_formulario">Laboratorio Centros UCM</label> -->
+					<select class="form-control" id="IDLABUCM" th:field="*{idLaboratorioCentro}">
+				     	<option th:each="var: ${mapaLaboratoriosCentro}" th:value="${var.key}" th:text="${var.value}" th:select="${formBeanUsuario.idLaboratorioCentro}"></option>
+				     </select>		
+				</div> 				
+				
+			 	<div class="form-group">	
+<!-- 					<label class="text_formulario">Laboratorio Logístico</label> -->
+					<select class="form-control" id="IDLABVISAVET" th:field="*{idLaboratorioVisavet}">
+				     	<option th:each="var: ${mapaLaboratoriosVisavet}" th:value="${var.key}" th:text="${var.value}" th:select="${formBeanUsuario.idLaboratorioVisavet}"></option>
+				     </select>		
+				</div> 		
+			</main>
 			
-			<div class="form-group">	
-				<label class="text_formulario">Centro</label>
-				<select class="form-control" id="idCentro" th:field="*{centroSeleccionado}">
-			     	<option th:each="var: ${mapaCentros}" th:value="${var.key}" th:text="${var.value}" th:select="${formBeanUsuario.centroSeleccionado}"></option>
-			     </select>		
-			</div>	
-
 			<!--  Los campos id y acción van ocultos en la pantalla 
 			-->
 			<div class="form-group">
@@ -127,6 +167,7 @@
 
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+	<script th:src="@{/js/gestionUsuario.js}"></script>
 	
 </body>
 </html>
