@@ -24,12 +24,15 @@ import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
+import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
+import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.EstadoPlacaLaboratorioRepositorio;
 import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
+import es.ucm.pcr.repositorio.MuestraRepositorio;
 import es.ucm.pcr.repositorio.PlacaLaboratorioRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
 
@@ -44,6 +47,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	@Autowired
 	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
+	
+	@Autowired
+	MuestraRepositorio muestraRepositorio;
 	
 	@Autowired
 	SesionServicio sesionServicio;
@@ -176,13 +182,23 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			EstadoPlacaLaboratorio estadoPlacaLab = estadoPlacaLaboratorioRepositorio.getOne(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
 			System.out.println("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
 			placa.setEstadoPlacaLaboratorio(estadoPlacaLab);
+			//recorremos todas las muestras de esa placa y les ponemos el estado pendente de analizar
+			for(Muestra m: placa.getMuestras()) {
+				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_PENDIENTE_ANALIZAR.getCodNum()));
+				muestraRepositorio.save(m);
+			}			
 		}else if(accion.equals("devolver")) {
 			//desasocia la placa del usuario, le cambia el estado de la placa a PLACA_LISTA_PARA_ANALISIS (estado anterior) y ¿Qué hacemos con las muestras?
 			placa.setUsuario(null);
-			EstadoPlacaLaboratorio estadoPlacaLab = estadoPlacaLaboratorioRepositorio.getOne(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
-			//TODO que hacemos con las muestras cuando devolvermos la placa?
+			EstadoPlacaLaboratorio estadoPlacaLab = estadoPlacaLaboratorioRepositorio.getOne(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());			
 			System.out.println("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
 			placa.setEstadoPlacaLaboratorio(estadoPlacaLab);
+			//TODO preguntar que hacemos con las muestras cuando devolvermos la placa?
+			//recorremos todas las muestras de esa placa y les ponemos en el estado que tenian al llegar MUESTRA_ENVIADA_CENTRO_ANALISIS?
+			for(Muestra m: placa.getMuestras()) {
+				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS.getCodNum()));
+				muestraRepositorio.save(m);
+			}	
 		}
 		placa = placaLaboratorioRepositorio.save(placa);			
 		
