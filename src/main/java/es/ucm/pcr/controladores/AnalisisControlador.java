@@ -148,7 +148,8 @@ public class AnalisisControlador {
 			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 			
 			//solo mostraremos al jefe las muestras de placas que ha cogido bajo su responsabilidad, del centro del jefe
-			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)			
+			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)
+			System.out.println("el idplacalaboratorio de beanBusqueda marcado es: " + beanBusqueda.getIdPlacaLaboratorio());
 			Page<BeanListadoMuestraAnalisis> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
 			
 			/*
