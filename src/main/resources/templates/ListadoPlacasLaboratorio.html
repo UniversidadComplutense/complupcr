@@ -76,8 +76,8 @@
 						<th scope="col">Fecha creación</th>
 						<th scope="col">Estado</th>
 						<th scope="col">Capacidad</th>
-						<th scope="col">Número de muestras</th>
-						<th scope="col">Modificar</th>
+						<th scope="col">Muestras</th>
+						<th scope="col">Acciones</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -87,11 +87,62 @@
 						<td><span th:text="${placa.beanEstado.estado.descripcion}"></span></td>
 						<td><span th:text="${placa.numeroMuestras}"></span></td>
 						<td>
-<!-- 							<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})} + '\''" class="btn btn-secondary">Ver</button> -->
+							<div th:if="${#lists.size(placa.muestras) == 0}">
+								<a style="cursor: pointer;color:grey">
+									<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+								</a>
+							</div>
+							
+							<div th:if="${#lists.size(placa.muestras) > 0}">								
+								<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${lote.id}" style="cursor: pointer;" title="Ver muestras">
+									<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+								</a>
+								<span th:text="${#lists.size(placa.muestras)}"></span>								
+							</div>
+							<!-- MODAL MUESTRAS -->							
+							<div class="modal fade" th:id="modal-warning+${placa.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-xl" role="document">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">La placa - <b><span th:text="${placa.id}"/></b> contiene <span th:text="${#lists.size(placa.muestras)}"/> muestras</h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	<!-- Muestras de la placa -->
+								          	<div id="tablaMuestras" class="tableFixHead">
+												<table>
+													<thead class="thead-light">	
+									    				<tr>
+										      				<th>Etiqueta</th>
+															<th>Ref. Interna</th>
+															<th>Placa Visavet</th>
+															<th>Estado</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${placa.muestras != null}" th:each="muestra : ${placa.muestras}">
+															<td><span th:text="${muestra.etiqueta}"></span></td>					
+															<td><span th:text="${muestra.refInterna}"></span></td>
+															<td><span th:text="${muestra.idPlacaVisavet}"></span></td>		
+															<td><span th:text="${muestra.estado}"></span></td>															
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>							        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+							<!-- FIN MODAL MUESTRAS -->	
 						</td>
 						<td>
 					        <a style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
-					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
+					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;" title="Editar placa"></i>
 					        </a>
 						</td>						
 					</tr>		

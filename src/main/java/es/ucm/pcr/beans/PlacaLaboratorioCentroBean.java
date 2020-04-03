@@ -3,8 +3,10 @@ package es.ucm.pcr.beans;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 
 public class PlacaLaboratorioCentroBean {
@@ -16,6 +18,7 @@ public class PlacaLaboratorioCentroBean {
 	private Date fechaCreacion;
 	private List<PlacaLaboratorioVisavetBean> placasVisavet;
 	private List<DocumentoBean> documentos;
+	private List<MuestraListadoPlacasLaboratorioBean> muestras;
 
 	
 	public Integer getId() {
@@ -73,6 +76,14 @@ public class PlacaLaboratorioCentroBean {
 	public void setDocumentos(List<DocumentoBean> documentos) {
 		this.documentos = documentos;
 	}
+	
+	public List<MuestraListadoPlacasLaboratorioBean> getMuestras() {
+		return muestras;
+	}
+
+	public void setMuestras(List<MuestraListadoPlacasLaboratorioBean> muestras) {
+		this.muestras = muestras;
+	}
 
 	
 	public static PlacaLaboratorioCentroBean modelToBean(PlacaLaboratorio placaLaboratorio) {
@@ -88,11 +99,23 @@ public class PlacaLaboratorioCentroBean {
 		bean.setNumeroMuestras(placaLaboratorio.getNumeromuestras());
 		bean.setFechaCreacion(placaLaboratorio.getFechaCreacion());
 		
-		// TODO rellenar laboratorioCentroBean
 		LaboratorioCentroBean laboratorioCentroBean = new LaboratorioCentroBean();	
 		laboratorioCentroBean.setId(String.valueOf((placaLaboratorio.getLaboratorioCentro().getId())));
 		laboratorioCentroBean.setNombre(placaLaboratorio.getLaboratorioCentro().getNombre());
 		bean.setLaboratorioCentro(laboratorioCentroBean);
+		
+		List<MuestraListadoPlacasLaboratorioBean> listadoMuestras = new ArrayList<MuestraListadoPlacasLaboratorioBean>();
+		Set<Muestra> muestras = placaLaboratorio.getMuestras();
+		for (Muestra muestra : muestras) {
+			MuestraListadoPlacasLaboratorioBean muestraBean = new MuestraListadoPlacasLaboratorioBean();
+			muestraBean.setId(muestra.getId());
+			muestraBean.setIdPlacaVisavet(muestra.getPlacaVisavet().getId());
+			muestraBean.setEstado(muestra.getEstadoMuestra().getDescripcion());
+			muestraBean.setEtiqueta(muestra.getEtiqueta());
+			muestraBean.setRefInterna(muestra.getRefInternaVisavet());
+			listadoMuestras.add(muestraBean);
+		}
+		bean.setMuestras(listadoMuestras);
 
 		List<PlacaLaboratorioVisavetBean> placasVisavet = new ArrayList<PlacaLaboratorioVisavetBean>();
 		// TODO rellenar placasVisavet
