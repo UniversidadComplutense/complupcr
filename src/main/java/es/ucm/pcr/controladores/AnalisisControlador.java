@@ -102,6 +102,13 @@ public class AnalisisControlador {
 //			binder.setValidator(validadorMuestra);
 //		}
 				
+		@ModelAttribute("beanListaPlacasDeJefe")
+		public  List<BeanElemento> rellenaListaPlacasJefe() {
+			
+			//si el usuario tiene rol jefe cargará la lista con las placas que el jefe cogió bajo su responsabilidad
+			List<BeanElemento> beanListaPlacasDeJefe = laboratorioCentroServicio.buscarPlacasBeanElementoAsignadasAJefe(sesionServicio.getUsuario());			
+			return beanListaPlacasDeJefe;
+		}
 		
 		/**
 		 * Posibles Resultados de la muestra
@@ -109,20 +116,23 @@ public class AnalisisControlador {
 		 * @return
 		 */
 		public static List<BeanResultado> resultadosMuestra() {
-			// estados del lote
-			List<BeanResultado> estadosLote = new ArrayList<>();
-			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE));
-			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_NEGATIVO));
-			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_POSITIVO));
-			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_DEBIL));
-			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_REPETIR));
+			// posibles resultados de la muestra
+			List<BeanResultado> estadosMuestra = new ArrayList<>();
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE));
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_NEGATIVO));
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_POSITIVO));
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_DEBIL));
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_REPETIR));
 
-			return estadosLote;
+			return estadosMuestra;
+		}
+				
+		@ModelAttribute("beanListaPosiblesResultadosMuestra")
+		public  List<BeanResultado> rellenaListaPosiblesResultadosMuestra() {
+			List<BeanResultado> listaPosiblesResultadosMuestra =  BeanResultado.resultadosMuestra();
+			return listaPosiblesResultadosMuestra;
 		}
 		
-		private void addListsToView(ModelAndView vista) {
-			vista.addObject("listaResultadosMuestra", BeanResultado.resultadosMuestra());
-		}
 		
 		
 		
@@ -133,11 +143,8 @@ public class AnalisisControlador {
 		
 			BeanBusquedaMuestraAnalisis beanBusqueda = new BeanBusquedaMuestraAnalisis();
 			
-			List<BeanElemento> beanListaPlacasDeJefe = laboratorioCentroServicio.buscarPlacasBeanElementoAsignadasAJefe(sesionServicio.getUsuario());			
-			System.out.println("el beanListaPlacasDeJefe tiene: " + beanListaPlacasDeJefe.size());
-			
 			vista.addObject("beanBusquedaMuestra", beanBusqueda);
-			vista.addObject("beanListaPlacasDeJefe", beanListaPlacasDeJefe);
+			
 			return vista;
 		}
 		
@@ -159,7 +166,7 @@ public class AnalisisControlador {
 				list.add(getBean(i));
 			}
 			*/
-			addListsToView(vista);
+			//addListsToView(vista);
 			vista.addObject("beanBusquedaMuestra", beanBusqueda);
 			//vista.addObject("listadoMuestras", list);
 			vista.addObject("listadoMuestras", muestrasPage);
