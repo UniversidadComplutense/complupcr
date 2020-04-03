@@ -27,6 +27,7 @@ public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 	private Set<Rol> rols = new HashSet<Rol>(0);
 	private String habilitado;
 	private String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA DE USUARIOS
+	private Integer centroSeleccionado;
 	
 	
 	public BeanUsuarioGestion() {
@@ -34,12 +35,10 @@ public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 		// TODO Auto-generated constructor stub
 	}
 
-	
-
-	public BeanUsuarioGestion(Integer id, Centro centro, String nombre, String apellido1, String apellido2, String email,
-			String password, Integer idLaboratorioVisavet, Integer idLaboratorioCentro, Integer asignadas,
+	public BeanUsuarioGestion(Integer id, Centro centro, String nombre, String apellido1, String apellido2,
+			String email, String password, Integer idLaboratorioVisavet, Integer idLaboratorioCentro, Integer asignadas,
 			Integer acertadas, Set<Documento> documentos, Set<UsuarioMuestra> usuarioMuestras, Set<Rol> rols,
-			String habilitado, String accion) {
+			String habilitado, String accion, Integer centroSeleccionado) {
 		super();
 		this.id = id;
 		this.centro = centro;
@@ -57,9 +56,8 @@ public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 		this.rols = rols;
 		this.habilitado = habilitado;
 		this.accion = accion;
+		this.centroSeleccionado = centroSeleccionado;
 	}
-
-
 
 	public Integer getId() {
 		return id;
@@ -251,18 +249,30 @@ public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 		this.accion = accion;
 	}
 
+	
 
-
-	@Override
-	public String toString() {
-		return "BeanUsuario [id=" + id + ", centro=" + centro + ", nombre=" + nombre + ", apellido1=" + apellido1
-				+ ", apellido2=" + apellido2 + ", email=" + email + ", password=" + password + ", idLaboratorioVisavet="
-				+ idLaboratorioVisavet + ", idLaboratorioCentro=" + idLaboratorioCentro + ", asignadas=" + asignadas
-				+ ", acertadas=" + acertadas + ", documentos=" + documentos + ", usuarioMuestras=" + usuarioMuestras
-				+ ", rols=" + rols + ", habilitado=" + habilitado + ", accion=" + accion + "]";
+	public Integer getCentroSeleccionado() {
+		return centroSeleccionado;
 	}
 
 
+
+
+
+
+	public void setCentroSeleccionado(Integer centroSeleccionado) {
+		this.centroSeleccionado = centroSeleccionado;
+	}
+
+	@Override
+	public String toString() {
+		return "BeanUsuarioGestion [id=" + id + ", centro=" + centro + ", nombre=" + nombre + ", apellido1=" + apellido1
+				+ ", apellido2=" + apellido2 + ", email=" + email + ", password=" + password + ", idLaboratorioVisavet="
+				+ idLaboratorioVisavet + ", idLaboratorioCentro=" + idLaboratorioCentro + ", asignadas=" + asignadas
+				+ ", acertadas=" + acertadas + ", documentos=" + documentos + ", usuarioMuestras=" + usuarioMuestras
+				+ ", rols=" + rols + ", habilitado=" + habilitado + ", accion=" + accion + ", centroSeleccionado="
+				+ centroSeleccionado + "]";
+	}
 
 	@Override
     public int compareTo(BeanUsuarioGestion o) {

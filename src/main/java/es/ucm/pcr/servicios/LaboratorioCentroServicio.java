@@ -1,11 +1,13 @@
 package es.ucm.pcr.servicios;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.ucm.pcr.beans.BeanElemento;
+import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
@@ -38,6 +40,15 @@ public interface LaboratorioCentroServicio {
 	 * @return BeanLaboratorioCentro
 	 */
 	public List<BeanLaboratorioCentro> listaLaboratoriosCentroOrdenada() throws Exception;
+	
+	/**
+	 * Mapa de  LaboratorioCentro
+	 * 
+	 * @param List<BeanLaboratorioCentro>
+	 * @return Map<String,String>
+	 */
+	public Map<Integer,String> mapaLaboratoriosCentro (List<BeanLaboratorioCentro> laboratoriosCentro) throws Exception;
+
 	
 	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable);
 	PlacaLaboratorioCentroBean buscarPlaca (Integer id);
