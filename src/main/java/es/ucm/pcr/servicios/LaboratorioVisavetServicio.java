@@ -4,8 +4,12 @@ package es.ucm.pcr.servicios;
 import java.util.List;
 import java.util.Map;
 
-import es.ucm.pcr.beans.BeanLaboratorioVisavet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import es.ucm.pcr.beans.BeanLaboratorioVisavet;
+import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
+import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 
 public interface LaboratorioVisavetServicio {
@@ -41,6 +45,10 @@ public interface LaboratorioVisavetServicio {
 	 * @return Map<String,String>
 	 */
 	public Map<Integer,String> mapaLaboratoriosVisavet (List<BeanLaboratorioVisavet> laboratoriosVisavet) throws Exception;
+
+
+	public Page<PlacaLaboratorioVisavetBean> buscarPlacas(BusquedaRecepcionPlacasVisavetBean criteriosBusqueda,
+			Pageable pageable);
 	
 	
 }
