@@ -154,21 +154,12 @@ public class AnalisisControlador {
 		public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute BeanBusquedaMuestraAnalisis beanBusqueda) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 			
-			//solo mostraremos al jefe las muestras de placas que ha cogido bajo su responsabilidad, del centro del jefe
-			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)
-			System.out.println("el idplacalaboratorio de beanBusqueda marcado es: " + beanBusqueda.getIdPlacaLaboratorio());
+			//solo mostraremos al jefe las muestras de placas que ha cogido bajo su responsabilidad, (que solo podran ser del centro del jefe, ya que solo le hemos dejado coger placas de su centro)
+			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)			
 			Page<BeanListadoMuestraAnalisis> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
+						
 			
-			/*
-			List<BeanListadoMuestraAnalisis> list = new ArrayList<BeanListadoMuestraAnalisis>();
-			
-			for (int i = 0; i<10; i++) {
-				list.add(getBean(i));
-			}
-			*/
-			//addListsToView(vista);
-			vista.addObject("beanBusquedaMuestra", beanBusqueda);
-			//vista.addObject("listadoMuestras", list);
+			vista.addObject("beanBusquedaMuestra", beanBusqueda);			
 			vista.addObject("listadoMuestras", muestrasPage);
 			return vista;
 		}
