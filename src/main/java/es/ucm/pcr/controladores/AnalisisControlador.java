@@ -147,8 +147,8 @@ public class AnalisisControlador {
 		public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute BeanBusquedaMuestraAnalisis beanBusqueda) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 			
-			//solo mostraremos al jefe las muestras de placas que ha cogido bajo su responsabilidad
-			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)
+			//solo mostraremos al jefe las muestras de placas que ha cogido bajo su responsabilidad, del centro del jefe
+			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)			
 			Page<BeanListadoMuestraAnalisis> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
 			
 			/*
