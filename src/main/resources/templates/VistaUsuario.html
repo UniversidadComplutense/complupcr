@@ -13,7 +13,8 @@
 </style>
 
 </head>
-<body onload="ocultarCentrosInicial()">
+<body>
+<!-- <body onload="ocultarCentrosInicial()"> -->
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>	
@@ -95,22 +96,22 @@
 			<div class="form-group">
 			<main>
 				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="tipoCentroSeleccionado1" name="tipoCentroSeleccionado1"
+					<input type="radio" id="CENTROSALUD" name="CENTROSALUD"
 						class="custom-control-input" value="C"
 						th:field="*{tipoCentroSeleccionado}"> <label
-						class="custom-control-label" for="tipoCentroSeleccionado1">Centros de salud</label>
+						class="custom-control-label" for="CENTROSALUD">Centros de salud</label>
 				</div>
 				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="tipoCentroSeleccionado2" name="tipoCentroSeleccionado2"
+					<input type="radio" id="LABUCM" name="LABUCM"
 						class="custom-control-input" value="L"
 						th:field="*{tipoCentroSeleccionado}"> <label
-						class="custom-control-label" for="tipoCentroSeleccionado2">Laboratorio Centros UCM</label>
+						class="custom-control-label" for="LABUCM">Laboratorio Centros UCM</label>
 				</div>
 				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="tipoCentroSeleccionado3" name="tipoCentroSeleccionado3"
+					<input type="radio" id="LABVISAVET" name="LABVISAVET"
 						class="custom-control-input" value="V"
 						th:field="*{tipoCentroSeleccionado}"> <label
-						class="custom-control-label" for="tipoCentroSeleccionado3">Laboratorio Logístico</label>
+						class="custom-control-label" for="LABVISAVET">Laboratorio Logístico</label>
 				</div>	
 				</main>			
 			</div> 	
