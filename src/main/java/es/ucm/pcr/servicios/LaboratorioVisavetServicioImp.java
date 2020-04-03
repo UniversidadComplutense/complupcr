@@ -7,17 +7,27 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanLaboratorioVisavet;
+import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
+import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
+import es.ucm.pcr.modelo.orm.PlacaVisavet;
 import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
+import es.ucm.pcr.repositorio.PlacaVisavetRepositorio;
 
 @Service
 public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio{
 	
 	@Autowired
 	LaboratorioVisavetRepositorio laboratorioVisavetRepositorio;
+	
+	@Autowired
+	PlacaVisavetRepositorio placaVisavetRepositorio;
 	
 	public LaboratorioVisavet mapeoBeanEntidadLaboratorioVisavet(BeanLaboratorioVisavet beanLaboratorioVisavet) throws Exception {
 		LaboratorioVisavet laboratorioVisavet = new LaboratorioVisavet();
@@ -73,6 +83,18 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 		return mapalaboratorioVisavet;
 	}
 	
-	
+	// JAVI para buscar placas Visavet e incorporarlas a 'BusquedaPlacasVisavetBean'
+	@Override
+	public Page<PlacaLaboratorioVisavetBean> buscarPlacas(BusquedaRecepcionPlacasVisavetBean criteriosBusqueda,
+			Pageable pageable) {
+		
+		List<PlacaLaboratorioVisavetBean> listaPlacasVisavetBean = new ArrayList<PlacaLaboratorioVisavetBean>();		
+		Page<PlacaVisavet> PagePlacasVisavet = placaVisavetRepositorio.findByParams(criteriosBusqueda, pageable); 		
+		for (PlacaVisavet placa : PagePlacasVisavet.getContent()) {
+			listaPlacasVisavetBean.add(PlacaLaboratorioVisavetBean.modelToBean(placa));
+		}		
+		Page<PlacaLaboratorioVisavetBean> placasVisavet = new PageImpl<>(listaPlacasVisavetBean, pageable, PagePlacasVisavet.getTotalElements());		
+		return placasVisavet;
+	}
 
 }

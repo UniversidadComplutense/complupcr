@@ -29,6 +29,12 @@ public class EstadoPlacaVisavet implements java.io.Serializable {
 
 	public EstadoPlacaVisavet() {
 	}
+	
+	
+	public EstadoPlacaVisavet(Integer id) {
+		super();
+		this.id = id;
+	}
 
 	public EstadoPlacaVisavet(String descripcion) {
 		this.descripcion = descripcion;

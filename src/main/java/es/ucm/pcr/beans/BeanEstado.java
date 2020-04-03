@@ -286,6 +286,23 @@ public class BeanEstado {
 	public static List<Integer> getEstadosLotesDisponiblesCentro() {
 		return Arrays.asList(new Integer[] {Estado.LOTE_INICIADO.getCodNum(), Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum()});
 	}
+	
+	
+	/**
+	 * Estados de búsqueda de una placa de Visavet para un laboratorio receptor
+	 * @return
+	 */
+	public static List<BeanEstado> estadosPlacaVisavetParaLaboratorioCentro() {
+
+		List<BeanEstado> estadosPlacaVisavet = new ArrayList<>();
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_ASIGNADA));
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_ENVIADA));
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_RECIBIDA));
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_ASIGNADA));
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_TRANSPASADA));		
+		return estadosPlacaVisavet;
+	}
+	
 
 	@Override
 	public String toString() {
