@@ -1,73 +1,63 @@
 package es.ucm.pcr.beans;
 
-import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 
 public class BusquedaRecepcionPlacasVisavetBean {
 
-	private String idPlacaVisavet;
-	private String capacidad;
-	private List<BeanEstado> estadosPlacaVisavet;
-	private String estadoSeleccionado;
-	private Calendar fechaEnvio;
-	private Calendar fechaRecepcion;
-	private Calendar fechaTraspaso;
-
+	private Integer idPlaca;
+	private String numeroMuestras;
+	private Integer idEstadoPlaca;
+	private Date fechaCreacionInicio;
+	private Date fechaCreacionFin;
+	private Integer idLaboratorioCentro;
 	
-	public String getIdPlacaVisavet() {
-		return idPlacaVisavet;
+
+	public Integer getIdPlaca() {
+		return idPlaca;
 	}
 
-	public void setIdPlacaVisavet(String idPlacaVisavet) {
-		this.idPlacaVisavet = idPlacaVisavet;
+	public void setIdPlaca(Integer idPlaca) {
+		this.idPlaca = idPlaca;
 	}
 
-	public String getCapacidad() {
-		return capacidad;
+	public String getNumeroMuestras() {
+		return numeroMuestras;
 	}
 
-	public void setCapacidad(String capacidad) {
-		this.capacidad = capacidad;
+	public void setNumeroMuestras(String numeroMuestras) {
+		this.numeroMuestras = numeroMuestras;
 	}
 
-	public List<BeanEstado> getEstadosPlacaVisavet() {
-		return estadosPlacaVisavet;
+	public Integer getIdEstadoPlaca() {
+		return idEstadoPlaca;
 	}
 
-	public void setEstadosPlacaVisavet(List<BeanEstado> estadosPlacaVisavet) {
-		this.estadosPlacaVisavet = estadosPlacaVisavet;
+	public void setIdEstadoPlaca(Integer idEstadoPlaca) {
+		this.idEstadoPlaca = idEstadoPlaca;
 	}
 
-	public String getEstadoSeleccionado() {
-		return estadoSeleccionado;
+	public Date getFechaCreacionInicio() {
+		return fechaCreacionInicio;
 	}
 
-	public void setEstadoSeleccionado(String estadoSeleccionado) {
-		this.estadoSeleccionado = estadoSeleccionado;
+	public void setFechaCreacionInicio(Date fechaCreacionInicio) {
+		this.fechaCreacionInicio = fechaCreacionInicio;
 	}
 
-	public Calendar getFechaEnvio() {
-		return fechaEnvio;
+	public Date getFechaCreacionFin() {
+		return fechaCreacionFin;
 	}
 
-	public void setFechaEnvio(Calendar fechaEnvio) {
-		this.fechaEnvio = fechaEnvio;
+	public void setFechaCreacionFin(Date fechaCreacionFin) {
+		this.fechaCreacionFin = fechaCreacionFin;
 	}
 
-	public Calendar getFechaRecepcion() {
-		return fechaRecepcion;
+	public Integer getIdLaboratorioCentro() {
+		return idLaboratorioCentro;
 	}
 
-	public void setFechaRecepcion(Calendar fechaRecepcion) {
-		this.fechaRecepcion = fechaRecepcion;
-	}
-
-	public Calendar getFechaTraspaso() {
-		return fechaTraspaso;
-	}
-
-	public void setFechaTraspaso(Calendar fechaTraspaso) {
-		this.fechaTraspaso = fechaTraspaso;
+	public void setIdLaboratorioCentro(Integer idLaboratorioCentro) {
+		this.idLaboratorioCentro = idLaboratorioCentro;
 	}
 
 }

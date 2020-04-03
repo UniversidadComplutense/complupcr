@@ -142,6 +142,11 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		BeanResultado beanResultado = new BeanResultado();
 		bean.setEstadoMuestra(beanResultado.asignarTipoEstadoYCodNum(muestra.getResultado()).getResultadoMuestra().getDescripcion());
 		
+		if(muestra.getPlacaLaboratorio()!=null) {
+			bean.setIdPlacaLaboratorio(muestra.getPlacaLaboratorio().getId()); //aqui solo se mostrarán muestras que ya esten en una placa de laboratorio
+			bean.setIdJefePlaca(muestra.getPlacaLaboratorio().getUsuario().getId()); //todas las muestras que mostremos en esta vista serán aquellas cuya placa se haya asignado el jefe
+		}
+		
 		Date date = new Date(); // your date
 	    Calendar cal = Calendar.getInstance();
 	    cal.setTime(date);

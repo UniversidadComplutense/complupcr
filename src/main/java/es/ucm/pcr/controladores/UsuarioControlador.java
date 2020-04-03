@@ -60,31 +60,36 @@ public class UsuarioControlador {
 	
 		// cargo todos los usuarios de BBDD
 		List<BeanUsuarioGestion> listaUsuarios = new ArrayList<BeanUsuarioGestion>();
-		for (Usuario usuario: usuarioRepositorio.findAll())
-		{
-			listaUsuarios.add(new BeanUsuarioGestion(
-								usuario.getId(), 
-								usuario.getCentro(),
-								usuario.getNombre(), 
-					 			usuario.getApellido1(), 
-					 			usuario.getApellido2(), 
-					 			usuario.getEmail(), 
-					 			usuario.getPassword(), 
-					 			usuario.getIdLaboratorioVisavet(),
-					 			usuario.getIdLaboratorioCentro(),
-					 			usuario.getAsignadas(),
-								usuario.getAcertadas(),
-								usuario.getDocumentos(),
-								usuario.getUsuarioMuestras(),
-								usuario.getRols(),
-								usuario.getHabilitado(),
-								"L",
-								usuario.getCentro().getId() // Centro seleccionado
-								));
-		}
-		//	Ordeno por ap1, ap2, nombre
-		Collections.sort(listaUsuarios);
+		listaUsuarios = usuarioServicio.listaUsuariosOrdenada();
 		vista.addObject("listaUsuarios", listaUsuarios);
+		
+//		for (Usuario usuario: usuarioRepositorio.findAll())
+//		{
+//			listaUsuarios.add(new BeanUsuarioGestion(
+//								usuario.getId(), 
+//								usuario.getCentro(),
+//								usuario.getNombre(), 
+//					 			usuario.getApellido1(), 
+//					 			usuario.getApellido2(), 
+//					 			usuario.getEmail(), 
+//					 			usuario.getPassword(), 
+//					 			usuario.getIdLaboratorioVisavet(),
+//					 			usuario.getIdLaboratorioCentro(),
+//					 			usuario.getAsignadas(),
+//								usuario.getAcertadas(),
+//								usuario.getDocumentos(),
+//								usuario.getUsuarioMuestras(),
+//								usuario.getRols(),
+//								usuario.getHabilitado(),
+//								"L",							// Acción = L: Lista de usuarios
+//								((!usuario.getCentro().equals(null))?usuario.getCentro().getId():999999) , 	// Centro seleccionado
+////								usuario.getCentro().getId(), 	// Centro seleccionado	
+//								"A"								// TipoCentro: A: A elegir
+//								));			
+//		}
+//		//	Ordeno por ap1, ap2, nombre
+//		Collections.sort(listaUsuarios);
+//		vista.addObject("listaUsuarios", listaUsuarios);
 	
 		return vista;
 	}
@@ -125,7 +130,6 @@ public class UsuarioControlador {
 			 								@RequestParam(value = "roles" , required = false) int[] roles,
 											HttpSession session) throws Exception {
 		
-		System.out.println("Habilitado: " + beanUsuario.getHabilitado());
 		// Damos de alta nuevo usuario
 		if (beanUsuario.getAccion().equals("A"))
 		{
