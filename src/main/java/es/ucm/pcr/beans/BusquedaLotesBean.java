@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 
 
 public class BusquedaLotesBean {
@@ -92,5 +94,7 @@ public String getSentidoOrden() {
 public void setSentidoOrden(String sentidoOrden) {
 	this.sentidoOrden = sentidoOrden;
 }
-
+public String getCriterioNumLote() {
+	return StringUtils.isBlank(numLote) ? null : "%" + numLote + "%";
+}
 }

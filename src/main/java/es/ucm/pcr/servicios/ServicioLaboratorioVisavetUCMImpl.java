@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import es.ucm.pcr.beans.BeanLaboratorioVisavet;
+import es.ucm.pcr.beans.BeanPlacaVisavetUCM;
 import es.ucm.pcr.beans.BusquedaLotesBean;
+import es.ucm.pcr.beans.BusquedaPlacasVisavetBean;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteListadoBean;
@@ -19,6 +21,7 @@ import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraListadoBean;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Lote;
+import es.ucm.pcr.modelo.orm.PlacaVisavet;
 import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
 import es.ucm.pcr.repositorio.LoteRepositorio;
 @Service
@@ -75,7 +78,21 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		return pageLote;
 	}
 
-	
+	public Page<BeanPlacaVisavetUCM> buscarPlacas(BusquedaPlacasVisavetBean busqueda, Pageable pageable){
+		
+		
+	List<BeanPlacaVisavetUCM> listPlacaBean = new ArrayList<BeanPlacaVisavetUCM>();
+		
+	//	Page<PlacaVisavet> placasPage = laboratorioVisavetRepositorio.findByParams(busqueda, pageable); 
+	Page<PlacaVisavet> placasPage = null;
+		for (PlacaVisavet l : placasPage.getContent()) {
+			//listPlacaBean.add(BeanPlacaVisavetUCM.modelToBean(l));
+		}
+		
+		Page<BeanPlacaVisavetUCM> paginasPlacas = new PageImpl<>(listPlacaBean, pageable, placasPage.getTotalElements());
+		
+		return paginasPlacas;
+	}
 	
 	
 	

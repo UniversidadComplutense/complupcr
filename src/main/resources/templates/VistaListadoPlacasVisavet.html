@@ -36,7 +36,7 @@
 				<label class="col-xs-2">Laboratorio asignado:</label>
 			    <select class="form-control form-control-sm" id="centro" th:field="*{idLaboratorioCentro}">
 					<option th:each="var: ${busqueda.listaLaboratorioCentro}"
-									th:value="${var.idLaboratorio}" th:text="${var.desLaboratorio}"
+									th:value="${var.id}" th:text="${var.nombre}"
 									th:select="${busqueda.idLaboratorioCentro}">Laboratorio</option>
 				</select>
 				</div>

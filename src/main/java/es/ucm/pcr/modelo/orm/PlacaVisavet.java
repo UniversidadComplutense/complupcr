@@ -1,6 +1,7 @@
 package es.ucm.pcr.modelo.orm;
 // Generated 30 mar. 2020 17:36:56 by Hibernate Tools 5.2.12.Final
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -33,7 +34,7 @@ public class PlacaVisavet implements java.io.Serializable {
 			0);
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<Lote> lotes = new HashSet<Lote>(0);
-
+	private Date fechaCreacion;
 	public PlacaVisavet() {
 	}
 
@@ -43,13 +44,14 @@ public class PlacaVisavet implements java.io.Serializable {
 
 	public PlacaVisavet(EstadoPlacaVisavet estadoPlacaVisavet, LaboratorioVisavet laboratorioVisavet,
 			Integer numeromuestras, Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios,
-			Set<Documento> documentos, Set<Lote> lotes) {
+			Set<Documento> documentos, Set<Lote> lotes,Date fechaCreacion) {
 		this.estadoPlacaVisavet = estadoPlacaVisavet;
 		this.laboratorioVisavet = laboratorioVisavet;
 		this.numeromuestras = numeromuestras;
 		this.placaVisavetPlacaLaboratorios = placaVisavetPlacaLaboratorios;
 		this.documentos = documentos;
 		this.lotes = lotes;
+		this.fechaCreacion=fechaCreacion;
 	}
 
 	@Id
@@ -119,5 +121,11 @@ public class PlacaVisavet implements java.io.Serializable {
 	public void setLotes(Set<Lote> lotes) {
 		this.lotes = lotes;
 	}
-
+	@Column(name = "fechaCreacion")
+	public Date getFechaCreacion() {
+		return this.fechaCreacion;
+	}
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
 }
