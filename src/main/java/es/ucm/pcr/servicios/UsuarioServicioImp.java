@@ -14,9 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanUsuarioGestion;
+import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.PasswordResetToken;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
+import es.ucm.pcr.repositorio.CentroRepositorio;
 import es.ucm.pcr.repositorio.PasswordTokenRepositorio;
 import es.ucm.pcr.repositorio.RolRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
@@ -30,6 +32,9 @@ public class UsuarioServicioImp implements UsuarioServicio {
 
 	@Autowired
 	UsuarioRepositorio usurep;
+	
+	@Autowired
+	CentroRepositorio centroRepositorio;
 	
 	@Autowired
 	RolRepositorio rolRepositorio;
@@ -76,7 +81,8 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		beanUsuario.setNombre(usuario.getNombre());
 		beanUsuario.setPassword(usuario.getPassword());
 		beanUsuario.setRols(usuario.getRols());
-		beanUsuario.setUsuarioMuestras(usuario.getUsuarioMuestras());				
+		beanUsuario.setUsuarioMuestras(usuario.getUsuarioMuestras());	
+        beanUsuario.setCentroSeleccionado(usuario.getCentro().getId());
 		
 		return beanUsuario;
 	}
@@ -90,7 +96,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		usuario.setApellido1(beanUsuario.getApellido1());
 		usuario.setApellido2(beanUsuario.getApellido2());
 		usuario.setAsignadas(beanUsuario.getAsignadas());
-		usuario.setCentro(beanUsuario.getCentro());
+//		usuario.setCentro(beanUsuario.getCentro());
 		usuario.setDocumentos(beanUsuario.getDocumentos());
 		usuario.setDocumentos(beanUsuario.getDocumentos());
 		usuario.setEmail(beanUsuario.getEmail());
@@ -107,8 +113,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		else
 		{
 			usuario.setPassword(beanUsuario.getPassword());
-		}
-		
+		}		
 		// Añado los roles seleccionado
 		Set<Rol> rolesSeleccionados = new HashSet<Rol>(0);
 		if(roles != null) 
@@ -121,8 +126,19 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		    }
 		}
 		usuario.setRols(rolesSeleccionados);
+
+		// Si el centro seleccionado corresponde a un centro existente,
+		// distinto de null, comprobamos si hay que asociarlo al usuario
+		if (centroRepositorio.existsById(beanUsuario.getCentroSeleccionado()))
+		{
+//			// si es distinto del grabado, lo asociamos al usuario
+//			if (!beanUsuario.getCentroSeleccionado().equals(usuario.getCentro().getId()))
+//			{
+				Optional<Centro> centroGuardar = centroRepositorio.findById(beanUsuario.getCentroSeleccionado());
+				usuario.setCentro(centroGuardar.get());
+//			}
+		}
 		//
-		
 		usuario.setUsuarioMuestras(beanUsuario.getUsuarioMuestras());
 		
 		return usuario;
@@ -137,7 +153,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		usuario.setApellido1(beanUsuario.getApellido1());
 		usuario.setApellido2(beanUsuario.getApellido2());
 		usuario.setAsignadas(beanUsuario.getAsignadas());
-		usuario.setCentro(beanUsuario.getCentro());
+//		usuario.setCentro(beanUsuario.getCentro());
 		usuario.setDocumentos(beanUsuario.getDocumentos());
 		usuario.setDocumentos(beanUsuario.getDocumentos());
 		//  El mail es único, y asociado al usuario, no poemos modifciarlo
@@ -162,7 +178,19 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		}
 		usuario.setRols(rolesSeleccionados);
 		//		
-//		usuario.setRols(beanUsuario.getRols());
+
+		// Si el centro seleccionado corresponde a un centro existente,
+		// distinto de null, comprobamos si hay que asociarlo al usuario
+		if (centroRepositorio.existsById(beanUsuario.getCentroSeleccionado()))
+		{
+//			// si es distinto del grabado, lo asociamos al usuario
+//			if (!beanUsuario.getCentroSeleccionado().equals(usuario.getCentro().getId()))
+//			{
+				Optional<Centro> centroGuardar = centroRepositorio.findById(beanUsuario.getCentroSeleccionado());
+				usuario.setCentro(centroGuardar.get());
+//			}
+		}		
+		
 		usuario.setUsuarioMuestras(beanUsuario.getUsuarioMuestras());
 		
 		return usuario;

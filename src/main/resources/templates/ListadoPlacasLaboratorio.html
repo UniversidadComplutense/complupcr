@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - LOTES</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+	
+	<div class="container">
+	<div class="row justify-content-center mt-1, titulo-menu">
+			<h5>Gestión de placas responsable PCR</h5>
+	</div>
+	
+	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas}" method="post" th:object="${busquedaPlacaLaboratorioBean}" id="formBusqueda" role="form">
+		
+		<!-- CRITERIOS BUSQUEDA -->
+		<fieldset id="criteriosBusqueda" class="form-group border p-2">
+			<legend class="w-auto">Placa de laboratorio</legend>
+			<div class="row">
+				<div class="col-3 form-group">
+					<label>Código</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.idPlaca}" th:value="${busquedaPlacaLaboratorioBean.idPlaca}" maxlength="100"/>
+				</div>	
+				<div class="col-3 form-group">
+					<label>Capacidad</label>
+				 	<select class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.numeroMuestras}" th:value="${busquedaPlacaLaboratorioBean.numeroMuestras}">
+				 		<option value="">Seleccione</option>
+				 		<option value="20">20</option>
+				 		<option value="96">96</option>
+				 	</select>
+				</div>
+			</div>
+			<div class="row">			
+				<div class="col-3 form-group">
+					<label>Estado</label>
+				 	<select class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.idEstadoPlaca}"  th:value="${busquedaPlacaLaboratorioBean.idEstadoPlaca}">
+				 		<option value="">Seleccione</option>
+				 		<option th:each="var: ${estadosPlacaLaboratorio}"
+									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
+									th:select="${busquedaPlacaLaboratorioBean.idEstadoPlaca}">Estado</option>				 		
+				 	</select>
+				</div>
+				<div class="col-3 form-group">
+					<label >Fecha de creación</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.fechaCreacionInicio}"  th:value="${busquedaPlacaLaboratorioBean.fechaCreacionInicio}"/>
+				</div>
+				<div class="col-3 form-group">
+					<label >a</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.fechaCreacionFin}"  th:value="${busquedaPlacaLaboratorioBean.fechaCreacionFin}"/>
+				</div>							
+			</div>
+		</fieldset>
+		
+		
+		<!-- ACCIONES -->
+		<div class="row justify-content-center mt-3">
+			<div class="col-2 justify-content-begin mt-3">
+				<a th:href="@{/laboratorioCentro/gestionPlacas/nueva}" class="btn btn-secondary">Nueva</a>				
+			</div>			
+			<div class="col-2 justify-content-end mt-3">
+				<button type="submit" class="btn btn-secondary">Buscar</button>
+			</div>
+		</div>	
+		
+
+		<!-- RESULTADO -->
+		<div class="row justify-content-center mt-3">
+			<table class="table">
+				<thead class="thead-light">	
+	    			<tr>
+	      				<th scope="col">Código</th>
+						<th scope="col">Fecha creación</th>
+						<th scope="col">Estado</th>
+						<th scope="col">Capacidad</th>
+						<th scope="col">Muestras</th>
+						<th scope="col">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${listaPlacas != null}" th:each="placa : ${listaPlacas}">
+						<td><span th:text="${placa.id}"></span></td>									
+					 	<td><span th:text="${#dates.format(placa.fechaCreacion, 'dd/MM/yyyy')}"></span></td>
+						<td><span th:text="${placa.beanEstado.estado.descripcion}"></span></td>
+						<td><span th:text="${placa.numeroMuestras}"></span></td>
+						<td>
+							<div th:if="${#lists.size(placa.muestras) == 0}">
+								<a style="cursor: pointer;color:grey">
+									<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+								</a>
+							</div>
+							
+							<div th:if="${#lists.size(placa.muestras) > 0}">								
+								<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${lote.id}" style="cursor: pointer;" title="Ver muestras">
+									<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+								</a>
+								<span th:text="${#lists.size(placa.muestras)}"></span>								
+							</div>
+							<!-- MODAL MUESTRAS -->							
+							<div class="modal fade" th:id="modal-warning+${placa.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-xl" role="document">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">La placa - <b><span th:text="${placa.id}"/></b> contiene <span th:text="${#lists.size(placa.muestras)}"/> muestras</h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	<!-- Muestras de la placa -->
+								          	<div id="tablaMuestras" class="tableFixHead">
+												<table>
+													<thead class="thead-light">	
+									    				<tr>
+										      				<th>Etiqueta</th>
+															<th>Ref. Interna</th>
+															<th>Placa Visavet</th>
+															<th>Estado</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${placa.muestras != null}" th:each="muestra : ${placa.muestras}">
+															<td><span th:text="${muestra.etiqueta}"></span></td>					
+															<td><span th:text="${muestra.refInterna}"></span></td>
+															<td><span th:text="${muestra.idPlacaVisavet}"></span></td>		
+															<td><span th:text="${muestra.estado}"></span></td>															
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>							        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+							<!-- FIN MODAL MUESTRAS -->	
+						</td>
+						<td>
+					        <a style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
+					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;" title="Editar placa"></i>
+					        </a>
+						</td>						
+					</tr>		
+				</tbody>
+			</table>
+			<div class="row justify-content-center mt-3" th:if="${#lists.size(listaPlacas) == 0}">
+				<span>No hay resultados para los criterios de búsqueda seleccionados</span>
+			</div>
+		</div>
+	</form>
+
+	</div>
+	
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+
+</body>
+</html>

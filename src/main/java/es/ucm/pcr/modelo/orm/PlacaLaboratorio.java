@@ -38,6 +38,7 @@ public class PlacaLaboratorio implements java.io.Serializable {
 			0);
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Usuario usuario; //un jefe coge la placa para asignar sus muestras a los analistas
+	private Set<Muestra> muestras = new HashSet<Muestra>(0);
 	
 
 	public PlacaLaboratorio() {
@@ -142,5 +143,13 @@ public class PlacaLaboratorio implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "placaLaboratorio")
+	public Set<Muestra> getMuestras() {
+		return this.muestras;
+	}
+
+	public void setMuestras(Set<Muestra> muestras) {
+		this.muestras = muestras;
+	}
 	
 }

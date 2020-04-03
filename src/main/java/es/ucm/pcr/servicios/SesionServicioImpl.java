@@ -123,10 +123,8 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario = new ArrayList<MenuBean>();
 			opcionSecundaria = new MenuBean("Recepción placas", "/laboratorioCentro/recepcionPlacas", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Placas listas para PCR", "/laboratorioCentro/gestionPlacas/preparacion", null);
-			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Placas esperando resultado PCR", "/laboratorioCentro/gestionPlacas/resultados", null);
-			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Gestión de placas", "/laboratorioCentro/gestionPlacas", null);
+			menuSecundario.add(opcionSecundaria);			
 			opcionPrincipal = new MenuBean("Responsable PCR", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}

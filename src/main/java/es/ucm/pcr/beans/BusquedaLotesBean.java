@@ -14,7 +14,7 @@ private Date fechaEntrada;
 private String muestra;
 private List<BeanEstado> listaBeanEstado;
 private Integer codNumEstadoSeleccionado;
-private List<CentroBean> listaCentros;
+private List<BeanCentro> listaCentros;
 private Integer idCentro;
 private String urlPaginada="/laboratorioUni/buscarLotesGet";
 private String orden;
@@ -62,11 +62,11 @@ public Integer getCodNumEstadoSeleccionado() {
 public void setCodNumEstadoSeleccionado(Integer codNumEstadoSeleccionado) {
 	this.codNumEstadoSeleccionado = codNumEstadoSeleccionado;
 }
-public List<CentroBean> getListaCentros() {
+public List<BeanCentro> getListaCentros() {
 	return listaCentros;
 }
-public void setListaCentros(List<CentroBean> listaCentros) {
-	this.listaCentros = listaCentros;
+public void setListaCentros(List<BeanCentro> list) {
+	this.listaCentros = list;
 }
 public Integer getIdCentro() {
 	return idCentro;

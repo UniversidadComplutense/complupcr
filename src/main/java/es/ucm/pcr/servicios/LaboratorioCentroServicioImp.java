@@ -2,8 +2,10 @@ package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
@@ -35,7 +38,6 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(LaboratorioCentroServicioImp.class);
 
-		
 	@Autowired
 	PlacaLaboratorioRepositorio placaLaboratorioRepositorio;
 	
@@ -92,9 +94,18 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 					laboratorioCentro.getEquipos(),
 					"L"));
 		}
-		//	Ordeno por ap1, ap2, nombre
+		//	Ordeno por nombre
 		Collections.sort(listaLaboratorioCentro);
 		return listaLaboratorioCentro;
+	}
+	
+	public Map<Integer,String> mapaLaboratoriosCentro (List<BeanLaboratorioCentro> laboratoriosCentro) throws Exception{
+		Map<Integer, String> mapalaboratorioCentro = new HashMap<Integer, String>();
+		for (BeanLaboratorioCentro laboratorioCentro :laboratoriosCentro)
+		{
+			mapalaboratorioCentro.put(laboratorioCentro.getId(), laboratorioCentro.getNombre());
+		}
+		return mapalaboratorioCentro;
 	}
 	
 	@Override

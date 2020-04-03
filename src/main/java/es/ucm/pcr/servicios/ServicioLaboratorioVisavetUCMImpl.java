@@ -18,7 +18,9 @@ import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraListadoBean;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
+import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
+import es.ucm.pcr.repositorio.LoteRepositorio;
 @Service
 public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVisavetUCM{
 	
@@ -27,7 +29,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	
 	@Autowired
 	private LaboratorioVisavetRepositorio laboratorioVisavetRepositorio;
-	
+
 	public Page<LoteBeanPlacaVisavet> buscarLotes(BusquedaLotesBean busquedaLotes, Pageable pageable){
 		LoteBusquedaBean loteBusquedaBean= new LoteBusquedaBean();
 		loteBusquedaBean.setIdCentro(busquedaLotes.getIdCentro());
@@ -36,10 +38,12 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		loteBusquedaBean.setNumLote(busquedaLotes.getNumLote());
 		// por muestra aun no esta
 		loteBusquedaBean.setIdEstado(busquedaLotes.getCodNumEstadoSeleccionado());
-		loteBusquedaBean.setIdLaboratorio("");
+		//loteBusquedaBean.setIdLaboratorio("");
+	
+		
 		Page <LoteListadoBean> pageResultados=loteServicio.findLoteByParam(loteBusquedaBean,pageable);
+		
 		List<LoteBeanPlacaVisavet> listaBeans = new ArrayList<LoteBeanPlacaVisavet>();
-		if (pageResultados.getTotalElements() > 0) {
 			
 			for (LoteListadoBean unResultado: pageResultados.getContent()) {
 				LoteBeanPlacaVisavet lotePlaca= new LoteBeanPlacaVisavet();
@@ -49,14 +53,15 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 				// necesito el BeanEstado
 				lotePlaca.setEstado(unResultado.getBeanEstado());
 				//lotePlaca.setEstado(unResultado.);
-				List<MuestraBeanLaboratorioVisavet>  listaMuestrasVisavet= null;
+				List<MuestraBeanLaboratorioVisavet>  listaMuestrasVisavet= new ArrayList<MuestraBeanLaboratorioVisavet>();
 				for(MuestraListadoBean muestra : unResultado.getMuestras()) {
-			     if (listaMuestrasVisavet == null) new ArrayList();
+			 
 			     MuestraBeanLaboratorioVisavet muestraBeanLaboratorioVisavet = new MuestraBeanLaboratorioVisavet();
 			     muestraBeanLaboratorioVisavet.setId(muestra.getId());
 			     muestraBeanLaboratorioVisavet.setEtiqueta(muestra.getEtiquetaMuestra());
 			     muestraBeanLaboratorioVisavet.setTipoMuestra(muestra.getTipoMuestra());
 			     muestraBeanLaboratorioVisavet.setReferenciaInterna(muestra.getRefInternaMuestra());
+			     //if (listaMuestrasVisavet == null) new ArrayList<MuestraBeanLaboratorioVisavet>();
 			     listaMuestrasVisavet.add(muestraBeanLaboratorioVisavet);
 				}
 				lotePlaca.setListaMuestras(listaMuestrasVisavet);
@@ -64,7 +69,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 			}
 		
 			
-		}
+		
 		Page<LoteBeanPlacaVisavet> pageLote=new PageImpl<LoteBeanPlacaVisavet>(listaBeans, pageable,
 				pageResultados.getTotalElements());
 		return pageLote;
