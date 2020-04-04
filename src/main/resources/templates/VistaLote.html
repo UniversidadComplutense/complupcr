@@ -10,7 +10,6 @@
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
-	<BR>
 	<form action="#" th:action="@{/centroSalud/lote/guardar}" method="post" th:object="${beanLote}" id="formGuardar" role="form">
 		<input type="hidden" th:field="${beanLote.id}"  th:value="${beanLote.id}" />
 		<input type="hidden" name="estado" th:value="${beanLote.estado.estado.codNum}" th:if="${beanLote.estado} != null"/>	
@@ -18,7 +17,7 @@
 		<input type="hidden" th:field="${beanLote.numeroMuestras}" th:value="${beanLote.tieneMuestras}"/>
 		
 		<!-- MENSAJES AVISO -->
-		<div th:classappend="${mensaje == null} ? visible : d-none" class="alert alert-secondary" role="alert" id="alertInfo">
+		<div th:classappend="${mensaje == null} ? visible : d-none" class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
 		  	<label th:if="${editable} and ${beanLote.id == null}">Nuevo lote</label>
 		  	<label th:if="${editable} and ${beanLote.id != null}">Modificar lote</label>
 		  	<label th:if="!${editable}">Consulta lote</label>
@@ -28,23 +27,23 @@
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		</div>
 		
-		<fieldset id="datosLote" class="form-group border p-2" th:disabled="!${editable}">
-			<legend class="w-auto font-weight-bold" th:if="${beanLote.tieneMuestras}">Lote con <span th:text="${beanLote.numeroMuestras}"/> muestras</legend>
-			<legend class="w-auto font-weight-bold" th:if="!${beanLote.tieneMuestras}">Lote sin muestras</legend>
+		<fieldset id="datosLote" class="form-group border p-2 m-1" th:disabled="!${editable}">
+			<legend class="w-auto font-weight-bold m-0" th:if="${beanLote.tieneMuestras}">Lote con <span th:text="${beanLote.numeroMuestras}"/> muestras</legend>
+			<legend class="w-auto font-weight-bold m-0" th:if="!${beanLote.tieneMuestras}">Lote sin muestras</legend>
 			<div class="row">
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Código</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="${beanLote.numLote}"  th:value="${beanLote.numLote}" required maxlength="50"/>
 				 	<label class="text-warning" th:if="${#fields.hasErrors('numLote')}" th:errors="${beanLote.numLote}"></label>
 				</div>
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Capacidad</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="${beanLote.capacidad}"  th:value="${beanLote.capacidad}" pattern="[0-9]+" maxlength="3" required/>
 				 	<label class="text-warning" th:if="${#fields.hasErrors('capacidad')}" th:errors="${beanLote.capacidad}"></label>
 				</div>
 			</div>		
 			<div class="row">			
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Laboratorio</label>															
 				 	<ul style="list-style: none;">
 				 		<li>
@@ -65,15 +64,15 @@
 				</div>				
 			</div>
 			<div class="row">
-				<div class="col-4 form-group" th:if="${beanLote.estado == null}">
+				<div class="col-4 m-0 form-group" th:if="${beanLote.estado == null}">
 					<label>Estado</label>
 				 	<input type="text" class="form-control form-control-sm" disabled></input>
 				</div>
-				<div class="col-4 form-group" th:if="${beanLote.estado != null}">
+				<div class="col-4 m-0 form-group" th:if="${beanLote.estado != null}">
 					<label>Estado</label>
 				 	<input type="text" class="form-control form-control-sm" disabled th:value="${beanLote.estado.estado.descripcion}"></input>
 				</div>
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Fecha envío</label>
 				 	<input type="text" class="form-control form-control-sm" disabled th:value="${#dates.format(beanLote.fechaEnvio, 'dd/MM/yyyy')}"></input>
 				</div>				

@@ -10,10 +10,9 @@
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
-	<br>
 	<form action="#" th:action="@{/centroSalud/muestra/list}" method="post" th:object="${beanBusquedaMuestra}" id="formBusqueda" role="form">
 		
-		<div th:classappend="${mensaje == null} and ${mensajeError == null} ? visible : d-none" class="alert alert-secondary" role="alert" id="alertInfo">
+		<div th:classappend="${mensaje == null} and ${mensajeError == null} ? visible : d-none" class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
 		  	<label>Búsqueda de muestras</label>
 		</div>
 		
@@ -27,28 +26,28 @@
 		</div>
 		
 		<!-- CRITERIOS BUSQUEDA PACIENTE -->
-		<fieldset id="datosPaciente" class="form-group border p-2">
-			<legend class="w-auto font-weight-bold">Paciente</legend>
+		<fieldset id="datosPaciente" class="form-group border p-2 m-1">
+			<legend class="w-auto font-weight-bold m-0">Paciente</legend>
 			<div class="row">
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label >Nombre</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.nombrePaciente}"  th:value="${beanBusquedaMuestra.nombrePaciente}" maxlength="100"/>
 				</div>
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label >Primer apellido</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.primerApellido}"  th:value="${beanBusquedaMuestra.primerApellido}" maxlength="100"/>
 				</div>	
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label >Segundo apellido</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.segundoApellido}"  th:value="${beanBusquedaMuestra.segundoApellido}" maxlength="100"/>
 				</div>				
 			</div>
 			<div class="row">
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label >NHC</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.nhcPaciente}"  th:value="${beanBusquedaMuestra.nhcPaciente}" maxlength="10"/>
 				</div>
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label >Correo</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.emailPaciente}"  th:value="${beanBusquedaMuestra.emailPaciente}" maxlength="25"/>
 				</div>					
@@ -56,22 +55,22 @@
 		</fieldset>
 		
 		<!-- CRITERIOS BUSQUEDA MUESTRAS -->
-		<fieldset id="datosMuestras" class="form-group border p-2">
-			<legend class="w-auto font-weight-bold">Muestra</legend>
+		<fieldset id="datosMuestras" class="form-group border p-2 m-1">
+			<legend class="w-auto font-weight-bold m-0">Muestra</legend>
 			<div class="row">
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label >Etiqueta</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.etiquetaMuestra}"  th:value="${beanBusquedaMuestra.etiquetaMuestra}" maxlength="10"/>
 				</div>	
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label >Fecha envío</label>
 				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaEnvioMuestraIni}"  th:value="${beanBusquedaMuestra.fechaEnvioMuestraIni}"/>
 				</div>
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label >a</label>
 				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaEnvioMuestraFin}"  th:value="${beanBusquedaMuestra.fechaEnvioMuestraFin}"/>
 				</div>				
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label>Estado de la muestra</label>
 					<select class="form-control form-control-sm" th:field="${beanBusquedaMuestra.estadoResueltaNoticado}"  th:value="${beanBusquedaMuestra.estadoResueltaNoticado}">
 				 		<option value="">Seleccione</option>
@@ -83,19 +82,19 @@
 			</div>
 			
 			<div class="row">
-				<div class="col-3">
+				<div class="col-3 m-0">
 					<!-- <label >Ref. interna</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.refInternaMuestra}"  th:value="${beanBusquedaMuestra.refInternaMuestra}" maxlength="10"/> -->
 				</div>	
-				<div class="col-3">
+				<div class="col-3 m-0">
 					<label >Fecha resultado</label>
 				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaResultadoMuestraIni}"  th:value="${beanBusquedaMuestra.fechaResultadoMuestraIni}"/>
 				</div>
-				<div class="col-3">
+				<div class="col-3 m-0">
 					<label >a</label>
 				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaResultadoMuestraFin}"  th:value="${beanBusquedaMuestra.fechaResultadoMuestraFin}"/>
 				</div>	
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label >Resultado</label>
 				 	<select class="form-control form-control-sm" th:field="${beanBusquedaMuestra.estadoMuestra}"  th:value="${beanBusquedaMuestra.estadoMuestra}">
 				 		<option value="">Seleccione</option>
@@ -108,7 +107,7 @@
 			
 		</fieldset>
 
-		<div class="row justify-content-end mt-3">
+		<div class="row justify-content-end mt-2">
 			<div class="col-1">
 				<a th:href="@{/centroSalud/muestra/nueva}" class="btn btn-secondary">Nueva</a>				
 			</div>
