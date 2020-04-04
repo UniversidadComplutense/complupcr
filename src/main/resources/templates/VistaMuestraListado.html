@@ -14,7 +14,7 @@
 	<form action="#" th:action="@{/centroSalud/muestra/list}" method="post" th:object="${beanBusquedaMuestra}" id="formBusqueda" role="form">
 		
 		<div th:classappend="${mensaje == null} and ${mensajeError == null} ? visible : d-none" class="alert alert-secondary" role="alert" id="alertInfo">
-		  	<label>Gestión muestras</label>
+		  	<label>Búsqueda de muestras</label>
 		</div>
 		
 		<div th:if="${mensaje !=null}" class="alert alert-success alert-dismissible fade show" role="alert">

@@ -142,7 +142,8 @@ public class LoteServicioImpl implements LoteServicio {
 	 * @param id
 	 * @return
 	 */
-	private Lote findByIdLote(Integer id) {
+	@Override
+	public Lote findByIdLote(Integer id) {
 		Optional<Lote> loteOptional = loteRepositorio.findById(id);
 		if (loteOptional.isPresent()) {
 			return loteOptional.get();
