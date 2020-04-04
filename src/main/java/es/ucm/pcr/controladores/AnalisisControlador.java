@@ -54,10 +54,12 @@ import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.GuardarAsignacionMuestraBean;
+import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.GuardarCogerYDevolverPlacasBean;
 import es.ucm.pcr.beans.MuestraBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
+import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 //import es.ucm.pcr.beans.BeanMuestraCentro;
 //import es.ucm.pcr.validadores.ValidadorMuestra;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
@@ -164,6 +166,7 @@ public class AnalisisControlador {
 			return vista;
 		}
 		
+		//metodos de asignacion de muestras a analistas
 		
 		@RequestMapping(value="/asignar", method=RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
@@ -243,7 +246,7 @@ public class AnalisisControlador {
 			redirectAttributes.addFlashAttribute("mensaje", "Asignacion de muestra guardada");
 			return new RedirectView("/analisis/asignar?idMuestra="+idMuestra, true);
 		}
-		
+		//fin metodos de asignacion de muestras a analistas
 		
 		//muestra pantalla al jefe para que resuelva la muestra
 		@RequestMapping(value="/revisar", method=RequestMethod.GET)
@@ -422,7 +425,7 @@ public class AnalisisControlador {
 			
 		}
 		
-		//FUNCIONALIDAD JEFE: COGER PLACAS 
+		//FUNCIONALIDAD JEFE: COGER PLACAS Y ASIGNAR ANALISTAS A PLACAS
 		
 		//gestionar lotes (en realidad es gestionar placas)		
 		@RequestMapping(value = "/cogerPlacas", method = RequestMethod.GET)
@@ -525,7 +528,94 @@ public class AnalisisControlador {
 			return new RedirectView("/analisis/cogerPlacas", true);			
 			
 		}
-		//FIN FUNCIONALIDAD JEFE: COGER PLACAS 
+		
+		//metodos de asignacion de placas a analistas
+		
+		@RequestMapping(value="/asignarPlaca", method=RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public ModelAndView asignarPlaca(HttpSession session, HttpServletRequest request, @RequestParam("idPlaca") Integer idPlaca) throws Exception {
+			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAPlaca");
+						
+			String mensaje = null;
+			// Comprobamos si hay mensaje enviado desde guardarAsignacion.
+			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+			if (inputFlashMap != null) {
+				mensaje = (String) inputFlashMap.get("mensaje");
+				System.out.println("mensaje vale: " + mensaje);
+			}
+			vista.addObject("mensaje", mensaje);
+
+			PlacaLaboratorioCentroAsignacionesBean placaLaboratorioCentroAsignacionesBean=laboratorioCentroServicio.buscarPlacaAsignaciones(idPlaca); 
+			
+
+			//para recoger los analistas y voluntarios seleccionados
+			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = new GuardarAsignacionPlacaLaboratorioCentroBean();			
+								
+			
+			List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
+			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();	
+			
+			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la placa para no mostrarlos como posibles a asignar en el desplegable
+			//listaAnalistasLab
+			List<BeanAsignacion> beanListadoAnalistaLabAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasLab();
+			List<BeanUsuario> beanListadoAnalistaLabABorrar = new ArrayList<BeanUsuario>();
+			//convierto la lista BeanAsignacion en lista BeanUsuario
+			for(BeanAsignacion beanAsig: beanListadoAnalistaLabAsignados) {
+				beanListadoAnalistaLabABorrar.add(beanAsig.getBeanUsuario());				
+			}
+			System.out.println("beanListadoAnalistaLabABorrar tiene: " + beanListadoAnalistaLabABorrar.size());
+			//borro de la lista todal de analistaslab los asignados
+			beanListadoAnalistaLab.removeAll(beanListadoAnalistaLabABorrar);
+			
+			//listaAnalistasVol			
+			List<BeanAsignacion> beanListadoAnalistaVolAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasVol();
+			List<BeanUsuario> beanListadoAnalistaVolABorrar = new ArrayList<BeanUsuario>();
+			//convierto la lista BeanAsignacion en lista BeanUsuario
+			for(BeanAsignacion beanAsig: beanListadoAnalistaVolAsignados) {
+				beanListadoAnalistaVolABorrar.add(beanAsig.getBeanUsuario());				
+			}
+			System.out.println("beanListadoAnalistaVolABorrar tiene: " + beanListadoAnalistaVolABorrar.size());
+			//borro de la lista todal de analistaslab los asignados
+			beanListadoAnalistaVol.removeAll(beanListadoAnalistaVolABorrar);
+			
+			
+			vista.addObject("placaLaboratorioCentroAsignacionesBean", placaLaboratorioCentroAsignacionesBean);
+			vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
+			vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);			
+			vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
+			return vista;
+		}
+		
+/* HACER POST		
+		@RequestMapping(value = "/guardarAsignacion", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public RedirectView guardarAsignacion(@ModelAttribute("formBeanGuardarAsignacionMuestra") GuardarAsignacionMuestraBean formBeanGuardarAsignacionMuestra,
+				HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
+			
+			System.out.println("muestra id: " + formBeanGuardarAsignacionMuestra.getId());
+			System.out.println("analistasLab seleccionados para asignar: " + formBeanGuardarAsignacionMuestra.getListaIdsAnalistasLabSeleccionados().toString());
+			System.out.println("analistasVol seleccionados para asignar: " + formBeanGuardarAsignacionMuestra.getListaIdsAnalistasVolSeleccionados().toString());
+			
+			//TODO llamar a metodo de servicio que a partir de formBeanGuardarAsignacionMuestra recupere la muestra y le asigne los nuevos analistas lab y analistas vol
+			
+			//muestraSevicio.guardarAsignacion(formBeanGuardarAsignacionMuestra);
+						
+			//vuelvo al formulario de asignacion de la muestra
+			String idMuestra = String.valueOf(formBeanGuardarAsignacionMuestra.getId());
+			redirectAttributes.addFlashAttribute("mensaje", "Asignacion de muestra guardada");
+			return new RedirectView("/analisis/asignar?idMuestra="+idMuestra, true);
+		}
+		
+HACER POST */
+		
+		//fin metodos de asignacion de placas a analistas
+
+		
+		
+		
+		
+		
+		//FIN FUNCIONALIDAD JEFE: COGER PLACAS Y ASIGNAR ANALISTAS A PLACAS
 		
 		
 		//ANALISTA O VOLUNTARIOS (SOLO ANALIZAN)

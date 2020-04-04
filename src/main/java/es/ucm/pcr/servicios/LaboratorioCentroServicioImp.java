@@ -23,6 +23,7 @@ import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
+import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
@@ -156,6 +157,18 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 
 	//Diana- metodos para jefe de servicio (replica de metodos de Javi con mi bean)
+	
+	@Override
+	public PlacaLaboratorioCentroAsignacionesBean buscarPlacaAsignaciones(Integer id) {
+		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
+		if (placa.isPresent()) {
+			return PlacaLaboratorioCentroAsignacionesBean.modelToBean(placa.get());
+		}
+		return new PlacaLaboratorioCentroAsignacionesBean();
+	}
+	
+	
+	
 	@Override
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda,
 			Pageable pageable) {
