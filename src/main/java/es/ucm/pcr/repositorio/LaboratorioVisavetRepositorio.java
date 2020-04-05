@@ -29,12 +29,11 @@ public interface LaboratorioVisavetRepositorio extends JpaRepository<Laboratorio
 			+ "(:#{#params.fechaCreacion} is null or placaVisavet.fechaCreacion = :#{#params.fechaCreacion}) and "
 			+ "(:#{#params.idEstado} is null or estadoPlaca.id = :#{#params.codNumEstadoSeleccionado}) ")
 	
-	*/
+	
 	@Query("SELECT placaVisavet FROM PlacaVisavet placaVisavet JOIN PlacaVisavet.estadoPlacaVisavet estadoPlaca "+
 	"where 1=1 and "
 	//+ "(:#{#params.codNumEstadoSeleccionado} is null or estadoPlaca.id = :#{#params.codNumEstadoSeleccionado}) and "
 			+ "(:#{#params.idPlaca} is null or placaVisavet.id = :#{#params.idPlaca})")
-	public Page<PlacaVisavet> findByParams(@Param("params") BusquedaPlacasVisavetBean params,
-			Pageable pageable);	
-			
+	*/
+	
 }

@@ -32,6 +32,7 @@ public class PlacaVisavet implements java.io.Serializable {
 	private EstadoPlacaVisavet estadoPlacaVisavet;
 	private LaboratorioVisavet laboratorioVisavet;
 	private Integer numeromuestras;
+
 	private Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>(
 			0);
 	private Set<Documento> documentos = new HashSet<Documento>(0);

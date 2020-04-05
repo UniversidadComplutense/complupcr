@@ -9,7 +9,8 @@ import java.util.List;
 public class BusquedaPlacasVisavetBean {
 private Integer idPlaca;
 private  String numLote;
-private Date fechaCreacion;
+private Date fechaCreacionInicio;
+private Date fechaCreacionFin;
 private String muestra;
 private List<BeanEstado> listaBeanEstado;
 private Integer codNumEstadoSeleccionado;
@@ -28,11 +29,18 @@ public String getNumLote() {
 public void setNumLote(String numLote) {
 	this.numLote = numLote;
 }
-public Date getFechaCreacion() {
-	return fechaCreacion;
+
+public Date getFechaCreacionInicio() {
+	return fechaCreacionInicio;
 }
-public void setFechaCreacion(Date fechaCreacion) {
-	this.fechaCreacion = fechaCreacion;
+public void setFechaCreacionInicio(Date fechaCreacionInicio) {
+	this.fechaCreacionInicio = fechaCreacionInicio;
+}
+public Date getFechaCreacionFin() {
+	return fechaCreacionFin;
+}
+public void setFechaCreacionFin(Date fechaCreacionFin) {
+	this.fechaCreacionFin = fechaCreacionFin;
 }
 public String getMuestra() {
 	return muestra;

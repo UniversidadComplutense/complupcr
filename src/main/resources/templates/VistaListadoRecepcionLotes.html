@@ -35,6 +35,7 @@
 				<div class="col-4 form-group">
 				<label class="col-xs-2">Centro de procedencia:</label>
 			    <select class="form-control form-control-sm" id="centro" th:field="*{idCentro}">
+			    <option value="">Seleccione</option>
 					<option th:each="var: ${busquedaLotes.listaCentros}"
 									th:value="${var.id}" th:text="${var.nombre}"
 									th:select="${busquedaLotes.idCentro}">Estado</option>
@@ -53,7 +54,7 @@
 						<div class="col-xs-9">
 							<select class="form-control form-control-sm" id="estado"
 								th:field="*{codNumEstadoSeleccionado}">
-
+                                <option value="">Seleccione</option>
 								<option th:each="var: ${busquedaLotes.listaBeanEstado}"
 									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
 									th:selected="${busquedaLotes.codNumEstadoSeleccionado}">Estado</option>

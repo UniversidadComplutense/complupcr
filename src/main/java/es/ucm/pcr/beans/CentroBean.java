@@ -32,4 +32,11 @@ public static CentroBean modelToBean(Centro centro) {
 	beanCentro.setCodCentro(centro.getCodCentro());
 	return beanCentro;
 }
+public static Centro beanToModel(CentroBean centroBean) {
+	Centro centro= new Centro();
+	centro.setId(centroBean.getId());
+	centro.setNombre(centroBean.getNombre());
+	centro.setCodCentro(centroBean.getCodCentro());
+	return centro;
+}
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.ucm.pcr.beans.BeanEstado;
+import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.LoteListadoBean;
@@ -60,5 +61,10 @@ public interface LoteServicio {
 	
 	
 	public boolean borrar(Integer id);
+	
+	
+	
+	public LoteBeanPlacaVisavet findByIdByPlacas(Integer id);
+	
 
 }

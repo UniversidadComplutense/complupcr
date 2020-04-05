@@ -160,6 +160,22 @@ function procesarLotes() {
 	window.location=url;
 }
 
+// desde placas
+function procesarLotesDesdePlacas(idPlaca) {
+	var lotesProcesar="";
+		
+			//lotesProcesar
+			$("#lotes"+idPlaca +" input").each(function () 
+					{ alert($("#lotes"+idPlaca +" input").val());
+			lotesProcesar+=$("#lotes"+idPlaca +" input").val()+":";
+			alert(lotesProcesar);
+		});
+	
+	
+	var url="/laboratorioUni/procesarLotes?lotes="+lotesProcesar;
+	window.location=url;
+}
+
 // funcion que al ser pulsada da de alta una nueva placa vacia
 function altaNuevaPlaca(){
 	var url = "";
@@ -204,10 +220,26 @@ function asignarPlaca(){
         dataType: 'html',
         data:  sBody
 	}).done(function(respuesta) {
-		
+		alert(respuesta);
 		eliminaFilas();
 		
 	    $("#trGroup").html(respuesta);
+		
+	});
+}
+function asignarLaboratorio(idPlaca){
+	var url="/laboratorioUni/consultarOcupacionLaboratorios";
+	
+	
+	$.ajax({
+        type:  'GET',
+        url:   url,
+        dataType: 'html'
+	}).done(function(respuesta) {
+		alert(respuesta);
+		
+		
+	    $("#trLaboratorio").html(respuesta);
 		
 	});
 }
