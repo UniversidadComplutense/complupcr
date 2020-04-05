@@ -10,19 +10,18 @@
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
-	<BR>
 	<form action="#" th:action="@{/centroSalud/muestra/guardar}" method="post" th:object="${beanMuestra}" id="formGuardar" role="form">
-		<input type="hidden" th:field="${beanMuestra.id}"  th:value="${beanMuestra.id}" />
-		<input type="hidden" th:field="${beanMuestra.idPaciente}"  th:value="${beanMuestra.idPaciente}" />
-		<input type="hidden" th:field="${beanMuestra.resultado}"  th:value="${beanMuestra.resultado}" />
-		<input type="hidden" th:field="${beanMuestra.fechaAsignada}"  th:value="${beanMuestra.fechaAsignada}" />
-		<input type="hidden" th:field="${beanMuestra.idLote}"  th:value="${beanMuestra.idLote}" />
-		<input type="hidden" th:field="${beanMuestra.idEstadoLote}"  th:value="${beanMuestra.idEstadoLote}" />
+		<input type="hidden" th:field="*{id}"  th:value="*{id}" />
+		<input type="hidden" th:field="*{idPaciente}"  th:value="*{idPaciente}" />
+		<input type="hidden" th:field="*{resultado}"  th:value="*{resultado}" />
+		<input type="hidden" th:field="*{fechaAsignada}"  th:value="*{fechaAsignada}" />
+<!-- 		<input type="hidden" th:field="*{idLote}"  th:value="*{idLote}" /> -->
+		<input type="hidden" th:field="*{idEstadoLote}"  th:value="*{idEstadoLote}" />
 		
 		<!-- MENSAJES AVISO -->
-		<div th:classappend="${mensaje == null} ? visible : d-none" class="alert alert-secondary" role="alert" id="alertInfo">
-		  	<label th:if="${editable} and ${beanMuestra.id == null}">Nueva muestra</label>
-		  	<label th:if="${editable} and ${beanMuestra.id != null}">Modificar muestra</label>
+		<div th:classappend="${mensaje == null} ? visible : d-none" class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
+		  	<label th:if="${editable} and *{id == null}">Nueva muestra</label>
+		  	<label th:if="${editable} and *{id != null}">Modificar muestra</label>
 		  	<label th:if="!${editable}">Consulta muestra</label>
 		</div>
 		<div th:if="${mensaje !=null}" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -30,109 +29,109 @@
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		</div>		
 		
-		<fieldset id="datosPaciente" class="form-group border p-2" th:disabled="!${editable}">
+		<fieldset id="datosPaciente" class="form-group border p-2 m-1" th:disabled="!${editable}">
 			<!-- DATOS PACIENTE -->
-			<legend class="w-auto font-weight-bold">Paciente</legend>
+			<legend class="w-auto font-weight-bold m-0">Paciente</legend>
 			<div class="row">
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Nombre</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nombre}"  th:value="${beanMuestra.nombre}" required maxlength="45"/>
+				 	<input type="text" class="form-control form-control-sm" th:field="*{nombre}"  th:value="*{nombre}" required maxlength="45"/>
 				</div>	
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Primer apellido</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.primerApellido}"  th:value="${beanMuestra.primerApellido}" required maxlength="45"/>
+				 	<input type="text" class="form-control form-control-sm" th:field="*{primerApellido}"  th:value="*{primerApellido}" required maxlength="45"/>
 				</div>	
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Segundo apellido</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.segundoApellido}"  th:value="${beanMuestra.segundoApellido}" maxlength="45"/>
+				 	<input type="text" class="form-control form-control-sm" th:field="*{segundoApellido}"  th:value="*{segundoApellido}" maxlength="45"/>
 				</div>
 			</div>
 			<div class="row">					
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Correo</label>
-				 	<input type="email" class="form-control form-control-sm" th:field="${beanMuestra.correo}"  th:value="${beanMuestra.correo}" required maxlength="200" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
+				 	<input type="email" class="form-control form-control-sm" th:field="*{correo}"  th:value="*{correo}" required maxlength="200" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
 				</div>
 				
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Teléfono</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.telefono}"  th:value="${beanMuestra.telefono}" pattern="[0-9]{9}" maxlength="9" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required />
+				 	<input type="text" class="form-control form-control-sm" th:field="*{telefono}"  th:value="*{telefono}" pattern="[0-9]{9}" maxlength="9" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required />
 				</div>					
 			</div>
 			<div class="row">	
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>NHC</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${beanMuestra.nhc}"  th:value="${beanMuestra.nhc}" required maxlength="45"/>
-				 	<label class="text-warning" th:if="${#fields.hasErrors('nhc')}" th:errors="${beanMuestra.nhc}"></label>
+				 	<input type="text" class="form-control form-control-sm" th:field="*{nhc}"  th:value="*{nhc}" required maxlength="45"/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('nhc')}" th:errors="*{nhc}"></label>
 				</div>											
 			</div>
 			<div class="row">	
-				<div class="col-4 form-group">				
+				<div class="col-4 m-0 form-group">				
 					<label>Recoger datos para notificar</label><br>
-					<label><input type="radio" name="recogerDatosNotif" id="recogerDatosNotif1" th:field="${beanMuestra.recogerDatosNotif}" value="true">Sí</label>
-					<label><input type="radio" name="recogerDatosNotif" id="recogerDatosNotif2" th:field="${beanMuestra.recogerDatosNotif}" value="false"></input>No</label>					  
+					<label><input type="radio" name="recogerDatosNotif" id="recogerDatosNotif1" th:field="*{recogerDatosNotif}" value="true">Sí</label>
+					<label><input type="radio" name="recogerDatosNotif" id="recogerDatosNotif2" th:field="*{recogerDatosNotif}" value="false"></input>No</label>					  
 				</div>	
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Notificar paciente automáticamente</label><br>
-					<label><input type="radio" name="avisosAuto" id="avisosAuto1" th:field="${beanMuestra.avisosAuto}" value="true">Sí</label>
-					<label><input type="radio" name="avisosAuto" id="avisosAuto2" th:field="${beanMuestra.avisosAuto}" value="false"></input>No</label>	
+					<label><input type="radio" name="avisosAuto" id="avisosAuto1" th:field="*{avisosAuto}" value="true">Sí</label>
+					<label><input type="radio" name="avisosAuto" id="avisosAuto2" th:field="*{avisosAuto}" value="false"></input>No</label>	
 				</div>	
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Avisar al paciente por sms</label><br>
-					<label><input type="radio" name="avisoSms" id="avisoSms1" th:field="${beanMuestra.avisoSms}" value="true">Sí</label>
-					<label><input type="radio" name="avisoSms" id="avisoSms2" th:field="${beanMuestra.avisoSms}" value="false"></input>No</label>	
+					<label><input type="radio" name="avisoSms" id="avisoSms1" th:field="*{avisoSms}" value="true">Sí</label>
+					<label><input type="radio" name="avisoSms" id="avisoSms2" th:field="*{avisoSms}" value="false"></input>No</label>	
 				</div>								
 			</div>			
 		</fieldset>
 		
 		<!-- DATOS MUESTRA -->
-		<fieldset id="datosMuestras" class="form-group border p-2" th:disabled="!${editable}">
-			<legend class="w-auto font-weight-bold">Muestra</legend>
+		<fieldset id="datosMuestras" class="form-group border p-2 m-1" th:disabled="!${editable}">
+			<legend class="w-auto font-weight-bold m-0">Muestra</legend>
 			<div class="row">
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Etiqueta</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanMuestra.etiqueta}"  th:value="${beanMuestra.etiqueta}" required/>
-				 	<label class="text-warning" th:if="${#fields.hasErrors('etiqueta')}" th:errors="${beanMuestra.etiqueta}"></label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{etiqueta}"  th:value="*{etiqueta}" required/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('etiqueta')}" th:errors="*{etiqueta}"></label>
 				</div>	
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Tipo muestra</label><br>
-				 	<label><input type="radio" name="tipoMuestra" id="tipoMuestra1" th:field="${beanMuestra.tipoMuestra}" value="N" required>Nariz</label>
-					<label><input type="radio" name="tipoMuestra" id="tipoMuestra2" th:field="${beanMuestra.tipoMuestra}" value="B" required></input>Boca</label>
+				 	<label><input type="radio" name="tipoMuestra" id="tipoMuestra1" th:field="*{tipoMuestra}" value="N" required>Nariz</label>
+					<label><input type="radio" name="tipoMuestra" id="tipoMuestra2" th:field="*{tipoMuestra}" value="B" required></input>Boca</label>
 				</div>	
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Fecha</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanMuestra.fechaEntrada}"  th:value="${beanMuestra.fechaEntrada}" required/>
+				 	<input  type="date" class="form-control form-control-sm" th:field="*{fechaEntrada}"  th:value="*{fechaEntrada}" required/>
 				</div>										
 			</div>				
 			<div class="row">
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Lote</label>
-				 	<select class="form-control form-control-sm" th:field="${beanMuestra.idLote}"  th:value="${beanMuestra.idLote}">
+				 	<select class="form-control form-control-sm" th:field="*{idLote}"  th:value="*{idLote}">
 				 		<option value="">Seleccione</option>
 				 		<option th:each="var: ${listaLotes}"
 									th:value="${var.id}" th:text="${var.numLote}"
-									th:select="${beanMuestra.idLote}"></option>
+									th:select="*{idLote}"></option>
 				 	</select>
-				 	<label class="text-warning" th:if="${#fields.hasErrors('idLote')}" th:errors="${beanMuestra.idLote}"></label>					
+				 	<label class="text-danger" th:if="${#fields.hasErrors('idLote')}" th:errors="*{idLote}"></label>					
 				</div>
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Fecha envio</label>
-				 	<input  type="date" class="form-control form-control-sm" disabled th:field="${beanMuestra.fechaEnvio}"  th:value="${beanMuestra.fechaEnvio}" required/>
+				 	<input  type="date" class="form-control form-control-sm" disabled th:field="*{fechaEnvio}"  th:value="*{fechaEnvio}" required/>
 				</div>	
 			</div>
 			
 			<!-- DATOS DE RESULTADOS DE LAS MUESTRAS Y NOTIFICAION NO EDITABLE -->
 			<div class="row">
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Resultado</label>
-				 	<input type="text" class="form-control form-control-sm" disabled th:field="${beanMuestra.resultado}"  th:value="${beanMuestra.resultado}" required/>				 	
+				 	<input type="text" class="form-control form-control-sm" disabled th:field="*{resultado}"  th:value="*{resultado}" required/>				 	
 				</div>	
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Fecha Resultado</label>
-				 	<input  type="date" class="form-control form-control-sm" disabled th:field="${beanMuestra.fechaResultado}"  th:value="${beanMuestra.fechaResultado}" required/>
+				 	<input  type="date" class="form-control form-control-sm" disabled th:field="*{fechaResultado}"  th:value="*{fechaResultado}" required/>
 				</div>
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Fecha Notificacion</label>
-				 	<input  type="date" class="form-control form-control-sm" disabled th:field="${beanMuestra.fechaNotificacion}"  th:value="${beanMuestra.fechaNotificacion}" required/>
+				 	<input  type="date" class="form-control form-control-sm" disabled th:field="*{fechaNotificacion}"  th:value="*{fechaNotificacion}" required/>
 				</div>	
 			</div>
 		</fieldset>
@@ -146,10 +145,10 @@
 				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>
 			</div>
 			<div class="col-2">
-				<a th:classappend="!${notificable} or ${beanMuestra.avisosAuto} ? 'disabled' : ''" th:href="@{/centroSalud/muestra/notificarTelefono/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Ya he llamado</a>
+				<a th:classappend="!${notificable} or *{avisosAuto} ? 'disabled' : ''" th:href="@{/centroSalud/muestra/notificarTelefono/{id}(id=*{id})}" class="btn btn-secondary">Ya he llamado</a>
 			</div>
 			<div class="col-2">
-				<a th:classappend="!${notificable} or ${beanMuestra.avisosAuto} ? 'disabled' : ''" th:href="@{/centroSalud/muestra/notificarCorreo/{id}(id=${beanMuestra.id})}" class="btn btn-secondary">Enviar correo</a>
+				<a th:classappend="!${notificable} or *{avisosAuto} ? 'disabled' : ''" th:href="@{/centroSalud/muestra/notificarCorreo/{id}(id=*{id})}" class="btn btn-secondary">Enviar correo</a>
 			</div>
 		</div>					
 	</form>

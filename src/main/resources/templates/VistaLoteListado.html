@@ -10,10 +10,9 @@
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
-	<br>
 	<form action="#" th:action="@{/centroSalud/lote/list}" method="post" th:object="${beanBusquedaLote}" id="formBusqueda" role="form">
 		
-		<div th:classappend="${mensaje == null} and ${mensajeError == null} ? visible : d-none" class="alert alert-secondary" role="alert" id="alertInfo">
+		<div th:classappend="${mensaje == null} and ${mensajeError == null} ? visible : d-none" class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
 		  	<label>Gestión lotes</label>
 		</div>
 		
@@ -27,10 +26,10 @@
 		</div>
 		
 		<!-- CRITERIOS BUSQUEDA LOTE -->
-		<fieldset id="datosLote" class="form-group border p-2">
-			<legend class="w-auto font-weight-bold">Lote</legend>
+		<fieldset id="datosLote" class="form-group border p-2 m-1">
+			<legend class="w-auto font-weight-bold m-0">Lote</legend>
 			<div class="row">
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label>Código</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="${beanBusquedaLote.numLote}"  th:value="${beanBusquedaLote.numLote}" maxlength="100"/>
 				</div>
@@ -46,7 +45,7 @@
 				 -->
 			</div>
 			<div class="row">			
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label>Estado</label>
 				 	<select class="form-control form-control-sm" th:field="${beanBusquedaLote.idEstado}"  th:value="${beanBusquedaLote.idEstado}">
 				 		<option value="">Seleccione</option>
@@ -55,11 +54,11 @@
 									th:select="${beanBusquedaLote.idEstado}">Estado</option>				 		
 				 	</select>
 				</div>
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label >Fecha envío</label>
 				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaLote.fechaEnvioIni}"  th:value="${beanBusquedaLote.fechaEnvioIni}"/>
 				</div>
-				<div class="col-3 form-group">
+				<div class="col-3 m-0 form-group">
 					<label >a</label>
 				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaLote.fechaEnvioFin}"  th:value="${beanBusquedaLote.fechaEnvioFin}"/>
 				</div>							

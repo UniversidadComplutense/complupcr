@@ -102,6 +102,13 @@ public class AnalisisControlador {
 //			binder.setValidator(validadorMuestra);
 //		}
 				
+		@ModelAttribute("beanListaPlacasDeJefe")
+		public  List<BeanElemento> rellenaListaPlacasJefe() {
+			
+			//si el usuario tiene rol jefe cargará la lista con las placas que el jefe cogió bajo su responsabilidad
+			List<BeanElemento> beanListaPlacasDeJefe = laboratorioCentroServicio.buscarPlacasBeanElementoAsignadasAJefe(sesionServicio.getUsuario());			
+			return beanListaPlacasDeJefe;
+		}
 		
 		/**
 		 * Posibles Resultados de la muestra
@@ -109,20 +116,23 @@ public class AnalisisControlador {
 		 * @return
 		 */
 		public static List<BeanResultado> resultadosMuestra() {
-			// estados del lote
-			List<BeanResultado> estadosLote = new ArrayList<>();
-			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE));
-			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_NEGATIVO));
-			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_POSITIVO));
-			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_DEBIL));
-			estadosLote.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_REPETIR));
+			// posibles resultados de la muestra
+			List<BeanResultado> estadosMuestra = new ArrayList<>();
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE));
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_NEGATIVO));
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_POSITIVO));
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_DEBIL));
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_REPETIR));
 
-			return estadosLote;
+			return estadosMuestra;
+		}
+				
+		@ModelAttribute("beanListaPosiblesResultadosMuestra")
+		public  List<BeanResultado> rellenaListaPosiblesResultadosMuestra() {
+			List<BeanResultado> listaPosiblesResultadosMuestra =  BeanResultado.resultadosMuestra();
+			return listaPosiblesResultadosMuestra;
 		}
 		
-		private void addListsToView(ModelAndView vista) {
-			vista.addObject("listaResultadosMuestra", BeanResultado.resultadosMuestra());
-		}
 		
 		
 		
@@ -134,6 +144,7 @@ public class AnalisisControlador {
 			BeanBusquedaMuestraAnalisis beanBusqueda = new BeanBusquedaMuestraAnalisis();
 			
 			vista.addObject("beanBusquedaMuestra", beanBusqueda);
+			
 			return vista;
 		}
 		
@@ -143,20 +154,12 @@ public class AnalisisControlador {
 		public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute BeanBusquedaMuestraAnalisis beanBusqueda) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 			
-			//solo mostraremos al jefe las muestras de placas que ha cogido bajo su responsabilidad
-			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)
+			//solo mostraremos al jefe las muestras de placas que ha cogido bajo su responsabilidad, (que solo podran ser del centro del jefe, ya que solo le hemos dejado coger placas de su centro)
+			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)			
 			Page<BeanListadoMuestraAnalisis> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
+						
 			
-			/*
-			List<BeanListadoMuestraAnalisis> list = new ArrayList<BeanListadoMuestraAnalisis>();
-			
-			for (int i = 0; i<10; i++) {
-				list.add(getBean(i));
-			}
-			*/
-			addListsToView(vista);
-			vista.addObject("beanBusquedaMuestra", beanBusqueda);
-			//vista.addObject("listadoMuestras", list);
+			vista.addObject("beanBusquedaMuestra", beanBusqueda);			
 			vista.addObject("listadoMuestras", muestrasPage);
 			return vista;
 		}
@@ -421,8 +424,7 @@ public class AnalisisControlador {
 		
 		//FUNCIONALIDAD JEFE: COGER PLACAS 
 		
-		//gestionar lotes (en realidad es gestionar placas)
-		//@RequestMapping(value = "/gestionPlacas/resultados", method = RequestMethod.GET)
+		//gestionar lotes (en realidad es gestionar placas)		
 		@RequestMapping(value = "/cogerPlacas", method = RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView buscarPlacasinAsignarYBajoResponsabilidadGET(HttpSession session, HttpServletRequest request, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
@@ -442,14 +444,12 @@ public class AnalisisControlador {
 			vista.addObject("mensajeCoger", mensajeCoger);
 			vista.addObject("mensajeDevolver", mensajeDevolver);
 			
-			//recupero el usuario logado
-			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
+			//recupero el usuario logado			
+			Usuario user = sesionServicio.getUsuario();
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 
 			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
-			// del centro del usuario jefe logado
+			// del idLaboratorioCentro del usuario jefe logado
 			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
 			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
 			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
@@ -493,8 +493,8 @@ public class AnalisisControlador {
 			List<Integer> listaIdsPlacasSeleccionadosParaCoger = guardarCogerYDevolverPlacasBean.getListaIdsPlacasSeleccionadosParaCoger();
 			System.out.println("listaIdsPlacasSeleccionadosParaCoger: " + listaIdsPlacasSeleccionadosParaCoger.toString());
 			
-			//cogemos esas placas, les asignamos el jefe logado, fecha de asignacion, cambiar estado a PLACA_ASIGNADA_PARA_ANALISIS y guardarlas
-			//TODO coger las muestras de esa plaa y ponerles estado pendente de analizar
+			//cogemos esas placas, les asignamos el jefe logado, fecha de asignacion, cambiamos estado a PLACA_ASIGNADA_PARA_ANALISIS y las guardamos
+			//TODO coger las muestras de esa placa y ponerles estado pendente de analizar
 			for(Integer idPlacaSeleccionada : listaIdsPlacasSeleccionadosParaCoger) {
 				laboratorioCentroServicio.guardarCogerODevolverPlaca(idPlacaSeleccionada, user.getId(), "coger");
 			}						

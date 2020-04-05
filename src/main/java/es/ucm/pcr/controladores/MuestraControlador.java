@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
@@ -39,6 +41,7 @@ import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
+import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.servicios.LoteServicio;
 import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.SesionServicio;
@@ -47,166 +50,173 @@ import es.ucm.pcr.validadores.MuestraValidador;
 @Controller
 @RequestMapping(value = "/centroSalud")
 public class MuestraControlador {
-	
+
+	@SuppressWarnings("unused")
+	private final static Logger log = LoggerFactory.getLogger(MuestraControlador.class);
+
 	// TODO - INCLUIR EL ROL DEL CENTRO
 	// TODO - LOG, TRAZAR SERVICIOS
 	// TODO - MUESTRA - ACCIONES, ORDENACION, PAGINACION
-	
+
 	public static final Sort ORDENACION = Sort.by(Direction.ASC, "etiqueta");
-	
+
 	@Autowired
 	private SesionServicio sesionServicio;
-	
+
 	@Autowired
 	private MuestraServicio muestraServicio;
-	
+
 	@Autowired
 	private LoteServicio loteServicio;
-	
+
 	@Autowired
 	private MuestraValidador validadorMuestra;
-	
-	private Map<Integer, String> ACCIONES_MENSAJE = Stream.of(new Object[][] { 
-	    { ACCION_GUARDAR_MUESTRA, "Muestra guardada correctamente" }, 
-	    { ACCION_NOTIFICAR_MUESTRA, "Muestra notificada correctamente" }, 
-	    { ACCION_BORRAR_MUESTRA_OK, "Muestra borrarda correctamente" },
-	    { ACCION_BORRAR_MUESTRA_KO, "Se ha producido un error al borrar la muestra" },
-	    { ACCION_VALIDAR_BORRAR_MUESTRA, "El estado del lote no permite borrar la muestra" }
-	}).collect(Collectors.toMap(d -> (Integer) d[0], d -> (String) d[1]));
-		
+
+	private Map<Integer, String> ACCIONES_MENSAJE = Stream
+			.of(new Object[][] { { ACCION_GUARDAR_MUESTRA, "Muestra guardada correctamente" },
+					{ ACCION_NOTIFICAR_MUESTRA, "Muestra notificada correctamente" },
+					{ ACCION_BORRAR_MUESTRA_OK, "Muestra borrarda correctamente" },
+					{ ACCION_BORRAR_MUESTRA_KO, "Se ha producido un error al borrar la muestra" },
+					{ ACCION_VALIDAR_BORRAR_MUESTRA, "El estado del lote no permite borrar la muestra" } })
+			.collect(Collectors.toMap(d -> (Integer) d[0], d -> (String) d[1]));
+
 	public static final Integer ACCION_GUARDAR_MUESTRA = 1;
 	public static final Integer ACCION_NOTIFICAR_MUESTRA = 2;
 	public static final Integer ACCION_BORRAR_MUESTRA_OK = 3;
 	public static final Integer ACCION_BORRAR_MUESTRA_KO = 4;
 	public static final Integer ACCION_VALIDAR_BORRAR_MUESTRA = 5;
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
-	    binder.registerCustomEditor(Date.class, editor);
+		CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+		binder.registerCustomEditor(Date.class, editor);
 	}
-	
+
 	@InitBinder("beanMuestra")
-	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session) throws Exception {  
+	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session)
+			throws Exception {
 		binder.setValidator(validadorMuestra);
 	}
-	
+
 	@ModelAttribute("listaLotes")
-    public List<LoteListadoBean> lotes() {
-        return loteServicio.findLoteByEstados(sesionServicio.getCentro().getId(), BeanEstado.getEstadosLotesDisponiblesCentro());
-    }	
-	
-	@RequestMapping(value="/muestra", method=RequestMethod.GET)
+	public List<LoteListadoBean> lotes() {
+		return loteServicio.findLoteByEstados(sesionServicio.getCentro().getId(),
+				BeanEstado.getEstadosLotesDisponiblesCentro());
+	}
+
+	@RequestMapping(value = "/muestra", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView buscador(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestraListado");
-	
+
 		MuestraBusquedaBean beanBusqueda = new MuestraBusquedaBean();
-		
+
 		addListsToView(vista);
 		vista.addObject("beanBusquedaMuestra", beanBusqueda);
 		return vista;
 	}
-	
-	@RequestMapping(value="/muestra/list", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/muestra/list", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView buscar(HttpSession session, @ModelAttribute MuestraBusquedaBean beanBusqueda) throws Exception {
-		ModelAndView vista = new ModelAndView("VistaMuestraListado");
-		
+	public String buscar(HttpSession session, @ModelAttribute MuestraBusquedaBean beanBusqueda) throws Exception {
 		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
 		session.setAttribute("beanBusquedaMuestras", beanBusqueda);
-		
-		buscarMuestras(beanBusqueda, vista);
-		return vista;
+		return "redirect:/centroSalud/muestra/list";
 	}
-	
-	@RequestMapping(value="/muestra/list", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/muestra/list", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView buscar(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestraListado");
-		
-		MuestraBusquedaBean beanBusqueda = (MuestraBusquedaBean)session.getAttribute("beanBusquedaMuestras");
+
+		MuestraBusquedaBean beanBusqueda = (MuestraBusquedaBean) session.getAttribute("beanBusquedaMuestras");
 		beanBusqueda = beanBusqueda != null ? beanBusqueda : new MuestraBusquedaBean();
 		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
-		
+
 		buscarMuestras(beanBusqueda, vista);
 		return vista;
 	}
-	
+
 	private void buscarMuestras(MuestraBusquedaBean beanBusqueda, ModelAndView vista) {
-		Page<MuestraListadoBean> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
+		Page<MuestraListadoBean> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda,
+				PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
 		addListsToView(vista);
 		vista.addObject("beanBusquedaMuestra", beanBusqueda);
 		vista.addObject("listadoMuestras", muestrasPage.getContent());
 	}
-	
-	@RequestMapping(value="/muestra/nueva", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/muestra/nueva", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
 	public ModelAndView nueva(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
-	
+
 		MuestraCentroBean beanMuestra = new MuestraCentroBean();
 		beanMuestra.setFechaEntrada(new Date());
-		
-		vista.addObject("editable", muestraEditable(beanMuestra));		
+
+		vista.addObject("editable", muestraEditable(beanMuestra));
 		vista.addObject("beanMuestra", beanMuestra);
 		return vista;
 	}
-	
-	@RequestMapping(value="/muestra/{id}", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/muestra/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView consulta(HttpSession session, HttpServletRequest request, @PathVariable Integer id) throws Exception {
+	public ModelAndView consulta(HttpSession session, HttpServletRequest request, @PathVariable Integer id)
+			throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
-		
+
 		MuestraCentroBean beanMuestra = muestraServicio.findById(id);
-	
+
 		vista.addObject("editable", false);
 		vista.addObject("notificable", muestraNotificable(beanMuestra));
 		vista.addObject("beanMuestra", beanMuestra);
 		return vista;
 	}
-	
-	@RequestMapping(value="/muestra/modificar", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/muestra/modificar", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView modificar(HttpSession session, HttpServletRequest request, @RequestParam(value = "id", required = true) Integer id) throws Exception {
+	public ModelAndView modificar(HttpSession session, HttpServletRequest request,
+			@RequestParam(value = "id", required = true) Integer id) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
-		
+
 		MuestraCentroBean beanMuestra = muestraServicio.findById(id);
-	
+
 		vista.addObject("editable", muestraEditable(beanMuestra));
 		vista.addObject("notificable", muestraNotificable(beanMuestra));
 		vista.addObject("beanMuestra", beanMuestra);
 		return vista;
 	}
-	
-	@RequestMapping(value="/muestra/guardar", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/muestra/guardar", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView guardar(@Valid @ModelAttribute("beanMuestra") MuestraCentroBean beanMuestra, BindingResult result, RedirectAttributes redirectAttributes) throws Exception {
+	public ModelAndView guardar(@Valid @ModelAttribute("beanMuestra") MuestraCentroBean beanMuestra,
+			BindingResult result, RedirectAttributes redirectAttributes) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
-	
+
 		if (result.hasErrors()) {
 			vista.addObject("editable", muestraEditable(beanMuestra));
 			vista.addObject("beanMuestra", beanMuestra);
-			return vista;			
+			return vista;
 		} else {
 			beanMuestra.setIdCentro(sesionServicio.getCentro().getId());
 			MuestraCentroBean muestra = muestraServicio.guardar(beanMuestra);
-			// TODO - VER A DONDE REDIRIGIR AL GUARDAR LOTE 
-			
+			// TODO - VER A DONDE REDIRIGIR AL GUARDAR LOTE
+
 			redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_GUARDAR_MUESTRA));
-			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/modificar?id=" + muestra.getId(), true));
+			ModelAndView respuesta = new ModelAndView(
+					new RedirectView("/centroSalud/muestra/modificar?id=" + muestra.getId(), true));
 			return respuesta;
 		}
 	}
-	
-	@RequestMapping(value="/muestra/borrar", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/muestra/borrar", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView borrar(HttpSession session, @RequestParam(value = "id", required = true) Integer id, RedirectAttributes redirectAttributes) throws Exception {
-		
-		boolean muestraValidaBorrar = muestraServicio.validateBorrar(id);		
+	public ModelAndView borrar(HttpSession session, @RequestParam(value = "id", required = true) Integer id,
+			RedirectAttributes redirectAttributes) throws Exception {
+
+		boolean muestraValidaBorrar = muestraServicio.validateBorrar(id);
 		if (muestraValidaBorrar) {
 			boolean borrado = muestraServicio.borrar(id);
-		
+
 			if (borrado) {
 				redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_BORRAR_MUESTRA_OK));
 			} else {
@@ -218,62 +228,72 @@ public class MuestraControlador {
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/list", true));
 		return respuesta;
 	}
-	
-	@RequestMapping(value="/muestra/notificarTelefono/{id}", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/muestra/notificarTelefono/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView notificarTelefono(HttpSession session, @PathVariable Integer id, RedirectAttributes redirectAttributes) throws Exception {
-		
+	public ModelAndView notificarTelefono(HttpSession session, @PathVariable Integer id,
+			RedirectAttributes redirectAttributes) throws Exception {
+
 		muestraServicio.actualizarNotificacionMuestra(id, false);
-		
+
 		// redirige a la consulta
-		
+
 		redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_NOTIFICAR_MUESTRA));
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/" + id, true));
 		return respuesta;
 	}
-	
-	@RequestMapping(value="/muestra/notificarCorreo/{id}", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/muestra/notificarCorreo/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView notificarCorreo(HttpSession session, @PathVariable Integer id, RedirectAttributes redirectAttributes) throws Exception {
-		
+	public ModelAndView notificarCorreo(HttpSession session, @PathVariable Integer id,
+			RedirectAttributes redirectAttributes) throws Exception {
+
 		muestraServicio.actualizarNotificacionMuestra(id, true);
-		
-		// redirige a la consulta		
-		
+
+		// redirige a la consulta
+
 		redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_NOTIFICAR_MUESTRA));
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/" + id, true));
 		return respuesta;
 	}
-	
+
 	/**
-	 * La muestra es editable mientras tenga estado iniciada o asignada a lote
-	 * Si esta resuelta se muestran acciones de notificacion
+	 * La muestra es editable mientras tenga estado iniciada o asignada a lote Si
+	 * esta resuelta se muestran acciones de notificacion
+	 * 
 	 * @param beanMuestra
 	 * @return
 	 */
 	private boolean muestraEditable(MuestraCentroBean beanMuestra) {
 		boolean nuevaMuestra = beanMuestra.getId() == null;
 		boolean tieneLote = beanMuestra.getIdLote() != null;
-		boolean tieneLoteEstado = tieneLote && (beanMuestra.getIdEstadoLote().intValue() == Estado.LOTE_INICIADO.getCodNum() 
-				|| beanMuestra.getIdEstadoLote().intValue() == Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum());
-				
-		return nuevaMuestra || (!nuevaMuestra && (!tieneLote || tieneLoteEstado));	
+		Lote lote = null;
+		if (tieneLote) {
+			lote = loteServicio.findByIdLote(beanMuestra.getIdLote());
+		}
+//		boolean tieneLoteEstado = tieneLote && (beanMuestra.getIdEstadoLote().intValue() == Estado.LOTE_INICIADO.getCodNum() 
+//				|| beanMuestra.getIdEstadoLote().intValue() == Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum());
+		boolean tieneLoteEstado = tieneLote
+				&& (lote.getEstadoLote().getId().intValue() == Estado.LOTE_INICIADO.getCodNum()
+						|| lote.getEstadoLote().getId().intValue() == Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum());
+
+		return nuevaMuestra || (!nuevaMuestra && (!tieneLote || tieneLoteEstado));
 	}
-	
+
 	private void addListsToView(ModelAndView vista) {
 		vista.addObject("listaResultadosMuestra", BeanResultado.resultadosMuestra());
 	}
-	
+
 	/**
 	 * La muestra es noficable si ya se ha resuelto y no tiene fecha de notificacion
+	 * 
 	 * @param beanMuestra
 	 * @return
 	 */
 	private boolean muestraNotificable(MuestraCentroBean beanMuestra) {
-		return beanMuestra.getId() != null 
-				&& beanMuestra.getResultado() != null 
-				&& beanMuestra.getEstado().getEstado().getCodNum() == (Estado.MUESTRA_RESUELTA.getCodNum()) 	
+		return beanMuestra.getId() != null && beanMuestra.getResultado() != null
+				&& beanMuestra.getEstado().getEstado().getCodNum() == (Estado.MUESTRA_RESUELTA.getCodNum())
 				&& beanMuestra.getFechaNotificacion() == null;
 	}
-	
+
 }

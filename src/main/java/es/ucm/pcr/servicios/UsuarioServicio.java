@@ -49,6 +49,13 @@ public interface UsuarioServicio {
 	 */	
 	public Usuario mapeoBeanEntidadUsuarioModificar (BeanUsuarioGestion beanUsuario, Usuario usuario, int[] roles) throws Exception;
 	
+	/**
+	 * Lista ordenada de  BeanUsuarioGestion
+	 * 
+	 * @param 
+	 * @return List<BeanUsuarioGestion>
+	 */
+	public List<BeanUsuarioGestion> listaUsuariosOrdenada() throws Exception;
 	
 	/**
 	 * Crea un token unico para que el usuario restablezca la contraseña.

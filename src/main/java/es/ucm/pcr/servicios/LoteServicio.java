@@ -10,6 +10,7 @@ import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.LoteListadoBean;
+import es.ucm.pcr.modelo.orm.Lote;
 
 public interface LoteServicio {
 	
@@ -43,12 +44,18 @@ public interface LoteServicio {
 	public LoteCentroBean guardar(LoteCentroBean loteBean);
 	
 	/**
-	 * Busca lote por id
+	 * Busca loteCentroBean por id
 	 * @param id
-	 * @return
+	 * @return LoteCentroBean
 	 */
 	public LoteCentroBean findById(Integer id);
 	
+	/**
+	 * Busca lote por id
+	 * @param id
+	 * @return Lote
+	 */
+	public Lote findByIdLote(Integer id);
 	
 	/**
 	 * Actualiza el estado de un lote

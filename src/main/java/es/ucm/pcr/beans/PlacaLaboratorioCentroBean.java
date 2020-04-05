@@ -109,7 +109,8 @@ public class PlacaLaboratorioCentroBean {
 		for (Muestra muestra : muestras) {
 			MuestraListadoPlacasLaboratorioBean muestraBean = new MuestraListadoPlacasLaboratorioBean();
 			muestraBean.setId(muestra.getId());
-			muestraBean.setIdPlacaVisavet(muestra.getPlacaVisavet().getId());
+			if(muestra.getPlacaVisavet()!=null) //Diana- añado esta condicion para que no falle porque en los datos de prueba tenemos casi todas las muestras sin placaVisavet
+				muestraBean.setIdPlacaVisavet(muestra.getPlacaVisavet().getId());
 			muestraBean.setEstado(muestra.getEstadoMuestra().getDescripcion());
 			muestraBean.setEtiqueta(muestra.getEtiqueta());
 			muestraBean.setRefInterna(muestra.getRefInternaVisavet());
