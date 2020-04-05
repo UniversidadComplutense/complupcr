@@ -14,7 +14,7 @@ import es.ucm.pcr.modelo.orm.UsuarioMuestra;
 
 public class PlacaLaboratorioCentroAsignacionesBean extends PlacaLaboratorioCentroBean{
 	
-	//es PlacaLaboratorioCentroBean al que le añadimos el beanAsignacion
+	//es PlacaLaboratorioCentroBean al que le añadimos el beanAnalisis
 	private BeanAnalisis beanAnalisis; //analistas de laboratorio y voluntarios que se asignan las placas (y a sus respesctivas muestras) por parte del jefe de servicio)  F6y F7
 	
 	public PlacaLaboratorioCentroAsignacionesBean() {
@@ -34,7 +34,7 @@ public class PlacaLaboratorioCentroAsignacionesBean extends PlacaLaboratorioCent
 
 		//PlacaLaboratorioCentroBean.modelToBean(placaLaboratorio); //llamo al metodo de la clase padre
 		
-		//replica codigo javi en clase pader
+		//replica codigo javi en clase padre
 		PlacaLaboratorioCentroAsignacionesBean bean = new PlacaLaboratorioCentroAsignacionesBean();
 
 		bean.setId(placaLaboratorio.getId());

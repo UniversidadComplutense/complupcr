@@ -587,7 +587,7 @@ public class AnalisisControlador {
 		}
 		
 /* HACER POST		
-		@RequestMapping(value = "/guardarAsignacion", method = RequestMethod.POST)
+		@RequestMapping(value = "/guardarAsignacionPlaca", method = RequestMethod.POST)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public RedirectView guardarAsignacion(@ModelAttribute("formBeanGuardarAsignacionMuestra") GuardarAsignacionMuestraBean formBeanGuardarAsignacionMuestra,
 				HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
