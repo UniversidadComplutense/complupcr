@@ -31,6 +31,7 @@ public class PlacaVisavet implements java.io.Serializable {
 	private Integer id;
 	private EstadoPlacaVisavet estadoPlacaVisavet;
 	private LaboratorioVisavet laboratorioVisavet;
+	private LaboratorioCentro laboratorioCentro;
 	private Integer numeromuestras;
 
 	private Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>(
@@ -50,9 +51,10 @@ public class PlacaVisavet implements java.io.Serializable {
 
 	public PlacaVisavet(EstadoPlacaVisavet estadoPlacaVisavet, LaboratorioVisavet laboratorioVisavet,
 			Integer numeromuestras, Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios,
-			Set<Documento> documentos, Set<Lote> lotes,Date fechaCreacion) {
+			Set<Documento> documentos, Set<Lote> lotes,Date fechaCreacion,LaboratorioCentro laboratorioCentro) {
 		this.estadoPlacaVisavet = estadoPlacaVisavet;
 		this.laboratorioVisavet = laboratorioVisavet;
+		this.laboratorioCentro = laboratorioCentro;
 		this.numeromuestras = numeromuestras;
 		this.placaVisavetPlacaLaboratorios = placaVisavetPlacaLaboratorios;
 		this.documentos = documentos;
@@ -91,7 +93,17 @@ public class PlacaVisavet implements java.io.Serializable {
 	public void setLaboratorioVisavet(LaboratorioVisavet laboratorioVisavet) {
 		this.laboratorioVisavet = laboratorioVisavet;
 	}
+	
+	@ManyToOne
+	@JoinColumn(name = "idLaboratorioCentro", nullable = false)
+	public LaboratorioCentro getLaboratorioCentro() {
+		return this.laboratorioCentro;
+	}
 
+	public void setLaboratorioCentro(LaboratorioCentro laboratorioCentro) {
+		this.laboratorioCentro = laboratorioCentro;
+	}
+	
 	@Column(name = "numeromuestras")
 	public Integer getNumeromuestras() {
 		return this.numeromuestras;
