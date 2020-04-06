@@ -29,6 +29,11 @@ public class PcrTHExpressions {
 		return sesionServicio.getEmail();
 	}
 	
+	/** devuelve el rol para hacer consulta en thymeleaf **/
+	public String getRol() {
+		if (sesionServicio.tieneRol("TECNICOLABORATORIO")) return "TECNICOLABORATORIO";
+		return null;
+	}
 	/**
 	 * Método que devuelve el centro del usuario para ponerlo en el pie de página.
 	 */
@@ -74,6 +79,7 @@ public class PcrTHExpressions {
 		List<MenuBean> menu = sesionServicio.getMenu();
 		return menu;
 	}
+	
 	
 	
 
