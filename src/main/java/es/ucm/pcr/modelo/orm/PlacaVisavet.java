@@ -156,7 +156,7 @@ public class PlacaVisavet implements java.io.Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fechaEnviadaLaboratorioCentro", length = 10)
-	public Date getFechaEnviadaLaboratorioCentron() {
+	public Date getFechaEnviadaLaboratorioCentro() {
 		return fechaEnviadaLaboratorioCentro;
 	}
 
