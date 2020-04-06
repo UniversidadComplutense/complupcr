@@ -78,8 +78,8 @@ public class LaboratorioCentroControlador {
 //				LaboratorioCentro laboratorioCentro = new LaboratorioCentro();
 //				laboratorioCentro.setNombre(beanLaboratorioCentro.getNombre());
 //				laboratorioCentroRepositorio.save(laboratorioCentro);
-				laboratorioCentroRepositorio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
-				
+//				laboratorioCentroRepositorio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
+				laboratorioCentroServicio.guardarLaboratorioCentro(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 			}
 			// Modificamos laboratorioCentro existente
 			if (beanLaboratorioCentro.getAccion().equals("M"))
@@ -89,7 +89,8 @@ public class LaboratorioCentroControlador {
 				// añadimos campos del formulario
 //				laboratorioCentro.get().setNombre(beanLaboratorioCentro.getNombre());
 //				laboratorioCentroRepositorio.save(laboratorioCentro.get());
-				laboratorioCentroRepositorio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
+//				laboratorioCentroRepositorio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
+				laboratorioCentroServicio.guardarLaboratorioCentro(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 			}
 
 			// Volvemos a grabar mas laboratorioCentro
@@ -123,7 +124,8 @@ public class LaboratorioCentroControlador {
 		@RequestMapping(value = "/gestor/borrarLaboratorioCentro", method = RequestMethod.GET)
 		public ModelAndView borrarLaboratorioCentro(@RequestParam("idLaboratorioCentro") Integer idLaboratorioCentro) throws Exception {
 			
-			laboratorioCentroRepositorio.deleteById(idLaboratorioCentro);
+//			laboratorioCentroRepositorio.deleteById(idLaboratorioCentro);
+			laboratorioCentroServicio.borrarLaboratorioCentro(idLaboratorioCentro);
 			
 			// Volvemos a grabar mas centros
 			ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaLaboratorioCentro",true));	
