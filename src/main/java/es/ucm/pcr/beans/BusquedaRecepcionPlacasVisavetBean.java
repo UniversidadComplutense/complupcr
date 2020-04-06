@@ -5,7 +5,7 @@ import java.util.Date;
 public class BusquedaRecepcionPlacasVisavetBean {
 
 	private Integer idPlaca;
-	private String numeroMuestras;
+	private Integer numeroMuestras;
 	private Integer idEstadoPlaca;
 	private Date fechaCreacionInicio;
 	private Date fechaCreacionFin;
@@ -20,11 +20,11 @@ public class BusquedaRecepcionPlacasVisavetBean {
 		this.idPlaca = idPlaca;
 	}
 
-	public String getNumeroMuestras() {
+	public Integer getNumeroMuestras() {
 		return numeroMuestras;
 	}
 
-	public void setNumeroMuestras(String numeroMuestras) {
+	public void setNumeroMuestras(Integer numeroMuestras) {
 		this.numeroMuestras = numeroMuestras;
 	}
 

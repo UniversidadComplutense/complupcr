@@ -26,9 +26,8 @@ public interface PlacaVisavetRepositorio extends JpaRepository<PlacaVisavet, Int
 			+ "(:#{#params.numeroMuestras} is null or placa.numeromuestras = :#{#params.numeroMuestras}) and "
 			+ "(:#{#params.fechaCreacionInicio} is null or placa.fechaCreacion >= :#{#params.fechaCreacionInicio}) and "
 			+ "(:#{#params.fechaCreacionFin} is null or placa.fechaCreacion <= :#{#params.fechaCreacionFin}) and "
-			+ "(:#{#params.idEstadoPlaca} is null or placa.estadoPlacaVisavet.id = :#{#params.idEstadoPlaca})")
-//	YOLI: javi creo que tienes que cambiar la sentencia de abajo por esta "(:#{#params.idLaboratorioCentro} is null or PlacaVisavetPlacaLaboratorio.placaLaboratorio.laboratorioCentro.id = :#{#params.idLaboratorioCentro})")	
-	//		+ "(:#{#params.idLaboratorioCentro} is null or placa.placaVisavetPlacaLaboratorios.placaLaboratorio.laboratorioCentro.id = :#{#params.idLaboratorioCentro})")
+			+ "(:#{#params.idEstadoPlaca} is null or placa.estadoPlacaVisavet.id = :#{#params.idEstadoPlaca}) and" 
+			+ "(:#{#params.idLaboratorioCentro} is null or PlacaVisavetPlacaLaboratorio.placaLaboratorio.laboratorioCentro.id = :#{#params.idLaboratorioCentro})")
 	public Page<PlacaVisavet> findByParams(@Param("params") BusquedaRecepcionPlacasVisavetBean params,
 			Pageable pageable);	
 	

@@ -118,9 +118,6 @@ public class LabCentroControlador {
 		ModelAndView vista = new ModelAndView("ListadoRecepcionarPlacasVisavet");
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getCentro().getId());
 		
-		if (criteriosBusqueda.getNumeroMuestras() == "") {
-			criteriosBusqueda.setNumeroMuestras(null);
-		}
 		
 		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
 		this.agregarEstadosBusquedaPlacaVisavet(vista);
