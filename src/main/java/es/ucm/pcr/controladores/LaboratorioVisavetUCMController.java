@@ -88,7 +88,7 @@ public class LaboratorioVisavetUCMController {
 private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes) throws Exception {
 	busquedaLotes.setIdCentro(0);
 
-	busquedaLotes.setListaBeanEstado(BeanEstado.estadosLote());
+	busquedaLotes.setListaBeanEstado(BeanEstado.estadosLoteLaboratorioVisavet());
 	busquedaLotes.setListaCentros(centroServicio.listaCentrosOrdenada());
 
 	return busquedaLotes;
@@ -128,6 +128,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		// inicializamos a enviado para filtrar por estos
 		// tengo que obtener los centros de los que puedo recibir muestras
 		//busquedaLotes.setIdCentro(0);
+		busquedaLotes.setCodNumEstadoSeleccionado(3);
 		this.rellenarBusquedaLotes(busquedaLotes);
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 		// invocar al servicio que dado id De laboratorio se obtiene la entidad laboratorioUni
@@ -137,8 +138,8 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		model.addAttribute("paginaLotes", paginaLotes);;
 		vista.addObject("busquedaLotes", busquedaLotes);
 		vista.addObject("paginaLotes", paginaLotes);
-		return vista;
-		// return this.buscarLotes(busquedaLotes, request, session, pageable);
+		//return vista;
+		 return this.buscarLotes(busquedaLotes, request, session, pageable);
 		// mas adelante necesito obtener Centros de un servicioCentros
 		
 		//busquedaLotes.setListaBeanCentro(servicioCentros.buscarCentros());
@@ -277,11 +278,12 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		
 		
 		@RequestMapping(value = "/laboratorioUni/mostrarMuestras", method = RequestMethod.GET)
-		public String consultarMuestrasLote(@RequestParam("id") String id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
+		public String consultarMuestrasLote(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
 		// ir al servicio lotes y llamar al metodo que me liste las muestra a partir del id de lote
 		// para probar
-			
-			List<MuestraBeanLaboratorioVisavet> muestras=new ArrayList();
+			LoteBeanPlacaVisavet loteBeanPlacaVisavet = servicioLaboratorioUni.buscarLote(id);
+			List<MuestraBeanLaboratorioVisavet> muestras=loteBeanPlacaVisavet.getListaMuestras();
+		/*	List<MuestraBeanLaboratorioVisavet> muestras=new ArrayList();
 			List<LoteBeanPlacaVisavet> list= new ArrayList();
 			for (int i = 0; i<10; i++) {
 				//list.add(getBean(i));
@@ -290,6 +292,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				}
 			}	
 	    // fin de prueba		
+          */
            model.addAttribute("muestras", muestras);
 			
 			return "VistaListadoRecepcionLotes :: #trMuestra";
