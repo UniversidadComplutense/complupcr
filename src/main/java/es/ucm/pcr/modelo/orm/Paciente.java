@@ -31,6 +31,7 @@ public class Paciente implements java.io.Serializable {
 	private String apellido2paciente;
 	private String notificarAutomato;
 	private String notificar;
+	private String recogerDatosNotif;
 	private String nhc;
 	private String email;
 	private String telefono;
@@ -119,6 +120,15 @@ public class Paciente implements java.io.Serializable {
 
 	public void setNotificar(String notificar) {
 		this.notificar = notificar;
+	}
+	
+	@Column(name = "recogerDatosNotif", length = 1)
+	public String getRecogerDatosNotif() {
+		return this.recogerDatosNotif;
+	}
+
+	public void setRecogerDatosNotif(String recogerDatosNotif) {
+		this.recogerDatosNotif = recogerDatosNotif;
 	}
 
 	@Column(name = "NHC", length = 45)
