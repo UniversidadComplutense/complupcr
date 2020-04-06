@@ -3,6 +3,7 @@ package es.ucm.pcr.servicios;
 import java.util.List;
 import java.util.Set;
 
+import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
@@ -86,4 +87,40 @@ public interface UsuarioServicio {
 	 * @return
 	 */
 	public Usuario guardar(Usuario usuario);
+	
+	
+
+	/**
+	 * Borrar Usuario
+	 * 
+	 * @param Integer idUsuario
+	 * @return void >
+	 */
+	public void borrarUsuario (Integer idUsuario) throws Exception;
+	
+	
+	
+	/**
+	 * Obtiene usuarios analistas de un laboratorioCentro
+	 * 
+	 * @param idLaboratorioCentro
+	 * @return List<BeanUsuario>
+	 */
+	public List<BeanUsuario> listaUsuariosAnalistasDeLaboratorioCentro(Integer idLaboratorioCentro);
+	
+	/**
+	 * Obtiene usuarios voluntarios de un laboratorioCentro
+	 * 
+	 * @param idLaboratorioCentro
+	 * @return List<BeanUsuario>
+	 */
+	public List<BeanUsuario> listaUsuariosVoluntariosDeLaboratorioCentro(Integer idLaboratorioCentro);
+	
+	
+	/**
+	 * Obtiene usuarios voluntarios sin asignar a ningun laboratorioCentro
+	 *	 
+	 * @return List<BeanUsuario>
+	 */
+	public List<BeanUsuario> listaUsuariosVoluntariosSinLaboratorioCentro(); 
 }

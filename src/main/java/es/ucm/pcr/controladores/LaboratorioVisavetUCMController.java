@@ -122,7 +122,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 	@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.GET)
 	public ModelAndView buscarLotesGet(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
          // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
-		System.out.println("numero get "+pageable.getPageNumber());
+		log.info("numero get "+pageable.getPageNumber());
 		BusquedaLotesBean busquedaLotes= new BusquedaLotesBean();
 		
 		// inicializamos a enviado para filtrar por estos

@@ -87,6 +87,15 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 		return mapalaboratorioVisavet;
 	}
 	
+	public void guardarLaboratorioVisavet (LaboratorioVisavet laboratorioVisavet) throws Exception{
+		laboratorioVisavetRepositorio.save(laboratorioVisavet);
+	}
+	
+	public void borrarLaboratorioVisavet (Integer idLaboratorioVisavet) throws Exception
+	{
+		laboratorioVisavetRepositorio.deleteById(idLaboratorioVisavet);
+	}
+	
 	// JAVI para buscar placas Visavet e incorporarlas a 'BusquedaPlacasVisavetBean'
 	@Override
 	public Page<PlacaLaboratorioVisavetBean> buscarPlacas(BusquedaRecepcionPlacasVisavetBean criteriosBusqueda,

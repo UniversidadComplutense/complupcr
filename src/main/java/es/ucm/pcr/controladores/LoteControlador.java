@@ -119,14 +119,10 @@ public class LoteControlador {
 	
 	@RequestMapping(value="/lote/list", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView buscar(HttpSession session, @ModelAttribute LoteBusquedaBean beanBusqueda) throws Exception {
-		ModelAndView vista = new ModelAndView("VistaLoteListado");
-		
+	public String buscar(HttpSession session, @ModelAttribute LoteBusquedaBean beanBusqueda) throws Exception {
 		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
 		session.setAttribute("beanBusquedaLotes", beanBusqueda);
-		
-		buscarLotes(beanBusqueda, vista);
-		return vista;
+		return "redirect:/centroSalud/lote/list";
 	}
 	
 	@RequestMapping(value="/lote/list", method=RequestMethod.GET)

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - MUESTRAS</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+	 
+	<div class="container">	
+		
+	
+	
+	<!-- DATOS PLACA -->
+	<fieldset id="datosPlacas" class="form-group border p-2" th:disabled="${placaLaboratorioCentroAsignacionesBean.id} != null">
+		<div id="AsignacionesPlaca" class="container">
+			<!-- <legend class="w-auto">Asignaciones Placa</legend> -->
+			<div class="row justify-content-center mt-1, titulo-menu">
+				<h5>DATOS PLACA - ANALISTAS Y VOLUNTARIOS ASIGNADOS</h5>
+			</div>
+			<div th:if="${mensaje !=null}"
+						class="alert alert-success alert-dismissible fade show"
+						role="alert">
+						<label th:text="${mensaje}"></label>
+						<button type="button" class="close" data-dismiss="alert"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+			</div>
+			
+			<div class="row justify-content-center mt-3">
+		    	<div class="col-lg-12">
+					<label>Placa: </label>
+				 	<span th:text="${placaLaboratorioCentroAsignacionesBean.id}">: </span>
+				 	<span th:text="${placaLaboratorioCentroAsignacionesBean.laboratorioCentro.nombre}"></span><br>
+				 	<label>Estado: </label>
+				 	<span th:text="${placaLaboratorioCentroAsignacionesBean.beanEstado.Estado.descripcion}"></span>				 	
+				</div>
+			</div>
+			
+			<div class="row justify-content-center mt-3">	
+				<div class="col-lg-12">
+					<table class="table">
+					  <thead class="thead-light">
+					    <tr>
+					      <!-- <th scope="col"><input class="form-check-input, justify-content-center" type="checkbox" value="" id="" disabled></th> -->
+					      <th scope="col">Analistas <span th:text="${placaLaboratorioCentroAsignacionesBean.laboratorioCentro.nombre}"></span></th>
+					      <th scope="col">Voluntarios <span th:text="${placaLaboratorioCentroAsignacionesBean.laboratorioCentro.nombre}"></span></th>
+					      <th scope="col">Otros voluntarios</th>					      			    
+					    </tr>
+					  </thead>
+					  <tbody>
+					    <tr>
+					      <!-- <td>				      	
+					      	<input class="form-check-input, justify-content-center" type="checkbox" th:field="*{listaIdsPlacasSeleccionadosParaCoger}" name="certificates" th:value="${placa.id}"/>
+					      </td> -->
+					      <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasLab) == 0}">
+					      	<span>No existen analistas de laboratorio asignados</span>
+						  </td>
+						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasLab) > 0}">
+						  	<ul th:each="analistaLab : ${placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
+									<li><span th:text="${analistaLab.beanUsuario.nom}"></span> 
+										<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
+										<!-- <span th:text="${analistaLab.valoracion}"></span> --> 
+									</li>
+							</ul>
+						  </td>
+						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVol) == 0}">
+					      	<span>No existen voluntarios de laboratorio asignados</span>
+						  </td>
+						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVol) > 0}">
+						  	<ul th:each="voluntarioLab : ${placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
+									<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span> 
+										<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
+										<!-- <span th:text="${voluntarioLab.valoracion}"></span> --> 
+									</li>
+							</ul>
+						  </td>
+						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVolSinLabCentro) == 0}">
+					      	<span>No existen otros voluntarios asignados</span>
+						  </td>
+						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVolSinLabCentro) > 0}">
+						  	<ul th:each="voluntarioSinLabCentro : ${placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVolSinLabCentro}">							
+									<li><span th:text="${voluntarioSinLabCentro.beanUsuario.nom}"></span> 
+										<!-- <span th:text="${voluntarioSinLabCentro.fechaAsignacion}"></span>;  -->
+										<!-- <span th:text="${voluntarioSinLabCentro.valoracion}"></span> --> 
+									</li>
+							</ul>
+						  </td>
+						  <td>
+						  </td>	
+					</tr>				    
+				  </tbody>
+				</table>
+				
+				
+				
+				
+				<!-- 
+					<label>Asignaciones</label><br>
+						<ul>					
+							<li><label>Analistas</label>
+								<ul th:each="analistaLab : ${placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
+									<li><span th:text="${analistaLab.beanUsuario.nom}"></span>;
+										<span th:text="${analistaLab.valoracion}"></span> 
+									</li>
+								</ul>
+							</li>
+							<li><label>Voluntarios</label>
+								<ul th:each="voluntarioLab : ${placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
+									<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span>;										
+										<span th:text="${voluntarioLab.valoracion}"></span> 
+									</li>
+								</ul>
+							</li>
+					</ul>
+				-->	
+				</div>										
+			</div>
+		</div>
+	</fieldset>
+		
+		
+		
+		
+	<form id="formularioGuardarAsignacion" action="#"
+						th:action="@{/analisis/guardarAsignacionPlaca}" method="post"
+						 role="form" th:object="${formBeanGuardarAsignacionPlaca}"> 
+	
+	
+		
+	<!-- ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->
+	<fieldset id="nuevasAsignaciones" class="form-group border p-2">		
+	<div id="AsignarAnalistasAPlaca" class="container">
+		<div class="row justify-content-center mt-1, titulo-menu">
+			<h5>ASIGNAR NUEVOS ANALISTAS</h5>
+		</div>
+			
+			 <!-- guardo en un hidden el id de la placa -->
+			 <div class="row justify-content-center mt-3">
+		    	<div class="col-lg-12">
+					<input type="hidden" th:field="*{idPlaca}"></input>
+			 	</div>
+			 </div>
+			
+			  <div class="row justify-content-center mt-3">		    	
+					<div id=analistasLab class="form-group  col-4">
+						<label>Analistas laboratorio: </label> 
+						<select
+							class="form-control selectpicker" multiple
+							data-live-search="true" data-actions-box="true"
+							id="analistasLabSeleccionado" th:field="*{listaIdsAnalistasLabSeleccionados}"
+							title="Todos los analistas laboratorio">
+							<option th:each="var: ${beanListadoAnalistaLab}"
+								th:value="${var.id}" th:text="${var.nom}"></option>
+						</select>
+					</div>															
+					<div id=analistasVol class="form-group  col-4">
+						<label>Voluntarios laboratorio: </label> 
+						<select
+							class="form-control selectpicker" multiple
+							data-live-search="true" data-actions-box="true"
+							id="analistasVolSeleccionado" th:field="*{listaIdsAnalistasVolSeleccionados}"
+							title="Todos los voluntarios laboratorio">
+							<option th:each="var: ${beanListadoAnalistaVol}"
+								th:value="${var.id}" th:text="${var.nom}"></option>
+						</select>
+					</div>
+					<div id=analistasOtrosVol class="form-group  col-4">
+						<label>Otros voluntarios: </label> 
+						<select
+							class="form-control selectpicker" multiple
+							data-live-search="true" data-actions-box="true"
+							id="analistasVolSinLabCentroSeleccionado" th:field="*{listaIdsVolSinLabCentroSeleccionados}"
+							title="Todos los otros voluntarios">
+							<option th:each="var: ${beanListadoVoluntariosSinLaboratorioCentro}"
+								th:value="${var.id}" th:text="${var.nom}"></option>
+						</select>
+					</div>
+			
+				</div>
+			  </div>
+			 							
+		
+		</div>
+		
+	</fielset>
+		<!-- botones cancelar y guardar asignacion -->
+		<div class="row justify-content-center mt-4">		
+			<div class="col-1">							
+				<a th:href="@{/analisis/cogerPlacas}" class="btn btn-secondary ">Cancelar</a>
+			</div>
+			<div class="col-1">
+				<input type="submit" class="btn btn-primary "
+					value="Guardar asignacion"></input>
+			</div>		
+		</div>
+		
+		<!-- ACCCIONES Tere -->
+		<!-- <div class="row justify-content-center mt-3">
+			<div class="col-1">
+				<a th:href="@{/centroSalud/muestra/}" class="btn btn-secondary">Volver</a>				
+			</div>
+			<div class="col-1">
+				<button th:disabled="${beanMuestra.id} != null" type="submit" class="btn btn-secondary">Guardar</button>
+			</div>
+		</div>	 -->
+		
+	</form>	
+	
+	
+	<!-- FIN ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->	
+		
+		
+
+	
+	
+	</div>
+	
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+	
+	<script th:src="@{/js/analisis.js}"></script>
+    
+</body>
+</html>

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
 import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
+import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 
 public interface LaboratorioVisavetServicio {
@@ -46,6 +47,21 @@ public interface LaboratorioVisavetServicio {
 	 */
 	public Map<Integer,String> mapaLaboratoriosVisavet (List<BeanLaboratorioVisavet> laboratoriosVisavet) throws Exception;
 
+	/**
+	 * Guardar Laboratorio Visavet
+	 * 
+	 * @param LaboratorioVisavet
+	 * @return void >
+	 */
+	public void guardarLaboratorioVisavet (LaboratorioVisavet laboratorioVisavet) throws Exception;
+	
+	/**
+	 * Borrar Laboratorio Visavet
+	 * 
+	 * @param Integer idLaboratorioVisavet
+	 * @return void >
+	 */
+	public void borrarLaboratorioVisavet (Integer idLaboratorioVisavet) throws Exception;	
 
 	
 	// JAVI
