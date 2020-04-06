@@ -9,14 +9,18 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
+import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
 import es.ucm.pcr.modelo.orm.Centro;
+import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PasswordResetToken;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
@@ -364,5 +368,43 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	}
 	
 
+	//metodos de obtencion de usuarios analistas de laboratoriocentro, voluntarios de laboratoriocentro y voluntarios sin laboratoriocentro
+	@Override 
+	public List<BeanUsuario> listaUsuariosAnalistasDeLaboratorioCentro(Integer idLaboratorioCentro) {
+		List<BeanUsuario> listaUsuariosBean = new ArrayList<BeanUsuario>();
+		Integer idRolAnalistaLaboratorio = 8; //TODO habría que hacer un enumerado con los roles?
+		List<Usuario> listUsuarios = usurep.findByIdLaboratorioCentroAndIdRol(idLaboratorioCentro,idRolAnalistaLaboratorio);
+		System.out.println("la lista de analistas del laboratorio tiene: " + listUsuarios.size());
+		for (Usuario u : listUsuarios) {
+			//listaUsuariosBean.add(BeanUsuario.modelToBean(u, 8));
+			//TODO BeanUsuario.modelToBean(u, 8)
+			BeanUsuario ana = new BeanUsuario();
+			ana.setId(u.getId());
+			String nombreCompleto = u.getNombre();
+			if (StringUtils.isNotEmpty(u.getApellido1())) {
+				nombreCompleto = nombreCompleto.concat(" ").concat(u.getApellido1());
+			}
+			if (StringUtils.isNotEmpty(u.getApellido2())) {
+				nombreCompleto = nombreCompleto.concat(" ").concat(u.getApellido2());
+			}
+			ana.setNom(nombreCompleto);
+			ana.setRol("ANALISTA_LAB"); //TODO mirar como poner estoo
+			listaUsuariosBean.add(ana);
+		}
+		return listaUsuariosBean;
+	}
+	
+	@Override 
+	public List<BeanUsuario> listaUsuariosVoluntariosDeLaboratorioCentro(Integer idLaboratorioCentro) {
+		Integer idRolVoluntario = 14; //TODO habría que hacer un enumerado con los roles?
+		List<Usuario> listUsuarios = usurep.findByIdLaboratorioCentroAndIdRol(idLaboratorioCentro,idRolVoluntario);
+		System.out.println("la lista de voluntarios del laboratorio tiene: " + listUsuarios.size());
+		return new ArrayList<BeanUsuario>();
+	}
+	
+	@Override 
+	public List<BeanUsuario> listaUsuariosVoluntariosSinLaboratorioCentro() {
+		return new ArrayList<BeanUsuario>();
+	}
 	
 }

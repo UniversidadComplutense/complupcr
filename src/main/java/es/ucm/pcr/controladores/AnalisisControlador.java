@@ -486,12 +486,10 @@ public class AnalisisControlador {
 		public RedirectView cogerPlacasSeleccionadas(HttpSession session, @ModelAttribute GuardarCogerYDevolverPlacasBean guardarCogerYDevolverPlacasBean, 
 				@PageableDefault(page = 0, value = 20) Pageable pageable, RedirectAttributes redirectAttributes) throws Exception {
 
-			//recupero el usuario logado
-			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
+			//recupero el usuario logado			
+			Usuario user = sesionServicio.getUsuario();
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
-			
+						
 			//recogemos las placas marcadas para coger
 			List<Integer> listaIdsPlacasSeleccionadosParaCoger = guardarCogerYDevolverPlacasBean.getListaIdsPlacasSeleccionadosParaCoger();
 			System.out.println("listaIdsPlacasSeleccionadosParaCoger: " + listaIdsPlacasSeleccionadosParaCoger.toString());
@@ -551,8 +549,14 @@ public class AnalisisControlador {
 			//para recoger los analistas y voluntarios seleccionados
 			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = new GuardarAsignacionPlacaLaboratorioCentroBean();			
 								
+			//obtenemos los listados de analistas del laboratorio, voluntarios del laboratorio y voluntarios sin laboratorio
 			
-			List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
+			//recupero el usuario logado			
+			Usuario user = sesionServicio.getUsuario();
+			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
+			
+			//List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
+			List<BeanUsuario> beanListadoAnalistaLab = usuarioServicio.listaUsuariosAnalistasDeLaboratorioCentro(user.getIdLaboratorioCentro()) ;
 			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();	
 			
 			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la placa para no mostrarlos como posibles a asignar en el desplegable
