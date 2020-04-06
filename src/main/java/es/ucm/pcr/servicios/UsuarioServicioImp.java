@@ -376,7 +376,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		List<BeanUsuario> listaUsuariosBean = new ArrayList<BeanUsuario>();
 		Integer idRolAnalistaLaboratorio = BeanRolUsuario.RolUsuario.ROL_USUARIO_ANALISTALABORATORIO.getId(); 
 		List<Usuario> listUsuarios = usurep.findByIdLaboratorioCentroAndIdRol(idLaboratorioCentro, idRolAnalistaLaboratorio);
-		System.out.println("la lista de analistas del laboratorio tiene: " + listUsuarios.size());
+		System.out.println("la lista de analistas del laboratorioCentro tiene: " + listUsuarios.size());
 		for (Usuario u : listUsuarios) {
 			BeanUsuario ana = BeanUsuario.modelToBean(u);			
 			ana.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_ANALISTALABORATORIO));
@@ -390,7 +390,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		List<BeanUsuario> listaUsuariosBean = new ArrayList<BeanUsuario>();
 		Integer idRolVoluntario = BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId(); 
 		List<Usuario> listUsuarios = usurep.findByIdLaboratorioCentroAndIdRol(idLaboratorioCentro, idRolVoluntario);
-		System.out.println("la lista de voluntarios del laboratorio tiene: " + listUsuarios.size());
+		System.out.println("la lista de voluntarios del laboratorioCentro tiene: " + listUsuarios.size());
 		for (Usuario u : listUsuarios) {
 			BeanUsuario vol = BeanUsuario.modelToBean(u);			
 			vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO)); 
@@ -401,7 +401,16 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	
 	@Override 
 	public List<BeanUsuario> listaUsuariosVoluntariosSinLaboratorioCentro() {
-		return new ArrayList<BeanUsuario>();
+		List<BeanUsuario> listaUsuariosBean = new ArrayList<BeanUsuario>();
+		Integer idRolVoluntario = BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId(); 
+		List<Usuario> listUsuarios = usurep.findByIdRolAndNotIdLaboratorioCentro(idRolVoluntario);
+		System.out.println("la lista de voluntarios sin asignar a ningun laboratorioCentro tiene: " + listUsuarios.size());
+		for (Usuario u : listUsuarios) {
+			BeanUsuario vol = BeanUsuario.modelToBean(u);			
+			vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO)); 
+			listaUsuariosBean.add(vol);
+		}
+		return listaUsuariosBean;		
 	}
 	
 }

@@ -10,12 +10,14 @@ public class GuardarAsignacionPlacaLaboratorioCentroBean {
 	private String fecAsignacion;	
 	private List<Integer> listaIdsAnalistasLabSeleccionados;
 	private List<Integer> listaIdsAnalistasVolSeleccionados;	
+	private List<Integer> listaIdsVolSinLabCentroSeleccionados;	
+
 
 	public GuardarAsignacionPlacaLaboratorioCentroBean() {
 		super();
 		listaIdsAnalistasLabSeleccionados = new ArrayList<Integer>();
 		listaIdsAnalistasVolSeleccionados = new ArrayList<Integer>();
-
+		listaIdsVolSinLabCentroSeleccionados = new ArrayList<Integer>();
 	}
 	
 	
@@ -51,6 +53,14 @@ public class GuardarAsignacionPlacaLaboratorioCentroBean {
 
 	public void setListaIdsAnalistasVolSeleccionados(List<Integer> listaIdsAnalistasVolSeleccionados) {
 		this.listaIdsAnalistasVolSeleccionados = listaIdsAnalistasVolSeleccionados;
+	}
+
+	public List<Integer> getListaIdsVolSinLabCentroSeleccionados() {
+		return listaIdsVolSinLabCentroSeleccionados;
+	}
+
+	public void setListaIdsVolSinLabCentroSeleccionados(List<Integer> listaIdsVolSinLabCentroSeleccionados) {
+		this.listaIdsVolSinLabCentroSeleccionados = listaIdsVolSinLabCentroSeleccionados;
 	}
 
 	

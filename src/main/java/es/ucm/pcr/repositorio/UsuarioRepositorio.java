@@ -30,8 +30,16 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Integer> {
 	@Query("SELECT usuario FROM Usuario usuario "
 			+ "JOIN usuario.rols rol "				
 			+ "WHERE 1=1 and "			
-			+ "(usuario.idLaboratorioCentro = :idLaboratorioCentro) and "
+			+ "(usuario.idLaboratorioCentro = :idLaboratorioCentro) and "		
 			+ "(rol.id = :idRol)")			
-	public List<Usuario> findByIdLaboratorioCentroAndIdRol(@Param("idLaboratorioCentro") Integer idLaboratorioCentro, @Param("idRol") Integer idRol);	
+	public List<Usuario> findByIdLaboratorioCentroAndIdRol(@Param("idLaboratorioCentro") Integer idLaboratorioCentro, @Param("idRol") Integer idRol);
+	
+	
+	@Query("SELECT usuario FROM Usuario usuario "
+			+ "JOIN usuario.rols rol "				
+			+ "WHERE 1=1 and "
+			+ "(usuario.idLaboratorioCentro is null) and"
+			+ "(rol.id = :idRol)")			
+	public List<Usuario> findByIdRolAndNotIdLaboratorioCentro(@Param("idRol") Integer idRol);
 	
 }

@@ -28,14 +28,16 @@
 			</div>
 			
 			<div class="row">
-				<div class="col-3 form-group">
+				<div class="col-12 form-group">
 					<label>Placa: </label>
 				 	<span th:text="${placaLaboratorioCentroAsignacionesBean.id}">: </span>
 				 	<span th:text="${placaLaboratorioCentroAsignacionesBean.laboratorioCentro.nombre}"></span><br>
 				 	<label>Estado: </label>
 				 	<span th:text="${placaLaboratorioCentroAsignacionesBean.beanEstado.Estado.descripcion}"></span>				 	
-				</div>	
-				<div class="col-9 form-group">
+				</div>
+			</div>
+			<div class="row justify-content-center mt-3">	
+				<div class="col-12 form-group">
 					<table class="table">
 					  <thead class="thead-light">
 					    <tr>
@@ -50,7 +52,10 @@
 					      <!-- <td>				      	
 					      	<input class="form-check-input, justify-content-center" type="checkbox" th:field="*{listaIdsPlacasSeleccionadosParaCoger}" name="certificates" th:value="${placa.id}"/>
 					      </td> -->
-						  <td>
+					      <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasLab) == 0}">
+					      	<span>No existen analistas de laboratorio asignados</span>
+						  </td>
+						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasLab) > 0}">
 						  	<ul th:each="analistaLab : ${placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
 									<li><span th:text="${analistaLab.beanUsuario.nom}"></span>; 
 										<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
@@ -58,13 +63,27 @@
 									</li>
 							</ul>
 						  </td>
+						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVol) == 0}">
+					      	<span>No existen voluntarios de laboratorio asignados</span>
+						  </td>
+						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVol) > 0}">
 						  	<ul th:each="voluntarioLab : ${placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
 									<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span>; 
 										<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
 										<span th:text="${voluntarioLab.valoracion}"></span> 
 									</li>
 							</ul>
-						  <td>
+						  </td>
+						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVolSinLabCentro) == 0}">
+					      	<span>No existen otros voluntarios asignados</span>
+						  </td>
+						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVolSinLabCentro) > 0}">
+						  	<ul th:each="voluntarioSinLabCentro : ${placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVolSinLabCentro}">							
+									<li><span th:text="${voluntarioSinLabCentro.beanUsuario.nom}"></span>; 
+										<!-- <span th:text="${voluntarioSinLabCentro.fechaAsignacion}"></span>;  -->
+										<span th:text="${voluntarioSinLabCentro.valoracion}"></span> 
+									</li>
+							</ul>
 						  </td>
 						  <td>
 						  </td>	
@@ -152,7 +171,7 @@
 									<select
 										class="form-control selectpicker" multiple
 										data-live-search="true" data-actions-box="true"
-										id="analistasLabSeleccionado" th:field="*{listaIdsAnalistasVolSeleccionados}"
+										id="analistasVolSeleccionado" th:field="*{listaIdsAnalistasVolSeleccionados}"
 										title="Todos los voluntarios laboratorio">
 										<option th:each="var: ${beanListadoAnalistaVol}"
 											th:value="${var.id}" th:text="${var.nom}"></option>
@@ -163,9 +182,9 @@
 									<select
 										class="form-control selectpicker" multiple
 										data-live-search="true" data-actions-box="true"
-										id="analistasLabSeleccionado" th:field="*{listaIdsAnalistasVolSeleccionados}"
+										id="analistasVolSinLabCentroSeleccionado" th:field="*{listaIdsVolSinLabCentroSeleccionados}"
 										title="Todos los otros voluntarios">
-										<option th:each="var: ${beanListadoAnalistaVol}"
+										<option th:each="var: ${beanListadoVoluntariosSinLaboratorioCentro}"
 											th:value="${var.id}" th:text="${var.nom}"></option>
 									</select>
 								</div>

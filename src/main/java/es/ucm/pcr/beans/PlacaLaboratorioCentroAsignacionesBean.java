@@ -99,8 +99,8 @@ public class PlacaLaboratorioCentroAsignacionesBean extends PlacaLaboratorioCent
 						//beanAsigAna.setValoracion("P"); //la valoración no tiene sentido a nivel de placa (se valoran las muestras no las placas)
 						beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);
 					}
-					//si el usuario tiene el rol voluntario
-					if(rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) {
+					//si el usuario tiene el rol voluntario y tiene idLaboratorioCentro
+					if((rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()!= null)) {
 						//si tiene rol VOLUNTARIO
 						BeanAsignacion beanAsigVol = new BeanAsignacion();
 						BeanUsuario beanUsuVol = BeanUsuario.modelToBean(usu);
@@ -109,6 +109,17 @@ public class PlacaLaboratorioCentroAsignacionesBean extends PlacaLaboratorioCent
 						beanAsigVol.setFechaAsignacion(usuMuestra.getFechaAsignacion());
 						//beanAsigVol.setValoracion("P"); //la valoración no tiene sentido a nivel de placa (se valoran las muestras no las placas)
 						beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
+					}
+					//si el usuario tiene el rol voluntario y no tiene idLaboratorioCentro
+					if((rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()== null)) {
+						//si tiene rol VOLUNTARIO y no está asignado a ningun laboratorioCentro
+						BeanAsignacion beanAsigVolSinCentro = new BeanAsignacion();
+						BeanUsuario beanUsuVolSinCentro = BeanUsuario.modelToBean(usu);
+						beanUsuVolSinCentro.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO)); //TODO mirar como poner estoo
+						beanAsigVolSinCentro.setBeanUsuario(beanUsuVolSinCentro);				
+						beanAsigVolSinCentro.setFechaAsignacion(usuMuestra.getFechaAsignacion());
+						//beanAsigVol.setValoracion("P"); //la valoración no tiene sentido a nivel de placa (se valoran las muestras no las placas)
+						beanListaAsignaciones.getListaAnalistasVolSinLabCentro().add(beanAsigVolSinCentro);
 					}
 				}
 			}

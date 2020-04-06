@@ -118,8 +118,8 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanAsigAna.setFechaValoracion(usuMu.getFechaValoracion());
 					beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);					
 				}
-				//si el usuario tiene el rol voluntario
-				if(rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) {
+				//si el usuario tiene el rol voluntario y tiene idLaboratorioCentro
+				if((rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()!= null)) {
 					BeanAsignacion beanAsigVol = new BeanAsignacion();
 					BeanUsuario vol = BeanUsuario.modelToBean(usu);					
 					vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO)); //TODO mirar como poner estoo					
@@ -128,7 +128,20 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanAsigVol.setValoracion(usuMu.getValoracion());
 					beanAsigVol.setFechaValoracion(usuMu.getFechaValoracion());
 					beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
+				}				
+				//si el usuario tiene el rol voluntario y no tiene idLaboratorioCentro
+				if((rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()== null)) {
+					//si tiene rol VOLUNTARIO y no está asignado a ningun laboratorioCentro
+					BeanAsignacion beanAsigVolSinCentro = new BeanAsignacion();
+					BeanUsuario beanUsuVolSinCentro = BeanUsuario.modelToBean(usu);
+					beanUsuVolSinCentro.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO)); //TODO mirar como poner estoo					
+					beanAsigVolSinCentro.setBeanUsuario(beanUsuVolSinCentro);
+					beanAsigVolSinCentro.setFechaAsignacion(usuMu.getFechaAsignacion());					
+					beanAsigVolSinCentro.setValoracion(usuMu.getValoracion());
+					beanAsigVolSinCentro.setFechaValoracion(usuMu.getFechaValoracion());					
+					beanListaAsignaciones.getListaAnalistasVolSinLabCentro().add(beanAsigVolSinCentro);
 				}
+				
 			}
 		}
 		beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);

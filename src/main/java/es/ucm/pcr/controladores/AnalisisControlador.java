@@ -560,6 +560,7 @@ public class AnalisisControlador {
 			//List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
 			List<BeanUsuario> beanListadoAnalistaLab = usuarioServicio.listaUsuariosAnalistasDeLaboratorioCentro(user.getIdLaboratorioCentro()) ;
 			List<BeanUsuario> beanListadoAnalistaVol = usuarioServicio.listaUsuariosVoluntariosDeLaboratorioCentro(user.getIdLaboratorioCentro());	
+			List<BeanUsuario> beanListadoVoluntariosSinLaboratorioCentro = usuarioServicio.listaUsuariosVoluntariosSinLaboratorioCentro();	
 			
 			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la placa para no mostrarlos como posibles a asignar en el desplegable
 			//listaAnalistasLab
@@ -589,6 +590,7 @@ public class AnalisisControlador {
 			vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
 			vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);			
 			vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
+			vista.addObject("beanListadoVoluntariosSinLaboratorioCentro", beanListadoVoluntariosSinLaboratorioCentro);
 			return vista;
 		}
 		
