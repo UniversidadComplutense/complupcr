@@ -17,11 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanLaboratorioVisavet;
-import es.ucm.pcr.beans.BeanLaboratorioVisavet;
-import es.ucm.pcr.beans.BeanLaboratorioVisavet;
+
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
-import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
-import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
+
 import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
@@ -86,7 +84,8 @@ public class LaboratorioVisavetControlador {
 //				laboratorioVisavet.setCapacidad(beanLaboratorioVisavet.getCapacidad());
 //				laboratorioVisavetRepositorio.save(laboratorioVisavet);
 				
-				laboratorioVisavetRepositorio.save(laboratorioVisavetServicio.mapeoBeanEntidadLaboratorioVisavet(beanLaboratorioVisavet));
+//				laboratorioVisavetRepositorio.save(laboratorioVisavetServicio.mapeoBeanEntidadLaboratorioVisavet(beanLaboratorioVisavet));
+				laboratorioVisavetServicio.guardarLaboratorioVisavet(laboratorioVisavetServicio.mapeoBeanEntidadLaboratorioVisavet(beanLaboratorioVisavet));
 				
 			}
 			// Modificamos laboratorioVisavet existente, menos mail
@@ -99,7 +98,8 @@ public class LaboratorioVisavetControlador {
 //				laboratorioVisavet.get().setCapacidad(beanLaboratorioVisavet.getCapacidad());
 //				laboratorioVisavetRepositorio.save(laboratorioVisavet.get());
 				
-				laboratorioVisavetRepositorio.save(laboratorioVisavetServicio.mapeoBeanEntidadLaboratorioVisavet(beanLaboratorioVisavet));
+//				laboratorioVisavetRepositorio.save(laboratorioVisavetServicio.mapeoBeanEntidadLaboratorioVisavet(beanLaboratorioVisavet));
+				laboratorioVisavetServicio.guardarLaboratorioVisavet(laboratorioVisavetServicio.mapeoBeanEntidadLaboratorioVisavet(beanLaboratorioVisavet));
 			}
 
 			// Volvemos a grabar mas laboratorioVisavet
@@ -134,7 +134,8 @@ public class LaboratorioVisavetControlador {
 		@RequestMapping(value = "/gestor/borrarLaboratorioVisavet", method = RequestMethod.GET)
 		public ModelAndView borrarLaboratorioVisavet(@RequestParam("idLaboratorioVisavet") Integer idLaboratorioVisavet) throws Exception {
 			
-			laboratorioVisavetRepositorio.deleteById(idLaboratorioVisavet);
+//			laboratorioVisavetRepositorio.deleteById(idLaboratorioVisavet);
+			laboratorioVisavetServicio.borrarLaboratorioVisavet(idLaboratorioVisavet);
 			
 			// Volvemos a grabar mas visavet
 			ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaLaboratorioVisavet",true));	
