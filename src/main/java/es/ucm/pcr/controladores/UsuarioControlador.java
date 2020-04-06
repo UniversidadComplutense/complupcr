@@ -1,7 +1,6 @@
 package es.ucm.pcr.controladores;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -9,6 +8,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +55,7 @@ public class UsuarioControlador {
 	//	Muestra una lista ordenada ap1, ap2,nombre con los usuarios
 	// Punto de entrada a la gestión de usuarios
 	@RequestMapping(value="/gestor/listaUsuarios", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView GestionUsuario(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionUsuario");
 	
@@ -63,39 +64,12 @@ public class UsuarioControlador {
 		listaUsuarios = usuarioServicio.listaUsuariosOrdenada();
 		vista.addObject("listaUsuarios", listaUsuarios);
 		
-//		for (Usuario usuario: usuarioRepositorio.findAll())
-//		{
-//			listaUsuarios.add(new BeanUsuarioGestion(
-//								usuario.getId(), 
-//								usuario.getCentro(),
-//								usuario.getNombre(), 
-//					 			usuario.getApellido1(), 
-//					 			usuario.getApellido2(), 
-//					 			usuario.getEmail(), 
-//					 			usuario.getPassword(), 
-//					 			usuario.getIdLaboratorioVisavet(),
-//					 			usuario.getIdLaboratorioCentro(),
-//					 			usuario.getAsignadas(),
-//								usuario.getAcertadas(),
-//								usuario.getDocumentos(),
-//								usuario.getUsuarioMuestras(),
-//								usuario.getRols(),
-//								usuario.getHabilitado(),
-//								"L",							// Acción = L: Lista de usuarios
-//								((!usuario.getCentro().equals(null))?usuario.getCentro().getId():999999) , 	// Centro seleccionado
-////								usuario.getCentro().getId(), 	// Centro seleccionado	
-//								"A"								// TipoCentro: A: A elegir
-//								));			
-//		}
-//		//	Ordeno por ap1, ap2, nombre
-//		Collections.sort(listaUsuarios);
-//		vista.addObject("listaUsuarios", listaUsuarios);
-	
 		return vista;
 	}
 	
 	// da de alta un nuevo usuario
 	@RequestMapping(value="/gestor/altaUsuario", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView AltaUsuario(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaUsuario");
 	
@@ -126,6 +100,7 @@ public class UsuarioControlador {
 	
    // Alta/modificación de usuario 
 	@RequestMapping(value="/gestor/altaUsuario", method=RequestMethod.POST)	
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView grabarAltaUsuario ( @ModelAttribute("formBeanUsuario") BeanUsuarioGestion beanUsuario, 
 			 								@RequestParam(value = "roles" , required = false) int[] roles,
 											HttpSession session) throws Exception {
@@ -155,6 +130,7 @@ public class UsuarioControlador {
 	
 	// Modificamos un usuario
 	@RequestMapping(value = "/gestor/editarUsuario", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView editarUsuario(@RequestParam("idUsuario") Integer idUsuario) throws Exception {
 
 		ModelAndView vista = new ModelAndView("VistaUsuario");
@@ -189,6 +165,7 @@ public class UsuarioControlador {
 	}
 		
 	@RequestMapping(value = "/gestor/borrarUsuario", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView borrarUsuario(@RequestParam("idUsuario") Integer idUsuario) throws Exception {
 		
 //		usuarioRepositorio.deleteById(idUsuario);

@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,7 @@ public class CentroControlador {
 	//	Muestra una lista ordenada ap1, ap2,nombre con los centros
 	// Punto de entrada a la gestión de centros
 	@RequestMapping(value="/gestor/listaCentros", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView GestionCentro(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionCentros");
 	
@@ -65,6 +67,7 @@ public class CentroControlador {
 	
 	// da de alta un nuevo centro
 	@RequestMapping(value="/gestor/altaCentro", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView AltaCentro(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaCentro");
 	
@@ -78,6 +81,7 @@ public class CentroControlador {
 	
    // Alta/modificación de centro 
 	@RequestMapping(value="/gestor/altaCentro", method=RequestMethod.POST)	
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView grabarAltaCentro ( @ModelAttribute("formBeanCentro") BeanCentro beanCentro, HttpSession session) throws Exception {
 
 		// Damos de alta nuevo centro
@@ -115,6 +119,7 @@ public class CentroControlador {
 	
 	// Modificamos un centro
 	@RequestMapping(value = "/gestor/editarCentro", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView editarCentro(@RequestParam("idCentro") Integer idCentro) throws Exception {
 
 		ModelAndView vista = new ModelAndView("VistaCentro");
@@ -142,6 +147,7 @@ public class CentroControlador {
 	}	
 	
 	@RequestMapping(value = "/gestor/borrarCentro", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView borrarCentro(@RequestParam("idCentro") Integer idCentro) throws Exception {
 		
 //		centroRepositorio.deleteById(idCentro);
@@ -151,28 +157,5 @@ public class CentroControlador {
 		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaCentros",true));	
 		return vista;
 	}	
-	
-	
-//	@RequestMapping(value="AltaCentro", method=RequestMethod.GET)
-//	public ModelAndView AltaCentro(HttpSession session) throws Exception {
-//		ModelAndView vista = new ModelAndView("VistaCentro");
-//	
-//		BeanCentro beanCentro = new BeanCentro();
-//		
-//		vista.addObject("formBeanCentro", beanCentro);
-//		return vista;
-//	}
-//	
-//   // Alta de centro 
-//	@RequestMapping(value="AltaCentro", method=RequestMethod.POST)	
-//	public ModelAndView grabarAltaCentro ( @ModelAttribute("formBeanCentro") BeanCentro beanCentro, HttpSession session) throws Exception {
-//
-//		System.out.println("Centro a grabar: " + beanCentro.toString());
-//		
-//		// Volvemos a grabar mas centros
-//		ModelAndView vista = new ModelAndView(new RedirectView("AltaCentro",true));	
-//		return vista;
-//		
-//	}
 
 }

@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,7 @@ public class LaboratorioVisavetControlador {
 	//	Muestra una lista ordenada ap1, ap2,nombre con los laboratorioVisavets
 	// Punto de entrada a la gestión de laboratorioVisavets
 	@RequestMapping(value="/gestor/listaLaboratorioVisavet", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView GestionLaboratorioVisavet(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionLaboratorioVisavet");
 	
@@ -61,6 +63,7 @@ public class LaboratorioVisavetControlador {
 	
 	// da de alta un nuevo laboratorio Visavet
 	@RequestMapping(value="/gestor/altaLaboratorioVisavet", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView AltaLaboratorioVisavet(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLaboratorioVisavet");
 	
@@ -74,6 +77,7 @@ public class LaboratorioVisavetControlador {
 	
 	   // Alta/modificación de laboratorioVisavet 
 		@RequestMapping(value="/gestor/altaLaboratorioVisavet", method=RequestMethod.POST)	
+		@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 		public ModelAndView grabarAltaLaboratorioVisavet ( @ModelAttribute("formBeanLaboratorioVisavet") BeanLaboratorioVisavet beanLaboratorioVisavet, HttpSession session) throws Exception {
 
 			// Damos de alta nuevo laboratorioVisavet
@@ -109,6 +113,7 @@ public class LaboratorioVisavetControlador {
 		
 		// Modificamos un laboratorioVisavet
 		@RequestMapping(value = "/gestor/editarLaboratorioVisavet", method = RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 		public ModelAndView editarLaboratorioVisavet(@RequestParam("idLaboratorioVisavet") Integer idLaboratorioVisavet) throws Exception {
 
 			ModelAndView vista = new ModelAndView("VistaLaboratorioVisavet");
@@ -132,6 +137,7 @@ public class LaboratorioVisavetControlador {
 		}		
 		
 		@RequestMapping(value = "/gestor/borrarLaboratorioVisavet", method = RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 		public ModelAndView borrarLaboratorioVisavet(@RequestParam("idLaboratorioVisavet") Integer idLaboratorioVisavet) throws Exception {
 			
 //			laboratorioVisavetRepositorio.deleteById(idLaboratorioVisavet);

@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ public class LaboratorioCentroControlador {
 	//	Muestra una lista ordenada ap1, ap2,nombre con los laboratorioCentros
 	// Punto de entrada a la gestión de laboratorioCentros
 	@RequestMapping(value="/gestor/listaLaboratorioCentro", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView GestionLaboratorioCentro(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionLaboratorioCentro");
 	
@@ -57,6 +59,7 @@ public class LaboratorioCentroControlador {
 
 	// da de alta un nuevo rol
 	@RequestMapping(value="/gestor/altaLaboratorioCentro", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView AltaLaboratorioCentro(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLaboratorioCentro");
 	
@@ -70,6 +73,7 @@ public class LaboratorioCentroControlador {
 	
 	   // Alta/modificación de laboratorioCentro 
 		@RequestMapping(value="/gestor/altaLaboratorioCentro", method=RequestMethod.POST)	
+		@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 		public ModelAndView grabarAltaLaboratorioCentro ( @ModelAttribute("formBeanLaboratorioCentro") BeanLaboratorioCentro beanLaboratorioCentro, HttpSession session) throws Exception {
 
 			// Damos de alta nuevo laboratorioCentro
@@ -100,6 +104,7 @@ public class LaboratorioCentroControlador {
 		
 		// Modificamos un laboratorioCentro
 		@RequestMapping(value = "/gestor/editarLaboratorioCentro", method = RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 		public ModelAndView editarLaboratorioCentro(@RequestParam("idLaboratorioCentro") Integer idLaboratorioCentro) throws Exception {
 
 			ModelAndView vista = new ModelAndView("VistaLaboratorioCentro");
@@ -122,6 +127,7 @@ public class LaboratorioCentroControlador {
 		}	
 
 		@RequestMapping(value = "/gestor/borrarLaboratorioCentro", method = RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 		public ModelAndView borrarLaboratorioCentro(@RequestParam("idLaboratorioCentro") Integer idLaboratorioCentro) throws Exception {
 			
 //			laboratorioCentroRepositorio.deleteById(idLaboratorioCentro);
