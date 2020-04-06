@@ -90,7 +90,8 @@ public class CentroControlador {
 //			centro.setTelefono(beanCentro.getTelefonoCentro());
 //			centroRepositorio.save(centro);
 			
-			centroRepositorio.save(centroServicio.mapeoBeanEntidadCentro(beanCentro));
+//			centroRepositorio.save(centroServicio.mapeoBeanEntidadCentro(beanCentro));
+			centroServicio.guardarCentro(centroServicio.mapeoBeanEntidadCentro(beanCentro));
 		}
 		// Modificamos centro existente
 		if (beanCentro.getAccion().equals("M"))
@@ -103,7 +104,8 @@ public class CentroControlador {
 //			centro.get().setNombre(beanCentro.getDesCentro());
 //			centro.get().setTelefono(beanCentro.getTelefonoCentro());
 //			centroRepositorio.save(centro.get());
-			centroRepositorio.save(centroServicio.mapeoBeanEntidadCentro(beanCentro));
+//			centroRepositorio.save(centroServicio.mapeoBeanEntidadCentro(beanCentro));
+			centroServicio.guardarCentro(centroServicio.mapeoBeanEntidadCentro(beanCentro));
 		}
 
 		// Volvemos a grabar mas centros
@@ -142,7 +144,8 @@ public class CentroControlador {
 	@RequestMapping(value = "/gestor/borrarCentro", method = RequestMethod.GET)
 	public ModelAndView borrarCentro(@RequestParam("idCentro") Integer idCentro) throws Exception {
 		
-		centroRepositorio.deleteById(idCentro);
+//		centroRepositorio.deleteById(idCentro);
+		centroServicio.BorrarCentro(idCentro);
 		
 		// Volvemos a grabar mas centros
 		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaCentros",true));	

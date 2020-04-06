@@ -40,5 +40,22 @@ public interface CentroServicio {
 	 * @return Map<String,String>
 	 */
 	public Map<Integer,String> mapaCentros (List<BeanCentro> centros) throws Exception;
+	
+	/**
+	 * Guardar Centro
+	 * 
+	 * @param Centro
+	 * @return void >
+	 */
+	public void guardarCentro (Centro centro) throws Exception;
+	
+	/**
+	 * Borrar Centro
+	 * 
+	 * @param Integer idCentro
+	 * @return void >
+	 */
+	public void BorrarCentro (Integer idCentro) throws Exception;
+
 
 }
