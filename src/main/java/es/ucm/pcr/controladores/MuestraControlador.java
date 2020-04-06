@@ -37,6 +37,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanResultado;
+import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
@@ -165,8 +166,10 @@ public class MuestraControlador {
 		ModelAndView vista = new ModelAndView("VistaMuestra");
 
 		MuestraCentroBean beanMuestra = muestraServicio.findById(id);
-
+		
 		vista.addObject("editable", false);
+		// se tienen que mostrar todos los lotes, no solo los no enviados
+		vista.addObject("listaLotes", loteServicio.findLoteByParam(new LoteBusquedaBean(sesionServicio.getCentro().getId())));
 		vista.addObject("notificable", muestraNotificable(beanMuestra));
 		vista.addObject("beanMuestra", beanMuestra);
 		return vista;
@@ -180,7 +183,12 @@ public class MuestraControlador {
 
 		MuestraCentroBean beanMuestra = muestraServicio.findById(id);
 
-		vista.addObject("editable", muestraEditable(beanMuestra));
+		boolean editable = muestraEditable(beanMuestra);
+		vista.addObject("editable", editable);
+		if (!editable) {
+			// 	se tienen que mostrar todos los lotes, no solo los no enviados
+			vista.addObject("listaLotes", loteServicio.findLoteByParam(new LoteBusquedaBean(sesionServicio.getCentro().getId())));
+		}
 		vista.addObject("notificable", muestraNotificable(beanMuestra));
 		vista.addObject("beanMuestra", beanMuestra);
 		return vista;

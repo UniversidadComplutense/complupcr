@@ -275,6 +275,7 @@ public class MuestraCentroBean implements java.io.Serializable {
 		paciente.setTelefono(muestraBean.getTelefono());
 		paciente.setNotificar(muestraBean.isAvisoSms() ? "S" : "N");
 		paciente.setNotificarAutomato(muestraBean.isAvisosAuto() ? "S" : "N");
+		paciente.setRecogerDatosNotif(muestraBean.isRecogerDatosNotif() ? "S" : "N");
 
 		paciente.setMuestra(muestra);
 		muestra.setPaciente(paciente);
@@ -316,6 +317,7 @@ public class MuestraCentroBean implements java.io.Serializable {
 		muestraBean.setTelefono(paciente.getTelefono());
 		muestraBean.setAvisoSms(paciente.getNotificar().equals("S"));
 		muestraBean.setAvisosAuto(paciente.getNotificarAutomato().equals("S"));
+		muestraBean.setRecogerDatosNotif(paciente.getRecogerDatosNotif().equals("S"));
 
 		// TODO - COMPLETAR
 		

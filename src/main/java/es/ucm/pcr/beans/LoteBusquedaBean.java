@@ -24,6 +24,11 @@ public class LoteBusquedaBean {
 		this.numLote = numLote;
 		this.idCentro = idCentro;
 	}
+	
+	public LoteBusquedaBean(Integer idCentro) {
+		super();
+		this.idCentro = idCentro;
+	}
 
 	public Integer getId() {
 		return id;
