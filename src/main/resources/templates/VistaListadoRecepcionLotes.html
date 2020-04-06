@@ -115,14 +115,14 @@
 					<table class="col-xs-12 table" th:id="tablaResultados">
 						<thead class="thead-light">
 							<tr>
-								<th scope="col"></th>
-								<th scope="col">#Lotes</th>
-								<th scope="col">Centro</th>
-								<th scope="col">F.Entrada</th>
-								<th scope="col">#Muestras</th>
-								<th scope="col">Test</th>
-								<th scope="col">Estado</th>
-								<th scope="col">Acciones</th>
+								<th class="p-1" scope="col"></th>
+								<th class="p-1" scope="col">#Lotes</th>
+								<th class="p-1" scope="col">Centro</th>
+								<th class="p-1" scope="col">F.Entrada</th>
+								<th class="p-1" scope="col">#Muestras</th>
+								<th class="p-1" scope="col">Test</th>
+								<th class="p-1" scope="col">Estado</th>
+								<th class="p-1" scope="col">Acciones</th>
 							</tr>
 						</thead>
 
@@ -130,17 +130,17 @@
 						<tr id="trGroup+${count.index}"
 							th:each="unResultado,count : ${paginaLotes.getContent()}">
 
-							<td>
+							<td class="p-1">
 								<!-- <span th:text="${@pcrTHExpressions.tieneRol('TECNICOLABORATORIO')}"></span>-->
 								<input type="checkbox" name="seleccionado"
 								th:disabled="${#strings.toString(unResultado.estado.Estado) != 'LOTE_RECIBIDO_CENTRO_ANALISIS'}"
 								th:id="seleccionado+${count.index}" th:value="${unResultado.id}" />
 							</td>
-							<td><span th:text="${unResultado.numLote}"></span></td>
-							<td><span th:text="${unResultado.centroProcedencia}"></span></td>
-							<td><span
+							<td class="p-1"><span th:text="${unResultado.numLote}"></span></td>
+							<td class="p-1"><span th:text="${unResultado.centroProcedencia}"></span></td>
+							<td class="p-1"><span
 								th:text="${#dates.format(unResultado.fechaEntrada, 'dd/MM/yyyy')}"></span></td>
-							<td><a data-toggle="modal"
+							<td class="p-1"><a data-toggle="modal"
 								data-target="#modalConsultarMuestras"
 								th:attr="data-target='#modalConsultarMuestras'+${unResultado.id}"
 								style="cursor: pointer;" title="Ver muestras"> <i
@@ -198,11 +198,11 @@
 										</div>
 									</div>
 								</div> <!-- fin modal --></td>
-							<td><span>Covid19</span></td>
-							<td><span
+							<td class="p-1"><span>Covid19</span></td>
+							<td class="p-1"><span
 								th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
 							</td>
-							<td><a
+							<td class="p-1"><a
 								th:if="${#strings.toString(unResultado.estado.Estado) == 'LOTE_ENVIADO_CENTRO_ANALISIS'}"
 								href="#modalConfirmRecibido" data-toggle="modal"
 								th:data-lote="${unResultado.numLote}"
