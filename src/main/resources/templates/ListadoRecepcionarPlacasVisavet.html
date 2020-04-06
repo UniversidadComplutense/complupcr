@@ -2,7 +2,7 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>PCR-COVID19 - LOTES</title>
+<title>PCR-COVID19 - RECEPCIÓN PLACAS VISAVET</title>
 <object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
 </head>
 <body>
@@ -70,7 +70,9 @@
 				<thead class="thead-light">	
 	    			<tr>
 	      				<th scope="col">Código</th>
-						<th scope="col">Fecha creación</th>
+						<th scope="col">Fecha Asignación</th>
+						<th scope="col">Fecha Envío</th>
+						<th scope="col">Fecha Recepción</th>
 						<th scope="col">Estado</th>
 						<th scope="col">Capacidad</th>
 						<th scope="col">Muestras</th>
@@ -80,7 +82,9 @@
 				<tbody>
 					<tr th:if="${listaPlacas != null}" th:each="placa : ${listaPlacas}">
 						<td><span th:text="${placa.id}"></span></td>									
-					 	<td><span th:text="${#dates.format(placa.fechaCreacion, 'dd/MM/yyyy')}"></span></td>
+					 	<td><span th:text="${#dates.format(placa.fechaAsignacion, 'dd/MM/yyyy')}"></span></td>
+				  	 	<td><span th:text="${#dates.format(placa.fechaEnvio, 'dd/MM/yyyy')}"></span></td>
+					 	<td><span th:text="${#dates.format(placa.fechaRecepcion, 'dd/MM/yyyy')}"></span></td>
 						<td><span th:text="${placa.beanEstado.estado.descripcion}"></span></td>
 						<td><span th:text="${placa.numeroMuestras}"></span></td>
 						<td>

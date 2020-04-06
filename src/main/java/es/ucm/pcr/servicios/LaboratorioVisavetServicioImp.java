@@ -2,6 +2,7 @@ package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,6 +151,7 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 		if (placa.isPresent()) {
 			if (placa.get().getEstadoPlacaVisavet().getId() == Estado.PLACAVISAVET_ASIGNADA.getCodNum()) {
 				placa.get().setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_RECIBIDA.getCodNum()));
+				placa.get().setFechaRecepcionLaboratorioCentro(new Date());
 				placaVisavetRepositorio.save(placa.get());
 			}			
 		}

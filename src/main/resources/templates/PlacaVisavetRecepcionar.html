@@ -26,19 +26,27 @@
 					<label>Identificador</label>
 				 	<input type="text" class="form-control form-control-sm" th:value="${placa.id}"/>
 				</div>
-				<div class="col-3 form-group">
+				<div class="col-4 form-group">
 					<label>Capacidad</label>
 				 	<input type="text" class="form-control form-control-sm" th:value="${placa.numeroMuestras}">
-				</div>						
-			</div>
-			<div class="row" th:if="${placa.id} != null">
+				</div>
 				<div class="col-4 form-group">
 					<label>Estado</label>
 				 	<input type="text" class="form-control form-control-sm" th:value="${placa.beanEstado.estado.descripcion}"></input>
+				</div>						
+			</div>
+			<div class="row" th:if="${placa.id} != null">				
+				<div class="col-4 form-group">
+					<label>Fecha de asignación</label>
+				 	<input type="text" class="form-control form-control-sm" th:value="${#dates.format(placa.fechaAsignacion, 'dd/MM/yyyy')}"></input>
 				</div>
 				<div class="col-4 form-group">
-					<label>Fecha de Creación</label>
-				 	<input type="text" class="form-control form-control-sm" th:value="${#dates.format(placa.fechaCreacion, 'dd/MM/yyyy')}"></input>
+					<label>Fecha de envío</label>
+				 	<input type="text" class="form-control form-control-sm" th:value="${#dates.format(placa.fechaEnvio, 'dd/MM/yyyy')}"></input>
+				</div>
+				<div class="col-4 form-group">
+					<label>Fecha de recepción</label>
+				 	<input type="text" class="form-control form-control-sm" th:value="${#dates.format(placa.fechaRecepcion, 'dd/MM/yyyy')}"></input>
 				</div>				
 			</div>					
 		</fieldset>

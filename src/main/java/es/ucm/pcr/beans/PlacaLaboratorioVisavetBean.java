@@ -14,7 +14,10 @@ public class PlacaLaboratorioVisavetBean {
 	private Integer id;
 	private String numeroMuestras;
 	private BeanEstado beanEstado;
-	private Date fechaCreacion;
+	private Date fechaAsignacion;
+	private Date fechaEnvio;
+	private Date fechaRecepcion;
+	
 	private List<MuestraListadoPlacasLaboratorioBean> muestras;
 
 	
@@ -50,13 +53,33 @@ public class PlacaLaboratorioVisavetBean {
 	}
 
 
-	public Date getFechaCreacion() {
-		return fechaCreacion;
+	public Date getFechaAsignacion() {
+		return fechaAsignacion;
 	}
 
 
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
+	public void setFechaAsignacion(Date fechaAsignacion) {
+		this.fechaAsignacion = fechaAsignacion;
+	}
+
+
+	public Date getFechaEnvio() {
+		return fechaEnvio;
+	}
+
+
+	public void setFechaEnvio(Date fechaEnvio) {
+		this.fechaEnvio = fechaEnvio;
+	}
+
+
+	public Date getFechaRecepcion() {
+		return fechaRecepcion;
+	}
+
+
+	public void setFechaRecepcion(Date fechaRecepcion) {
+		this.fechaRecepcion = fechaRecepcion;
 	}
 
 
@@ -81,7 +104,9 @@ public class PlacaLaboratorioVisavetBean {
 				placaVisavet.getEstadoPlacaVisavet().getId());
 		bean.setBeanEstado(beanEstado);
 		bean.setNumeroMuestras("" + placaVisavet.getNumeromuestras());
-		bean.setFechaCreacion(placaVisavet.getFechaCreacion());
+		bean.setFechaAsignacion(placaVisavet.getFechaAsignadaLaboratorioCentro());
+		bean.setFechaEnvio(placaVisavet.getFechaEnviadaLaboratorioCentro());
+		bean.setFechaRecepcion(placaVisavet.getFechaRecepcionLaboratorioCentro());
 		
 		List<MuestraListadoPlacasLaboratorioBean> listadoMuestras = new ArrayList<MuestraListadoPlacasLaboratorioBean>();
 		Set<Muestra> muestras = placaVisavet.getMuestras();
@@ -108,10 +133,18 @@ public class PlacaLaboratorioVisavetBean {
 			placa.setId(placaLaboratorioVisavetBean.getId());
 		}
 		
-		if (placaLaboratorioVisavetBean.getFechaCreacion() != null) {
-			placa.setFechaCreacion(placaLaboratorioVisavetBean.getFechaCreacion());
+		if (placaLaboratorioVisavetBean.getFechaAsignacion() != null) {
+			placa.setFechaAsignadaLaboratorioCentro(placaLaboratorioVisavetBean.getFechaAsignacion());
 		}
-
+		
+		if (placaLaboratorioVisavetBean.getFechaEnvio() != null) {
+			placa.setFechaEnviadaLaboratorioCentro(placaLaboratorioVisavetBean.getFechaEnvio());
+		}
+		
+		if (placaLaboratorioVisavetBean.getFechaRecepcion() != null) {
+			placa.setFechaRecepcionLaboratorioCentro(placaLaboratorioVisavetBean.getFechaRecepcion());
+		}
+		
 		if (placaLaboratorioVisavetBean.getBeanEstado() != null) {
 			placa.setEstadoPlacaVisavet(new EstadoPlacaVisavet(placaLaboratorioVisavetBean.getBeanEstado().getEstado().getCodNum()));
 		}
