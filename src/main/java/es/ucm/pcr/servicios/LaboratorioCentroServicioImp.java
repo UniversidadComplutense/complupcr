@@ -115,6 +115,14 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		return mapalaboratorioCentro;
 	}
 	
+	public void guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception{
+		laboratorioCentroRepositorio.save(laboratorioCentro);
+	}
+	
+	public void borrarLaboratorioCentro (Integer idLaboratorioCentro) throws Exception{
+		laboratorioCentroRepositorio.deleteById(idLaboratorioCentro);
+	}
+	
 	@Override
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda,
 			Pageable pageable) {

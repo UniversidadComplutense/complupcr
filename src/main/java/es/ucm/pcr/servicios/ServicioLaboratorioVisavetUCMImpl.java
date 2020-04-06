@@ -3,6 +3,7 @@ package es.ucm.pcr.servicios;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,8 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	
 	@Autowired
     LoteServicio loteServicio;
+	@Autowired
+	LoteRepositorio loteRepositorio1;
 	
 	@Autowired
 	PlacaVisavetRepositorio placaVisavetRepositorio;
@@ -52,7 +55,8 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		LoteBusquedaBean loteBusquedaBean= new LoteBusquedaBean();
 		loteBusquedaBean.setIdCentro(busquedaLotes.getIdCentro());
 	// se refiere a fecha recepcion
-		loteBusquedaBean.setFechaEnvioFin(busquedaLotes.getFechaEntrada());
+		loteBusquedaBean.setFechaEnvioFin(busquedaLotes.getFechaFinEntrada());
+		loteBusquedaBean.setFechaEnvioIni(busquedaLotes.getFechaInicioEntrada());
 		loteBusquedaBean.setNumLote(busquedaLotes.getNumLote());
 		// por muestra aun no esta
 		loteBusquedaBean.setIdEstado(busquedaLotes.getCodNumEstadoSeleccionado());
@@ -67,6 +71,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 				LoteBeanPlacaVisavet lotePlaca= new LoteBeanPlacaVisavet();
 				lotePlaca.setId(unResultado.getId());
 				lotePlaca.setNumLote(unResultado.getNumLote());
+				lotePlaca.setFechaEntrada(unResultado.getFechaEnvio());
 				lotePlaca.setCentroProcedencia(unResultado.getCentroBean().getNombre());
 				// necesito el BeanEstado
 				lotePlaca.setEstado(unResultado.getBeanEstado());
@@ -92,6 +97,16 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 				pageResultados.getTotalElements());
 		return pageLote;
 	}
+	
+	
+	public LoteBeanPlacaVisavet buscarLote(Integer id) {
+		Lote lote=loteServicio.findByIdLote(id);
+		if (lote != null) {
+			return LoteBeanPlacaVisavet.modelToBean(lote);
+		}
+		return null;
+	}
+	
 
 	public Page<BeanPlacaVisavetUCM> buscarPlacas(BusquedaPlacasVisavetBean busqueda, Pageable pageable){
 		
@@ -145,9 +160,9 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	
 		if (placa.getId()!= null) {
 			for (Lote l: placa.getLotes()) {
-				Lote lbbdd = loteRepositorio.findById(l.getId()).get();
+				Lote lbbdd = loteRepositorio1.findById(l.getId()).get();
 				lbbdd.setPlacaVisavet(placa);
-				lbbdd =loteRepositorio.save(lbbdd);
+				lbbdd =loteRepositorio1.save(lbbdd);
 				
 			 // aqui tengo que asignarle a placa los lotes con el nuevo id
 			}

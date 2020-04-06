@@ -15,7 +15,7 @@ public class MuestraListadoBean extends MuestraBusquedaBean {
 	private String codNumLote;
 	private boolean notificado;
 	private Date fechaEntrada;
-
+    
 	public MuestraListadoBean() {
 		super();
 	}
@@ -54,7 +54,6 @@ public class MuestraListadoBean extends MuestraBusquedaBean {
 	
 
 	
-
 	public static MuestraListadoBean modelToBean(Muestra muestra) {
 		Paciente paciente = muestra.getPaciente();
 		
@@ -69,7 +68,7 @@ public class MuestraListadoBean extends MuestraBusquedaBean {
 		bean.setFechaResultadoMuestraIni(muestra.getFechaResultado());
 		bean.setCodNumLote(muestra.getLote() != null ? muestra.getLote().getNumeroLote() : "");
 		bean.setNotificado(muestra.getFechaNotificacion() != null);
-		
+		bean.setTipoMuestra(muestra.getTipoMuestra());
 		BeanResultado beanResultado = new BeanResultado();
 		bean.setEstadoMuestra(beanResultado.asignarTipoEstadoYCodNum(muestra.getResultado()).getResultadoMuestra().getDescripcion());		
 		
