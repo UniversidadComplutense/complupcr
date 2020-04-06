@@ -2,10 +2,10 @@ package es.ucm.pcr.validadores;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -53,6 +53,8 @@ public class MuestraValidador implements Validator {
 		// avisos sms
 		validateAvisoSMS(muestra, errors);
 		
+		// valida etiqueta
+		validateEtiqueta(muestra, errors);
 	}
 	
 	/**
@@ -100,7 +102,7 @@ public class MuestraValidador implements Validator {
 	private void validateDatosNotificar(MuestraCentroBean muestra, Errors errors) {
 		if (muestra.isRecogerDatosNotif()) {
 			if (StringUtils.isEmpty(muestra.getCorreo()) && StringUtils.isEmpty(muestra.getTelefono())) {
-				errors.rejectValue("recogerDatosNotif", "campo.invalid", "Debe rellenar el email y/o teléfono");
+				errors.rejectValue("recogerDatosNotif", "campo.invalid", "Debe rellenar el correo y/o teléfono");
 			}
 		}
 	}
@@ -115,11 +117,11 @@ public class MuestraValidador implements Validator {
 	private void validateNotificarAuto(MuestraCentroBean muestra, Errors errors) {
 		if (muestra.isAvisosAuto()) {
 			if (StringUtils.isEmpty(muestra.getCorreo())) {
-				errors.rejectValue("avisosAuto", "campo.invalid", "Debe rellenar el email");
+				errors.rejectValue("avisosAuto", "campo.invalid", "Debe rellenar el correo");
 			}
 		} else {
 			if (StringUtils.isEmpty(muestra.getCorreo()) && StringUtils.isEmpty(muestra.getTelefono())) {
-				errors.rejectValue("avisosAuto", "campo.invalid", "Debe rellenar el email y/o teléfono");
+				errors.rejectValue("avisosAuto", "campo.invalid", "Debe rellenar el correo y/o teléfono");
 			}
 		}
 	}
@@ -137,6 +139,27 @@ public class MuestraValidador implements Validator {
 				errors.rejectValue("avisoSms", "campo.invalid", "Debe rellenar el teléfono");
 			}
 		} 
+	}
+	
+	/**
+	 * Solo puede haber una muestra con la misma etiqueta
+	 * @param muestra
+	 * @param errors
+	 */
+	private void validateEtiqueta(MuestraCentroBean muestra, Errors errors) {
+		if (StringUtils.isNotEmpty(muestra.getEtiqueta())) {
+			List<MuestraListadoBean> muestras = muestraServicio.findMuestraByParam(new MuestraBusquedaBean(muestra.getEtiqueta()));
+			if (muestra.getId() == null) {
+				if (!CollectionUtils.isEmpty(muestras)) {
+					errors.rejectValue("etiqueta", "campo.invalid", "Ya existe una muestra con la misma etiqueta");
+				}
+			} else {
+				MuestraListadoBean muestraBean = muestras.stream().filter(muestrasList -> muestra.getId().equals(muestrasList.getId())).findAny().orElse(null);
+				if (muestraBean == null) {
+					errors.rejectValue("etiqueta", "campo.invalid", "Ya existe una muestra con la misma etiqueta");
+				}
+			}
+		}			
 	}
 		
 }

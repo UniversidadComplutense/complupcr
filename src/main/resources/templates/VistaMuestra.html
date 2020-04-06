@@ -24,7 +24,7 @@
 		  	<label th:if="${editable} and *{id != null}">Modificar muestra</label>
 		  	<label th:if="!${editable}">Consulta muestra</label>
 		</div>
-		<div th:if="${mensaje !=null}" class="alert alert-success alert-dismissible fade show" role="alert">
+		<div th:if="${mensaje !=null}" class="alert alert-success alert-dismissible fade show m-1 mt-2" role="alert">
 			<label th:text="${mensaje}"></label>
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		</div>		
@@ -49,12 +49,12 @@
 			<div class="row">					
 				<div class="col-4 m-0 form-group">
 					<label>Correo</label>
-				 	<input type="email" class="form-control form-control-sm" th:field="*{correo}"  th:value="*{correo}" required maxlength="200" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
+				 	<input type="email" class="form-control form-control-sm" th:field="*{correo}"  th:value="*{correo}" maxlength="200" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
 				</div>
 				
 				<div class="col-4 m-0 form-group">
 					<label>Teléfono</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="*{telefono}"  th:value="*{telefono}" pattern="[0-9]{9}" maxlength="9" onkeyup="this.value=this.value.replace(/[^\d]/,'')" required />
+				 	<input type="text" class="form-control form-control-sm" th:field="*{telefono}"  th:value="*{telefono}" pattern="[0-9]{9}" maxlength="9" onkeyup="this.value=this.value.replace(/[^\d]/,'')" />
 				</div>					
 			</div>
 			<div class="row">	
@@ -68,17 +68,20 @@
 				<div class="col-4 m-0 form-group">				
 					<label>Recoger datos para notificar</label><br>
 					<label><input type="radio" name="recogerDatosNotif" id="recogerDatosNotif1" th:field="*{recogerDatosNotif}" value="true">Sí</label>
-					<label><input type="radio" name="recogerDatosNotif" id="recogerDatosNotif2" th:field="*{recogerDatosNotif}" value="false"></input>No</label>					  
+					<label><input type="radio" name="recogerDatosNotif" id="recogerDatosNotif2" th:field="*{recogerDatosNotif}" value="false"></input>No</label>	
+					<label class="text-warning" th:if="${#fields.hasErrors('recogerDatosNotif')}" th:errors="*{recogerDatosNotif}"></label>				  
 				</div>	
 				<div class="col-4 m-0 form-group">
 					<label>Notificar paciente automáticamente</label><br>
 					<label><input type="radio" name="avisosAuto" id="avisosAuto1" th:field="*{avisosAuto}" value="true">Sí</label>
-					<label><input type="radio" name="avisosAuto" id="avisosAuto2" th:field="*{avisosAuto}" value="false"></input>No</label>	
+					<label><input type="radio" name="avisosAuto" id="avisosAuto2" th:field="*{avisosAuto}" value="false"></input>No</label>
+					<label class="text-warning" th:if="${#fields.hasErrors('avisosAuto')}" th:errors="*{avisosAuto}"></label>	
 				</div>	
 				<div class="col-4 m-0 form-group">
 					<label>Avisar al paciente por sms</label><br>
 					<label><input type="radio" name="avisoSms" id="avisoSms1" th:field="*{avisoSms}" value="true">Sí</label>
-					<label><input type="radio" name="avisoSms" id="avisoSms2" th:field="*{avisoSms}" value="false"></input>No</label>	
+					<label><input type="radio" name="avisoSms" id="avisoSms2" th:field="*{avisoSms}" value="false"></input>No</label>
+					<label class="text-warning" th:if="${#fields.hasErrors('avisoSms')}" th:errors="*{avisoSms}"></label>	
 				</div>								
 			</div>			
 		</fieldset>
@@ -145,10 +148,10 @@
 				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>
 			</div>
 			<div class="col-2">
-				<a th:classappend="!${notificable} or *{avisosAuto} ? 'disabled' : ''" th:href="@{/centroSalud/muestra/notificarTelefono/{id}(id=*{id})}" class="btn btn-secondary">Ya he llamado</a>
+				<a th:classappend="!${notificable} or *{avisosAuto} or *{telefono == null} ? 'disabled' : ''" th:href="@{/centroSalud/muestra/notificarTelefono/{id}(id=*{id})}" class="btn btn-secondary">Ya he llamado</a>
 			</div>
 			<div class="col-2">
-				<a th:classappend="!${notificable} or *{avisosAuto} ? 'disabled' : ''" th:href="@{/centroSalud/muestra/notificarCorreo/{id}(id=*{id})}" class="btn btn-secondary">Enviar correo</a>
+				<a th:classappend="!${notificable} or *{avisosAuto} or *{correo == null} ? 'disabled' : ''" th:href="@{/centroSalud/muestra/notificarCorreo/{id}(id=*{id})}" class="btn btn-secondary">Enviar correo</a>
 			</div>
 		</div>					
 	</form>
