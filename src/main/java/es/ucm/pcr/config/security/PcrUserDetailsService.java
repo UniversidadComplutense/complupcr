@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,14 +41,16 @@ public class PcrUserDetailsService implements UserDetailsService {
 	private PasswordTokenRepositorio passwordTokenRepositorio;
 
 	@Override
+	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<Usuario> usuario = usuarioRepository.findByEmailWithRoles(username);
+		Optional<Usuario> usuario = usuarioRepository.findByEmail(username);
 		if (!usuario.isPresent()) {
 			throw new UsernameNotFoundException("Autenticación incorrecta.");
 		}
 		Usuario miUser = usuario.get();
 
 		return new PcrUserDetails(miUser, getAuthorities(miUser));
+
 	}
 
 	private static Set<GrantedAuthority> getAuthorities(Usuario usuario) {

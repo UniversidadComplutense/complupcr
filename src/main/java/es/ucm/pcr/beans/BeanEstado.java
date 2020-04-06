@@ -231,7 +231,21 @@ public class BeanEstado {
 	}
 	
 	/**
-	 * Estados del lote
+	 * Estados del lote para laboratorio Visavet
+	 * @return
+	 */
+	public static List<BeanEstado> estadosLoteLaboratorioVisavet() {
+		// estados del lote
+		List<BeanEstado> estadosLote = new ArrayList<>();
+		estadosLote.add(new BeanEstado(TipoEstado.EstadoLote, Estado.LOTE_ENVIADO_CENTRO_ANALISIS));
+		estadosLote.add(new BeanEstado(TipoEstado.EstadoLote, Estado.LOTE_RECIBIDO_CENTRO_ANALISIS));
+		estadosLote.add(new BeanEstado(TipoEstado.EstadoLote, Estado.LOTE_PROCESADO_CENTRO_ANALISIS));
+		
+		return estadosLote;
+	}
+	
+	/**
+	 * Estados de la muestra
 	 * @return
 	 */
 	public static List<BeanEstado> estadosMuestra() {
@@ -274,7 +288,7 @@ public class BeanEstado {
 		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_PREPARADA));
 		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_FINALIZADA));
 		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_ASIGNADA));
-		
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_ENVIADA));
 		return estadosPlacaVisavet;
 	}
 	

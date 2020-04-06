@@ -31,12 +31,16 @@ public class PlacaVisavet implements java.io.Serializable {
 	private Integer id;
 	private EstadoPlacaVisavet estadoPlacaVisavet;
 	private LaboratorioVisavet laboratorioVisavet;
+	private LaboratorioCentro laboratorioCentro;
 	private Integer numeromuestras;
+
 	private Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>(
 			0);
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<Lote> lotes = new HashSet<Lote>(0);
 	private Date fechaCreacion;
+	private Date fechaEnviadaLaboratorioCentro;
+	private Date fechaRecepcionLaboratorioCentro;
 	private Set<Muestra> muestras = new HashSet<Muestra>(0);
 	
 
@@ -49,13 +53,17 @@ public class PlacaVisavet implements java.io.Serializable {
 
 	public PlacaVisavet(EstadoPlacaVisavet estadoPlacaVisavet, LaboratorioVisavet laboratorioVisavet,
 			Integer numeromuestras, Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios,
-			Set<Documento> documentos, Set<Lote> lotes) {
+			Set<Documento> documentos, Set<Lote> lotes,Date fechaCreacion,LaboratorioCentro laboratorioCentro, Date fechaRecepcionLaboratorioCentro, Date fechaEnviadaLaboratorioCentro) {
 		this.estadoPlacaVisavet = estadoPlacaVisavet;
 		this.laboratorioVisavet = laboratorioVisavet;
+		this.laboratorioCentro = laboratorioCentro;
 		this.numeromuestras = numeromuestras;
 		this.placaVisavetPlacaLaboratorios = placaVisavetPlacaLaboratorios;
 		this.documentos = documentos;
 		this.lotes = lotes;
+		this.fechaCreacion=fechaCreacion;
+		this.fechaEnviadaLaboratorioCentro=fechaEnviadaLaboratorioCentro;
+		this.fechaRecepcionLaboratorioCentro=fechaRecepcionLaboratorioCentro;
 	}
 
 	@Id
@@ -89,7 +97,17 @@ public class PlacaVisavet implements java.io.Serializable {
 	public void setLaboratorioVisavet(LaboratorioVisavet laboratorioVisavet) {
 		this.laboratorioVisavet = laboratorioVisavet;
 	}
+	
+	@ManyToOne
+	@JoinColumn(name = "idLaboratorioCentro", nullable = false)
+	public LaboratorioCentro getLaboratorioCentro() {
+		return this.laboratorioCentro;
+	}
 
+	public void setLaboratorioCentro(LaboratorioCentro laboratorioCentro) {
+		this.laboratorioCentro = laboratorioCentro;
+	}
+	
 	@Column(name = "numeromuestras")
 	public Integer getNumeromuestras() {
 		return this.numeromuestras;
@@ -136,6 +154,27 @@ public class PlacaVisavet implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaEnviadaLaboratorioCentro", length = 10)
+	public Date getFechaEnviadaLaboratorioCentro() {
+		return fechaEnviadaLaboratorioCentro;
+	}
+
+	public void setFechaEnviadaLaboratorioCentro(Date fechaEnviadaLaboratorioCentro) {
+		this.fechaEnviadaLaboratorioCentro = fechaEnviadaLaboratorioCentro;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaRecepcionLaboratorioCentro", length = 10)
+	public Date getFechaRecepcionLaboratorioCentro() {
+		return fechaRecepcionLaboratorioCentro;
+	}
+
+	public void setFechaRecepcionLaboratorioCentro(Date fechaRecepcionLaboratorioCentro) {
+		this.fechaRecepcionLaboratorioCentro = fechaRecepcionLaboratorioCentro;
+	}
+
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "placaVisavet")
 	public Set<Muestra> getMuestras() {
 		return this.muestras;
@@ -144,5 +183,5 @@ public class PlacaVisavet implements java.io.Serializable {
 	public void setMuestras(Set<Muestra> muestras) {
 		this.muestras = muestras;
 	}
-
+	
 }

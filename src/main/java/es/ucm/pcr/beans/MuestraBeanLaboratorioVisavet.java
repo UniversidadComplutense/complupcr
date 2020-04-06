@@ -2,6 +2,9 @@ package es.ucm.pcr.beans;
 
 import java.util.Calendar;
 
+import es.ucm.pcr.modelo.orm.Lote;
+import es.ucm.pcr.modelo.orm.Muestra;
+
 public class MuestraBeanLaboratorioVisavet{
 	private int id;
 	private String etiqueta;
@@ -61,8 +64,29 @@ public class MuestraBeanLaboratorioVisavet{
 	public void setCentro(BeanCentro centro) {
 		this.centro = centro;
 	}
+	public static MuestraBeanLaboratorioVisavet modelToBean(Muestra muestra) {
+	//
 	
+	MuestraBeanLaboratorioVisavet muestraBeanLaboratorioVisavet = new MuestraBeanLaboratorioVisavet();
+    muestraBeanLaboratorioVisavet.setId(muestra.getId());
+    muestraBeanLaboratorioVisavet.setEtiqueta(muestra.getEtiqueta());
+    muestraBeanLaboratorioVisavet.setTipoMuestra(muestra.getTipoMuestra());
+    muestraBeanLaboratorioVisavet.setReferenciaInterna(muestra.getRefInternaVisavet());
+    return muestraBeanLaboratorioVisavet;
+	//
+	}
 	
+	public static Muestra beanToModel(MuestraBeanLaboratorioVisavet muestra) {
+		//
+		
+		Muestra muestraT = new Muestra();
+		muestraT.setId(muestra.getId());
+		muestraT.setEtiqueta(muestra.getEtiqueta());
+		muestraT.setTipoMuestra(muestra.getTipoMuestra());
+		muestraT.setRefInternaVisavet(muestra.getReferenciaInterna());
+	    return muestraT;
+		//
+		}
 	
 	
 }

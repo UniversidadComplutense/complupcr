@@ -69,12 +69,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 
 	@Override
 	public Set<Rol> getRoles(Usuario usuario) {
-		Optional<Usuario> usuWithRoles = usurep.findByEmailWithRoles(usuario.getEmail());
-		if (usuWithRoles.isPresent()) {
-			return usuWithRoles.get().getRols();
-		} else {
-			return null;
-		}
+		return usuario.getRols();
 	}
 	
 	// Un usuario puede no estar asociado a ningún centro,
@@ -369,6 +364,9 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		return usuario;
 	}
 	
+	public void borrarUsuario (Integer idUsuario) throws Exception{
+		usurep.deleteById(idUsuario);
+	}
 
 	//metodos de obtencion de usuarios analistas de laboratoriocentro, voluntarios de laboratoriocentro y voluntarios sin laboratoriocentro
 	@Override 

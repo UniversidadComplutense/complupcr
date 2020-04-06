@@ -88,6 +88,18 @@ public interface UsuarioServicio {
 	 */
 	public Usuario guardar(Usuario usuario);
 	
+	
+
+	/**
+	 * Borrar Usuario
+	 * 
+	 * @param Integer idUsuario
+	 * @return void >
+	 */
+	public void borrarUsuario (Integer idUsuario) throws Exception;
+	
+	
+	
 	/**
 	 * Obtiene usuarios analistas de un laboratorioCentro
 	 * 

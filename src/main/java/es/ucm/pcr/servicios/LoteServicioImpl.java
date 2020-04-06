@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.LoteListadoBean;
@@ -142,7 +143,8 @@ public class LoteServicioImpl implements LoteServicio {
 	 * @param id
 	 * @return
 	 */
-	private Lote findByIdLote(Integer id) {
+	@Override
+	public Lote findByIdLote(Integer id) {
 		Optional<Lote> loteOptional = loteRepositorio.findById(id);
 		if (loteOptional.isPresent()) {
 			return loteOptional.get();
@@ -160,4 +162,16 @@ public class LoteServicioImpl implements LoteServicio {
 			return false;
 		}
 	}
+	
+	
+	// yoli
+	@Override
+	public LoteBeanPlacaVisavet findByIdByPlacas(Integer id) {
+		Lote lote = findByIdLote(id);
+		if (lote != null) {
+			return LoteBeanPlacaVisavet.modelToBean(lote);
+		}
+		return new LoteBeanPlacaVisavet();
+	}
+	
 }

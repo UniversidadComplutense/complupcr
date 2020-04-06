@@ -14,6 +14,7 @@ import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
+import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.Usuario;
 
@@ -51,6 +52,21 @@ public interface LaboratorioCentroServicio {
 	 */
 	public Map<Integer,String> mapaLaboratoriosCentro (List<BeanLaboratorioCentro> laboratoriosCentro) throws Exception;
 
+	/**
+	 * Guardar Laboratorio
+	 * 
+	 * @param LaboratorioCentro
+	 * @return void >
+	 */
+	public void guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception;
+	
+	/**
+	 * Borrar Laboratorio
+	 * 
+	 * @param Integer idLaboratorioCentro
+	 * @return void >
+	 */
+	public void borrarLaboratorioCentro (Integer idLaboratorioCentro) throws Exception;
 	
 	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable);
 	PlacaLaboratorioCentroBean buscarPlaca (Integer id);

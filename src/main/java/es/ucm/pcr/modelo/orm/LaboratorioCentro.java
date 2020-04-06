@@ -27,6 +27,9 @@ public class LaboratorioCentro implements java.io.Serializable {
 	private String nombre;
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<PlacaLaboratorio> placaLaboratorios = new HashSet<PlacaLaboratorio>(0);
+    private Set<PlacaVisavet> placasVisavet = new HashSet<PlacaVisavet>(0);
+	
+	
 	private Set<Equipo> equipos = new HashSet<Equipo>(0);
 	private Set<Equipo> equipos_1 = new HashSet<Equipo>(0);
 
@@ -42,12 +45,13 @@ public class LaboratorioCentro implements java.io.Serializable {
 	}
 
 	public LaboratorioCentro(String nombre, Set<Documento> documentos, Set<PlacaLaboratorio> placaLaboratorios,
-			Set<Equipo> equipos, Set<Equipo> equipos_1) {
+			Set<Equipo> equipos, Set<Equipo> equipos_1,Set<PlacaVisavet> placasVisavet) {
 		this.nombre = nombre;
 		this.documentos = documentos;
 		this.placaLaboratorios = placaLaboratorios;
 		this.equipos = equipos;
 		this.equipos_1 = equipos_1;
+		this.placasVisavet=placasVisavet;
 	}
 
 	@Id
@@ -88,7 +92,14 @@ public class LaboratorioCentro implements java.io.Serializable {
 	public void setPlacaLaboratorios(Set<PlacaLaboratorio> placaLaboratorios) {
 		this.placaLaboratorios = placaLaboratorios;
 	}
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "laboratorioCentro")
+	public Set<PlacaVisavet> getPlacasVisavet() {
+		return this.placasVisavet;
+	}
 
+	public void setPlacasVisavet(Set<PlacaVisavet> placasVisavet) {
+		this.placasVisavet = placasVisavet;
+	}
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "laboratorioCentro")
 	public Set<Equipo> getEquipos() {
 		return this.equipos;
