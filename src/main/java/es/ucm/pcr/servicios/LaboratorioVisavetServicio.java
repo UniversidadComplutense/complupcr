@@ -47,8 +47,17 @@ public interface LaboratorioVisavetServicio {
 	public Map<Integer,String> mapaLaboratoriosVisavet (List<BeanLaboratorioVisavet> laboratoriosVisavet) throws Exception;
 
 
+	
+	// JAVI
 	public Page<PlacaLaboratorioVisavetBean> buscarPlacas(BusquedaRecepcionPlacasVisavetBean criteriosBusqueda,
 			Pageable pageable);
+	// JAVI
+	public PlacaLaboratorioVisavetBean buscarPlaca(Integer id);
+
+	// JAVI
+	public void recepcionarPlaca(Integer id);
+	
+	
 	
 	
 }

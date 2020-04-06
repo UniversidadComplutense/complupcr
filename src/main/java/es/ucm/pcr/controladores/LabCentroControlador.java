@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.ucm.pcr.beans.BeanEstado;
+import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
@@ -127,6 +128,41 @@ public class LabCentroControlador {
 	}
 	
 	
+	@RequestMapping(value = "/recepcionPlacas/recepcionar", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
+	public ModelAndView recepcionarPlacaVisavetGET(HttpSession session, @RequestParam(value = "id", required = true) Integer id) throws Exception {
+		
+		ModelAndView vista = new ModelAndView("PlacaVisavetRecepcionar");
+		PlacaLaboratorioVisavetBean placa = laboratorioVisavetServicio.buscarPlaca(id);
+		vista.addObject("mostrarMensaje", false);
+		
+		if (placa.getBeanEstado().getEstado().getCodNum() == Estado.PLACAVISAVET_ASIGNADA.getCodNum()) {
+			vista.addObject("recepcionable", true);
+		}			
+		vista.addObject("placa", placa);
+		return vista;
+	}
+	
+	
+	@RequestMapping(value = "/recepcionPlacas/recepcionar", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
+	public ModelAndView recepcionarPlacaVisavetPOST(@Valid @ModelAttribute("placa") PlacaLaboratorioCentroBean placa, BindingResult result) throws Exception {
+
+		ModelAndView vista = new ModelAndView("PlacaVisavetRecepcionar");	
+		vista.addObject("mostrarMensaje", false);
+		
+		if (!result.hasErrors()) {
+			laboratorioVisavetServicio.recepcionarPlaca(placa.getId());
+			vista.addObject("mensaje", "La placa se ha recepcionado correctamente.");
+			vista.addObject("mostrarMensaje", true);
+			vista.addObject("recepcionable", false);
+		}
+				
+		vista.addObject("placa", laboratorioVisavetServicio.buscarPlaca(placa.getId()));
+		return vista;
+	}
+		
+	
 	@RequestMapping(value = "/gestionPlacas", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
 	public ModelAndView buscarPlacasListasParaPcrGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
@@ -173,7 +209,10 @@ public class LabCentroControlador {
 	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
 	public ModelAndView consultarPlaca(HttpSession session, @PathVariable Integer idPlaca) throws Exception {
 
-		return new ModelAndView("PlacaLaboratorio").addObject("placa", laboratorioCentroServicio.buscarPlaca(idPlaca));
+		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
+		vista.addObject("mostrarMensaje", false);
+		vista.addObject("placa", laboratorioCentroServicio.buscarPlaca(idPlaca));		
+		return vista;
 	}
 		
 	
@@ -184,6 +223,7 @@ public class LabCentroControlador {
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");		
 		PlacaLaboratorioCentroBean placa = new PlacaLaboratorioCentroBean();		
 		
+		vista.addObject("mostrarMensaje", false);
 		vista.addObject("nueva", true);
 		vista.addObject("editable", esEditable(placa));
 		vista.addObject("placa", new PlacaLaboratorioCentroBean());		
@@ -195,10 +235,13 @@ public class LabCentroControlador {
 	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
 	public ModelAndView guardarPlaca(@Valid @ModelAttribute("placa") PlacaLaboratorioCentroBean placa, BindingResult result) throws Exception {
 
-		ModelAndView vista = new ModelAndView("PlacaLaboratorio");	
+		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
+		vista.addObject("mostrarMensaje", false);
 		
 		if (!result.hasErrors()) {
 			placa = laboratorioCentroServicio.guardarPlaca(placa);
+			vista.addObject("mostrarMensaje", true);
+			vista.addObject("mensaje", "Los cambios se han guardado correctamente.");
 		}
 		vista.addObject("nueva", true);
 		vista.addObject("placa", placa);
@@ -212,6 +255,7 @@ public class LabCentroControlador {
 		
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		PlacaLaboratorioCentroBean placa = laboratorioCentroServicio.buscarPlaca(id);
+		vista.addObject("mostrarMensaje", false);
 		vista.addObject("nueva", false);
 		vista.addObject("editable", esEditable(placa));
 		vista.addObject("placa", placa);

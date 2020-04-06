@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,9 +13,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
 import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
+import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.PlacaVisavet;
 import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
@@ -95,6 +98,28 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 		}		
 		Page<PlacaLaboratorioVisavetBean> placasVisavet = new PageImpl<>(listaPlacasVisavetBean, pageable, PagePlacasVisavet.getTotalElements());		
 		return placasVisavet;
+	}
+	
+	
+	// JAVI para buscar una placa Visavet e incorporarla a 'BusquedaPlacasVisavetBean'
+	@Override
+	public PlacaLaboratorioVisavetBean buscarPlaca(Integer id) {
+		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(id);
+		if (placa.isPresent()) {
+			return PlacaLaboratorioVisavetBean.modelToBean(placa.get());
+		}
+		return new PlacaLaboratorioVisavetBean();
+	}
+	
+	
+	// JAVI para recepcionar una placa Visavet
+	@Override
+	public void recepcionarPlaca(Integer id) {				
+		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(id);
+		if (placa.isPresent()) {
+			placa.get().setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_RECIBIDA.getCodNum()));
+			placaVisavetRepositorio.save(placa.get());
+		}
 	}
 
 }

@@ -32,8 +32,9 @@ public interface PlacaVisavetRepositorio extends JpaRepository<PlacaVisavet, Int
 			Pageable pageable);	
 	
 
-	Optional<PlacaVisavet> findById(Integer id);
+	Optional<PlacaVisavet> findById(Integer id);	
 	
+	public void save(Optional<PlacaVisavet> placa);
 	
 	// yoli esta query no da resultados probar LEFT JOIN placa.placaVisavetPlacaLaboratorios placaVLaboratorio "
 	@Query("SELECT placa FROM PlacaVisavet placa "
@@ -67,6 +68,8 @@ public interface PlacaVisavetRepositorio extends JpaRepository<PlacaVisavet, Int
 		//	+ "(:#{#params.muestra} is null or muestras.etiqueta = :#{#params.muestra}) and "
 			// + "(:#{#params.idLaboratorioCentro} is null or placaVLaboratorio.placaLaboratorio.laboratorioCentro.id = :#{#params.idLaboratorioCentro}) and "
 		//	+ "(:#{#params.idLaboratorioVisavet} is null or placa.laboratorioVisavet.id = :#{#params.idLaboratorioVisavet})")
-	public List<PlacaVisavet> findByParams(@Param("params") BusquedaPlacasVisavetBean params);	
+	public List<PlacaVisavet> findByParams(@Param("params") BusquedaPlacasVisavetBean params);
+
+	
 	
 }
