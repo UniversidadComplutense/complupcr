@@ -11,6 +11,7 @@ import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
+import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
@@ -60,4 +61,5 @@ public interface LaboratorioCentroServicio {
 	public PlacaLaboratorioCentroBean guardarCogerODevolverPlaca(Integer idPlaca, Integer idUsuario, String accion);	
 	public List<PlacaLaboratorioCentroBean> buscarPlacasAsignadasAJefe(Usuario usuario); 
 	public List<BeanElemento> buscarPlacasBeanElementoAsignadasAJefe(Usuario usuario);
+	public void guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca);
 }	

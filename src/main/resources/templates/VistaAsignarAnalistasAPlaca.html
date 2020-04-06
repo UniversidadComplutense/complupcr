@@ -63,9 +63,9 @@
 						  </td>
 						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasLab) > 0}">
 						  	<ul th:each="analistaLab : ${placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
-									<li><span th:text="${analistaLab.beanUsuario.nom}"></span>; 
+									<li><span th:text="${analistaLab.beanUsuario.nom}"></span> 
 										<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
-										<span th:text="${analistaLab.valoracion}"></span> 
+										<!-- <span th:text="${analistaLab.valoracion}"></span> --> 
 									</li>
 							</ul>
 						  </td>
@@ -74,9 +74,9 @@
 						  </td>
 						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVol) > 0}">
 						  	<ul th:each="voluntarioLab : ${placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
-									<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span>; 
+									<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span> 
 										<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
-										<span th:text="${voluntarioLab.valoracion}"></span> 
+										<!-- <span th:text="${voluntarioLab.valoracion}"></span> --> 
 									</li>
 							</ul>
 						  </td>
@@ -85,9 +85,9 @@
 						  </td>
 						  <td th:if="${#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVolSinLabCentro) > 0}">
 						  	<ul th:each="voluntarioSinLabCentro : ${placaLaboratorioCentroAsignacionesBean.beanAnalisis.beanListaAsignaciones.listaAnalistasVolSinLabCentro}">							
-									<li><span th:text="${voluntarioSinLabCentro.beanUsuario.nom}"></span>; 
+									<li><span th:text="${voluntarioSinLabCentro.beanUsuario.nom}"></span> 
 										<!-- <span th:text="${voluntarioSinLabCentro.fechaAsignacion}"></span>;  -->
-										<span th:text="${voluntarioSinLabCentro.valoracion}"></span> 
+										<!-- <span th:text="${voluntarioSinLabCentro.valoracion}"></span> --> 
 									</li>
 							</ul>
 						  </td>

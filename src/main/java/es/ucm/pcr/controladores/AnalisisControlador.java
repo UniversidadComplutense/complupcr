@@ -518,7 +518,7 @@ public class AnalisisControlador {
 			System.out.println("listaIdsPlacasSeleccionadosParaDevolver: " + listaIdsPlacasSeleccionadosParaDevolver.toString());
 			
 			//devolver esas placas, quitarles el jefe asignado, fecha de asignacion, cambiar estado a placa a PLACA_LISTA_PARA_ANALISIS y guardarlas
-			//TODO ¿que hacemos con las muestras?			
+			//TODO ¿que hacemos con las muestras?, las ponemos en el estado anterior "enviada centro analisis"			
 			for(Integer idPlacaSeleccionada : listaIdsPlacasSeleccionadosParaDevolver) {
 				laboratorioCentroServicio.guardarCogerODevolverPlaca(idPlacaSeleccionada, null, "devolver");
 			}	
@@ -587,6 +587,18 @@ public class AnalisisControlador {
 			beanListadoAnalistaVol.removeAll(beanListadoAnalistaVolABorrar);
 			
 			
+			//listaAnalistasVolSinCentro			
+			List<BeanAsignacion> beanListadoAnalistaVolSinLabCentroAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasVolSinLabCentro();
+			List<BeanUsuario> beanListadoAnalistaVolSinCentroABorrar = new ArrayList<BeanUsuario>();
+			//convierto la lista BeanAsignacion en lista BeanUsuario
+			for(BeanAsignacion beanAsig: beanListadoAnalistaVolSinLabCentroAsignados) {
+				beanListadoAnalistaVolSinCentroABorrar.add(beanAsig.getBeanUsuario());				
+			}
+			System.out.println("beanListadoAnalistaVolSinCentroABorrar tiene: " + beanListadoAnalistaVolSinCentroABorrar.size());
+			//borro de la lista todal de analistas los asignados
+			beanListadoVoluntariosSinLaboratorioCentro.removeAll(beanListadoAnalistaVolSinCentroABorrar);
+			
+			
 			vista.addObject("placaLaboratorioCentroAsignacionesBean", placaLaboratorioCentroAsignacionesBean);
 			vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
 			vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);			
@@ -606,11 +618,12 @@ public class AnalisisControlador {
 			System.out.println("voluntarios de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados().toString());
 			System.out.println("voluntarios sin labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados().toString());
 			
-			//TODO llamar a metodo de servicio que a partir de formBeanGuardarAsignacionPlaca recupere la placa y le asigne a todas sus muestras los nuevos analistas lab, analistas vol y otros vol
+			//llamamos a metodo de servicio que a partir de formBeanGuardarAsignacionPlaca recupere la placa y le asigne a todas sus muestras los nuevos analistas lab, analistas vol y otros vol
+			//y cambie el estado de las muestras a asignada analista			
+			laboratorioCentroServicio.guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(formBeanGuardarAsignacionPlaca);
 			
-			//muestraSevicio.guardarAsignacion(formBeanGuardarAsignacionMuestra);
 						
-			//vuelvo al formulario de asignacion de la muestra
+			//vuelvo al formulario de asignacion de la placa
 			String idPlaca = String.valueOf(formBeanGuardarAsignacionPlaca.getIdPlaca());
 			redirectAttributes.addFlashAttribute("mensaje", "Asignaciones de placa guardadas");
 			return new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true);
