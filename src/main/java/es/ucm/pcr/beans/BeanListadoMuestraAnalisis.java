@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.Paciente;
 import es.ucm.pcr.modelo.orm.Rol;
@@ -70,58 +71,6 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		this.esCerrable = esCerrable;
 	}
 
-	/*
-	public BeanListadoMuestraAnalisis getBean(int i) {
-		BeanListadoMuestraAnalisis bean = new BeanListadoMuestraAnalisis();
-		bean.setId(i);
-		bean.setNombrePaciente("Paciente " + i);
-		bean.setNhcPaciente("nhc-" + i);
-		bean.setEtiquetaMuestra("etiquetaM-" + i);
-		bean.setRefInternaMuestra("refInternaM-" + i);
-		bean.setFechaEnvioMuestraIni(new Date());
-		bean.setFechaResultadoMuestraIni(new Date());
-		bean.setEstadoMuestra("Pendiente");
-		if (i > 2) {
-			bean.setEstadoMuestra("Negativo");
-		}
-		//bean.setCodNumLote("codLote-" + i);
-		
-		Date date = new Date(); // your date
-	    Calendar cal = Calendar.getInstance();
-	    cal.setTime(date);
-		BeanAnalisis beanAnalisis  = new BeanAnalisis();
-		BeanListaAsignaciones beanListaAsignaciones = new BeanListaAsignaciones();
-		//usuarios que analizan, 2 analistas y 2 voluntario
-		for(int j=0;j<2; j++) {
-			BeanAsignacion beanAsigAna = new BeanAsignacion();
-			BeanUsuario ana = new BeanUsuario();
-			ana.setId(j);
-			ana.setNom("analista-" + j);
-			ana.setRol("ANALISTA_LAB");
-			beanAsigAna.setBeanUsuario(ana);				
-			beanAsigAna.setFechaAsignacion(cal);
-			beanAsigAna.setValoracion("P");
-			beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);
-			
-			BeanAsignacion beanAsigVol = new BeanAsignacion();
-			BeanUsuario vol = new BeanUsuario();
-			vol.setId(j);
-			vol.setNom("voluntario-" + j);
-			vol.setRol("ANALISTA_VOLUNTARIO");
-			beanAsigVol.setBeanUsuario(vol);				
-			beanAsigVol.setFechaAsignacion(cal);
-			beanAsigVol.setValoracion("N");
-			beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
-		}
-		beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
-		bean.setBeanAnalisis(beanAnalisis);		
-		bean.setEsCerrable(true); //lo pongo a true para que esté habilitado el check
-		
-		
-		return bean;
-	}
-	*/
-	
 	
 
 	public static BeanListadoMuestraAnalisis modelToBean(Muestra muestra) {
@@ -159,12 +108,10 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 			Set<Rol> rolesUsu = usu.getRols();			
 			for(Rol rol: rolesUsu) {
 				//si el usuario tiene el rol analista
-				if(rol.getId()==8) {
+				if(rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_ANALISTALABORATORIO.getId()) {
 					BeanAsignacion beanAsigAna = new BeanAsignacion();
-					BeanUsuario ana = new BeanUsuario();
-					ana.setId(usu.getId());
-					ana.setNom(nombreCompletoUsuario(usu));
-					ana.setRol("ANALISTA_LAB"); //TODO mirar como poner estoo
+					BeanUsuario ana = BeanUsuario.modelToBean(usu);					
+					ana.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_ANALISTALABORATORIO)); //TODO mirar como poner estoo
 					beanAsigAna.setBeanUsuario(ana);				
 					beanAsigAna.setFechaAsignacion(usuMu.getFechaAsignacion());
 					beanAsigAna.setValoracion(usuMu.getValoracion());
@@ -172,12 +119,10 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);					
 				}
 				//si el usuario tiene el rol voluntario
-				if(rol.getId()==14) {
+				if(rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) {
 					BeanAsignacion beanAsigVol = new BeanAsignacion();
-					BeanUsuario vol = new BeanUsuario();
-					vol.setId(usu.getId());
-					vol.setNom(nombreCompletoUsuario(usu));
-					vol.setRol("ANALISTA_VOLUNTARIO"); //TODO mirar como poner estoo
+					BeanUsuario vol = BeanUsuario.modelToBean(usu);					
+					vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO)); //TODO mirar como poner estoo					
 					beanAsigVol.setBeanUsuario(vol);				
 					beanAsigVol.setFechaAsignacion(usuMu.getFechaAsignacion());					
 					beanAsigVol.setValoracion(usuMu.getValoracion());
@@ -204,17 +149,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		}
 		return nombreCompleto;
 	}
-	
-	private static String nombreCompletoUsuario(Usuario usu) {
-		String nombreCompleto = usu.getNombre();
-		if (StringUtils.isNotEmpty(usu.getApellido1())) {
-			nombreCompleto = nombreCompleto.concat(" ").concat(usu.getApellido1());
-		}
-		if (StringUtils.isNotEmpty(usu.getApellido2())) {
-			nombreCompleto = nombreCompleto.concat(" ").concat(usu.getApellido2());
-		}
-		return nombreCompleto;
-	}
+		
 		
 
 }

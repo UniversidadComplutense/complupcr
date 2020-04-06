@@ -17,8 +17,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
+import es.ucm.pcr.beans.BeanRolUsuario;
 import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
+import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PasswordResetToken;
@@ -372,34 +374,29 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	@Override 
 	public List<BeanUsuario> listaUsuariosAnalistasDeLaboratorioCentro(Integer idLaboratorioCentro) {
 		List<BeanUsuario> listaUsuariosBean = new ArrayList<BeanUsuario>();
-		Integer idRolAnalistaLaboratorio = 8; //TODO habría que hacer un enumerado con los roles?
-		List<Usuario> listUsuarios = usurep.findByIdLaboratorioCentroAndIdRol(idLaboratorioCentro,idRolAnalistaLaboratorio);
+		Integer idRolAnalistaLaboratorio = BeanRolUsuario.RolUsuario.ROL_USUARIO_ANALISTALABORATORIO.getId(); 
+		List<Usuario> listUsuarios = usurep.findByIdLaboratorioCentroAndIdRol(idLaboratorioCentro, idRolAnalistaLaboratorio);
 		System.out.println("la lista de analistas del laboratorio tiene: " + listUsuarios.size());
 		for (Usuario u : listUsuarios) {
-			//listaUsuariosBean.add(BeanUsuario.modelToBean(u, 8));
-			//TODO BeanUsuario.modelToBean(u, 8)
-			BeanUsuario ana = new BeanUsuario();
-			ana.setId(u.getId());
-			String nombreCompleto = u.getNombre();
-			if (StringUtils.isNotEmpty(u.getApellido1())) {
-				nombreCompleto = nombreCompleto.concat(" ").concat(u.getApellido1());
-			}
-			if (StringUtils.isNotEmpty(u.getApellido2())) {
-				nombreCompleto = nombreCompleto.concat(" ").concat(u.getApellido2());
-			}
-			ana.setNom(nombreCompleto);
-			ana.setRol("ANALISTA_LAB"); //TODO mirar como poner estoo
+			BeanUsuario ana = BeanUsuario.modelToBean(u);			
+			ana.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_ANALISTALABORATORIO));
 			listaUsuariosBean.add(ana);
 		}
 		return listaUsuariosBean;
 	}
 	
 	@Override 
-	public List<BeanUsuario> listaUsuariosVoluntariosDeLaboratorioCentro(Integer idLaboratorioCentro) {
-		Integer idRolVoluntario = 14; //TODO habría que hacer un enumerado con los roles?
-		List<Usuario> listUsuarios = usurep.findByIdLaboratorioCentroAndIdRol(idLaboratorioCentro,idRolVoluntario);
+	public List<BeanUsuario> listaUsuariosVoluntariosDeLaboratorioCentro(Integer idLaboratorioCentro) {		
+		List<BeanUsuario> listaUsuariosBean = new ArrayList<BeanUsuario>();
+		Integer idRolVoluntario = BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId(); 
+		List<Usuario> listUsuarios = usurep.findByIdLaboratorioCentroAndIdRol(idLaboratorioCentro, idRolVoluntario);
 		System.out.println("la lista de voluntarios del laboratorio tiene: " + listUsuarios.size());
-		return new ArrayList<BeanUsuario>();
+		for (Usuario u : listUsuarios) {
+			BeanUsuario vol = BeanUsuario.modelToBean(u);			
+			vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO)); 
+			listaUsuariosBean.add(vol);
+		}
+		return listaUsuariosBean;
 	}
 	
 	@Override 

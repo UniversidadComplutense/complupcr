@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
@@ -82,28 +83,29 @@ public class PlacaLaboratorioCentroAsignacionesBean extends PlacaLaboratorioCent
 		//analistas de la muestra(serán los mismos analistas que la placa), 
 		//rellenamos los analistas de la placa a partir de los analistas de la primera muestra de la placa (porque son los mismos para todas las muestras)
 		Set<Muestra> setMuestras = placaLaboratorio.getMuestras();		
-		for (Muestra muestra : muestras) {
+		for (Muestra muestra : setMuestras) {
 			for(UsuarioMuestra usuMuestra: muestra.getUsuarioMuestras()) {
-				
-				BeanUsuario beanUsu = new BeanUsuario();
 				Usuario usu = usuMuestra.getUsuario();
-				beanUsu.setId(usu.getId());
-				beanUsu.setNom(usu.getNombre() + " " + usu.getApellido1());				
+							
 				for(Rol rol: usu.getRols()) {
-					if(rol.getId()==8) {
+					//si el usuario tiene el rol analista
+					if(rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_ANALISTALABORATORIO.getId()) {
 						//si tiene rol ANALISTALABORATORIO
 						BeanAsignacion beanAsigAna = new BeanAsignacion();
-						beanUsu.setRol("ANALISTA_LAB");
-						beanAsigAna.setBeanUsuario(beanUsu);				
+						BeanUsuario beanUsuAnalista = BeanUsuario.modelToBean(usu);
+						beanUsuAnalista.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_ANALISTALABORATORIO)); //TODO mirar como poner estoo						
+						beanAsigAna.setBeanUsuario(beanUsuAnalista);				
 						beanAsigAna.setFechaAsignacion(usuMuestra.getFechaAsignacion());
 						//beanAsigAna.setValoracion("P"); //la valoración no tiene sentido a nivel de placa (se valoran las muestras no las placas)
 						beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);
 					}
-					if(rol.getId()==14) {
+					//si el usuario tiene el rol voluntario
+					if(rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) {
 						//si tiene rol VOLUNTARIO
 						BeanAsignacion beanAsigVol = new BeanAsignacion();
-						beanUsu.setRol("ANALISTA_VOLUNTARIO");
-						beanAsigVol.setBeanUsuario(beanUsu);				
+						BeanUsuario beanUsuVol = BeanUsuario.modelToBean(usu);
+						beanUsuVol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO)); //TODO mirar como poner estoo
+						beanAsigVol.setBeanUsuario(beanUsuVol);				
 						beanAsigVol.setFechaAsignacion(usuMuestra.getFechaAsignacion());
 						//beanAsigVol.setValoracion("P"); //la valoración no tiene sentido a nivel de placa (se valoran las muestras no las placas)
 						beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);

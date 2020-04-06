@@ -50,6 +50,7 @@ import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanListaAsignaciones;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.BeanResultado;
+import es.ucm.pcr.beans.BeanRolUsuario;
 import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
@@ -64,6 +65,7 @@ import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 //import es.ucm.pcr.validadores.ValidadorMuestra;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.BeanResultado.ResultadoMuestra;
+import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.config.security.PcrUserDetails;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
@@ -557,7 +559,7 @@ public class AnalisisControlador {
 			
 			//List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
 			List<BeanUsuario> beanListadoAnalistaLab = usuarioServicio.listaUsuariosAnalistasDeLaboratorioCentro(user.getIdLaboratorioCentro()) ;
-			List<BeanUsuario> beanListadoAnalistaVol =getBeanListadoAnalistasVoluntarios();	
+			List<BeanUsuario> beanListadoAnalistaVol = usuarioServicio.listaUsuariosVoluntariosDeLaboratorioCentro(user.getIdLaboratorioCentro());	
 			
 			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la placa para no mostrarlos como posibles a asignar en el desplegable
 			//listaAnalistasLab
@@ -830,7 +832,7 @@ HACER POST */
 				BeanUsuario ana = new BeanUsuario();
 				ana.setId(j);
 				ana.setNom("analista-" + j);
-				ana.setRol("ANALISTA_LAB");
+				ana.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_ANALISTALABORATORIO));
 				beanAsigAna.setBeanUsuario(ana);				
 				beanAsigAna.setFechaAsignacion(date);
 				beanAsigAna.setValoracion("P");
@@ -840,7 +842,7 @@ HACER POST */
 				BeanUsuario vol = new BeanUsuario();
 				vol.setId(j);
 				vol.setNom("voluntario-" + j);
-				vol.setRol("ANALISTA_VOLUNTARIO");
+				vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO));
 				beanAsigVol.setBeanUsuario(vol);				
 				beanAsigVol.setFechaAsignacion(date);
 				beanAsigVol.setValoracion("N");
@@ -863,7 +865,7 @@ HACER POST */
 				BeanUsuario ana = new BeanUsuario();
 				ana.setId(j);
 				ana.setNom("analista-" + j);
-				ana.setRol("ANALISTA_LAB");
+				ana.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_ANALISTALABORATORIO));
 				//TODO aciertos y posibles				
 				listaAnalistas.add(ana);				
 			}
@@ -877,7 +879,7 @@ HACER POST */
 				BeanUsuario vol = new BeanUsuario();
 				vol.setId(j);
 				vol.setNom("voluntario-" + j);
-				vol.setRol("ANALISTA_VOLUNTARIO");
+				vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO));
 				//TODO aciertos y posibles				
 				listaVoluntarios.add(vol);				
 			}
@@ -907,7 +909,7 @@ HACER POST */
 				BeanUsuario ana = new BeanUsuario();
 				ana.setId(j);
 				ana.setNom("analista-" + j);
-				ana.setRol("ANALISTA_LAB");
+				ana.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_ANALISTALABORATORIO));
 				beanAsigAna.setBeanUsuario(ana);				
 				beanAsigAna.setFechaAsignacion(date);
 				beanAsigAna.setValoracion("P");
@@ -917,7 +919,7 @@ HACER POST */
 				BeanUsuario vol = new BeanUsuario();
 				vol.setId(j);
 				vol.setNom("voluntario-" + j);
-				vol.setRol("ANALISTA_VOLUNTARIO");
+				vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO));
 				beanAsigVol.setBeanUsuario(vol);				
 				beanAsigVol.setFechaAsignacion(date);
 				beanAsigVol.setValoracion("N");
