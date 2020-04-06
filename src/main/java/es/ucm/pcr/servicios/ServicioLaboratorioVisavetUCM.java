@@ -19,7 +19,7 @@ public interface ServicioLaboratorioVisavetUCM {
 	public Page<BeanPlacaVisavetUCM> buscarPlacas(BusquedaPlacasVisavetBean busqueda, Pageable pageable);
 	public BeanPlacaVisavetUCM guardar(BeanPlacaVisavetUCM beanPlacaVisavetUCM);
 	public BeanPlacaVisavetUCM guardarConLote(BeanPlacaVisavetUCM beanPlacaVisavetUCM);
-	
+	public LoteBeanPlacaVisavet buscarLote(Integer id);
 	
 	
 	
