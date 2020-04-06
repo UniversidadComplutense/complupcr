@@ -35,7 +35,7 @@ function loadTabla(i) {
         dataType: 'html',
         data:  sBody
 	}).done(function(respuesta) {
-		alert(respuesta);
+		
 		eliminaFilas();
 		//$("#tablaResultadosLotes").append("<thead><th>#Lote</th><th>Centro</th><th>F.Entrada</th><th>#Muestras</th><th>Test</th><th>Estado</th></thead>");
 
@@ -143,7 +143,8 @@ function consultarMuestras(lote,centroProcedencia,id){
 
 //funcion que obtiene los checkbox pulsados y se los envia al controlador
 function procesarLotes() {
-	var nFilas = $("#tablaResultadosLotes tr").length;
+
+	var nFilas = $("#tablaResultados tr").length;
 	var lotesProcesar="";
 	if (nFilas>0) {
 	 
@@ -151,7 +152,7 @@ function procesarLotes() {
 		 var seleccionado="#seleccionado"+i;
 		if ($(seleccionado).is(':checked')) {
 			//lotesProcesar
-			
+		
 			lotesProcesar+=$(seleccionado).val()+":";
 		}
 	 }
