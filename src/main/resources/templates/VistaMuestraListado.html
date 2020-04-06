@@ -121,50 +121,50 @@
 			<table class="table">
 				<thead class="thead-light">	
 	    			<tr>
-	      				<th scope="col">Nombre</th>
-						<th scope="col">NHC</th>
-						<th scope="col">Etiqueta</th>
-						<!-- <th scope="col">Ref. interna</th> -->
-						<th scope="col">Fecha envío</th>
-						<th scope="col">Fecha resultado</th>
-						<th scope="col">Resultado</th>
-						<th scope="col">Notificado</th>
-						<th scope="col">Lote</th>
-						<th scope="col">Acciones</th>
+	      				<th class="p-1" scope="col">Nombre</th>
+						<th class="p-1" scope="col">NHC</th>
+						<th class="p-1" scope="col">Etiqueta</th>
+						<!-- <th class="p-1" scope="col">Ref. interna</th> -->
+						<th class="p-1" scope="col">Fecha envío</th>
+						<th class="p-1" scope="col">Fecha resultado</th>
+						<th class="p-1" scope="col">Resultado</th>
+						<th class="p-1" scope="col">Notificado</th>
+						<th class="p-1" scope="col">Lote</th>
+						<th class="p-1" scope="col">Acciones</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:if="${listadoMuestras != null}" th:each="muestra : ${listadoMuestras}">
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
 							<span th:text="${muestra.nombrePaciente}"></span>
 						</td>					
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
 							<span th:text="${muestra.nhcPaciente}"></span>							
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">							
+						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">							
 							<span th:text="${muestra.etiquetaMuestra}"></span>							
 						</td>
-						<!-- <td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<!-- <td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
 							<span th:text="${muestra.refInternaMuestra}"></span>							
 						</td>-->
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
 							<span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span>
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
 							<span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/MM/yyyy')}"></span>
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
 							<span th:text="${muestra.estadoMuestra}"></span>
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
 							<span th:text="${muestra.notificado} ? 'Sí' : 'No'"></span>
 						</td>
-						<td th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
 							<span th:text="${muestra.codNumLote}"></span>
 						</td>
-						<td>
+						<td class="p-1">
 							<!-- ACCIONES -->
-					        <a style="color:black" th:href="@{/centroSalud/muestra/modificar(id=${muestra.id})}">
+					        <a style="color:black" th:href="@{/centroSalud/muestra/modificar(id=${muestra.id})}" title="Editar">
 					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
 					        <a th:if="${muestra.fechaEnvioMuestraIni} != null" style="color:grey;cursor: pointer;" title="Borrar">

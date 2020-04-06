@@ -12,10 +12,10 @@
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	
 <div id="lotesRecibidos" class="container">
-	<div class="row justify-content-center mt-1">
-			<h5>Gestión de lotes</h5>
+	<div class="alert alert-secondary m-1 mt-2" role="alert">
+			<label>Recepción de lotes</label>
     </div>
-    <div class="row justify-content-left mt-3">
+    <div class="row justify-content-left">
    <!-- <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">		      
 				<div class="list-group">
 				  <a href="/laboratorioUni/buscarLotes" class="list-group-item list-group-item-action text-white bg-secondary">Gestión lotes centros de salud</a>
@@ -29,10 +29,10 @@
 	<form action="#" th:action="@{/laboratorioUni/buscarLotes}"
 			id="formularioPrueba" method="post" th:object="${busquedaLotes}"
 			class="form-horizontal">
-			<fieldset id="criteriosBusqueda" class="form-group border p-2">
-		    <legend class="w-auto">Búsqueda Lotes</legend>
+			<fieldset id="criteriosBusqueda" class="form-group border p-2 m-1">
+		    <legend class="w-auto font-weight-bold m-0">Búsqueda Lotes</legend>
 			  <div class="row">
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 				<label class="col-xs-2">Centro de procedencia:</label>
 			    <select class="form-control form-control-sm" id="centro" th:field="*{idCentro}">
 			    <option value="">Seleccione</option>
@@ -41,7 +41,7 @@
 									th:select="${busquedaLotes.idCentro}">Estado</option>
 				</select>
 				</div>
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 				<label class="col-xs-2">Número de Lote:</label>
 						<div class="col-xs-7">
 								<input type="text" class="form-control form-control-sm" id="numLote"
@@ -49,7 +49,7 @@
 								th:field="*{numLote}" />
 						</div>
 			    </div>
-			     <div class="col-4 form-group">
+			     <div class="col-4 m-0 form-group">
 						<label class="col-xs-3">Estado:</label>
 						<div class="col-xs-9">
 							<select class="form-control form-control-sm" id="estado"
@@ -64,14 +64,14 @@
 					</div>
 			  </div>
 			  <div class="row">
-				<div class="col-4 form-group">
+				<div class="col-4 m-0 form-group">
 			
 						<label class="col-xs-2">Fecha de Entrada:</label>
 						 		<input type="date" class="form-control" id="fechaEntrada"
 								th:field="*{fechaEntrada}" th:value="${busquedaLotes.fechaEntrada}" />
 						
                    </div>
-                   <div class="col-4 form-group">
+                   <div class="col-4 m-0 form-group">
 			
                    	<label class="col-xs-4">Muestra:</label>
 					<input type="text" class="form-control" id="muestra"
@@ -80,14 +80,15 @@
 						</div>
                  </div>  
 
-        <div class="row justify-content-end mt-3">
+        
+		</fieldset>
+		<div class="row justify-content-end mt-2">
 			<div class="col-2">
 			 <button type="submit"  class="btn btn-secondary">Buscar</button>
 			
 			<!--  <button type="button" th:onClick="|buscarResultados('lote','DESC','2','20'); return false|"  class="btn btn-secondary">Buscar</button>-->
 			</div>
 		</div>	
-		</fieldset>
 		<!-- campos hidden para permitir ordenar y para paginar 
 		<input type="hidden" class="form-control" id="orden" th:field="*{orden}" />
 		<input type="hidden" class="form-control" id="sentidoOrden" th:field="*{sentidoOrden}" />
@@ -96,8 +97,7 @@
 		</div>
 		
 		<!-- Aqui vienen los resultados -->
-		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
-	<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">	
+	<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 mt-3">	
 		<div id="capaResultados" 
 			class="row formPnl1"  th:unless="${(paginaLotes == null)}">
 		 	<table class="col-xs-12 table" th:id="tablaResultadosCabecera" >
