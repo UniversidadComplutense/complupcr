@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BeanListaAsignaciones {
-	private List<BeanAsignacion> listaAnalistasLab; //lista de los analistas de laboratorio ucm asignados
-	private List<BeanAsignacion> listaAnalistasVol; //lista de los analistas voluntarios asignados
+	private List<BeanAsignacion> listaAnalistasLab; //lista de los analistas de laboratorioCentro asignados
+	private List<BeanAsignacion> listaAnalistasVol; //lista de los analistas voluntarios del laboratorioCentro asignados
+	private List<BeanAsignacion> listaAnalistasVolSinLabCentro; //lista de los analistas voluntarios de ningun laboratorioCentro asignados
 	
 	
 	
@@ -13,7 +14,7 @@ public class BeanListaAsignaciones {
 	public BeanListaAsignaciones() {
 		listaAnalistasLab = new ArrayList<BeanAsignacion>();
 		listaAnalistasVol = new ArrayList<BeanAsignacion>();
-		
+		listaAnalistasVolSinLabCentro = new ArrayList<BeanAsignacion>();		
 	}
 
 
@@ -34,6 +35,16 @@ public class BeanListaAsignaciones {
 
 	public void setListaAnalistasVol(List<BeanAsignacion> listaAnalistasVol) {
 		this.listaAnalistasVol = listaAnalistasVol;
+	}
+
+
+	public List<BeanAsignacion> getListaAnalistasVolSinLabCentro() {
+		return listaAnalistasVolSinLabCentro;
+	}
+
+
+	public void setListaAnalistasVolSinLabCentro(List<BeanAsignacion> listaAnalistasVolSinLabCentro) {
+		this.listaAnalistasVolSinLabCentro = listaAnalistasVolSinLabCentro;
 	}
 
 	
