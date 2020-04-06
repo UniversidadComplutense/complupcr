@@ -47,21 +47,21 @@ public interface SesionServicio {
 	/**
 	 * Obtener Centro del usuario actual
 	 * 
-	 * @return Centro
+	 * @return Centro or null
 	 */
 	public Centro getCentro();
 	
 	/**
 	 * Obtener el laboratorio Visavet del usuario actual
 	 * 
-	 * @return LaboratorioVisavet
+	 * @return LaboratorioVisavet or null
 	 */
 	public LaboratorioVisavet getLaboratorioVisavet();
 	
 	/**
 	 * Obtener el laboratorioCentro del usuario actual
 	 * 
-	 * @return LaboratorioCentro
+	 * @return LaboratorioCentro or null
 	 */
 	public LaboratorioCentro getLaboratorioCentro();
 	

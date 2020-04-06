@@ -2,15 +2,12 @@ package es.ucm.pcr.beans;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import es.ucm.pcr.modelo.orm.Documento;
-import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
-import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 
 public class PlacaLaboratorioCentroBean {
 
@@ -21,6 +18,7 @@ public class PlacaLaboratorioCentroBean {
 	private Date fechaCreacion;
 	private List<PlacaLaboratorioVisavetBean> placasVisavet;
 	private List<DocumentoBean> documentos;
+	private List<MuestraListadoPlacasLaboratorioBean> muestras;
 
 	
 	public Integer getId() {
@@ -78,6 +76,14 @@ public class PlacaLaboratorioCentroBean {
 	public void setDocumentos(List<DocumentoBean> documentos) {
 		this.documentos = documentos;
 	}
+	
+	public List<MuestraListadoPlacasLaboratorioBean> getMuestras() {
+		return muestras;
+	}
+
+	public void setMuestras(List<MuestraListadoPlacasLaboratorioBean> muestras) {
+		this.muestras = muestras;
+	}
 
 	
 	public static PlacaLaboratorioCentroBean modelToBean(PlacaLaboratorio placaLaboratorio) {
@@ -90,22 +96,34 @@ public class PlacaLaboratorioCentroBean {
 		beanEstado.asignarTipoEstadoYCodNum(BeanEstado.TipoEstado.EstadoPlacaLabCentro,
 				placaLaboratorio.getEstadoPlacaLaboratorio().getId());
 		bean.setBeanEstado(beanEstado);
-
-		LaboratorioCentroBean laboratorioCentroBean = new LaboratorioCentroBean();
-		// TODO rellenar laboratorioCentroBean
-		// laboratorioCentroBean.setId(String.valueOf((placaLaboratorio.getLaboratorioCentro().getId())));
-		laboratorioCentroBean.setNombre(placaLaboratorio.getLaboratorioCentro().getNombre());
-		// laboratorioCentroBean.setCapacidad(loteBean.getCapacidad() != null ?
-		// loteBean.getCapacidad() : 0);
-		bean.setLaboratorioCentro(laboratorioCentroBean);
 		bean.setNumeroMuestras(placaLaboratorio.getNumeromuestras());
+		bean.setFechaCreacion(placaLaboratorio.getFechaCreacion());
+		
+		LaboratorioCentroBean laboratorioCentroBean = new LaboratorioCentroBean();	
+		laboratorioCentroBean.setId(String.valueOf((placaLaboratorio.getLaboratorioCentro().getId())));
+		laboratorioCentroBean.setNombre(placaLaboratorio.getLaboratorioCentro().getNombre());
+		bean.setLaboratorioCentro(laboratorioCentroBean);
+		
+		List<MuestraListadoPlacasLaboratorioBean> listadoMuestras = new ArrayList<MuestraListadoPlacasLaboratorioBean>();
+		Set<Muestra> muestras = placaLaboratorio.getMuestras();
+		for (Muestra muestra : muestras) {
+			MuestraListadoPlacasLaboratorioBean muestraBean = new MuestraListadoPlacasLaboratorioBean();
+			muestraBean.setId(muestra.getId());
+			if(muestra.getPlacaVisavet()!=null) //Diana- añado esta condicion para que no falle porque en los datos de prueba tenemos casi todas las muestras sin placaVisavet
+				muestraBean.setIdPlacaVisavet(muestra.getPlacaVisavet().getId());
+			muestraBean.setEstado(muestra.getEstadoMuestra().getDescripcion());
+			muestraBean.setEtiqueta(muestra.getEtiqueta());
+			muestraBean.setRefInterna(muestra.getRefInternaVisavet());
+			listadoMuestras.add(muestraBean);
+		}
+		bean.setMuestras(listadoMuestras);
 
 		List<PlacaLaboratorioVisavetBean> placasVisavet = new ArrayList<PlacaLaboratorioVisavetBean>();
 		// TODO rellenar placasVisavet
 		bean.setPlacasVisavet(placasVisavet);
 
 		List<DocumentoBean> documentos = new ArrayList<DocumentoBean>();
-		// TODO rellenar Documento
+		// TODO rellenar Documentos
 		bean.setDocumentos(documentos);
 
 		return bean;
@@ -128,7 +146,10 @@ public class PlacaLaboratorioCentroBean {
 			placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(placaLaboratorioCentroBean.getBeanEstado().getEstado().getCodNum()));
 		}
 		
-		placa.setNumeromuestras(placaLaboratorioCentroBean.getNumeroMuestras());
+		if (placaLaboratorioCentroBean.getNumeroMuestras() != null) {
+			placa.setNumeromuestras(placaLaboratorioCentroBean.getNumeroMuestras());
+		}
+		
 
 		// TODO rellenar LaboratorioCentro
 		// placa.setLaboratorioCentro();

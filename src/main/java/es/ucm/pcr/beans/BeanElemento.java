@@ -1,7 +1,7 @@
 package es.ucm.pcr.beans;
 
 public class BeanElemento {
-	private int codigo;
+	private Integer codigo;
 	private String codigoString;
 	private String descripcion;
 
@@ -11,7 +11,7 @@ public class BeanElemento {
 
 	
 
-	public BeanElemento(int codigo, String codigoString, String descripcion) {
+	public BeanElemento(Integer codigo, String codigoString, String descripcion) {
 		super();
 		this.codigo = codigo;
 		this.codigoString = codigoString;
@@ -20,17 +20,21 @@ public class BeanElemento {
 
 
 
-	public int getCodigo() {
+	
+	
+	
+	public Integer getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(int codigo) {
+
+
+	public void setCodigo(Integer codigo) {
 		this.codigo = codigo;
 	}
 
-	
-	
-	
+
+
 	public String getCodigoString() {
 		return codigoString;
 	}

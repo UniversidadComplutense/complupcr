@@ -16,6 +16,7 @@ public class LaboratorioCentroValidador implements Validator {
 
 	@Override
 	public void validate(Object target, Errors errors) {
+		@SuppressWarnings("unused")
 		LaboratorioCentroBean LabCentroBean = (LaboratorioCentroBean) target;
 
 		// TODO - VALIDADOR

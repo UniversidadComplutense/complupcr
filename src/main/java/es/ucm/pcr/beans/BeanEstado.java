@@ -32,9 +32,12 @@ public class BeanEstado {
 		
 		
 		//ESTADOS PLACA VISAVET
-		PLACAVISAVET_INICIADA (1, "Iniciada"), PLACAVISAVET_PREPARADA (2, "Preparada para laboratorio"),					
+		PLACAVISAVET_INICIADA (1, "Iniciada"), PLACAVISAVET_PREPARADA (2, "Preparada con muestras"),					
 		PLACAVISAVET_FINALIZADA (3, "Finalizada"),
-		PLACAVISAVET_ASIGNADA (4, "Asignada a Laboratorio"),		
+		PLACAVISAVET_ASIGNADA (4, "Asignada a Laboratorio"),	
+		PLACAVISAVET_ENVIADA (5, "Enviada"),	
+		PLACAVISAVET_RECIBIDA (6, "Recibida"),	
+		PLACAVISAVET_TRANSPASADA (7, "Transpasada"),	
 		;
 				
 		private int codNum;
@@ -191,7 +194,18 @@ public class BeanEstado {
 						this.setEstado(Estado.PLACAVISAVET_ASIGNADA);
 						break;
 					}
-					
+					case 5: {
+						this.setEstado(Estado.PLACAVISAVET_ENVIADA);
+						break;
+					}
+					case 6: {
+						this.setEstado(Estado.PLACAVISAVET_RECIBIDA);
+						break;
+					}
+					case 7: {
+						this.setEstado(Estado.PLACAVISAVET_TRANSPASADA);
+						break;
+					}
 				}
 			break;
 			}
@@ -260,7 +274,7 @@ public class BeanEstado {
 		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_PREPARADA));
 		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_FINALIZADA));
 		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_ASIGNADA));
-		
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_ENVIADA));
 		return estadosPlacaVisavet;
 	}
 	
@@ -272,6 +286,23 @@ public class BeanEstado {
 	public static List<Integer> getEstadosLotesDisponiblesCentro() {
 		return Arrays.asList(new Integer[] {Estado.LOTE_INICIADO.getCodNum(), Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum()});
 	}
+	
+	
+	/**
+	 * Estados de búsqueda de una placa de Visavet para un laboratorio receptor
+	 * @return
+	 */
+	public static List<BeanEstado> estadosPlacaVisavetParaLaboratorioCentro() {
+
+		List<BeanEstado> estadosPlacaVisavet = new ArrayList<>();
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_ASIGNADA));
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_ENVIADA));
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_RECIBIDA));
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_ASIGNADA));
+		estadosPlacaVisavet.add(new BeanEstado(TipoEstado.EstadoPlacaLaboratorioVisavet, Estado.PLACAVISAVET_TRANSPASADA));		
+		return estadosPlacaVisavet;
+	}
+	
 
 	@Override
 	public String toString() {

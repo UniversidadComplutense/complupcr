@@ -37,7 +37,9 @@
 				      <th scope="col">Identificador</th>
 				      <th scope="col">Laboratorio</th>
 				      <th scope="col">Fecha creación</th>
-				      <th scope="col">Nº de muestras</th>				    
+				      <th scope="col">Nº de muestras</th>
+				      <th scope="col">Muestras</th>	
+				      <th scope="col">Acciones</th>				    
 				    </tr>
 				  </thead>
 				  <tbody th:if="${listaPlacasListasParaAnalisis != null}" th:each="placa : ${listaPlacasListasParaAnalisis}">
@@ -48,7 +50,72 @@
 				      <td><span th:text="${placa.id}"></span></td>
 				      <td><span th:text="${placa.laboratorioCentro.nombre}"></span></td>
 				      <td><!-- <span th:text="${placa.fechaCreacion}"></span> --></td>
-				      <td><span th:text="${placa.numeroMuestras}"></span></td>				      
+				      <td><span th:text="${#lists.size(placa.muestras)}"></span></td>
+				      <td>
+				      <div th:if="${#lists.size(placa.muestras) > 0}">								
+							<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${placa.id}" style="cursor: pointer;" title="Ver muestras">
+								<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+							</a>
+							<span th:text="${#lists.size(placa.muestras)}"></span>
+							
+							<!-- MODAL MUESTRAS DE PLACA SIN ASIGNAR-->							
+							<div class="modal fade" th:id="modal-warning+${placa.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-xl" role="document">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">Muestras Placa - <b><span th:text="${placa.id}"/></b> con <span th:text="${#lists.size(placa.muestras)}"/> muestras</h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	<!-- Muestras de la placa -->
+								          	<div id="tablaMuestras" class="tableFixHead">
+												<table>
+													<thead class="thead-light">	
+									    				<tr>
+										      				<th>Id</th>
+															<th>Etiqueta</th>
+															<th>Ref. interna</th>
+																														
+															<!--<th>Placa</th> 
+															<th>Fecha envío</th>
+															<th>Fecha resultado</th>
+															<th>Resultado</th>
+															<th>Notificado</th> -->
+															<th>Estado</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${placa.muestras != null}" th:each="muestra : ${placa.muestras}">
+															<td><span th:text="${muestra.id}"></span></td>
+															<td><span th:text="${muestra.etiqueta}"></span></td>					
+															<td><span th:text="${muestra.refInterna}"></span></td>
+															<!-- 
+															<td><span th:text="${muestra.idPlacaLaboratorio}"></span></td>															
+															<td><span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span></td>
+															<td><span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/MM/yyyy')}"></span></td>
+															<td><span th:text="${muestra.estadoMuestra}"></span></td>		
+															<td><span th:text="${muestra.notificado} ? 'Sí' : 'No'"></span></td>	
+															-->	
+															<td><span th:text="${muestra.estado}"></span></td>													
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>							        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+							<!-- FIN MODAL MUESTRAS DE PLACA SIN ASIGNAR-->
+														
+					  </div>
+					  </td>
+					  
+				      <td></td>				      
 				    </tr>				    
 				  </tbody>
 				</table>
@@ -92,7 +159,9 @@
 				      <th scope="col">Identificador</th>
 				      <th scope="col">Laboratorio</th>
 				      <th scope="col">Fecha creación</th>
-				      <th scope="col">Nº de muestras</th>				      
+				      <th scope="col">Nº de muestras</th>
+				      <th scope="col">Muestras</th>	
+				      <th scope="col">Acciones</th>			      
 				    </tr>
 				  </thead>
 				  <tbody th:if="${listaPlacasAsignadasParaAnalisis != null}" th:each="placaAsignada : ${listaPlacasAsignadasParaAnalisis}">
@@ -103,7 +172,86 @@
 				      <td><span th:text="${placaAsignada.id}"></span></td>
 				      <td><span th:text="${placaAsignada.laboratorioCentro.nombre}"></span></td>
 				      <td><!-- <span th:text="${placa.fechaCreacion}"></span> --></td>
-				      <td><span th:text="${placaAsignada.numeroMuestras}"></span></td>				      
+				      <td><span th:text="${#lists.size(placaAsignada.muestras)}"></span></td>
+				      <td>
+				      <div th:if="${#lists.size(placaAsignada.muestras) > 0}">								
+							<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${placaAsignada.id}" style="cursor: pointer;" title="Ver muestras">
+								<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+							</a>
+							<span th:text="${#lists.size(placaAsignada.muestras)}"></span>
+							
+							<!-- MODAL MUESTRAS DE PLACA ASIGNADA-->							
+							<div class="modal fade" th:id="modal-warning+${placaAsignada.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-xl" role="document">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">Muestras Placa - <b><span th:text="${placaAsignada.id}"/></b> con <span th:text="${#lists.size(placaAsignada.muestras)}"/> muestras</h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	<!-- Muestras de la placa -->
+								          	<div id="tablaMuestras" class="tableFixHead">
+												<table>
+													<thead class="thead-light">	
+									    				<tr>
+										      				<th>Id</th>
+															<th>Etiqueta</th>
+															<th>Ref. interna</th>
+																														
+															<!--<th>Placa</th> 
+															<th>Fecha envío</th>
+															<th>Fecha resultado</th>
+															<th>Resultado</th>
+															<th>Notificado</th> -->
+															<th>Estado</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${placaAsignada.muestras != null}" th:each="muestra : ${placaAsignada.muestras}">
+															<td><span th:text="${muestra.id}"></span></td>
+															<td><span th:text="${muestra.etiqueta}"></span></td>					
+															<td><span th:text="${muestra.refInterna}"></span></td>
+															<!-- 
+															<td><span th:text="${muestra.idPlacaLaboratorio}"></span></td>															
+															<td><span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span></td>
+															<td><span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/MM/yyyy')}"></span></td>
+															<td><span th:text="${muestra.estadoMuestra}"></span></td>		
+															<td><span th:text="${muestra.notificado} ? 'Sí' : 'No'"></span></td>	
+															-->	
+															<td><span th:text="${muestra.estado}"></span></td>													
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>							        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+							<!-- FIN MODAL MUESTRAS DE PLACA ASIGNADA-->
+														
+					  </div>
+					  </td>
+							
+						
+						<td>
+							<!-- ACCIONES 
+							<a style="color:black" th:href="@{/centroSalud/lote/modificar(id=${lote.id})}" title="Modificar">
+					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>
+					        <a th:if="${#lists.size(lote.muestras) > 0}" style="color:grey;cursor: pointer;" title="Borrar">
+					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>			        
+					        <a th:if="${#lists.size(lote.muestras) == 0}" style="color:black;cursor: pointer;" th:href="@{/centroSalud/lote/borrar(id=${lote.id})}" title="Borrar">
+					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>
+					         -->
+						</td>					
+				      				      
 				    </tr>				   				    
 				  </tbody>
 				</table>
@@ -119,6 +267,11 @@
 	</div>
 </fieldset>	
 </form>	
+
+
+		
+
+
 	
 	<!-- Modal Marcar placa para resultados-->
 	<div class="modal fade" id="modalMarcarPlacaParaResultados" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="MarcarPlacaParaResultadosLabel" aria-hidden="true">

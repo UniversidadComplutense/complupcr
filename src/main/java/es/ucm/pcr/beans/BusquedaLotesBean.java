@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 
 
 public class BusquedaLotesBean {
@@ -14,7 +16,7 @@ private Date fechaEntrada;
 private String muestra;
 private List<BeanEstado> listaBeanEstado;
 private Integer codNumEstadoSeleccionado;
-private List<CentroBean> listaCentros;
+private List<BeanCentro> listaCentros;
 private Integer idCentro;
 private String urlPaginada="/laboratorioUni/buscarLotesGet";
 private String orden;
@@ -62,11 +64,11 @@ public Integer getCodNumEstadoSeleccionado() {
 public void setCodNumEstadoSeleccionado(Integer codNumEstadoSeleccionado) {
 	this.codNumEstadoSeleccionado = codNumEstadoSeleccionado;
 }
-public List<CentroBean> getListaCentros() {
+public List<BeanCentro> getListaCentros() {
 	return listaCentros;
 }
-public void setListaCentros(List<CentroBean> listaCentros) {
-	this.listaCentros = listaCentros;
+public void setListaCentros(List<BeanCentro> list) {
+	this.listaCentros = list;
 }
 public Integer getIdCentro() {
 	return idCentro;
@@ -92,5 +94,7 @@ public String getSentidoOrden() {
 public void setSentidoOrden(String sentidoOrden) {
 	this.sentidoOrden = sentidoOrden;
 }
-
+public String getCriterioNumLote() {
+	return StringUtils.isBlank(numLote) ? null : "%" + numLote + "%";
+}
 }

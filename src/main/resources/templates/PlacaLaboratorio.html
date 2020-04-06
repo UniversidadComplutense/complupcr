@@ -10,7 +10,9 @@
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	<div class="container">	
-	
+	<div class="row justify-content-center mt-1, titulo-menu">
+			<h5></h5>
+	</div>
 	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/guardar}" method="post" th:object="${placa}" id="formGuardar" role="form">
 		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
 		<input type="hidden" name="estado" th:value="${placa.beanEstado.estado.codNum}" th:if="${placa.beanEstado} != null"/> 
@@ -33,22 +35,31 @@
 			<div class="row" th:if="${placa.id} != null">
 				<div class="col-4 form-group">
 					<label>Estado</label>
-				 	<input type="text" class="form-control form-control-sm" disabled th:value="${placa.beanEstado.estado.descripcion}"></input>
+				 	<input type="text" class="form-control form-control-sm" th:value="${placa.beanEstado.estado.descripcion}"></input>
 				</div>
 				<div class="col-4 form-group">
 					<label>Fecha de Creación</label>
-				 	<input type="text" class="form-control form-control-sm" disabled th:value="${#dates.format(placa.fechaCreacion, 'dd/MM/yyyy')}"></input>
+				 	<input type="text" class="form-control form-control-sm" th:value="${#dates.format(placa.fechaCreacion, 'dd/MM/yyyy')}"></input>
 				</div>				
 			</div>					
 		</fieldset>
 		
 
 		<!-- ACCCIONES -->
-		<div class="row justify-content-center mt-3">
-			<div class="col-2">
-				<a th:href="@{/laboratorioCentro/gestionPlacas/preparacion}" class="btn btn-secondary">Volver</a>				
+		<div class="row justify-content-center mt-3">			
+			<div class="col-2 justify-content-begin mt-3">
+				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas} + '\''" class="btn btn-secondary">Volver</button>				
 			</div>
-			<div class="col-2">
+			<div class="col-2 justify-content-begin mt-3">
+				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/rellenar} + '\''" th:disabled="${nueva}" class="btn btn-secondary">Rellenar</button>			
+			</div>
+			<div class="col-3 justify-content-begin mt-3">
+				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/finalizar} + '\''" th:disabled="${nueva}" class="btn btn-secondary">Finalizar para PCR</button>			
+			</div>
+			<div class="col-3 justify-content-begin mt-3">
+				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/resultados} + '\''" th:disabled="${nueva}" class="btn btn-secondary">Asignar resultados PCR</button>			
+			</div>			
+			<div class="col-2 justify-content-begin mt-3">
 				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Guardar</button>
 			</div>			
 		</div>					

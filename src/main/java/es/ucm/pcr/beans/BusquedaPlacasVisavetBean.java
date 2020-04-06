@@ -7,18 +7,20 @@ import java.util.List;
 
 
 public class BusquedaPlacasVisavetBean {
-private String idPlaca;
+private Integer idPlaca;
 private  String numLote;
-private Date fechaCreacion;
+private Date fechaCreacionInicio;
+private Date fechaCreacionFin;
 private String muestra;
 private List<BeanEstado> listaBeanEstado;
 private Integer codNumEstadoSeleccionado;
-private List<BeanLaboratorio> listaLaboratorioCentro;
+private List<BeanLaboratorioCentro> listaLaboratorioCentro;
 private Integer idLaboratorioCentro;
-public String getIdPlaca() {
+private Integer idLaboratorioVisavet;
+public Integer getIdPlaca() {
 	return idPlaca;
 }
-public void setIdPlaca(String idPlaca) {
+public void setIdPlaca(Integer idPlaca) {
 	this.idPlaca = idPlaca;
 }
 public String getNumLote() {
@@ -27,11 +29,18 @@ public String getNumLote() {
 public void setNumLote(String numLote) {
 	this.numLote = numLote;
 }
-public Date getFechaCreacion() {
-	return fechaCreacion;
+
+public Date getFechaCreacionInicio() {
+	return fechaCreacionInicio;
 }
-public void setFechaCreacion(Date fechaCreacion) {
-	this.fechaCreacion = fechaCreacion;
+public void setFechaCreacionInicio(Date fechaCreacionInicio) {
+	this.fechaCreacionInicio = fechaCreacionInicio;
+}
+public Date getFechaCreacionFin() {
+	return fechaCreacionFin;
+}
+public void setFechaCreacionFin(Date fechaCreacionFin) {
+	this.fechaCreacionFin = fechaCreacionFin;
 }
 public String getMuestra() {
 	return muestra;
@@ -51,10 +60,10 @@ public Integer getCodNumEstadoSeleccionado() {
 public void setCodNumEstadoSeleccionado(Integer codNumEstadoSeleccionado) {
 	this.codNumEstadoSeleccionado = codNumEstadoSeleccionado;
 }
-public List<BeanLaboratorio> getListaLaboratorioCentro() {
+public List<BeanLaboratorioCentro> getListaLaboratorioCentro() {
 	return listaLaboratorioCentro;
 }
-public void setListaLaboratorioCentro(List<BeanLaboratorio> listaLaboratorioCentro) {
+public void setListaLaboratorioCentro(List<BeanLaboratorioCentro> listaLaboratorioCentro) {
 	this.listaLaboratorioCentro = listaLaboratorioCentro;
 }
 public Integer getIdLaboratorioCentro() {
@@ -62,6 +71,12 @@ public Integer getIdLaboratorioCentro() {
 }
 public void setIdLaboratorioCentro(Integer idLaboratorioCentro) {
 	this.idLaboratorioCentro = idLaboratorioCentro;
+}
+public Integer getIdLaboratorioVisavet() {
+	return idLaboratorioVisavet;
+}
+public void setIdLaboratorioVisavet(Integer idLaboratorioVisavet) {
+	this.idLaboratorioVisavet = idLaboratorioVisavet;
 }
 
 

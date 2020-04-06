@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,11 +35,12 @@ public class SesionServicioImpl implements SesionServicio {
 
 	@Override
 	public Usuario getUsuario() {
-		String email = this.getEmail();
-		if (email == null) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) {
 			return null;
 		}
-		return usuarioServicio.buscarUsuarioPorEmail(email);
+		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
+		return ud.getUsuario();
 	}
 
 	@Override
@@ -72,6 +75,7 @@ public class SesionServicioImpl implements SesionServicio {
 	}
 
 	@Override
+	@Transactional
 	public Centro getCentro() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
@@ -89,7 +93,9 @@ public class SesionServicioImpl implements SesionServicio {
 //	Centro de Salud	
 		if (this.tieneRol("ADMIN") || this.tieneRol("CENTROSALUD")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Gestión muestras", "/centroSalud/muestra", null);
+			opcionSecundaria = new MenuBean("Nueva muestra", "/centroSalud/muestra/nueva", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Búsqueda de muestras", "/centroSalud/muestra", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Gestión lotes", "/centroSalud/lote", null);
 			menuSecundario.add(opcionSecundaria);
@@ -119,10 +125,8 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario = new ArrayList<MenuBean>();
 			opcionSecundaria = new MenuBean("Recepción placas", "/laboratorioCentro/recepcionPlacas", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Placas listas para PCR", "/laboratorioCentro/gestionPlacas/preparacion", null);
-			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Placas esperando resultado PCR", "/laboratorioCentro/gestionPlacas/resultados", null);
-			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Gestión de placas", "/laboratorioCentro/gestionPlacas", null);
+			menuSecundario.add(opcionSecundaria);			
 			opcionPrincipal = new MenuBean("Responsable PCR", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}

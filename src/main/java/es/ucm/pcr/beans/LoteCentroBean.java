@@ -140,7 +140,13 @@ public class LoteCentroBean {
 			loteBean.setIdLaboratorio(lote.getLaboratorioVisavet().getId());
 		}
 		loteBean.setTieneMuestras(!CollectionUtils.isEmpty(lote.getMuestras()));
+		
 		loteBean.setNumeroMuestras(!CollectionUtils.isEmpty(lote.getMuestras()) ? lote.getMuestras().size() : 0);
+		
+		
+		
+		// yoli
+		loteBean.setIdCentro(lote.getCentro().getId());
 		// TODO - COMPLETAR MUESTRAS
 		return loteBean;
 	}

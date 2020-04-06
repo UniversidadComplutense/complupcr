@@ -3,6 +3,7 @@ package es.ucm.pcr.controladores;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
@@ -18,10 +19,12 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanRol;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
-import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.RolRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
+import es.ucm.pcr.servicios.CentroServicio;
+import es.ucm.pcr.servicios.LaboratorioCentroServicio;
+import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 import es.ucm.pcr.servicios.RolServicio;
 import es.ucm.pcr.servicios.UsuarioServicio;
 
@@ -40,6 +43,15 @@ public class UsuarioControlador {
 	@Autowired
 	RolServicio rolServicio;
 	
+	@Autowired
+	LaboratorioVisavetServicio laboratorioVisavetServicio;
+	
+	@Autowired
+	LaboratorioCentroServicio laboratorioCentroServicio;
+	
+	@Autowired
+	CentroServicio centroServicio;
+	
 	//	Muestra una lista ordenada ap1, ap2,nombre con los usuarios
 	// Punto de entrada a la gestión de usuarios
 	@RequestMapping(value="/gestor/listaUsuarios", method=RequestMethod.GET)
@@ -48,30 +60,36 @@ public class UsuarioControlador {
 	
 		// cargo todos los usuarios de BBDD
 		List<BeanUsuarioGestion> listaUsuarios = new ArrayList<BeanUsuarioGestion>();
-		for (Usuario usuario: usuarioRepositorio.findAll())
-		{
-			listaUsuarios.add(new BeanUsuarioGestion(
-								usuario.getId(), 
-								usuario.getCentro(),
-								usuario.getNombre(), 
-					 			usuario.getApellido1(), 
-					 			usuario.getApellido2(), 
-					 			usuario.getEmail(), 
-					 			usuario.getPassword(), 
-					 			usuario.getIdLaboratorioVisavet(),
-					 			usuario.getIdLaboratorioCentro(),
-					 			usuario.getAsignadas(),
-								usuario.getAcertadas(),
-								usuario.getDocumentos(),
-								usuario.getUsuarioMuestras(),
-								usuario.getRols(),
-								usuario.getHabilitado(),
-								"L"
-								));
-		}
-		//	Ordeno por ap1, ap2, nombre
-		Collections.sort(listaUsuarios);
+		listaUsuarios = usuarioServicio.listaUsuariosOrdenada();
 		vista.addObject("listaUsuarios", listaUsuarios);
+		
+//		for (Usuario usuario: usuarioRepositorio.findAll())
+//		{
+//			listaUsuarios.add(new BeanUsuarioGestion(
+//								usuario.getId(), 
+//								usuario.getCentro(),
+//								usuario.getNombre(), 
+//					 			usuario.getApellido1(), 
+//					 			usuario.getApellido2(), 
+//					 			usuario.getEmail(), 
+//					 			usuario.getPassword(), 
+//					 			usuario.getIdLaboratorioVisavet(),
+//					 			usuario.getIdLaboratorioCentro(),
+//					 			usuario.getAsignadas(),
+//								usuario.getAcertadas(),
+//								usuario.getDocumentos(),
+//								usuario.getUsuarioMuestras(),
+//								usuario.getRols(),
+//								usuario.getHabilitado(),
+//								"L",							// Acción = L: Lista de usuarios
+//								((!usuario.getCentro().equals(null))?usuario.getCentro().getId():999999) , 	// Centro seleccionado
+////								usuario.getCentro().getId(), 	// Centro seleccionado	
+//								"A"								// TipoCentro: A: A elegir
+//								));			
+//		}
+//		//	Ordeno por ap1, ap2, nombre
+//		Collections.sort(listaUsuarios);
+//		vista.addObject("listaUsuarios", listaUsuarios);
 	
 		return vista;
 	}
@@ -90,8 +108,18 @@ public class UsuarioControlador {
 		List<BeanRol> listaRoles = rolServicio.generarListaRoles();
 		vista.addObject("listaRoles", listaRoles);
 		
-		boolean seleccionado = true;
-		vista.addObject("seleccionado", seleccionado);
+		// añadimos los laboratorios Visavet
+		Map<Integer,String> mapaLaboratoriosVisavet = laboratorioVisavetServicio.mapaLaboratoriosVisavet(laboratorioVisavetServicio.listaLaboratoriosVisavetOrdenada());
+		vista.addObject("mapaLaboratoriosVisavet", mapaLaboratoriosVisavet);
+		
+		// añadimos los laboratorios Centro
+		Map<Integer,String> mapaLaboratoriosCentro = laboratorioCentroServicio.mapaLaboratoriosCentro(laboratorioCentroServicio.listaLaboratoriosCentroOrdenada());
+		vista.addObject("mapaLaboratoriosCentro", mapaLaboratoriosCentro);
+		
+		// añadimos los centros
+		Map<Integer,String> mapaCentros = centroServicio.mapaCentros(centroServicio.listaCentrosOrdenada());
+		vista.addObject("mapaCentros", mapaCentros);
+
 		
 		return vista;
 	}
@@ -102,7 +130,6 @@ public class UsuarioControlador {
 			 								@RequestParam(value = "roles" , required = false) int[] roles,
 											HttpSession session) throws Exception {
 		
-		System.out.println("Habilitado: " + beanUsuario.getHabilitado());
 		// Damos de alta nuevo usuario
 		if (beanUsuario.getAccion().equals("A"))
 		{
@@ -119,7 +146,7 @@ public class UsuarioControlador {
 			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get(), roles));
 		}
 
-		// Volvemos a grabar mas centros
+		// Volvemos a centros
 		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaUsuarios",true));	
 		return vista;		
 	}	
@@ -141,6 +168,18 @@ public class UsuarioControlador {
 		// Añadimos los roles en BBDD
 		List<BeanRol> listaRoles = rolServicio.generarListaRolesUsuario(usuario.get());
 		vista.addObject("listaRoles", listaRoles);
+		
+		// añadimos los laboratorios Visavet
+		Map<Integer,String> mapaLaboratoriosVisavet = laboratorioVisavetServicio.mapaLaboratoriosVisavet(laboratorioVisavetServicio.listaLaboratoriosVisavetOrdenada());
+		vista.addObject("mapaLaboratoriosVisavet", mapaLaboratoriosVisavet);
+		
+		// añadimos los laboratorios Centro
+		Map<Integer,String> mapaLaboratoriosCentro = laboratorioCentroServicio.mapaLaboratoriosCentro(laboratorioCentroServicio.listaLaboratoriosCentroOrdenada());
+		vista.addObject("mapaLaboratoriosCentro", mapaLaboratoriosCentro);
+		
+		// añadimos los centros
+		Map<Integer,String> mapaCentros = centroServicio.mapaCentros(centroServicio.listaCentrosOrdenada());
+		vista.addObject("mapaCentros", mapaCentros);
 		
 		vista.addObject("formBeanUsuario", beanUsuario);
 	

@@ -2,12 +2,15 @@ package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanCentro;
+import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.repositorio.CentroRepositorio;
 
@@ -72,6 +75,16 @@ public class CentroServicioImp implements CentroServicio{
 		//	Ordeno por ap1, ap2, nombre
 		Collections.sort(listaCentros);
 		return listaCentros;
+	}
+	
+	public Map<Integer,String> mapaCentros (List<BeanCentro> centros) throws Exception
+	{
+		Map<Integer, String> mapaCentros = new HashMap<Integer, String>();
+		for (BeanCentro centro : centros)
+		{
+			mapaCentros.put(centro.getId(), centro.getNombre());
+		}
+		return mapaCentros;
 	}
 	
 }

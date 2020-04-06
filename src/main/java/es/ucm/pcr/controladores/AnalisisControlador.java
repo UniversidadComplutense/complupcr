@@ -16,7 +16,11 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,18 +49,24 @@ import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanListaAsignaciones;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
+import es.ucm.pcr.beans.BeanResultado;
 import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.GuardarAsignacionMuestraBean;
 import es.ucm.pcr.beans.GuardarCogerYDevolverPlacasBean;
 import es.ucm.pcr.beans.MuestraBean;
+import es.ucm.pcr.beans.MuestraBusquedaBean;
+import es.ucm.pcr.beans.MuestraListadoBean;
 //import es.ucm.pcr.beans.BeanMuestraCentro;
 //import es.ucm.pcr.validadores.ValidadorMuestra;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
+import es.ucm.pcr.beans.BeanResultado.ResultadoMuestra;
 import es.ucm.pcr.config.security.PcrUserDetails;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
+import es.ucm.pcr.servicios.MuestraServicio;
+import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.servicios.UsuarioServicio;
 
 
@@ -65,12 +75,19 @@ import es.ucm.pcr.servicios.UsuarioServicio;
 public class AnalisisControlador {
 	
 	@Autowired
+	private SesionServicio sesionServicio;
+	
+	@Autowired
 	private UsuarioServicio usuarioServicio;
 	
 	@Autowired
 	private LaboratorioCentroServicio laboratorioCentroServicio;
 	
-		
+	@Autowired
+	private MuestraServicio muestraServicio;
+	
+	public static final Sort ORDENACION = Sort.by(Direction.ASC, "etiqueta");
+	
 		//@Autowired
 		//private ValidadorMuestra validadorMuestra;
 		
@@ -84,7 +101,40 @@ public class AnalisisControlador {
 //		public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session) throws Exception {  
 //			binder.setValidator(validadorMuestra);
 //		}
+				
+		@ModelAttribute("beanListaPlacasDeJefe")
+		public  List<BeanElemento> rellenaListaPlacasJefe() {
+			
+			//si el usuario tiene rol jefe cargará la lista con las placas que el jefe cogió bajo su responsabilidad
+			List<BeanElemento> beanListaPlacasDeJefe = laboratorioCentroServicio.buscarPlacasBeanElementoAsignadasAJefe(sesionServicio.getUsuario());			
+			return beanListaPlacasDeJefe;
+		}
+		
+		/**
+		 * Posibles Resultados de la muestra
+		 * 
+		 * @return
+		 */
+		public static List<BeanResultado> resultadosMuestra() {
+			// posibles resultados de la muestra
+			List<BeanResultado> estadosMuestra = new ArrayList<>();
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE));
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_NEGATIVO));
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_POSITIVO));
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_DEBIL));
+			estadosMuestra.add(new BeanResultado(ResultadoMuestra.RESULTADO_MUESTRA_REPETIR));
 
+			return estadosMuestra;
+		}
+				
+		@ModelAttribute("beanListaPosiblesResultadosMuestra")
+		public  List<BeanResultado> rellenaListaPosiblesResultadosMuestra() {
+			List<BeanResultado> listaPosiblesResultadosMuestra =  BeanResultado.resultadosMuestra();
+			return listaPosiblesResultadosMuestra;
+		}
+		
+		
+		
 		
 		@RequestMapping(value="/", method=RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
@@ -94,23 +144,23 @@ public class AnalisisControlador {
 			BeanBusquedaMuestraAnalisis beanBusqueda = new BeanBusquedaMuestraAnalisis();
 			
 			vista.addObject("beanBusquedaMuestra", beanBusqueda);
+			
 			return vista;
 		}
+		
 		
 		@RequestMapping(value="/list", method=RequestMethod.POST)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute BeanBusquedaMuestraAnalisis beanBusqueda) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 			
-			List<BeanListadoMuestraAnalisis> list = new ArrayList<BeanListadoMuestraAnalisis>();
+			//solo mostraremos al jefe las muestras de placas que ha cogido bajo su responsabilidad, (que solo podran ser del centro del jefe, ya que solo le hemos dejado coger placas de su centro)
+			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)			
+			Page<BeanListadoMuestraAnalisis> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
+						
 			
-			for (int i = 0; i<10; i++) {
-				list.add(getBean(i));
-			}
-			
-			
-			vista.addObject("beanBusquedaMuestra", beanBusqueda);
-			vista.addObject("listadoMuestras", list);
+			vista.addObject("beanBusquedaMuestra", beanBusqueda);			
+			vista.addObject("listadoMuestras", muestrasPage);
 			return vista;
 		}
 		
@@ -374,8 +424,7 @@ public class AnalisisControlador {
 		
 		//FUNCIONALIDAD JEFE: COGER PLACAS 
 		
-		//gestionar lotes (en realidad es gestionar placas)
-		//@RequestMapping(value = "/gestionPlacas/resultados", method = RequestMethod.GET)
+		//gestionar lotes (en realidad es gestionar placas)		
 		@RequestMapping(value = "/cogerPlacas", method = RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView buscarPlacasinAsignarYBajoResponsabilidadGET(HttpSession session, HttpServletRequest request, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
@@ -395,14 +444,12 @@ public class AnalisisControlador {
 			vista.addObject("mensajeCoger", mensajeCoger);
 			vista.addObject("mensajeDevolver", mensajeDevolver);
 			
-			//recupero el usuario logado
-			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
+			//recupero el usuario logado			
+			Usuario user = sesionServicio.getUsuario();
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 
 			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
-			// del centro del usuario jefe logado
+			// del idLaboratorioCentro del usuario jefe logado
 			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
 			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
 			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
@@ -446,8 +493,8 @@ public class AnalisisControlador {
 			List<Integer> listaIdsPlacasSeleccionadosParaCoger = guardarCogerYDevolverPlacasBean.getListaIdsPlacasSeleccionadosParaCoger();
 			System.out.println("listaIdsPlacasSeleccionadosParaCoger: " + listaIdsPlacasSeleccionadosParaCoger.toString());
 			
-			//cogemos esas placas, les asignamos el jefe logado, fecha de asignacion, cambiar estado a PLACA_ASIGNADA_PARA_ANALISIS y guardarlas
-			//TODO coger las muestras de esa plaa y ponerles estado pendente de analizar
+			//cogemos esas placas, les asignamos el jefe logado, fecha de asignacion, cambiamos estado a PLACA_ASIGNADA_PARA_ANALISIS y las guardamos
+			//TODO coger las muestras de esa placa y ponerles estado pendente de analizar
 			for(Integer idPlacaSeleccionada : listaIdsPlacasSeleccionadosParaCoger) {
 				laboratorioCentroServicio.guardarCogerODevolverPlaca(idPlacaSeleccionada, user.getId(), "coger");
 			}						
@@ -662,6 +709,7 @@ public class AnalisisControlador {
 //			}
 //		}
 		
+
 		public BeanListadoMuestraAnalisis getBean(int i) {
 			BeanListadoMuestraAnalisis bean = new BeanListadoMuestraAnalisis();
 			bean.setId(i);
@@ -675,7 +723,7 @@ public class AnalisisControlador {
 			if (i > 2) {
 				bean.setEstadoMuestra("Negativo");
 			}
-			bean.setCodNumLote("codLote-" + i);
+			//bean.setCodNumLote("codLote-" + i);
 			
 			Date date = new Date(); // your date
 		    Calendar cal = Calendar.getInstance();
@@ -690,7 +738,7 @@ public class AnalisisControlador {
 				ana.setNom("analista-" + j);
 				ana.setRol("ANALISTA_LAB");
 				beanAsigAna.setBeanUsuario(ana);				
-				beanAsigAna.setFechaAsignacion(cal);
+				beanAsigAna.setFechaAsignacion(date);
 				beanAsigAna.setValoracion("P");
 				beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);
 				
@@ -700,7 +748,7 @@ public class AnalisisControlador {
 				vol.setNom("voluntario-" + j);
 				vol.setRol("ANALISTA_VOLUNTARIO");
 				beanAsigVol.setBeanUsuario(vol);				
-				beanAsigVol.setFechaAsignacion(cal);
+				beanAsigVol.setFechaAsignacion(date);
 				beanAsigVol.setValoracion("N");
 				beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
 			}
@@ -767,7 +815,7 @@ public class AnalisisControlador {
 				ana.setNom("analista-" + j);
 				ana.setRol("ANALISTA_LAB");
 				beanAsigAna.setBeanUsuario(ana);				
-				beanAsigAna.setFechaAsignacion(cal);
+				beanAsigAna.setFechaAsignacion(date);
 				beanAsigAna.setValoracion("P");
 				beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);
 				
@@ -777,7 +825,7 @@ public class AnalisisControlador {
 				vol.setNom("voluntario-" + j);
 				vol.setRol("ANALISTA_VOLUNTARIO");
 				beanAsigVol.setBeanUsuario(vol);				
-				beanAsigVol.setFechaAsignacion(cal);
+				beanAsigVol.setFechaAsignacion(date);
 				beanAsigVol.setValoracion("N");
 				beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
 			}

@@ -161,10 +161,10 @@ public class InicioControlador {
 	private SimpleMailMessage constructWelcomeEmail(String contextPath, Usuario user) {
 		String url = contextPath + "/regenerarContrasena";
 		String message = "<p>Bien venido " + user.getNombre()
-				+ ",</p><p>Ha sido dado de alta en la aplicación COVID-19.</p>"
+				+ ",</p><p>Ha sido dado de alta en la aplicación de gesión y seguimiento de tests PCR Covid-19.</p>"
 				+ "<p>Para poder acceder debe solicitar el cambio de contraseña, indicando su e-mail (" + user.getEmail()
 				+ ") a través del siguente enlace:</p>";
-		return constructEmail("Bien venido COVID-19", message + " <p><a href=\"" + url +"\">Cambio de contraseña<a> </p><p> Un cordial saludo.</p>", user);
+		return constructEmail("Sistema de gestión y seguimiento de tests PCR Covid-19", message + " <p><a href=\"" + url +"\">Cambio de contraseña<a> </p><p> Un cordial saludo.</p>", user);
 	}
 
 	private SimpleMailMessage constructEmail(String subject, String body, Usuario user) {
