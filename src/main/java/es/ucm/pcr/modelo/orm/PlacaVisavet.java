@@ -39,6 +39,8 @@ public class PlacaVisavet implements java.io.Serializable {
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<Lote> lotes = new HashSet<Lote>(0);
 	private Date fechaCreacion;
+	private Date fechaEnviadaLaboratorioCentro;
+	private Date fechaRecepcionLaboratorioCentro;
 	private Set<Muestra> muestras = new HashSet<Muestra>(0);
 	
 
@@ -51,7 +53,7 @@ public class PlacaVisavet implements java.io.Serializable {
 
 	public PlacaVisavet(EstadoPlacaVisavet estadoPlacaVisavet, LaboratorioVisavet laboratorioVisavet,
 			Integer numeromuestras, Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios,
-			Set<Documento> documentos, Set<Lote> lotes,Date fechaCreacion,LaboratorioCentro laboratorioCentro) {
+			Set<Documento> documentos, Set<Lote> lotes,Date fechaCreacion,LaboratorioCentro laboratorioCentro, Date fechaRecepcionLaboratorioCentro, Date fechaEnviadaLaboratorioCentro) {
 		this.estadoPlacaVisavet = estadoPlacaVisavet;
 		this.laboratorioVisavet = laboratorioVisavet;
 		this.laboratorioCentro = laboratorioCentro;
@@ -60,6 +62,8 @@ public class PlacaVisavet implements java.io.Serializable {
 		this.documentos = documentos;
 		this.lotes = lotes;
 		this.fechaCreacion=fechaCreacion;
+		this.fechaEnviadaLaboratorioCentro=fechaEnviadaLaboratorioCentro;
+		this.fechaRecepcionLaboratorioCentro=fechaRecepcionLaboratorioCentro;
 	}
 
 	@Id
@@ -150,6 +154,27 @@ public class PlacaVisavet implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaEnviadaLaboratorioCentro", length = 10)
+	public Date getFechaEnviadaLaboratorioCentron() {
+		return fechaEnviadaLaboratorioCentro;
+	}
+
+	public void setFechaEnviadaLaboratorioCentro(Date fechaEnviadaLaboratorioCentro) {
+		this.fechaEnviadaLaboratorioCentro = fechaEnviadaLaboratorioCentro;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaRecepcionLaboratorioCentro", length = 10)
+	public Date getFechaRecepcionLaboratorioCentro() {
+		return fechaRecepcionLaboratorioCentro;
+	}
+
+	public void setFechaRecepcionLaboratorioCentro(Date fechaRecepcionLaboratorioCentro) {
+		this.fechaRecepcionLaboratorioCentro = fechaRecepcionLaboratorioCentro;
+	}
+
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "placaVisavet")
 	public Set<Muestra> getMuestras() {
 		return this.muestras;

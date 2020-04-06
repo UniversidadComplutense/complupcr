@@ -2,7 +2,7 @@ function eliminaFilas()
 {
 //OBTIENE EL NÚMERO DE FILAS DE LA TABLA
 var n=0;
-$("#tablaResultadosLotes tbody tr").each(function () 
+$("#tablaResultados tbody tr").each(function () 
 {
 n++;
 });
@@ -12,7 +12,7 @@ n++;
 //DEJANDO LA PRIMERA FILA VISIBLE, MÁS LA FILA PLANTILLA OCULTA
 for(i=n-1;i>0;i--)
 {
-$("#tablaResultadosLotes tbody tr:eq('"+i+"')").remove();
+$("#tablaResultados tbody tr:eq('"+i+"')").remove();
 
 };
 //$("#tablaResultadosLotes thead").remove();
@@ -35,7 +35,7 @@ function loadTabla(i) {
         dataType: 'html',
         data:  sBody
 	}).done(function(respuesta) {
-		
+		alert(respuesta);
 		eliminaFilas();
 		//$("#tablaResultadosLotes").append("<thead><th>#Lote</th><th>Centro</th><th>F.Entrada</th><th>#Muestras</th><th>Test</th><th>Estado</th></thead>");
 
@@ -102,8 +102,8 @@ function cambiarOrdenColumna(orden,sentidoOrden,numPagina,sizePagina){
 // carga el modal de  Confirmar Lote Recibido 
 function loadConfirmarEnvio(id, numLote, centroProcedencia){
 	
-	$("#mensajeConfirmar").html(numLote);
-	$("#mensajeCentroProcedenciaCentro").html(centroProcedencia);
+	$("#numeroLote").html(numLote);
+	$("#centro").html(centroProcedencia);
 	$("#id").val(id);
 }
 // funcion que  realia una llamada ajax para cambiar el estado de un lote y recargar tabla de resultados 
