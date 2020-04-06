@@ -358,6 +358,9 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		return usuario;
 	}
 	
+	public void borrarUsuario (Integer idUsuario) throws Exception{
+		usurep.deleteById(idUsuario);
+	}
 
 	
 }

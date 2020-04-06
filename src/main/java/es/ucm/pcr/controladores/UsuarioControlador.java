@@ -133,7 +133,8 @@ public class UsuarioControlador {
 		// Damos de alta nuevo usuario
 		if (beanUsuario.getAccion().equals("A"))
 		{
-			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioAlta(beanUsuario, roles));
+//			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioAlta(beanUsuario, roles));
+			usuarioServicio.guardar(usuarioServicio.mapeoBeanEntidadUsuarioAlta(beanUsuario, roles));
 		}
 		// Modificamos usuario existente, menos mail
 		if (beanUsuario.getAccion().equals("M"))
@@ -143,7 +144,8 @@ public class UsuarioControlador {
 			// Buscamos el usuario a modificar, y volcamos los datos recogidos por el formulario
 			Optional<Usuario> usuario = usuarioRepositorio.findById(beanUsuario.getId());
 			// añadimos campos del formulario
-			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get(), roles));
+//			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get(), roles));
+			usuarioServicio.guardar(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get(), roles));
 		}
 
 		// Volvemos a centros
@@ -189,7 +191,9 @@ public class UsuarioControlador {
 	@RequestMapping(value = "/gestor/borrarUsuario", method = RequestMethod.GET)
 	public ModelAndView borrarUsuario(@RequestParam("idUsuario") Integer idUsuario) throws Exception {
 		
-		usuarioRepositorio.deleteById(idUsuario);
+//		usuarioRepositorio.deleteById(idUsuario);
+		usuarioServicio.borrarUsuario(idUsuario);
+		
 		
 		// Volvemos a grabar mas centros
 		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaUsuarios",true));	
