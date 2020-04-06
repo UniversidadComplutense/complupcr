@@ -91,7 +91,38 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	public Page<PlacaLaboratorioVisavetBean> buscarPlacas(BusquedaRecepcionPlacasVisavetBean criteriosBusqueda,
 			Pageable pageable) {
 		
-		List<PlacaLaboratorioVisavetBean> listaPlacasVisavetBean = new ArrayList<PlacaLaboratorioVisavetBean>();		
+		List<PlacaLaboratorioVisavetBean> listaPlacasVisavetBean = new ArrayList<PlacaLaboratorioVisavetBean>();
+		
+		if (criteriosBusqueda.getFechaBusquedaInicio() != null) {
+			
+			if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_ASIGNADA.getCodNum()) {
+				criteriosBusqueda.setFechaAsignadaInicio(criteriosBusqueda.getFechaBusquedaInicio());
+			} else {
+				if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_ENVIADA.getCodNum()) {
+					criteriosBusqueda.setFechaEnviadaInicio(criteriosBusqueda.getFechaBusquedaInicio());
+				} else {
+					if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_RECIBIDA.getCodNum()) {
+						criteriosBusqueda.setFechaRecepcionInicio(criteriosBusqueda.getFechaBusquedaInicio());
+					}
+				}
+			}	
+		}
+		
+		if (criteriosBusqueda.getFechaBusquedaFin() != null) {
+			
+			if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_ASIGNADA.getCodNum()) {
+				criteriosBusqueda.setFechaAsignadaFin(criteriosBusqueda.getFechaBusquedaFin());
+			} else {
+				if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_ENVIADA.getCodNum()) {
+					criteriosBusqueda.setFechaEnviadaFin(criteriosBusqueda.getFechaBusquedaFin());
+				} else {
+					if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_RECIBIDA.getCodNum()) {
+						criteriosBusqueda.setFechaRecepcionFin(criteriosBusqueda.getFechaBusquedaFin());
+					}
+				}
+			}	
+		}
+		
 		Page<PlacaVisavet> PagePlacasVisavet = placaVisavetRepositorio.findByParams(criteriosBusqueda, pageable); 		
 		for (PlacaVisavet placa : PagePlacasVisavet.getContent()) {
 			listaPlacasVisavetBean.add(PlacaLaboratorioVisavetBean.modelToBean(placa));
@@ -117,8 +148,10 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	public void recepcionarPlaca(Integer id) {				
 		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(id);
 		if (placa.isPresent()) {
-			placa.get().setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_RECIBIDA.getCodNum()));
-			placaVisavetRepositorio.save(placa.get());
+			if (placa.get().getEstadoPlacaVisavet().getId() == Estado.PLACAVISAVET_ASIGNADA.getCodNum()) {
+				placa.get().setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_RECIBIDA.getCodNum()));
+				placaVisavetRepositorio.save(placa.get());
+			}			
 		}
 	}
 

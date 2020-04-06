@@ -22,8 +22,12 @@ public interface PlacaVisavetRepositorio extends JpaRepository<PlacaVisavet, Int
 			+ "WHERE 1=1 and "
 			+ "(:#{#params.idPlaca} is null or placa.id = :#{#params.idPlaca}) and "
 			+ "(:#{#params.numeroMuestras} is null or placa.numeromuestras = :#{#params.numeroMuestras}) and "
-			+ "(:#{#params.fechaCreacionInicio} is null or placa.fechaCreacion >= :#{#params.fechaCreacionInicio}) and "
-			+ "(:#{#params.fechaCreacionFin} is null or placa.fechaCreacion <= :#{#params.fechaCreacionFin}) and "
+			+ "(:#{#params.fechaAsignadaInicio} is null or placa.fechaAsignadaLaboratorioCentro >= :#{#params.fechaAsignadaInicio}) and "
+			+ "(:#{#params.fechaAsignadaFin} is null or placa.fechaAsignadaLaboratorioCentro <= :#{#params.fechaAsignadaInicio}) and "
+			+ "(:#{#params.fechaEnviadaInicio} is null or placa.fechaEnviadaLaboratorioCentro >= :#{#params.fechaEnviadaInicio}) and "
+			+ "(:#{#params.fechaEnviadaFin} is null or placa.fechaEnviadaLaboratorioCentro <= :#{#params.fechaEnviadaFin}) and "
+			+ "(:#{#params.fechaRecepcionInicio} is null or placa.fechaRecepcionLaboratorioCentro >= :#{#params.fechaRecepcionInicio}) and "
+			+ "(:#{#params.fechaRecepcionFin} is null or placa.fechaRecepcionLaboratorioCentro <= :#{#params.fechaRecepcionFin}) and "
 			+ "(:#{#params.idEstadoPlaca} is null or placa.estadoPlacaVisavet.id = :#{#params.idEstadoPlaca}) and" 
 			+ "(:#{#params.idLaboratorioCentro} is null or placa.laboratorioCentro.id = :#{#params.idLaboratorioCentro})")
 	public Page<PlacaVisavet> findByParams(@Param("params") BusquedaRecepcionPlacasVisavetBean params,
