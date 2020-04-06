@@ -40,6 +40,11 @@ public class MuestraBusquedaBean {
 		this.idCentro = idCentro;
 	}
 
+	public MuestraBusquedaBean(String etiquetaMuestra) {
+		super();
+		this.etiquetaMuestra = etiquetaMuestra;
+	}
+
 	public String getNombrePaciente() {
 		return nombrePaciente;
 	}
