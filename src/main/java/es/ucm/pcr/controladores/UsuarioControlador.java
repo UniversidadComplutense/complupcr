@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import es.ucm.pcr.beans.BeanCentro;
 import es.ucm.pcr.beans.BeanRol;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
 import es.ucm.pcr.modelo.orm.Usuario;
@@ -52,7 +54,11 @@ public class UsuarioControlador {
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView GestionUsuario(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionUsuario");
-	
+		String mensajeError = (String) session.getAttribute("mensajeError");
+		if (mensajeError != null) {
+			vista.addObject("mensajeError", mensajeError);
+			session.removeAttribute("mensajeError");
+		}
 		// cargo todos los usuarios de BBDD
 		List<BeanUsuarioGestion> listaUsuarios = new ArrayList<BeanUsuarioGestion>();
 		listaUsuarios = usuarioServicio.listaUsuariosOrdenada();
@@ -66,8 +72,14 @@ public class UsuarioControlador {
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView AltaUsuario(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaUsuario");
-	
 		BeanUsuarioGestion beanUsuario = new BeanUsuarioGestion();
+		String mensajeError = (String) session.getAttribute("mensajeError");
+		if (mensajeError != null) {
+			vista.addObject("mensajeError", mensajeError);
+			beanUsuario = (BeanUsuarioGestion) session.getAttribute("beanUsuario");
+			session.removeAttribute("mensajeError");
+			session.removeAttribute("beanUsuario");
+		}
 		// le indicamos la acción a relizar: A alta de un usuario
 		beanUsuario.setAccion("A");
 		vista.addObject("formBeanUsuario", beanUsuario);
@@ -98,11 +110,19 @@ public class UsuarioControlador {
 	public ModelAndView grabarAltaUsuario ( @ModelAttribute("formBeanUsuario") BeanUsuarioGestion beanUsuario, 
 			 								@RequestParam(value = "roles" , required = false) int[] roles,
 											HttpSession session) throws Exception {
-		
+		String mensaje = null;
 		// Damos de alta nuevo usuario
 		if (beanUsuario.getAccion().equals("A"))
 		{
+			try {
 			usuarioServicio.guardar(usuarioServicio.mapeoBeanEntidadUsuarioAlta(beanUsuario, roles));
+			} catch (DataIntegrityViolationException e) {
+				mensaje = "Ya existe un usuario con ese email.";
+				session.setAttribute("mensajeError", mensaje);
+				session.setAttribute("beanUsuario", beanUsuario);
+				ModelAndView vista = new ModelAndView(new RedirectView("/gestor/altaUsuario",true));
+				return vista;
+			}
 		}
 		// Modificamos usuario existente, menos mail
 		if (beanUsuario.getAccion().equals("M"))
@@ -158,14 +178,16 @@ public class UsuarioControlador {
 		
 	@RequestMapping(value = "/gestor/borrarUsuario", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
-	public ModelAndView borrarUsuario(@RequestParam("idUsuario") Integer idUsuario) throws Exception {
+	public ModelAndView borrarUsuario(@RequestParam("idUsuario") Integer idUsuario, HttpSession session) throws Exception {
+		try {
 		usuarioServicio.borrarUsuario(idUsuario);
+		} catch (DataIntegrityViolationException e) {
+			String mensaje = "No se puede borrar el usuario " + usuarioServicio.buscarUsuarioPorId(idUsuario).get().getEmail() + " porque tiene información asociada.";
+			session.setAttribute("mensajeError", mensaje);
+		}
 			
 		// Volvemos a grabar mas centros
 		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaUsuarios",true));	
 		return vista;
-	}
-	
-
-	
+	}	
 }
