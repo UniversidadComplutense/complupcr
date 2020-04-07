@@ -2,9 +2,9 @@ package es.ucm.pcr.servicios;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import es.ucm.pcr.beans.BeanCentro;
-import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Centro;
 
 public interface CentroServicio {
@@ -56,6 +56,14 @@ public interface CentroServicio {
 	 * @return void >
 	 */
 	public void BorrarCentro (Integer idCentro) throws Exception;
+
+	/**
+	 * Buscar Centro por id
+	 * 
+	 * @param Integer idCentro
+	 * @return Optional<Centro>
+	 */
+	public Optional<Centro> buscarCentroPorId (Integer idCentro) throws Exception;
 
 
 }

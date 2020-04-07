@@ -26,8 +26,8 @@ import es.ucm.pcr.servicios.CentroServicio;
 @Controller
 public class CentroControlador {
 	
-	@Autowired
-	CentroRepositorio centroRepositorio;
+//	@Autowired
+//	CentroRepositorio centroRepositorio;
 	
 	@Autowired
 	CentroServicio centroServicio;
@@ -41,26 +41,29 @@ public class CentroControlador {
 	
 		// cargo todos los rols de BBDD
 		List<BeanCentro> listaCentros = new ArrayList<BeanCentro>();
-		for (Centro centro: centroRepositorio.findAll())
-		{
-			listaCentros.add( 
-					new BeanCentro(
-							centro.getId(), 
-							centro.getNombre(), 
-							centro.getCodCentro(), 
-							centro.getTelefono(), 
-							centro.getEmail(), 
-							centro.getDireccion(),
-							centro.getUsuarios(),
-							centro.getMuestras(),
-							centro.getDocumentos(),
-							centro.getLotes(),
-							"L")
-			);
-		}
-		//	Ordeno por ap1, ap2, nombre
-		Collections.sort(listaCentros);
+		listaCentros = centroServicio.listaCentrosOrdenada();
 		vista.addObject("listaCentros", listaCentros);
+		
+//		for (Centro centro: centroRepositorio.findAll())
+//		{
+//			listaCentros.add( 
+//					new BeanCentro(
+//							centro.getId(), 
+//							centro.getNombre(), 
+//							centro.getCodCentro(), 
+//							centro.getTelefono(), 
+//							centro.getEmail(), 
+//							centro.getDireccion(),
+//							centro.getUsuarios(),
+//							centro.getMuestras(),
+//							centro.getDocumentos(),
+//							centro.getLotes(),
+//							"L")
+//			);
+//		}
+//		//	Ordeno por ap1, ap2, nombre
+//		Collections.sort(listaCentros);
+//		vista.addObject("listaCentros", listaCentros);
 	
 		return vista;
 	}	
@@ -101,7 +104,8 @@ public class CentroControlador {
 		if (beanCentro.getAccion().equals("M"))
 		{
 			// Buscamos el centro a modificar, y volcamos los datos recogidos por el formulario
-			Optional<Centro> centro = centroRepositorio.findById(beanCentro.getId());
+//			Optional<Centro> centro = centroRepositorio.findById(beanCentro.getId());
+			Optional<Centro> centro = centroServicio.buscarCentroPorId(beanCentro.getId());
 			// añadimos campos del formulario
 //			centro.get().setCodCentro(beanCentro.getCodCentro());
 //			centro.get().setEmail(beanCentro.getMailCentro());
@@ -125,7 +129,8 @@ public class CentroControlador {
 		ModelAndView vista = new ModelAndView("VistaCentro");
 		
 		// Busco el centro a modificar
-		Optional<Centro> centro = centroRepositorio.findById(idCentro);
+//		Optional<Centro> centro = centroRepositorio.findById(idCentro);
+		Optional<Centro> centro = centroServicio.buscarCentroPorId(idCentro);
 		// cargo el beanCentro con lo datos del centro a modificar
 //		BeanCentro beanCentro = new BeanCentro();
 //		beanCentro.setIdCentro(centro.get().getId());
