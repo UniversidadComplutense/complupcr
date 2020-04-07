@@ -1,6 +1,7 @@
 package es.ucm.pcr.servicios;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import es.ucm.pcr.beans.BeanUsuario;
@@ -97,6 +98,14 @@ public interface UsuarioServicio {
 	 * @return void >
 	 */
 	public void borrarUsuario (Integer idUsuario) throws Exception;
+	
+	/**
+	 * Buscar Usuario por Id
+	 * 
+	 * @param Integer idUsuario
+	 * @return void Optional<Usuario>
+	 */
+	public Optional<Usuario> buscarUsuarioPorId (Integer idUsuario) throws Exception;
 	
 	
 	

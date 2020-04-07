@@ -13,11 +13,14 @@
 	<div class="row justify-content-center mt-1, titulo-menu">
 			<h5></h5>
 	</div>
+	<div th:if="${mostrarMensaje}" class="alert alert-warning">
+		<span th:text="${mensaje}"></span>
+	</div>
 	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/guardar}" method="post" th:object="${placa}" id="formGuardar" role="form">
 		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
 		<input type="hidden" name="estado" th:value="${placa.beanEstado.estado.codNum}" th:if="${placa.beanEstado} != null"/> 
 		<fieldset id="datosPlaca" class="form-group border p-2" th:disabled="!${editable}">
-			<legend class="w-auto">Placa</legend>
+			<legend class="w-auto">Placa de laboratorio</legend>
 			<div class="row">
 				<div class="col-4 form-group" th:if="${placa.id} != null">
 					<label>Identificador</label>

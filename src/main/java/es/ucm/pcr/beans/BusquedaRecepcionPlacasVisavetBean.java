@@ -5,13 +5,19 @@ import java.util.Date;
 public class BusquedaRecepcionPlacasVisavetBean {
 
 	private Integer idPlaca;
-	private String numeroMuestras;
+	private Integer numeroMuestras;
 	private Integer idEstadoPlaca;
-	private Date fechaCreacionInicio;
-	private Date fechaCreacionFin;
+	private Date fechaBusquedaInicio;
+	private Date fechaBusquedaFin;
+	private Date fechaAsignadaInicio;
+	private Date fechaAsignadaFin;
+	private Date fechaEnviadaInicio;
+	private Date fechaEnviadaFin;
+	private Date fechaRecepcionInicio;
+	private Date fechaRecepcionFin;
 	private Integer idLaboratorioCentro;
-	
 
+	
 	public Integer getIdPlaca() {
 		return idPlaca;
 	}
@@ -20,11 +26,11 @@ public class BusquedaRecepcionPlacasVisavetBean {
 		this.idPlaca = idPlaca;
 	}
 
-	public String getNumeroMuestras() {
+	public Integer getNumeroMuestras() {
 		return numeroMuestras;
 	}
 
-	public void setNumeroMuestras(String numeroMuestras) {
+	public void setNumeroMuestras(Integer numeroMuestras) {
 		this.numeroMuestras = numeroMuestras;
 	}
 
@@ -36,20 +42,68 @@ public class BusquedaRecepcionPlacasVisavetBean {
 		this.idEstadoPlaca = idEstadoPlaca;
 	}
 
-	public Date getFechaCreacionInicio() {
-		return fechaCreacionInicio;
+	public Date getFechaBusquedaInicio() {
+		return fechaBusquedaInicio;
 	}
 
-	public void setFechaCreacionInicio(Date fechaCreacionInicio) {
-		this.fechaCreacionInicio = fechaCreacionInicio;
+	public void setFechaBusquedaInicio(Date fechaBusquedaInicio) {
+		this.fechaBusquedaInicio = fechaBusquedaInicio;
 	}
 
-	public Date getFechaCreacionFin() {
-		return fechaCreacionFin;
+	public Date getFechaBusquedaFin() {
+		return fechaBusquedaFin;
 	}
 
-	public void setFechaCreacionFin(Date fechaCreacionFin) {
-		this.fechaCreacionFin = fechaCreacionFin;
+	public void setFechaBusquedaFin(Date fechaBusquedaFin) {
+		this.fechaBusquedaFin = fechaBusquedaFin;
+	}
+
+	public Date getFechaAsignadaInicio() {
+		return fechaAsignadaInicio;
+	}
+
+	public void setFechaAsignadaInicio(Date fechaAsignadaInicio) {
+		this.fechaAsignadaInicio = fechaAsignadaInicio;
+	}
+
+	public Date getFechaAsignadaFin() {
+		return fechaAsignadaFin;
+	}
+
+	public void setFechaAsignadaFin(Date fechaAsignadaFin) {
+		this.fechaAsignadaFin = fechaAsignadaFin;
+	}
+
+	public Date getFechaEnviadaInicio() {
+		return fechaEnviadaInicio;
+	}
+
+	public void setFechaEnviadaInicio(Date fechaEnviadaInicio) {
+		this.fechaEnviadaInicio = fechaEnviadaInicio;
+	}
+
+	public Date getFechaEnviadaFin() {
+		return fechaEnviadaFin;
+	}
+
+	public void setFechaEnviadaFin(Date fechaEnviadaFin) {
+		this.fechaEnviadaFin = fechaEnviadaFin;
+	}
+
+	public Date getFechaRecepcionInicio() {
+		return fechaRecepcionInicio;
+	}
+
+	public void setFechaRecepcionInicio(Date fechaRecepcionInicio) {
+		this.fechaRecepcionInicio = fechaRecepcionInicio;
+	}
+
+	public Date getFechaRecepcionFin() {
+		return fechaRecepcionFin;
+	}
+
+	public void setFechaRecepcionFin(Date fechaRecepcionFin) {
+		this.fechaRecepcionFin = fechaRecepcionFin;
 	}
 
 	public Integer getIdLaboratorioCentro() {

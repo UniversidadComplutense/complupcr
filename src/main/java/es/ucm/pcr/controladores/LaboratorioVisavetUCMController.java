@@ -299,7 +299,15 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		}
 		
 // request PLACAS
-		
+		private Boolean isLotesConPlacas(List<LoteBeanPlacaVisavet> lotes) {
+		 Boolean mostrar=true;
+			for (LoteBeanPlacaVisavet lote: lotes) {
+			  if (lote.getIdPlacaVisavet()== null) { mostrar =false;
+			 break;
+			  }
+		  }
+			return mostrar;
+		}
 		
 		
 		//este metodo obtiene los lotes q estan listos para ser procesados en placas visavet y muestran en las placas
@@ -310,16 +318,17 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			// obtenemos los lotes con sus muestras
 			String[] idsLotes=lotes.split(":");
 			List<LoteBeanPlacaVisavet> listaLotes=new ArrayList();
+			Integer numeroMuestras=0;
 			//LoteBeanPlacaVisavet lotePlaca;
 			for (int i=0; i<idsLotes.length;i++) {
 				// cuando ya este el servicio BeanLote lote=servicioLotes.obtenerLote(idsLotes[i]);
 				// para probar
 				LoteBeanPlacaVisavet lotePlaca = loteServicio.findByIdByPlacas(Integer.parseInt(idsLotes[i]));
-				
+				numeroMuestras+=lotePlaca.getListaMuestras().size();
 				listaLotes.add(lotePlaca);
 		        //lotePlacaVisavetBean.setTotalMuestras(getBean(i).getListaMuestras().size()+lotePlacaVisavetBean.getTotalMuestras());
 			} 
-			
+			lotePlacaVisavetBean.setTotalMuestras(numeroMuestras);
 			// para probar
 			List<Integer> tamanoLista= new ArrayList();
 			tamanoLista.add(20);
@@ -338,6 +347,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			//fin probar
 			
 			vista.addObject("lotePlacaVisavetBean",lotePlacaVisavetBean);
+			vista.addObject("botonAltaNoMostrar", this.isLotesConPlacas(listaLotes));
 			//vista.addObject("listaLotes",listaLotes);
 			// los mostramos en la vista
 			return vista;

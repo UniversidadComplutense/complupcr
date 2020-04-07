@@ -158,7 +158,10 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		}
 		placa.setLaboratorioVisavet(new LaboratorioVisavet(sesionServicio.getUsuario().getIdLaboratorioVisavet()));
 	
-		if (placa.getId()!= null) {
+		
+		
+		
+	/*	if (placa.getId()!= null) {
 			for (Lote l: placa.getLotes()) {
 				Lote lbbdd = loteRepositorio1.findById(l.getId()).get();
 				lbbdd.setPlacaVisavet(placa);
@@ -166,8 +169,16 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 				
 			 // aqui tengo que asignarle a placa los lotes con el nuevo id
 			}
-		}
+		} */
 		placa = placaVisavetRepositorio.save(placa);
+		// por cada placa tengo que guardar el lote
+		if (placa.getId()!=null) {
+			for (LoteBeanPlacaVisavet loteB: beanPlacaVisavetUCM.getListaLotes()) {
+				Lote l=LoteBeanPlacaVisavet.beanToModel(loteB);
+				l.setPlacaVisavet(placa);
+				loteRepositorio.save(l);
+			}
+		}
 		return BeanPlacaVisavetUCM.modelToBean(placa);
 
 	}
