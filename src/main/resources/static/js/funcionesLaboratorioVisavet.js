@@ -228,8 +228,8 @@ function asignarPlaca(){
 		
 	});
 }
-function asignarLaboratorio(idPlaca){
-	var url="/laboratorioUni/consultarOcupacionLaboratorios";
+function consultarOcupacionLaboratorio(idPlaca){
+	var url="/laboratorioUni/consultarOcupacionLaboratorios?idPlaca="+idPlaca;
 	
 	
 	$.ajax({
@@ -238,12 +238,32 @@ function asignarLaboratorio(idPlaca){
         dataType: 'html'
 	}).done(function(respuesta) {
 		alert(respuesta);
-		
+		$("#idPlaca").val(idPlaca);
 		
 	    $("#trLaboratorio").html(respuesta);
 		
 	});
 }
+
+function asignarLaboratoriodesdeModal(){
+	alert ($("#laboratorio option:selected").val());
+	
+	var url="/laboratorioUni/asignarLaboratorio?idPlaca="+$("#idPlaca").val()+"&laboratorio="+$("#laboratorio option:selected").val();
+	alert(url);
+	
+	/*$.ajax({
+        type:  'GET',
+        url:   url,
+        dataType: 'html'
+	}).done(function(respuesta) {
+		alert(respuesta);
+		
+	    $("#trLaboratorio").html(respuesta);
+		
+	});  */
+	window.location=url;
+}
+
 function seleccionAccion(accion){
 	$("#accion").val(accion);
 	$("#formularioConReferencias").submit();

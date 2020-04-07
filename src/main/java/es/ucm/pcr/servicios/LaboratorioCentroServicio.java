@@ -85,4 +85,11 @@ public interface LaboratorioCentroServicio {
 	public List<PlacaLaboratorioCentroBean> buscarPlacasAsignadasAJefe(Usuario usuario); 
 	public List<BeanElemento> buscarPlacasBeanElementoAsignadasAJefe(Usuario usuario);
 	public void guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca);
+	
+	
+	
+	
+	
+	
+	public BeanLaboratorioCentro buscarLaboratorioById(Integer id);
 }	

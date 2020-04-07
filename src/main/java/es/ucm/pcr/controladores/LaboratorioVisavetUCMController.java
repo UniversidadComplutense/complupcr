@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -46,10 +47,14 @@ import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
+import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
+import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.beans.BeanPlacaVisavetUCM;
 import es.ucm.pcr.beans.LotePlacaVisavetBean;
 import es.ucm.pcr.servicios.CentroServicio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
+import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 import es.ucm.pcr.servicios.LoteServicio;
 import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
 import es.ucm.pcr.servicios.ServicioLotes;
@@ -73,7 +78,8 @@ public class LaboratorioVisavetUCMController {
 	
 	@Autowired
 	LaboratorioCentroServicio laboratorioCentroServicio;
-
+  @Autowired
+  LaboratorioVisavetServicio laboratorioVisavetServicio;
 
 	@SuppressWarnings("unused")
 	private final static Logger log = LoggerFactory.getLogger(LaboratorioVisavetUCMController.class);
@@ -441,7 +447,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			return vista; */
 			Page<BeanPlacaVisavetUCM> pagina= null;
 			ModelAndView vista = new ModelAndView("VistaListadoPlacasVisavet");
-		
+		if (busqueda == null) new BusquedaPlacasVisavetBean();
 			busqueda= this.rellenarBusquedaPlacas(busqueda);
 			pagina = servicioLaboratorioUni.buscarPlacas(busqueda, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), ORDENACION_PLACAS));
 			//model.addAttribute("paginaLotes", paginaLotes);
@@ -453,10 +459,9 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		}
 		@RequestMapping(value = "/laboratorioUni/buscarPlacas", method = RequestMethod.POST)
 		public ModelAndView buscarPlacasPost(@ModelAttribute("busquedaPlacasVisavetBean") BusquedaPlacasVisavetBean busquedaPlacasVisavetBean, Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
-		System.out.println("entra en post ");
-			ModelAndView vista= this.buscarPlacas(busquedaPlacasVisavetBean, request, session, pageable);
-			System.out.println("fin post");
-			return  vista;
+	
+			return  this.buscarPlacas(busquedaPlacasVisavetBean, request, session, pageable);
+			
 		}
 				// buscar placas segun los criterios de busqueda 
 				@RequestMapping(value = "/laboratorioUni/buscarPlacasProcesar", method = RequestMethod.POST)
@@ -533,15 +538,43 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 					return "VistaLotesPlacasVisavet :: #trGroup";
 					
 				}
-				
+		private Integer calcularPlacasVisavetEspera(BeanLaboratorioCentro laboratorio)	{
+			Integer suma=0;
+			Set<PlacaLaboratorio> placasLaboratorios= laboratorio.getPlacaLaboratorios();
+			for (PlacaLaboratorio placaLaboratorio:placasLaboratorios) {
+				for (PlacaVisavetPlacaLaboratorio placaRelacion: placaLaboratorio.getPlacaVisavetPlacaLaboratorios()) {
+					if (placaRelacion.getPlacaVisavet().getEstadoPlacaVisavet().getId()== 4 || placaRelacion.getPlacaVisavet().getEstadoPlacaVisavet().getId()==5) 
+				     suma++;
+				}
+			}
+			return suma;
+		}
 			
 		@RequestMapping(value = "/laboratorioUni/consultarOcupacionLaboratorios", method = RequestMethod.GET)
-	   public String asignarPlacasGet( Model model, HttpServletRequest request, HttpSession session) throws Exception {
+	   public String asignarPlacasGet(@RequestParam("idPlaca") Integer idPlaca, Model model, HttpServletRequest request, HttpSession session) throws Exception {
 		//	
 			List<BeanLaboratorioCentro> laboratorios=laboratorioCentroServicio.listaLaboratoriosCentroOrdenada();
 		    model.addAttribute("laboratorios", laboratorios);
+		    for (BeanLaboratorioCentro laboratorio: laboratorios) {
+		    	laboratorio.setPlacasVisavetaLaEspera(this.calcularPlacasVisavetEspera(laboratorio));
+		    }
 			return "VistaListadoPlacasVisavet :: #trLaboratorio";
 		}		
+		
+		
+		@RequestMapping(value="/laboratorioUni/asignarLaboratorio", method=RequestMethod.GET)
+		public ModelAndView asignarPlacasPost(@RequestParam("idPlaca") Integer idPlaca, @RequestParam("laboratorio") Integer laboratorio,Model model,HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+			//PlacaLaboratorioVisavetBean  placa=laboratorioVisavetServicio.buscarPlaca(idPlaca);
+			BeanPlacaVisavetUCM placa= servicioLaboratorioUni.buscarPlacaById(idPlaca);
+			//BeanLaboratorioCentro laboratorioBean =laboratorioCentroServicio.buscarLaboratorioById(laboratorio);
+			BeanEstado estado= new BeanEstado();
+			estado.setEstado(Estado.PLACAVISAVET_ASIGNADA);
+			estado.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
+			placa.setEstado(estado);
+		BeanPlacaVisavetUCM placab= servicioLaboratorioUni.guardarPlacaConLaboratorio(placa, laboratorio);
+		    return this.buscarPlacas((BusquedaPlacasVisavetBean) session.getAttribute("busqueda"), request, session, pageable);
+		}
+
 }
 
 

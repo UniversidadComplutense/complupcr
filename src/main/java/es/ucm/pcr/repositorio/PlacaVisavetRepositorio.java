@@ -34,7 +34,7 @@ public interface PlacaVisavetRepositorio extends JpaRepository<PlacaVisavet, Int
 			Pageable pageable);	
 	
 
-	Optional<PlacaVisavet> findById(Integer id);	
+	//Optional<PlacaVisavet> findById(Integer id);	
 	
 	public void save(Optional<PlacaVisavet> placa);
 	

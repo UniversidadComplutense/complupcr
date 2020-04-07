@@ -22,6 +22,7 @@ import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraListadoBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
+import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
@@ -30,6 +31,7 @@ import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.PlacaVisavet;
+import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
 import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
 import es.ucm.pcr.repositorio.LoteRepositorio;
 import es.ucm.pcr.repositorio.PlacaLaboratorioRepositorio;
@@ -47,6 +49,9 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	
 	@Autowired
 	LaboratorioVisavetRepositorio laboratorioVisavetRepositorio;
+	@Autowired
+	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
+	
 	@Autowired
 	SesionServicio sesionServicio;
 	@Autowired
@@ -183,9 +188,26 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 
 	}
 	
+	public BeanPlacaVisavetUCM buscarPlacaById(Integer id) {
+		Optional<PlacaVisavet> placa=placaVisavetRepositorio.findById(id);
+		if (placa.isPresent()) 
+			return 	BeanPlacaVisavetUCM.modelToBean(placa.get());
+		else return null;
+	}
+	public BeanPlacaVisavetUCM guardarPlacaConLaboratorio(BeanPlacaVisavetUCM placaVisavet, Integer idLaboratorio) {
+		Optional<PlacaVisavet> placaOp=placaVisavetRepositorio.findById(placaVisavet.getId());
+		Optional<LaboratorioCentro> laboratorioOp= laboratorioCentroRepositorio.findById(idLaboratorio);
+		PlacaVisavet placa=null;
+		if (placaOp.isPresent()) {
+			placa=placaOp.get();
+			placa.setEstadoPlacaVisavet(new EstadoPlacaVisavet(placaVisavet.getEstado().getEstado().getCodNum()));
+				if (laboratorioOp.isPresent())
+					placa.setLaboratorioCentro(laboratorioOp.get());
+		placa=placaVisavetRepositorio.save(placa);
+		}
+	return	BeanPlacaVisavetUCM.modelToBean(placa);
 	
-	
-	
+	}
 	
 	
 	
