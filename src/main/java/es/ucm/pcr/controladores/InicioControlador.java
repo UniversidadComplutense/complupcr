@@ -103,7 +103,7 @@ public class InicioControlador {
 		}
 		String token = UUID.randomUUID().toString();
 		usuarioServicio.createPasswordResetTokenForUser(user, token);
-		SimpleMailMessage simpleMailMessage = constructResetTokenEmail(getAppUrl(request), token, user);
+		SimpleMailMessage simpleMailMessage = envioCorreoImp.constructResetTokenEmail(envioCorreoImp.getAppUrl(request), token, user);
 		envioCorreoImp.send(userEmail, simpleMailMessage.getSubject(), simpleMailMessage.getText(), null, "",
 				"<p><strong>Este es un correo automático enviado por la aplicación COVID-19.</strong></p>"
 						+ "<p><strong>No responda a este mensaje.</strong></p>",
@@ -131,53 +131,6 @@ public class InicioControlador {
 		usuarioServicio.cambiarContrasena(pcrUserDetails.getUser().getUsuario().getEmail(), matchPassword);
 		session.invalidate();
 		return "redirect:/acceso";
-	}
-
-	// ============== Metodos privados ============
-
-	@Scheduled(cron = "${cron.expression}")
-	public void scheduleEnvioMailInicio() {
-		List<Usuario> userList = usuarioServicio.buscarUsuarioInhabilitados();
-		for (Usuario user : userList) {
-			SimpleMailMessage simpleMailMessage = constructWelcomeEmail(env.getProperty("app.url"), user);
-			envioCorreoImp.send(user.getEmail(), simpleMailMessage.getSubject(), simpleMailMessage.getText(), null, "",
-					"<p><strong>Este es un correo automático enviado por la aplicación COVID-19.</strong></p>"
-							+ "<p><strong>No responda a este mensaje.</strong></p>",
-					"");
-			user.setHabilitado("E");
-			usuarioServicio.guardar(user);
-		}
-
-	}
-
-	private SimpleMailMessage constructResetTokenEmail(String contextPath, String token, Usuario user) {
-		String url = contextPath + "/modificarContrasena?id=" + user.getId() + "&token=" + token;
-		String message = "<p>Hola " + user.getNombre()
-		+",</p><p>Puede realizar el cambio de contraseña a través del siguente enlace:</p>";
-		return constructEmail("Restablecer contraseña COVID-19",
-				message + " <p><a href=\"" + url + "\">Cambio de contraseña<a> </p><p> Un cordial saludo.</p>", user);
-	}
-
-	private SimpleMailMessage constructWelcomeEmail(String contextPath, Usuario user) {
-		String url = contextPath + "/regenerarContrasena";
-		String message = "<p>Bien venido " + user.getNombre()
-				+ ",</p><p>Ha sido dado de alta en la aplicación de gesión y seguimiento de tests PCR Covid-19.</p>"
-				+ "<p>Para poder acceder debe solicitar el cambio de contraseña, indicando su e-mail (" + user.getEmail()
-				+ ") a través del siguente enlace:</p>";
-		return constructEmail("Sistema de gestión y seguimiento de tests PCR Covid-19", message + " <p><a href=\"" + url +"\">Cambio de contraseña<a> </p><p> Un cordial saludo.</p>", user);
-	}
-
-	private SimpleMailMessage constructEmail(String subject, String body, Usuario user) {
-		SimpleMailMessage email = new SimpleMailMessage();
-		email.setSubject(subject);
-		email.setText(body);
-		email.setTo(user.getEmail());
-		email.setFrom("no-reply@ucm.es");
-		return email;
-	}
-
-	private String getAppUrl(HttpServletRequest request) {
-		return "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 	}
 
 }

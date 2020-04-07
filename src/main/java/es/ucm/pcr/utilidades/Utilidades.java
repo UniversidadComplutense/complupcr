@@ -1,8 +1,13 @@
 package es.ucm.pcr.utilidades;
 
+import java.text.DecimalFormat;
 import java.text.Normalizer;
 
 public class Utilidades {
+	
+	public static DecimalFormat df2 = new DecimalFormat("#.##");
+	// 5MB
+	public static Integer MAX_FILE_SIZE = 5242880;
 	
 	public static String limpiarStringParaOrdenacion(String cadena) {
 	    String limpio =null;
@@ -17,6 +22,37 @@ public class Utilidades {
 	        limpio = Normalizer.normalize(limpio, Normalizer.Form.NFC);
 	    }
 	    return limpio;
+	}
+	
+	
+	/**
+	 * Formatea a string el tamanio del fichero
+	 * @param size
+	 * @return
+	 */
+	public static String fileSizeFormat(Integer size) {
+		double sized = 0;
+		
+		sized = (double) size/(1024*1024);
+		if (sized > 1) {
+			return df2.format(sized) + " MB";
+		} else {
+			sized = (double) size/(1024);
+			if (sized > 1) {
+				return df2.format(sized) + " kB";
+			} else {
+				return size + " bytes";
+			}
+		}	
+	}	 
+	
+	/**
+	 * Comprueba si el tamanio del fichero excede lo permitido
+	 * @param size
+	 * @return
+	 */
+	public static boolean excedeTamanioFichero(long size) {
+		return (size > MAX_FILE_SIZE);		
 	}
 
 }

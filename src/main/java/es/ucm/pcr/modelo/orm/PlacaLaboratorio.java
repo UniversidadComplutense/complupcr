@@ -43,6 +43,11 @@ public class PlacaLaboratorio implements java.io.Serializable {
 
 	public PlacaLaboratorio() {
 	}
+	
+	public PlacaLaboratorio(int id) {
+		super();
+		this.id = id;
+	}
 
 	public PlacaLaboratorio(int id, EstadoPlacaLaboratorio estadoPlacaLaboratorio,
 			LaboratorioCentro laboratorioCentro) {
