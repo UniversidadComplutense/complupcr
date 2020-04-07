@@ -106,6 +106,20 @@ function loadConfirmarEnvio(id, numLote, centroProcedencia){
 	$("#centro").html(centroProcedencia);
 	$("#id").val(id);
 }
+function cambiarEstadoaEnviada(id, laboratorio){
+	
+	$("#idPlaca").html(id);
+	$("#laboratorio").html(laboratorio);
+	$("#id").val(id);
+}
+function confirmarPlacaEnviada(){
+	var url = "";
+	//var urlAbs = getAbsolutePath();
+	
+	var id=$("#id").val();
+	url =  '/laboratorioUni/confirmarEnviadaPlaca?id='+id;
+	window.location=url;
+}
 // funcion que  realia una llamada ajax para cambiar el estado de un lote y recargar tabla de resultados 
 function confirmarLote(){
 

@@ -263,7 +263,17 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				
 				    return vista;	*/
 	}
-	
+	@RequestMapping(value = "/laboratorioUni/confirmarEnviadaPlaca", method = RequestMethod.GET)
+	public ModelAndView confirmarEnviadaPlaca(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,direction =Sort.Direction.DESC) Pageable pageable) throws Exception {
+		BeanPlacaVisavetUCM placa= servicioLaboratorioUni.buscarPlacaById(id);
+		//BeanLaboratorioCentro laboratorioBean =laboratorioCentroServicio.buscarLaboratorioById(laboratorio);
+		BeanEstado estado= new BeanEstado();
+		estado.setEstado(Estado.PLACAVISAVET_ENVIADA);
+		estado.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
+		placa.setEstado(estado);
+	   BeanPlacaVisavetUCM placab= servicioLaboratorioUni.guardar(placa); 
+	    return this.buscarPlacas((BusquedaPlacasVisavetBean) session.getAttribute("busqueda"), request, session, pageable);
+	}
 	
 		// refrescar  datos con ajax
 		@RequestMapping(value = "/laboratorioUni/actualizarLote", method = RequestMethod.POST)
