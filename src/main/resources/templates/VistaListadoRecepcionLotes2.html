@@ -12,9 +12,9 @@
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	
 <div id="lotesRecibidos" class="container">
-	<div class="alert alert-secondary m-1 mt-2" role="alert">
-			<label>Recepción de lotes</label>
-		</div>
+	<div class="row justify-content-center mt-1">
+			<h5>Gestión de lotes</h5>
+    </div>
     <div class="row justify-content-left mt-3">
    <!-- <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">		      
 				<div class="list-group">
@@ -30,7 +30,7 @@
 			id="formularioPrueba" method="post" th:object="${busquedaLotes}"
 			class="form-horizontal">
 			<fieldset id="criteriosBusqueda" class="form-group border p-2">
-			<legend class="w-auto font-weight-bold m-0">Búsqueda Lotes</legend>
+		    <legend class="w-auto">Búsqueda Lotes</legend>
 			  <div class="row">
 				<div class="col-4 form-group">
 				<label class="col-xs-2">Centro de procedencia:</label>

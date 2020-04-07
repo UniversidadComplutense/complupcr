@@ -109,8 +109,8 @@ public class Lote implements java.io.Serializable {
 		this.laboratorioVisavet = laboratorioVisavet;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "idPlacaVisavet")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idPlacaVisavet", nullable = true)
 	public PlacaVisavet getPlacaVisavet() {
 		return this.placaVisavet;
 	}

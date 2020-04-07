@@ -39,6 +39,7 @@ public class PlacaVisavet implements java.io.Serializable {
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<Lote> lotes = new HashSet<Lote>(0);
 	private Date fechaCreacion;
+	private Date fechaAsignadaLaboratorioCentro;
 	private Date fechaEnviadaLaboratorioCentro;
 	private Date fechaRecepcionLaboratorioCentro;
 	private Set<Muestra> muestras = new HashSet<Muestra>(0);
@@ -169,9 +170,19 @@ public class PlacaVisavet implements java.io.Serializable {
 	public Date getFechaRecepcionLaboratorioCentro() {
 		return fechaRecepcionLaboratorioCentro;
 	}
-
+	
 	public void setFechaRecepcionLaboratorioCentro(Date fechaRecepcionLaboratorioCentro) {
 		this.fechaRecepcionLaboratorioCentro = fechaRecepcionLaboratorioCentro;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaAsignadaLaboratorioCentro", length = 10)
+	public Date getFechaAsignadaLaboratorioCentro() {
+		return fechaAsignadaLaboratorioCentro;
+	}
+
+	public void setFechaAsignadaLaboratorioCentro(Date fechaAsignadaLaboratorioCentro) {
+		this.fechaAsignadaLaboratorioCentro = fechaAsignadaLaboratorioCentro;
 	}
 
 	

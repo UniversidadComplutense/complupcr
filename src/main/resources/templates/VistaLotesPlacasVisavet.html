@@ -30,17 +30,17 @@
 			class="form-horizontal">
         <div class="row justify-content-end mt-3">
 			<div class="col-2">
-				<button type="button" th:onClick="|altaNuevaPlaca(); return false|"  class="btn btn-secondary">Alta nueva placa</button>
+				<button type="button" th:disabled="${botonAltaNoMostrar}" th:onClick="|altaNuevaPlaca(); return false|"  class="btn btn-secondary">Alta nueva placa</button>
 			</div>
 		</div>	   
 
 			<fieldset id="criteriosBusqueda" style="display:none" class="form-group border p-2">
-		    <legend class="w-auto">Asignación de referencias a muestras</legend>
+		    <legend class="w-auto font-weight-bold m-0" >Asignación de referencias a muestras</legend>
 			  <div class="row">
 				<div class="col-3 form-group">
-				<label class="col-xs-2">Placa número:</label><label class="col-xs-2"><span id="numPlacaSpan"/></label>
+				<label class="col-xs-2">Placa número:</label><label class="col-xs-2"><span style="font-weight:bold;" id="numPlacaSpan"/></label>
 				</div>
-				<div class="col-9 form-group">
+				<div class="col-6 form-group">
 				<label class="col-xs-2">Tamaño:</label>
 				
 						<label class="col-xs-2">
@@ -51,26 +51,36 @@
 				           </select>
 						</label>
 			    </div>
-			   
-			    <div class="col-12 form-group">
-			   <!--  <div class="col-6 form-group">
-				<label class="col-xs-2">#Lote:</label>
-						<label class="col-xs-2">
-							 <select class="form-control form-control-sm" id="loteSeleccionado">
-					              <option th:each="var: ${lotePlacaVisavetBean.listaLotesDisponibles}"
-									th:value="${var.id}" th:text="${var.numLote} +  ' - ' + ${var.centroProcedencia} + ' - '   + ${#lists.size(var.listaMuestras)}" >lote</option>
-				           </select>
-						</label>
-			    </div> --><div class="col-6 form-group" th:each="var: ${lotePlacaVisavetBean.listaLotesDisponibles}">
-			     <label id="tamanoMuestra" >Nº muestras del lote  <span th:text="${var.numLote}"></span>: <span th:text="${#lists.size(var.listaMuestras)}"></span></label>
-			   </div> 
-			   <div class="col-6 form-group">Nº total:<span th:text="${lotePlacaVisavetBean.totalMuestras}"/></div>
-			    <div class="col-6 form-group">
-				<button type="button" th:onClick="|asignarPlaca(); return false|"  class="btn btn-secondary">Asignar</button>
-			    </div>
-			    
-			  </div>
+			    <div class="col-3 form-group">
+			     <button type="button" th:onClick="|asignarPlaca(); return false|"  class="btn btn-secondary">Asignar</button>
+			   </div>
+			   </div>
+			    <div class="row form-group">
+			    <table class="col-6 table">
+				<thead class="thead-light">
+				<tr>
+				    <th scope="col">#Lote</th>
+					<th scope="col">Nº de muestas</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="var: ${lotePlacaVisavetBean.listaLotesDisponibles}">
+				<td>
+				<span th:text="${var.numLote}"></span></td>
+				<td><span th:text="${#lists.size(var.listaMuestras)}"></span></td>
+				</tr>
+				<tr><td><span>Nº Total</span></td><td><span th:text="${lotePlacaVisavetBean.totalMuestras}"></span></td></tr>
+				</tbody>
+				</table>	
 			 
+			   </div>
+			    <div class="row form-group">
+			    <div class="col-9 form-group justify-content-end mt-3">
+			   
+			   </div>
+			    </div>
+			   
+			   
 
 		</fieldset>
 		
@@ -82,42 +92,38 @@
 		<div id="capaResultados" 
 			class="row formPnl1">
 		
-				<table class="col-xs-12 table" id="tablaResultadosLotes" >
-						 <thead class="thead-light">
+				<table class="col-xs-12 table" id="tablaResultados" >
+				<thead class="thead-light">
 				<tr>
-				
-				    <th  width="1%" style="text-align: left;">#Placa</th>
-					<th  width="1%" style="text-align: left;">#Lote</th>
-					<th width="10%" style="text-align: left;">Centro</th>
-					<th  width="5%" style="text-align: left;">Nº de muestras</th>
-				
-					
-				
+				    <th scope="col">#Placa</th>
+					<th scope="col">#Lote</th>
+					<th scope="col">Centro</th>
+					<th scope="col">Nº de muestras</th>
 				</tr>
 				</thead>
 				<tbody>
-				<tr id="trGroup"></tr>
+				<!--  <tr id="trGroup"></tr>  -->
 				<tr id="trGroup" th:each="unResultado,count : ${lotePlacaVisavetBean.placa.listaLotes}">
 					   <td colspan="4">    
 					     <table class="col-xs-12 table" id="tablaMuestras" >
 				    <tbody>
 				    <tr>
-					           <td width="2%">
+					           <td>
 					          <input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].idPlacaVisavet}"/>
 								<span th:text="${unResultado.idPlacaVisavet}"></span>
 								</td>
-								<td width="1%">
+								<td>
 								<input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].id}"/>
 								<span th:text="${unResultado.numLote}"></span>
 								</td>
-                                <td width="10%">
+                                <td>
                                 <span th:text="${unResultado.centroProcedencia}"></span>
 								</td>
-                                <td width="5%">
+                                <td>
                                 
 								<span th:text="${#lists.size(unResultado.listaMuestras)}"></span>
 								</td>
-                              <td id="mensajes_log" style="text-align: left;" width="1%">
+                              <td id="mensajes_log">
                               <a th:data-lote="${unResultado.id}" href="#" th:onclick="|mostrarMuestrasPlacas(this.getAttribute('data-lote'));|">
 										<i class="fa fa-table" aria-hidden="true" 
 										style="font-size: 1.2em;"></i>
@@ -127,20 +133,18 @@
 							
 				</tr>
 				<tr th:id="muestra+${unResultado.id}" style="display:none;">
-				<!--  <tr th:if="${#lists.size(unResultado.listaMuestras)>0}"  th:each="unaMuestra,countM : ${unResultado.listaMuestras}">
-					-->
-					<td colspan="5">  
+				<td colspan="5">  
 					<table class="col-xs-12 table">
 					<tr th:if="${#lists.size(unResultado.listaMuestras)>0}"  th:each="unaMuestra,countM : ${unResultado.listaMuestras}">
 					
-								<td width="2%">
+								<td>
 								<input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].id}"/>
 								<span th:text="${unaMuestra.tipoMuestra}"></span>
 								</td>
-								<td width="2%">
+								<td>
 								<span th:text="${unaMuestra.etiqueta}"></span>
 								</td>
-								<td width="2%">
+								<td>
 								<input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].referenciaInterna}"/>
 								<input th:id="${unaMuestra.referenciaInterna}" th:value="${unaMuestra.referenciaInterna}"></span>
 								</td>
