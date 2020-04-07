@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,6 +38,11 @@ public class LaboratorioVisavetControlador {
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView GestionLaboratorioVisavet(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionLaboratorioVisavet");
+		String mensajeError = (String) session.getAttribute("mensajeError");
+		if (mensajeError != null) {
+			vista.addObject("mensajeError", mensajeError);
+			session.removeAttribute("mensajeError");
+		}
 	
 		// cargo todos los laboratorioVisavets de BBDD
 		List<BeanLaboratorioVisavet> listaLaboratorioVisavet = new ArrayList<BeanLaboratorioVisavet>();
@@ -106,9 +112,13 @@ public class LaboratorioVisavetControlador {
 		
 		@RequestMapping(value = "/gestor/borrarLaboratorioVisavet", method = RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
-		public ModelAndView borrarLaboratorioVisavet(@RequestParam("idLaboratorioVisavet") Integer idLaboratorioVisavet) throws Exception {
-			
+		public ModelAndView borrarLaboratorioVisavet(@RequestParam("idLaboratorioVisavet") Integer idLaboratorioVisavet, HttpSession session) throws Exception {
+			try {
 			laboratorioVisavetServicio.borrarLaboratorioVisavet(idLaboratorioVisavet);
+			} catch (DataIntegrityViolationException e) {
+				String mensaje = "No se puede borrar el centro " + laboratorioVisavetServicio.buscarLaboratorioVisavetPorId(idLaboratorioVisavet).get().getNombre() + " porque tiene información asociada.";
+				session.setAttribute("mensajeError", mensaje);
+			}
 			
 			// Volvemos a grabar mas visavet
 			ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaLaboratorioVisavet",true));	

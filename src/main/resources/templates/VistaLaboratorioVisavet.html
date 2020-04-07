@@ -16,8 +16,10 @@
 			method="post" th:object="${formBeanLaboratorioVisavet}"
 			id="ALTALaboratorioVisavet" role="form">
 
-			<h4>ALTA LABORATORIO VISAVET</h4>
-
+			<div
+				class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
+				<label>Información del laboratorio Visavet</label>
+			</div>
 			<div class="form-group">
 				<label class="text_formulario">Laboratorio Visabet</label> <input
 					type="text" class="form-control"
@@ -34,23 +36,18 @@
 
 			<!--  Los campos id y acción van ocultos en la pantalla 
 			-->
-			<div class="form-group">
-				<label class="text_formulario"></label> <input type="hidden"
+			<input type="hidden"
 					class="form-control" th:field="${formBeanLaboratorioVisavet.accion}"
 					th:value="${formBeanLaboratorioVisavet.accion}" />
-			</div>
-			<div class="form-group">
-				<label class="text_formulario"></label> <input type="hidden"
+			<input type="hidden"
 					class="form-control" th:field="${formBeanLaboratorioVisavet.id}"
 					th:value="${formBeanLaboratorioVisavet.id}" />
-			</div>
 			<!--  Los campos id y acción van ocultos en la pantalla 
 			-->
 
 			<div class="row align-content-center">
 				<div class="col-4 mx-auto">
-					<button type="submit" class="btn btn-primary">Alta
-						Laboratorio Visavet</button>
+					<button type="submit" class="btn btn-secondary">Guardar</button>
 				</div>
 			</div>
 
