@@ -9,65 +9,81 @@
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
-	<div class="container">	
-	
-	<form action="#" th:action="@{/gestor/altaCentro}" method="post" th:object="${formBeanCentro}" id="ALTACENTRO" role="form">
+	<div class="container">
 
-	<h4>ALTA DE CENTROS</h4>
-	
-	<div class="form-group">
-		<label class="text_formulario">Código Centro</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanCentro.codCentro}"  th:value="${formBeanCentro.codCentro}" required="required"/>
-	</div>
-	
-	<div class="form-group">
-		<label class="text_formulario">Descripción Centro</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanCentro.nombre}"  th:value="${formBeanCentro.nombre}" required="required"/>
-	</div>
-	
-	<div class="form-group">
-		<label class="text_formulario">Teléfono Centro</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanCentro.telefono}"  th:value="${formBeanCentro.telefono}" required="required"/>
-	</div>
-	
-	<div class="form-group">
-		<label class="text_formulario">Direccion Centro</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanCentro.direccion}"  th:value="${formBeanCentro.direccion}" required="required"/>
-	</div>	
-	
-	<div class="form-group">
-		<label class="text_formulario">Mail Centro</label>
-	 	<input  type="text" class="form-control" th:field="${formBeanCentro.email}"  th:value="${formBeanCentro.email}" required="required"/>
-	</div>	
-	
-	<!--  Los campos id y acción van ocultos en la pantalla 
+		<form action="#" th:action="@{/gestor/altaCentro}" method="post"
+			th:object="${formBeanCentro}" id="ALTACENTRO" role="form">
+
+			<div
+				class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
+				<label>Información del centro</label>
+			</div>
+			<div th:if="${mensajeError !=null}"
+				class="alert alert-danger alert-dismissible fade show m-1 mt-2"
+				role="alert">
+				<label th:text="${mensajeError}"></label>
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<div class="form-group">
+				<label class="text_formulario">Código Centro</label> <input
+					type="text" class="form-control"
+					th:field="${formBeanCentro.codCentro}"
+					th:value="${formBeanCentro.codCentro}" required="required" />
+			</div>
+
+			<div class="form-group">
+				<label class="text_formulario">Descripción Centro</label> <input
+					type="text" class="form-control"
+					th:field="${formBeanCentro.nombre}"
+					th:value="${formBeanCentro.nombre}" required="required" />
+			</div>
+
+			<div class="form-group">
+				<label class="text_formulario">Teléfono Centro</label> <input
+					type="text" class="form-control"
+					th:field="${formBeanCentro.telefono}"
+					th:value="${formBeanCentro.telefono}" required="required" />
+			</div>
+
+			<div class="form-group">
+				<label class="text_formulario">Direccion Centro</label> <input
+					type="text" class="form-control"
+					th:field="${formBeanCentro.direccion}"
+					th:value="${formBeanCentro.direccion}" required="required" />
+			</div>
+
+			<div class="form-group">
+				<label class="text_formulario">Mail Centro</label> <input
+					type="text" class="form-control" th:field="${formBeanCentro.email}"
+					th:value="${formBeanCentro.email}" required="required" />
+			</div>
+
+			<!--  Los campos id y acción van ocultos en la pantalla 
 	-->
-	<div class="form-group">
-		<label class="text_formulario"></label> 
-		<input type="hidden" class="form-control"
-			th:field="${formBeanCentro.accion}"
-			th:value="${formBeanCentro.accion}"  />
-	</div>
-	<div class="form-group">
-		<label class="text_formulario"></label> 
-		<input type="hidden" class="form-control"
-			th:field="${formBeanCentro.id}"
-			th:value="${formBeanCentro.id}"  />
-	</div>
-	<!--  Los campos id y acción van ocultos en la pantalla 
-	-->	
 
-	<div class="row align-content-center">
-		<div class="col-4 mx-auto">
-			<button type="submit"
-				class="btn btn-primary">Alta centro</button>
-		</div>
-	</div>	
-	
-	</form>
+			<input type="hidden" class="form-control"
+				th:field="${formBeanCentro.accion}"
+				th:value="${formBeanCentro.accion}" /> <input type="hidden"
+				class="form-control" th:field="${formBeanCentro.id}"
+				th:value="${formBeanCentro.id}" />
+
+			<!--  Los campos id y acción van ocultos en la pantalla 
+	-->
+
+			<div class="row align-content-center">
+				<div class="col-4 mx-auto">
+					<button type="submit" class="btn btn-secondary">Guardar</button>
+				</div>
+			</div>
+
+		</form>
 
 	</div>
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
-    <object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
 </body>
 </html>

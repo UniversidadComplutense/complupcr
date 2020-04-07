@@ -1,13 +1,13 @@
 package es.ucm.pcr.controladores;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,7 +19,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanCentro;
 import es.ucm.pcr.modelo.orm.Centro;
-import es.ucm.pcr.repositorio.CentroRepositorio;
 import es.ucm.pcr.servicios.CentroServicio;
 
 
@@ -35,8 +34,12 @@ public class CentroControlador {
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView GestionCentro(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionCentros");
-	
-		// cargo todos los rols de BBDD
+		String mensajeError = (String) session.getAttribute("mensajeError");
+		if (mensajeError != null) {
+			vista.addObject("mensajeError", mensajeError);
+			session.removeAttribute("mensajeError");
+		}
+		// cargo todos los centros de BBDD
 		List<BeanCentro> listaCentros = new ArrayList<BeanCentro>();
 		listaCentros = centroServicio.listaCentrosOrdenada();
 		vista.addObject("listaCentros", listaCentros);
@@ -48,8 +51,14 @@ public class CentroControlador {
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView AltaCentro(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaCentro");
-	
 		BeanCentro beanCentro = new BeanCentro();
+		String mensajeError = (String) session.getAttribute("mensajeError");
+		if (mensajeError != null) {
+			vista.addObject("mensajeError", mensajeError);
+			beanCentro = (BeanCentro) session.getAttribute("beanCentro");
+			session.removeAttribute("mensajeError");
+			session.removeAttribute("beanCentro");
+		}
 		// le indicamos la acción a relizar: A alta de un centro
 		beanCentro.setAccion("A");
 		vista.addObject("formBeanCentro", beanCentro);
@@ -62,10 +71,19 @@ public class CentroControlador {
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView grabarAltaCentro ( @ModelAttribute("formBeanCentro") BeanCentro beanCentro, HttpSession session) throws Exception {
 
+		String mensaje = null;
 		// Damos de alta nuevo centro
 		if (beanCentro.getAccion().equals("A"))
 		{
+			try {
 			centroServicio.guardarCentro(centroServicio.mapeoBeanEntidadCentro(beanCentro));
+			} catch (DataIntegrityViolationException e) {
+				mensaje = "Ya existe un centro con ese código.";
+				session.setAttribute("mensajeError", mensaje);
+				session.setAttribute("beanCentro", beanCentro);
+				ModelAndView vista = new ModelAndView(new RedirectView("/gestor/altaCentro",true));
+				return vista;
+			}
 		}
 		// Modificamos centro existente
 		if (beanCentro.getAccion().equals("M"))
@@ -103,9 +121,14 @@ public class CentroControlador {
 	
 	@RequestMapping(value = "/gestor/borrarCentro", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
-	public ModelAndView borrarCentro(@RequestParam("idCentro") Integer idCentro) throws Exception {
-		
+	public ModelAndView borrarCentro(@RequestParam("idCentro") Integer idCentro, HttpSession session) throws Exception {
+		try {
 		centroServicio.BorrarCentro(idCentro);
+		} catch (DataIntegrityViolationException e) {
+			
+			String mensaje = "No se puede borrar el centro " + centroServicio.buscarCentroPorId(idCentro).get().getNombre() + " porque tiene información asociada.";
+			session.setAttribute("mensajeError", mensaje);
+		}
 		
 		// Volvemos a grabar mas centros
 		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaCentros",true));	
