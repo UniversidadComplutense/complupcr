@@ -289,8 +289,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			
 			Date fechaAsignacion = new Date();
 			
-			//recorremos todas las muestras de esa placa, les asignamos los nuevos analistas y les ponemos el estado asignada analista
+			//recorremos todas las muestras de esa placa, les asignamos los nuevos analistas, aumentamos el contador de analistas asignados
+			//y les ponemos el estado asignada analista
 			for(Muestra muestra: placa.getMuestras()) {
+				Integer numerodeAnalistasAsignadosMuestra = (muestra.getNumerodeAnalistasAsignados()==null) ? 0 : muestra.getNumerodeAnalistasAsignados(); 
 				//creamos nuevos usuarioMuestras por cada nueva asignacion de cada una de las muestras
 				//recorremos los analistas de labaratorio marcados para asignar
 				for(Integer idAnalistaLabSeleccionado: formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados()) {
@@ -298,6 +300,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 					UsuarioMuestra nuevoUsuarioMuestra = new UsuarioMuestra(muestra,analistaLab);
 					nuevoUsuarioMuestra.setFechaAsignacion(fechaAsignacion);
 					usuarioMuestraRepositorio.save(nuevoUsuarioMuestra);
+					numerodeAnalistasAsignadosMuestra = numerodeAnalistasAsignadosMuestra +1;
 				}
 				//recorremos los analistas voluntarios de labaratorio marcados para asignar
 				for(Integer idAnalistaVolSeleccionado: formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados()) {
@@ -305,6 +308,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 					UsuarioMuestra nuevoUsuarioMuestra = new UsuarioMuestra(muestra,analistaVol);
 					nuevoUsuarioMuestra.setFechaAsignacion(fechaAsignacion);
 					usuarioMuestraRepositorio.save(nuevoUsuarioMuestra);
+					numerodeAnalistasAsignadosMuestra = numerodeAnalistasAsignadosMuestra +1;
 				}
 				//recorremos los otros voluntarios sin labaratorioCentro marcados para asignar
 				for(Integer idOtroVolSeleccionado: formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados()) {
@@ -312,9 +316,11 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 					UsuarioMuestra nuevoUsuarioMuestra = new UsuarioMuestra(muestra,otroVol);
 					nuevoUsuarioMuestra.setFechaAsignacion(fechaAsignacion);
 					usuarioMuestraRepositorio.save(nuevoUsuarioMuestra);
+					numerodeAnalistasAsignadosMuestra = numerodeAnalistasAsignadosMuestra +1;
 				}
 				//cambiamos el estado de la muestra a asignada a analista							
 				muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum()));
+				muestra.setNumerodeAnalistasAsignados(numerodeAnalistasAsignadosMuestra);
 				muestraRepositorio.save(muestra);
 			}
 		}
