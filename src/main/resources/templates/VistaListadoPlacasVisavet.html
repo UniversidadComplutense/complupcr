@@ -106,8 +106,8 @@
 					<th scope="col">F. Creación</th>
 					<th scope="col">#Lotes</th>
 					<th scope="col">Nº Muestras</th>
-					<th scope="col">Estado</th>
-				    <th scope="col">Laboratorio</th>
+					
+				    <th scope="col">Estado</th>
 				    <th scope="col">Acciones</th>
 				</tr>
 				</thead>
@@ -126,12 +126,20 @@
                      </td>
                      <td>
 						<span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
-						<input th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}"  id="procesarBoton"   type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" th:data-id="${unResultado.id}" onclick="procesarLotesDesdePlacas(this.getAttribute('data-id'))"/>
-						<a  th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_FINALIZADA'}" data-toggle="modal"  data-target="#modalLaboratorio"   th:attr="data-target='#modalLaboratorio'" th:data-id="${unResultado.id}"  th:onClick="|consultarOcupacionLaboratorio(this.getAttribute('data-id'));|">
-                          <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+					</td>
+					<td>	
+						<a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}"  th:data-id="${unResultado.id}" onclick="procesarLotesDesdePlacas(this.getAttribute('data-id'))">
+						     <i class="fa fa-edit" title="Modificar placa" aria-hidden="true" style="font-size: 1.2em;"></i>
 						</a>
-							
-						
+						<i title="Modificar placa" th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;color:grey;"></i>
+						<a  th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_FINALIZADA' or  #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}" data-toggle="modal"  data-target="#modalLaboratorio"   th:attr="data-target='#modalLaboratorio'" th:data-id="${unResultado.id}"  th:onClick="|consultarOcupacionLaboratorio(this.getAttribute('data-id'));|">
+                          <i class="fa fa-flask" aria-hidden="true" title="Asignar laboratorio" style="font-size: 1.2em;"></i>
+						</a>
+						<i  title="Asignar laboratorio" th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_FINALIZADA' or  #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}" class="fa fa-flask"  aria-hidden="true" style="font-size: 1.2em;color:grey;"></i>
+					  <a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}"  th:data-id="${unResultado.id}" th:onClick="cambiarEstadoaEnviada(this.getAttribute('data-id'))">
+					  	<i class="fa fa-share-square" title="Confirmar Enviada" aria-hidden="true" style="font-size: 1.2em;"></i>
+						</a>
+						<i th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}"  class="fa fa-share-square" title="Confirmar Enviada" aria-hidden="true"  style="font-size: 1.2em;color:grey;"></i>
 						
                     </td>		  
 					</tr>	
