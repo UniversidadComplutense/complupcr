@@ -47,8 +47,9 @@
 			</div>					
 		</fieldset>
 		
+		<div th:if="${nueva || placa.beanEstado.estado.codNum == 1}">
 		<fieldset id="placasVisavet" class="form-group border p-2">
-			<legend class="w-auto">Placas VISAVET</legend>
+			<legend class="w-auto">Placas Visavet</legend>
 			<!-- PLACAS VISAVET PARA COMBINAR -->
 			<div class="row justify-content-center mt-6">
 				<input th:id="placasSeleccionadas" type="hidden" th:value="${placa.placasVisavetSeleccionadas}" th:field="${placa.placasVisavetSeleccionadas}" />
@@ -127,11 +128,12 @@
 					</tbody>
 				</table>
 				<div class="row justify-content-center mt-3" th:if="${placa.placasVisavetParaCombinar  == null}">
-					<span>En este momento no hay disponibles placas VISAVET para rellenar la placa de laboratorio.</span>
+					<span>En este momento no hay disponibles placas Visavet para rellenar la placa de laboratorio.</span>
 				</div>
 			</div>
 			</div>								
 		</fieldset>
+		</div>
 		
 
 		<!-- ACCCIONES -->
