@@ -1,8 +1,8 @@
 package es.ucm.pcr.controladores;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -218,31 +218,42 @@ public class LabCentroControlador {
 	
 	@RequestMapping(value = "/gestionPlacas/nueva", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView nuevaPlaca(HttpSession session) throws Exception {
+	public ModelAndView nuevaPlacaGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
 	
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");		
-		PlacaLaboratorioCentroBean placa = new PlacaLaboratorioCentroBean();		
+		PlacaLaboratorioCentroBean placa = new PlacaLaboratorioCentroBean();
+
+
+		// Recuperamos las placas VISAVET que se pueden combinar (recepcionadas).
+		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = new BusquedaRecepcionPlacasVisavetBean();
+		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACAVISAVET_RECIBIDA.getCodNum());
+		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getCentro().getId());
+		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
+		placa.setPlacasVisavetParaCombinar(listaPlacas.getContent());
 		
 		vista.addObject("mostrarMensaje", false);
 		vista.addObject("nueva", true);
 		vista.addObject("editable", esEditable(placa));
-		vista.addObject("placa", new PlacaLaboratorioCentroBean());		
+		vista.addObject("placa", placa);		
 		return vista;
 	}
 	
 	
-	@RequestMapping(value = "/gestionPlacas/guardar", method = RequestMethod.POST)
+	@RequestMapping(value = "/gestionPlacas/nueva", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView guardarPlaca(@Valid @ModelAttribute("placa") PlacaLaboratorioCentroBean placa, BindingResult result) throws Exception {
+	public ModelAndView nuevaPlacaPOST(@Valid @ModelAttribute("placa") PlacaLaboratorioCentroBean placa, BindingResult result) throws Exception {
 
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		vista.addObject("mostrarMensaje", false);
 		
+		// System.out.println(placa.getPlacasVisavetSeleccionadas());
+		
 		if (!result.hasErrors()) {
 			placa = laboratorioCentroServicio.guardarPlaca(placa);
 			vista.addObject("mostrarMensaje", true);
-			vista.addObject("mensaje", "Los cambios se han guardado correctamente.");
+			vista.addObject("mensaje", "Los cambios se han guardado correctamente.");			
 		}
+		
 		vista.addObject("nueva", true);
 		vista.addObject("placa", placa);
 		return vista;
