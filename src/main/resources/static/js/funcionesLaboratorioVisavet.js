@@ -2,7 +2,7 @@ function eliminaFilas()
 {
 //OBTIENE EL NÚMERO DE FILAS DE LA TABLA
 var n=0;
-$("#tablaResultadosLotes tbody tr").each(function () 
+$("#tablaResultados tbody tr").each(function () 
 {
 n++;
 });
@@ -12,7 +12,7 @@ n++;
 //DEJANDO LA PRIMERA FILA VISIBLE, MÁS LA FILA PLANTILLA OCULTA
 for(i=n-1;i>0;i--)
 {
-$("#tablaResultadosLotes tbody tr:eq('"+i+"')").remove();
+$("#tablaResultados tbody tr:eq('"+i+"')").remove();
 
 };
 //$("#tablaResultadosLotes thead").remove();
@@ -102,8 +102,8 @@ function cambiarOrdenColumna(orden,sentidoOrden,numPagina,sizePagina){
 // carga el modal de  Confirmar Lote Recibido 
 function loadConfirmarEnvio(id, numLote, centroProcedencia){
 	
-	$("#mensajeConfirmar").html(numLote);
-	$("#mensajeCentroProcedenciaCentro").html(centroProcedencia);
+	$("#numeroLote").html(numLote);
+	$("#centro").html(centroProcedencia);
 	$("#id").val(id);
 }
 // funcion que  realia una llamada ajax para cambiar el estado de un lote y recargar tabla de resultados 
@@ -143,7 +143,8 @@ function consultarMuestras(lote,centroProcedencia,id){
 
 //funcion que obtiene los checkbox pulsados y se los envia al controlador
 function procesarLotes() {
-	var nFilas = $("#tablaResultadosLotes tr").length;
+
+	var nFilas = $("#tablaResultados tr").length;
 	var lotesProcesar="";
 	if (nFilas>0) {
 	 
@@ -151,7 +152,7 @@ function procesarLotes() {
 		 var seleccionado="#seleccionado"+i;
 		if ($(seleccionado).is(':checked')) {
 			//lotesProcesar
-			
+		
 			lotesProcesar+=$(seleccionado).val()+":";
 		}
 	 }
@@ -227,8 +228,8 @@ function asignarPlaca(){
 		
 	});
 }
-function asignarLaboratorio(idPlaca){
-	var url="/laboratorioUni/consultarOcupacionLaboratorios";
+function consultarOcupacionLaboratorio(idPlaca){
+	var url="/laboratorioUni/consultarOcupacionLaboratorios?idPlaca="+idPlaca;
 	
 	
 	$.ajax({
@@ -237,12 +238,32 @@ function asignarLaboratorio(idPlaca){
         dataType: 'html'
 	}).done(function(respuesta) {
 		alert(respuesta);
-		
+		$("#idPlaca").val(idPlaca);
 		
 	    $("#trLaboratorio").html(respuesta);
 		
 	});
 }
+
+function asignarLaboratoriodesdeModal(){
+	alert ($("#laboratorio option:selected").val());
+	
+	var url="/laboratorioUni/asignarLaboratorio?idPlaca="+$("#idPlaca").val()+"&laboratorio="+$("#laboratorio option:selected").val();
+	alert(url);
+	
+	/*$.ajax({
+        type:  'GET',
+        url:   url,
+        dataType: 'html'
+	}).done(function(respuesta) {
+		alert(respuesta);
+		
+	    $("#trLaboratorio").html(respuesta);
+		
+	});  */
+	window.location=url;
+}
+
 function seleccionAccion(accion){
 	$("#accion").val(accion);
 	$("#formularioConReferencias").submit();

@@ -119,6 +119,7 @@ public class LoteBeanPlacaVisavet{
 		lotePlaca.setId(lote.getId());
 		lotePlaca.setNumLote(lote.getNumeroLote());
 		lotePlaca.setCentroProcedencia(lote.getCentro().getNombre());
+		lotePlaca.setFechaEntrada(lote.getFechaEnvio());
 		// necesito el BeanEstado
 		 BeanEstado estado = new BeanEstado();
 		 estado.asignarTipoEstadoYCodNum(TipoEstado.EstadoLote, lote.getEstadoLote().getId());

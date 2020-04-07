@@ -3,6 +3,7 @@ package es.ucm.pcr.servicios;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
 import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
+import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 
 public interface LaboratorioVisavetServicio {
@@ -46,9 +48,41 @@ public interface LaboratorioVisavetServicio {
 	 */
 	public Map<Integer,String> mapaLaboratoriosVisavet (List<BeanLaboratorioVisavet> laboratoriosVisavet) throws Exception;
 
+	/**
+	 * Guardar Laboratorio Visavet
+	 * 
+	 * @param LaboratorioVisavet
+	 * @return void >
+	 */
+	public void guardarLaboratorioVisavet (LaboratorioVisavet laboratorioVisavet) throws Exception;
+	
+	/**
+	 * Borrar Laboratorio Visavet
+	 * 
+	 * @param Integer idLaboratorioVisavet
+	 * @return void >
+	 */
+	public void borrarLaboratorioVisavet (Integer idLaboratorioVisavet) throws Exception;	
 
+	/**
+	 * Buscat Laboratorio por Id
+	 * 
+	 * @param Integer idLaboratorioVisavet
+	 * @return void Optional <LaboratorioVisavet>
+	 */
+	public Optional <LaboratorioVisavet> buscarLaboratorioVisavetPorId (Integer idLaboratorioVisavet) throws Exception;
+
+	
+	// JAVI
 	public Page<PlacaLaboratorioVisavetBean> buscarPlacas(BusquedaRecepcionPlacasVisavetBean criteriosBusqueda,
 			Pageable pageable);
+	// JAVI
+	public PlacaLaboratorioVisavetBean buscarPlaca(Integer id);
+
+	// JAVI
+	public void recepcionarPlaca(Integer id);
+	
+	
 	
 	
 }

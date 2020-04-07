@@ -13,16 +13,17 @@ import es.ucm.pcr.beans.BusquedaLotesBean;
 import es.ucm.pcr.beans.BusquedaPlacasVisavetBean;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteCentroBean;
+import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
 @Service
 public interface ServicioLaboratorioVisavetUCM {
 	public Page<LoteBeanPlacaVisavet> buscarLotes(BusquedaLotesBean busquedaLotes, Pageable pageable);
 	public Page<BeanPlacaVisavetUCM> buscarPlacas(BusquedaPlacasVisavetBean busqueda, Pageable pageable);
 	public BeanPlacaVisavetUCM guardar(BeanPlacaVisavetUCM beanPlacaVisavetUCM);
 	public BeanPlacaVisavetUCM guardarConLote(BeanPlacaVisavetUCM beanPlacaVisavetUCM);
+	public LoteBeanPlacaVisavet buscarLote(Integer id);
+	public BeanPlacaVisavetUCM buscarPlacaById(Integer id);
 	
-	
-	
-	
+	public BeanPlacaVisavetUCM guardarPlacaConLaboratorio(BeanPlacaVisavetUCM placaVisavet, Integer laboratorio);
 	/**
 	 * Recupera laboratorios con datos simples, id, nombre, capacida y ocupacion
 	 * @return

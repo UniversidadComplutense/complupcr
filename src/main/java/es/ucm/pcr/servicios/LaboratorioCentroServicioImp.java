@@ -3,10 +3,12 @@ package es.ucm.pcr.servicios;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,8 @@ import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
+import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
+import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
@@ -30,10 +34,12 @@ import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Usuario;
+import es.ucm.pcr.modelo.orm.UsuarioMuestra;
 import es.ucm.pcr.repositorio.EstadoPlacaLaboratorioRepositorio;
 import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
 import es.ucm.pcr.repositorio.MuestraRepositorio;
 import es.ucm.pcr.repositorio.PlacaLaboratorioRepositorio;
+import es.ucm.pcr.repositorio.UsuarioMuestraRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
 
 @Service
@@ -53,10 +59,12 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	@Autowired
 	SesionServicio sesionServicio;
-	
-	
+		
 	@Autowired
 	UsuarioRepositorio usuarioRepositorio;	
+	
+	@Autowired
+	UsuarioMuestraRepositorio usuarioMuestraRepositorio;	
 	
 	@Autowired
 	EstadoPlacaLaboratorioRepositorio estadoPlacaLaboratorioRepositorio;
@@ -93,13 +101,17 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		List<BeanLaboratorioCentro> listaLaboratorioCentro = new ArrayList<BeanLaboratorioCentro>();
 		for (LaboratorioCentro laboratorioCentro: laboratorioCentroRepositorio.findAll())
 		{
-			listaLaboratorioCentro.add(new BeanLaboratorioCentro(
-					laboratorioCentro.getId(), 
-					laboratorioCentro.getNombre(),
-					laboratorioCentro.getDocumentos(),
-					laboratorioCentro.getPlacaLaboratorios(),
-					laboratorioCentro.getEquipos(),
-					"L"));
+			BeanLaboratorioCentro beanLaboratorioCentro = new BeanLaboratorioCentro();
+			beanLaboratorioCentro = mapeoEntidadBeanLaboratorioCentro(laboratorioCentro);
+			listaLaboratorioCentro.add(beanLaboratorioCentro);
+			
+//			listaLaboratorioCentro.add(new BeanLaboratorioCentro(
+//					laboratorioCentro.getId(), 
+//					laboratorioCentro.getNombre(),
+//					laboratorioCentro.getDocumentos(),
+//					laboratorioCentro.getPlacaLaboratorios(),
+//					laboratorioCentro.getEquipos(),
+//					"L"));
 		}
 		//	Ordeno por nombre
 		Collections.sort(listaLaboratorioCentro);
@@ -113,6 +125,18 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			mapalaboratorioCentro.put(laboratorioCentro.getId(), laboratorioCentro.getNombre());
 		}
 		return mapalaboratorioCentro;
+	}
+	
+	public void guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception{
+		laboratorioCentroRepositorio.save(laboratorioCentro);
+	}
+	
+	public void borrarLaboratorioCentro (Integer idLaboratorioCentro) throws Exception{
+		laboratorioCentroRepositorio.deleteById(idLaboratorioCentro);
+	}
+	
+	public Optional <LaboratorioCentro> buscarLaboratorioCentroPorId (Integer idLaboratorioCentro) throws Exception{
+		return laboratorioCentroRepositorio.findById(idLaboratorioCentro);
 	}
 	
 	@Override
@@ -156,6 +180,18 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 
 	//Diana- metodos para jefe de servicio (replica de metodos de Javi con mi bean)
+	
+	@Override
+	public PlacaLaboratorioCentroAsignacionesBean buscarPlacaAsignaciones(Integer id) {
+		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
+		if (placa.isPresent()) {
+			return PlacaLaboratorioCentroAsignacionesBean.modelToBean(placa.get());
+		}
+		return new PlacaLaboratorioCentroAsignacionesBean();
+	}
+	
+	
+	
 	@Override
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda,
 			Pageable pageable) {
@@ -237,6 +273,83 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		seleccione.setDescripcion("Seleccione");
 		listaBeanPlacasLaboratorioDeJefe.add(0,seleccione);
 		return listaBeanPlacasLaboratorioDeJefe;
+	}
+	
+	//metodo que guarda las nuevas asignaciones de analistas de labCentro, voluntarios de labCentro y voluntarios sin centro a la placa 
+	//se guardan en realidad las asignaciones a las muestras de la placa
+	@Override
+	public void guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca) {
+	
+		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(formBeanGuardarAsignacionPlaca.getIdPlaca());
+		
+		//si se ha marcado algun analistalab, analistavol u otros vol 
+		if(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados().size()>0 ||
+			formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados().size()>0 ||
+			formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados().size()>0) {
+			
+			Date fechaAsignacion = new Date();
+			
+			//recorremos todas las muestras de esa placa, les asignamos los nuevos analistas, aumentamos el contador de analistas asignados
+			//y les ponemos el estado asignada analista
+			for(Muestra muestra: placa.getMuestras()) {
+				Integer numerodeAnalistasAsignadosMuestra = (muestra.getNumerodeAnalistasAsignados()==null) ? 0 : muestra.getNumerodeAnalistasAsignados(); 
+				//creamos nuevos usuarioMuestras por cada nueva asignacion de cada una de las muestras
+				//recorremos los analistas de labaratorio marcados para asignar
+				for(Integer idAnalistaLabSeleccionado: formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados()) {
+					Usuario analistaLab = usuarioRepositorio.getOne(idAnalistaLabSeleccionado);
+					UsuarioMuestra nuevoUsuarioMuestra = new UsuarioMuestra(muestra,analistaLab);
+					nuevoUsuarioMuestra.setFechaAsignacion(fechaAsignacion);
+					usuarioMuestraRepositorio.save(nuevoUsuarioMuestra);
+					numerodeAnalistasAsignadosMuestra = numerodeAnalistasAsignadosMuestra +1;
+				}
+				//recorremos los analistas voluntarios de labaratorio marcados para asignar
+				for(Integer idAnalistaVolSeleccionado: formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados()) {
+					Usuario analistaVol = usuarioRepositorio.getOne(idAnalistaVolSeleccionado);
+					UsuarioMuestra nuevoUsuarioMuestra = new UsuarioMuestra(muestra,analistaVol);
+					nuevoUsuarioMuestra.setFechaAsignacion(fechaAsignacion);
+					usuarioMuestraRepositorio.save(nuevoUsuarioMuestra);
+					numerodeAnalistasAsignadosMuestra = numerodeAnalistasAsignadosMuestra +1;
+				}
+				//recorremos los otros voluntarios sin labaratorioCentro marcados para asignar
+				for(Integer idOtroVolSeleccionado: formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados()) {
+					Usuario otroVol = usuarioRepositorio.getOne(idOtroVolSeleccionado);
+					UsuarioMuestra nuevoUsuarioMuestra = new UsuarioMuestra(muestra,otroVol);
+					nuevoUsuarioMuestra.setFechaAsignacion(fechaAsignacion);
+					usuarioMuestraRepositorio.save(nuevoUsuarioMuestra);
+					numerodeAnalistasAsignadosMuestra = numerodeAnalistasAsignadosMuestra +1;
+				}
+				//cambiamos el estado de la muestra a asignada a analista							
+				muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum()));
+				muestra.setNumerodeAnalistasAsignados(numerodeAnalistasAsignadosMuestra);
+				muestraRepositorio.save(muestra);
+			}
+		}
+		else {
+			//si no se ha marcado ningun nuevo analista no hacemos nada
+			System.out.println("no se ha escogido ningun analista nuevo, no hacemos asignaciones nuevas ni cambiamos el estado a sus muestras");			
+		}
+				
+		//a la placa no hay que cambiarle el estado, solo cambiamos el estado de sus muestras		
+
+	}
+	
+	
+	
+	
+	public BeanLaboratorioCentro buscarLaboratorioById(Integer id) {
+		Optional<LaboratorioCentro> laboratorioOp= laboratorioCentroRepositorio.findById(id);
+		
+		if (laboratorioOp.isPresent()) {
+			LaboratorioCentro laboratorioCentro=laboratorioOp.get();
+			return new BeanLaboratorioCentro(
+					laboratorioCentro.getId(), 
+					laboratorioCentro.getNombre(),
+					laboratorioCentro.getDocumentos(),
+					laboratorioCentro.getPlacaLaboratorios(),
+					laboratorioCentro.getEquipos(),
+					"L");
+		}
+		else return null;
 	}
 	
 	//Fin Diana- metodos para jefe de servicio

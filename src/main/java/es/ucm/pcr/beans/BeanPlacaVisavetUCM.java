@@ -96,13 +96,14 @@ public static PlacaVisavet beanToModel(BeanPlacaVisavetUCM bean) {
 //	bean.setTamano(placaVisavet.getTamano());
 	placaVisavet.setFechaCreacion(bean.getFechaCreacion());
     placaVisavet.setEstadoPlacaVisavet(new EstadoPlacaVisavet(bean.getEstado().getEstado().getCodNum()));
-   Set<Lote> listaLotes =  new HashSet();
+    /* YOLI  Set<Lote> listaLotes =  new HashSet();
    if (bean.getListaLotes() !=null) {
     for (LoteBeanPlacaVisavet l:bean.getListaLotes()) {
     	listaLotes.add(LoteBeanPlacaVisavet.beanToModel(l));
     }
     placaVisavet.setLotes(listaLotes);
-   }
+    
+   }*/
     /*LoteBeanPlacaVisavet lote = new LoteBeanPlacaVisavet();
 	List<LoteBeanPlacaVisavet> listaLotes = new ArrayList();
 	

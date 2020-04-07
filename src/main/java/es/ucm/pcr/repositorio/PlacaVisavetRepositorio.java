@@ -15,26 +15,28 @@ import es.ucm.pcr.modelo.orm.PlacaVisavet;
 
 public interface PlacaVisavetRepositorio extends JpaRepository<PlacaVisavet, Integer> {
 
-	// TODO Terminar query para que busque por idLaboratorioCentro
 
 	@Query("SELECT placa FROM PlacaVisavet placa "
 			+ "JOIN placa.laboratorioVisavet LaboratorioVisavet "
 			+ "JOIN placa.estadoPlacaVisavet EstadoPlacaVisavet "
-			+ "JOIN placa.placaVisavetPlacaLaboratorios PlacaVisavetPlacaLaboratorio "
 			+ "WHERE 1=1 and "
 			+ "(:#{#params.idPlaca} is null or placa.id = :#{#params.idPlaca}) and "
 			+ "(:#{#params.numeroMuestras} is null or placa.numeromuestras = :#{#params.numeroMuestras}) and "
-			+ "(:#{#params.fechaCreacionInicio} is null or placa.fechaCreacion >= :#{#params.fechaCreacionInicio}) and "
-			+ "(:#{#params.fechaCreacionFin} is null or placa.fechaCreacion <= :#{#params.fechaCreacionFin}) and "
-			+ "(:#{#params.idEstadoPlaca} is null or placa.estadoPlacaVisavet.id = :#{#params.idEstadoPlaca})")
-//	YOLI: javi creo que tienes que cambiar la sentencia de abajo por esta "(:#{#params.idLaboratorioCentro} is null or PlacaVisavetPlacaLaboratorio.placaLaboratorio.laboratorioCentro.id = :#{#params.idLaboratorioCentro})")	
-	//		+ "(:#{#params.idLaboratorioCentro} is null or placa.placaVisavetPlacaLaboratorios.placaLaboratorio.laboratorioCentro.id = :#{#params.idLaboratorioCentro})")
+			+ "(:#{#params.fechaAsignadaInicio} is null or placa.fechaAsignadaLaboratorioCentro >= :#{#params.fechaAsignadaInicio}) and "
+			+ "(:#{#params.fechaAsignadaFin} is null or placa.fechaAsignadaLaboratorioCentro <= :#{#params.fechaAsignadaInicio}) and "
+			+ "(:#{#params.fechaEnviadaInicio} is null or placa.fechaEnviadaLaboratorioCentro >= :#{#params.fechaEnviadaInicio}) and "
+			+ "(:#{#params.fechaEnviadaFin} is null or placa.fechaEnviadaLaboratorioCentro <= :#{#params.fechaEnviadaFin}) and "
+			+ "(:#{#params.fechaRecepcionInicio} is null or placa.fechaRecepcionLaboratorioCentro >= :#{#params.fechaRecepcionInicio}) and "
+			+ "(:#{#params.fechaRecepcionFin} is null or placa.fechaRecepcionLaboratorioCentro <= :#{#params.fechaRecepcionFin}) and "
+			+ "(:#{#params.idEstadoPlaca} is null or placa.estadoPlacaVisavet.id = :#{#params.idEstadoPlaca}) and" 
+			+ "(:#{#params.idLaboratorioCentro} is null or placa.laboratorioCentro.id = :#{#params.idLaboratorioCentro})")
 	public Page<PlacaVisavet> findByParams(@Param("params") BusquedaRecepcionPlacasVisavetBean params,
 			Pageable pageable);	
 	
 
-	Optional<PlacaVisavet> findById(Integer id);
+	//Optional<PlacaVisavet> findById(Integer id);	
 	
+	public void save(Optional<PlacaVisavet> placa);
 	
 	// yoli esta query no da resultados probar LEFT JOIN placa.placaVisavetPlacaLaboratorios placaVLaboratorio "
 	@Query("SELECT placa FROM PlacaVisavet placa "
@@ -68,6 +70,8 @@ public interface PlacaVisavetRepositorio extends JpaRepository<PlacaVisavet, Int
 		//	+ "(:#{#params.muestra} is null or muestras.etiqueta = :#{#params.muestra}) and "
 			// + "(:#{#params.idLaboratorioCentro} is null or placaVLaboratorio.placaLaboratorio.laboratorioCentro.id = :#{#params.idLaboratorioCentro}) and "
 		//	+ "(:#{#params.idLaboratorioVisavet} is null or placa.laboratorioVisavet.id = :#{#params.idLaboratorioVisavet})")
-	public List<PlacaVisavet> findByParams(@Param("params") BusquedaPlacasVisavetBean params);	
+	public List<PlacaVisavet> findByParams(@Param("params") BusquedaPlacasVisavetBean params);
+
+	
 	
 }

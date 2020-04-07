@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanCentro;
-import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.repositorio.CentroRepositorio;
 
@@ -52,25 +52,31 @@ public class CentroServicioImp implements CentroServicio{
 		beanCentro.setTelefono(centro.getTelefono());
 		return beanCentro;	
 	}
+	
 	public List<BeanCentro> listaCentrosOrdenada() throws Exception{
 		// cargo todos los rols de BBDD
 		List<BeanCentro> listaCentros = new ArrayList<BeanCentro>();
 		for (Centro centro: centroRepositorio.findAll())
 		{
-			listaCentros.add( 
-					new BeanCentro(
-							centro.getId(), 
-							centro.getNombre(), 
-							centro.getCodCentro(), 
-							centro.getTelefono(), 
-							centro.getEmail(), 
-							centro.getDireccion(),
-							centro.getUsuarios(),
-							centro.getMuestras(),
-							centro.getDocumentos(),
-							centro.getLotes(),
-							"L")
-			);
+			BeanCentro beanCentro = new BeanCentro();
+			beanCentro = mapeoEntidadBeanCentro(centro);
+			listaCentros.add(beanCentro);
+//			
+//			
+//			listaCentros.add( 
+//					new BeanCentro(
+//							centro.getId(), 
+//							centro.getNombre(), 
+//							centro.getCodCentro(), 
+//							centro.getTelefono(), 
+//							centro.getEmail(), 
+//							centro.getDireccion(),
+//							centro.getUsuarios(),
+//							centro.getMuestras(),
+//							centro.getDocumentos(),
+//							centro.getLotes(),
+//							"L")
+//			);
 		}
 		//	Ordeno por ap1, ap2, nombre
 		Collections.sort(listaCentros);
@@ -85,6 +91,18 @@ public class CentroServicioImp implements CentroServicio{
 			mapaCentros.put(centro.getId(), centro.getNombre());
 		}
 		return mapaCentros;
+	}
+	
+	public void guardarCentro (Centro centro) throws Exception{
+		centroRepositorio.save(centro);
+	}
+	
+	public void BorrarCentro (Integer idCentro) throws Exception{
+		centroRepositorio.deleteById(idCentro);
+	}
+	
+	public Optional<Centro> buscarCentroPorId (Integer idCentro) throws Exception{
+		return centroRepositorio.findById(idCentro);
 	}
 	
 }

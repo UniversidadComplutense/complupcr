@@ -1,5 +1,10 @@
 package es.ucm.pcr.beans;
 
+import org.apache.commons.lang.StringUtils;
+
+import es.ucm.pcr.modelo.orm.Muestra;
+import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.utilidades.Utilidades;
 
 public class BeanUsuario implements Comparable<BeanUsuario>{
@@ -8,11 +13,10 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 	public String nom;
 	public String ap1;
 	public String ap2;
-	public String telFijo;
-	public String telMovil;
-	public String mail;
-	public String internoExterno;
-	public String rol;
+	public String nombreCompleto;	
+	public String mail;	
+	
+	public BeanRolUsuario beanRolUsuario; //rol con el que está actuando el usuario
 	
 	
 	public BeanUsuario() {
@@ -21,20 +25,18 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 	}
 
 
-
-	public BeanUsuario(Integer id, String nom, String ap1, String ap2, String telFijo, String telMovil, String mail,
-			String internoExterno, String rol) {
+	public BeanUsuario(Integer id, String nom, String ap1, String ap2, String nombreCompleto, String mail,
+			BeanRolUsuario beanRolUsuario) {
 		super();
 		this.id = id;
 		this.nom = nom;
 		this.ap1 = ap1;
 		this.ap2 = ap2;
-		this.telFijo = telFijo;
-		this.telMovil = telMovil;
+		this.nombreCompleto = nombreCompleto;
 		this.mail = mail;
-		this.internoExterno = internoExterno;
-		this.rol = rol;
+		this.beanRolUsuario = beanRolUsuario;
 	}
+
 
 
 
@@ -74,21 +76,17 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 		this.ap2 = ap2;
 	}
 
-	public String getTelFijo() {
-		return telFijo;
+	
+	
+	public String getNombreCompleto() {
+		return nombreCompleto;
 	}
 
-	public void setTelFijo(String telFijo) {
-		this.telFijo = telFijo;
+
+	public void setNombreCompleto(String nombreCompleto) {
+		this.nombreCompleto = nombreCompleto;
 	}
 
-	public String getTelMovil() {
-		return telMovil;
-	}
-
-	public void setTelMovil(String telMovil) {
-		this.telMovil = telMovil;
-	}
 
 	public String getMail() {
 		return mail;
@@ -98,41 +96,30 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 		this.mail = mail;
 	}
 
-	public String getInternoExterno() {
-		return internoExterno;
+
+	public BeanRolUsuario getBeanRolUsuario() {
+		return beanRolUsuario;
 	}
 
-	public void setInternoExterno(String internoExterno) {
-		this.internoExterno = internoExterno;
+
+	public void setBeanRolUsuario(BeanRolUsuario beanRolUsuario) {
+		this.beanRolUsuario = beanRolUsuario;
 	}
 
-	public String getRol() {
-		return rol;
-	}
 
-	public void setRol(String rol) {
-		this.rol = rol;
-	}
-
-	
-
-
-	@Override
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((ap1 == null) ? 0 : ap1.hashCode());
 		result = prime * result + ((ap2 == null) ? 0 : ap2.hashCode());
+		result = prime * result + ((beanRolUsuario == null) ? 0 : beanRolUsuario.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((internoExterno == null) ? 0 : internoExterno.hashCode());
 		result = prime * result + ((mail == null) ? 0 : mail.hashCode());
 		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
-		result = prime * result + ((rol == null) ? 0 : rol.hashCode());
-		result = prime * result + ((telFijo == null) ? 0 : telFijo.hashCode());
-		result = prime * result + ((telMovil == null) ? 0 : telMovil.hashCode());
+		result = prime * result + ((nombreCompleto == null) ? 0 : nombreCompleto.hashCode());
 		return result;
 	}
-
 
 
 	@Override
@@ -154,15 +141,15 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 				return false;
 		} else if (!ap2.equals(other.ap2))
 			return false;
+		if (beanRolUsuario == null) {
+			if (other.beanRolUsuario != null)
+				return false;
+		} else if (!beanRolUsuario.equals(other.beanRolUsuario))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
-			return false;
-		if (internoExterno == null) {
-			if (other.internoExterno != null)
-				return false;
-		} else if (!internoExterno.equals(other.internoExterno))
 			return false;
 		if (mail == null) {
 			if (other.mail != null)
@@ -174,20 +161,10 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 				return false;
 		} else if (!nom.equals(other.nom))
 			return false;
-		if (rol == null) {
-			if (other.rol != null)
+		if (nombreCompleto == null) {
+			if (other.nombreCompleto != null)
 				return false;
-		} else if (!rol.equals(other.rol))
-			return false;
-		if (telFijo == null) {
-			if (other.telFijo != null)
-				return false;
-		} else if (!telFijo.equals(other.telFijo))
-			return false;
-		if (telMovil == null) {
-			if (other.telMovil != null)
-				return false;
-		} else if (!telMovil.equals(other.telMovil))
+		} else if (!nombreCompleto.equals(other.nombreCompleto))
 			return false;
 		return true;
 	}
@@ -196,18 +173,42 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 
 	@Override
 	public String toString() {
-		return "BeanUsuario [id=" + id + ", nom=" + nom + ", ap1=" + ap1 + ", ap2=" + ap2 + ", telFijo=" + telFijo
-				+ ", telMovil=" + telMovil + ", mail=" + mail + ", internoExterno=" + internoExterno + ", rol=" + rol
-				+ "]";
+		return "BeanUsuario [id=" + id + ", nom=" + nom + ", ap1=" + ap1 + ", ap2=" + ap2 + ", nombreCompleto="
+				+ nombreCompleto + ", mail=" + mail + ", beanRolUsuario=" + beanRolUsuario + "]";
 	}
 
-    @Override
+
+	@Override
     public int compareTo(BeanUsuario o) {
 		String p1 = o.getAp1() + o.getAp2() + o.getNom();
 		String p2 = getAp1() + getAp2() + getNom();
         String l1 = Utilidades.limpiarStringParaOrdenacion(p1);
         String l2 = Utilidades.limpiarStringParaOrdenacion(p2);
 		return l2.compareTo(l1);
-    }		
-
+    }
+	
+	private static String nombreCompletoUsuario(Usuario usu) {
+		String nombreCompleto = usu.getNombre();
+		if (StringUtils.isNotEmpty(usu.getApellido1())) {
+			nombreCompleto = nombreCompleto.concat(" ").concat(usu.getApellido1());
+		}
+		if (StringUtils.isNotEmpty(usu.getApellido2())) {
+			nombreCompleto = nombreCompleto.concat(" ").concat(usu.getApellido2());
+		}
+		return nombreCompleto;
+	}
+	
+	public static BeanUsuario modelToBean(Usuario usu) {
+		
+		BeanUsuario beanUsuario = new BeanUsuario();
+		beanUsuario.setId(usu.getId());
+		beanUsuario.setNom(usu.getNombre());
+		beanUsuario.setAp1(usu.getApellido1());
+		beanUsuario.setAp2(usu.getApellido2());
+		beanUsuario.setNombreCompleto(nombreCompletoUsuario(usu));		
+		beanUsuario.setMail(usu.getEmail());	
+		//beanUsuario.setBeanRolUsuario(beanRolUsuario); //el rol con el que actua depende de dónde lo llamemos, se le asignará despues
+		return beanUsuario;		
+		
+	}
 }

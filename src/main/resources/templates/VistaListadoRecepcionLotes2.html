@@ -12,9 +12,9 @@
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 	
 <div id="lotesRecibidos" class="container">
-	<div class="alert alert-secondary m-1 mt-2" role="alert">
-			<label>Recepción de lotes</label>
-		</div>
+	<div class="row justify-content-center mt-1">
+			<h5>Gestión de lotes</h5>
+    </div>
     <div class="row justify-content-left mt-3">
    <!-- <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">		      
 				<div class="list-group">
@@ -30,7 +30,7 @@
 			id="formularioPrueba" method="post" th:object="${busquedaLotes}"
 			class="form-horizontal">
 			<fieldset id="criteriosBusqueda" class="form-group border p-2">
-			<legend class="w-auto font-weight-bold m-0">Búsqueda Lotes</legend>
+		    <legend class="w-auto">Búsqueda Lotes</legend>
 			  <div class="row">
 				<div class="col-4 form-group">
 				<label class="col-xs-2">Centro de procedencia:</label>
@@ -235,7 +235,40 @@
 			
 			
 			
-		
+			<!--  fin confirmar recibido 
+<div id="modalConfirmRecibido" class="modal fade modal1 in" role="dialog">
+   <div id="ventanaConfirmRecibido" class="modal-dialog ">
+    
+	<div class="modal-content">
+         <div class="modal-header" id="modal-header">
+         <button class="close" data-dismiss="modal" type="button">×</button>
+	
+         <h4 class="modal-title"> <span id="modalTitleNombre" class="info">Confirmar lote recibido</span>
+         </h4>
+        </div>
+
+	<div id="mensajeSinSeleccionarTit" style="display: block; height: 70px;">
+		<span style="text-align: center; padding-top: 30px; padding-left: 30px;">Confirmar como recibido el siguiente lote:</span>
+	
+						<label>Número de lote:</label><span id="mensajeConfirmar"></span>
+						<label>Centro de procedencia:</label><span id="mensajeCentroProcedencia"></span>
+									<div class="modal-footer">
+									<input type="hidden" id="id" value=""></input>
+									    <button type="button" id="aceptarConfirmacion" data-dismiss="modal"  th:onclick="|confirmarLote()|">Aceptar</button>
+										<button type="button" id="cerrarConfirmacion" data-dismiss="modal">Cerrar</button>
+										
+									</div>
+						
+
+							</div>
+
+
+
+
+						</div>
+						</div>
+	</div> 		
+			-->
 <!--  	 fin  Recibido -->
 			
 				

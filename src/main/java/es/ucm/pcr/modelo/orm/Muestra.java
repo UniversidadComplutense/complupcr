@@ -50,6 +50,7 @@ public class Muestra implements java.io.Serializable {
 	private Set<UsuarioMuestra> usuarioMuestras = new HashSet<UsuarioMuestra>(0);
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Paciente paciente;
+	private Integer numerodeAnalistasAsignados;
 
 	public Muestra() {
 	}
@@ -262,5 +263,16 @@ public class Muestra implements java.io.Serializable {
 	public void setPaciente(Paciente paciente) {
 		this.paciente = paciente;
 	}
+
+	@Column(name = "numerodeAnalistasAsignados")	
+	public Integer getNumerodeAnalistasAsignados() {
+		return numerodeAnalistasAsignados;
+	}
+
+	public void setNumerodeAnalistasAsignados(Integer numerodeAnalistasAsignados) {
+		this.numerodeAnalistasAsignados = numerodeAnalistasAsignados;
+	}
+	
+	
 
 }

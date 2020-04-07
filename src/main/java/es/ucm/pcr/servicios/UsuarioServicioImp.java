@@ -9,14 +9,20 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
+import es.ucm.pcr.beans.BeanRolUsuario;
+import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
+import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.modelo.orm.Centro;
+import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PasswordResetToken;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
@@ -304,27 +310,6 @@ public class UsuarioServicioImp implements UsuarioServicio {
 			BeanUsuarioGestion beanUsuarioGestion = new BeanUsuarioGestion();
 			beanUsuarioGestion = mapeoEntidadBeanUsuario (usuario);
 			listaUsuarios.add(beanUsuarioGestion);
-//			beanUsuarioGestion.setAccion("L");
-//			beanUsuarioGestion.setAcertadas(usuario.getAcertadas());
-//			beanUsuarioGestion.setApellido1(usuario.getApellido1());
-//			beanUsuarioGestion.setApellido2(usuario.getApellido2());
-//			beanUsuarioGestion.setAsignadas(usuario.getAsignadas());
-//			beanUsuarioGestion.setCentro(usuario.getCentro());
-//			beanUsuarioGestion.setDocumentos(usuario.getDocumentos());
-//			beanUsuarioGestion.setEmail(usuario.getEmail());
-//			beanUsuarioGestion.setHabilitado(usuario.getHabilitado());
-//			beanUsuarioGestion.setId(usuario.getId());
-//			beanUsuarioGestion.setIdLaboratorioCentro(usuario.getIdLaboratorioCentro());
-//			beanUsuarioGestion.setIdLaboratorioVisavet(usuario.getIdLaboratorioVisavet());
-//			beanUsuarioGestion.setNombre(usuario.getNombre());
-//			beanUsuarioGestion.setPassword(usuario.getPassword());
-//			beanUsuarioGestion.setRols(usuario.getRols());
-//			beanUsuarioGestion.setUsuarioMuestras(usuario.getUsuarioMuestras());
-//			// Tipo de centro seleccionado
-//			
-//			// Centro Seccionado
-			
-			
 		}
 		//	Ordeno por ap1, ap2, nombre
 		Collections.sort(listaUsuarios);
@@ -358,6 +343,55 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		return usuario;
 	}
 	
+	public void borrarUsuario (Integer idUsuario) throws Exception{
+		usurep.deleteById(idUsuario);
+	}
+	
+	public Optional<Usuario> buscarUsuarioPorId (Integer idUsuario) throws Exception{
+		return usurep.findById(idUsuario);
+	}
 
+	//metodos de obtencion de usuarios analistas de laboratoriocentro, voluntarios de laboratoriocentro y voluntarios sin laboratoriocentro
+	@Override 
+	public List<BeanUsuario> listaUsuariosAnalistasDeLaboratorioCentro(Integer idLaboratorioCentro) {
+		List<BeanUsuario> listaUsuariosBean = new ArrayList<BeanUsuario>();
+		Integer idRolAnalistaLaboratorio = BeanRolUsuario.RolUsuario.ROL_USUARIO_ANALISTALABORATORIO.getId(); 
+		List<Usuario> listUsuarios = usurep.findByIdLaboratorioCentroAndIdRol(idLaboratorioCentro, idRolAnalistaLaboratorio);
+		System.out.println("la lista de analistas del laboratorioCentro tiene: " + listUsuarios.size());
+		for (Usuario u : listUsuarios) {
+			BeanUsuario ana = BeanUsuario.modelToBean(u);			
+			ana.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_ANALISTALABORATORIO));
+			listaUsuariosBean.add(ana);
+		}
+		return listaUsuariosBean;
+	}
+	
+	@Override 
+	public List<BeanUsuario> listaUsuariosVoluntariosDeLaboratorioCentro(Integer idLaboratorioCentro) {		
+		List<BeanUsuario> listaUsuariosBean = new ArrayList<BeanUsuario>();
+		Integer idRolVoluntario = BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId(); 
+		List<Usuario> listUsuarios = usurep.findByIdLaboratorioCentroAndIdRol(idLaboratorioCentro, idRolVoluntario);
+		System.out.println("la lista de voluntarios del laboratorioCentro tiene: " + listUsuarios.size());
+		for (Usuario u : listUsuarios) {
+			BeanUsuario vol = BeanUsuario.modelToBean(u);			
+			vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO)); 
+			listaUsuariosBean.add(vol);
+		}
+		return listaUsuariosBean;
+	}
+	
+	@Override 
+	public List<BeanUsuario> listaUsuariosVoluntariosSinLaboratorioCentro() {
+		List<BeanUsuario> listaUsuariosBean = new ArrayList<BeanUsuario>();
+		Integer idRolVoluntario = BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId(); 
+		List<Usuario> listUsuarios = usurep.findByIdRolAndNotIdLaboratorioCentro(idRolVoluntario);
+		System.out.println("la lista de voluntarios sin asignar a ningun laboratorioCentro tiene: " + listUsuarios.size());
+		for (Usuario u : listUsuarios) {
+			BeanUsuario vol = BeanUsuario.modelToBean(u);			
+			vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO)); 
+			listaUsuariosBean.add(vol);
+		}
+		return listaUsuariosBean;		
+	}
 	
 }

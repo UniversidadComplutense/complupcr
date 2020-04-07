@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -46,10 +47,14 @@ import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
+import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
+import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.beans.BeanPlacaVisavetUCM;
 import es.ucm.pcr.beans.LotePlacaVisavetBean;
 import es.ucm.pcr.servicios.CentroServicio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
+import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 import es.ucm.pcr.servicios.LoteServicio;
 import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
 import es.ucm.pcr.servicios.ServicioLotes;
@@ -73,7 +78,8 @@ public class LaboratorioVisavetUCMController {
 	
 	@Autowired
 	LaboratorioCentroServicio laboratorioCentroServicio;
-
+  @Autowired
+  LaboratorioVisavetServicio laboratorioVisavetServicio;
 
 	@SuppressWarnings("unused")
 	private final static Logger log = LoggerFactory.getLogger(LaboratorioVisavetUCMController.class);
@@ -88,7 +94,7 @@ public class LaboratorioVisavetUCMController {
 private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes) throws Exception {
 	busquedaLotes.setIdCentro(0);
 
-	busquedaLotes.setListaBeanEstado(BeanEstado.estadosLote());
+	busquedaLotes.setListaBeanEstado(BeanEstado.estadosLoteLaboratorioVisavet());
 	busquedaLotes.setListaCentros(centroServicio.listaCentrosOrdenada());
 
 	return busquedaLotes;
@@ -122,12 +128,13 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 	@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.GET)
 	public ModelAndView buscarLotesGet(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
          // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
-		System.out.println("numero get "+pageable.getPageNumber());
+		log.info("numero get "+pageable.getPageNumber());
 		BusquedaLotesBean busquedaLotes= new BusquedaLotesBean();
 		
 		// inicializamos a enviado para filtrar por estos
 		// tengo que obtener los centros de los que puedo recibir muestras
 		//busquedaLotes.setIdCentro(0);
+		busquedaLotes.setCodNumEstadoSeleccionado(3);
 		this.rellenarBusquedaLotes(busquedaLotes);
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 		// invocar al servicio que dado id De laboratorio se obtiene la entidad laboratorioUni
@@ -137,8 +144,8 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		model.addAttribute("paginaLotes", paginaLotes);;
 		vista.addObject("busquedaLotes", busquedaLotes);
 		vista.addObject("paginaLotes", paginaLotes);
-		return vista;
-		// return this.buscarLotes(busquedaLotes, request, session, pageable);
+		//return vista;
+		 return this.buscarLotes(busquedaLotes, request, session, pageable);
 		// mas adelante necesito obtener Centros de un servicioCentros
 		
 		//busquedaLotes.setListaBeanCentro(servicioCentros.buscarCentros());
@@ -277,11 +284,12 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		
 		
 		@RequestMapping(value = "/laboratorioUni/mostrarMuestras", method = RequestMethod.GET)
-		public String consultarMuestrasLote(@RequestParam("id") String id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
+		public String consultarMuestrasLote(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
 		// ir al servicio lotes y llamar al metodo que me liste las muestra a partir del id de lote
 		// para probar
-			
-			List<MuestraBeanLaboratorioVisavet> muestras=new ArrayList();
+			LoteBeanPlacaVisavet loteBeanPlacaVisavet = servicioLaboratorioUni.buscarLote(id);
+			List<MuestraBeanLaboratorioVisavet> muestras=loteBeanPlacaVisavet.getListaMuestras();
+		/*	List<MuestraBeanLaboratorioVisavet> muestras=new ArrayList();
 			List<LoteBeanPlacaVisavet> list= new ArrayList();
 			for (int i = 0; i<10; i++) {
 				//list.add(getBean(i));
@@ -290,13 +298,22 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				}
 			}	
 	    // fin de prueba		
+          */
            model.addAttribute("muestras", muestras);
 			
 			return "VistaListadoRecepcionLotes :: #trMuestra";
 		}
 		
 // request PLACAS
-		
+		private Boolean isLotesConPlacas(List<LoteBeanPlacaVisavet> lotes) {
+		 Boolean mostrar=true;
+			for (LoteBeanPlacaVisavet lote: lotes) {
+			  if (lote.getIdPlacaVisavet()== null) { mostrar =false;
+			 break;
+			  }
+		  }
+			return mostrar;
+		}
 		
 		
 		//este metodo obtiene los lotes q estan listos para ser procesados en placas visavet y muestran en las placas
@@ -307,16 +324,17 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			// obtenemos los lotes con sus muestras
 			String[] idsLotes=lotes.split(":");
 			List<LoteBeanPlacaVisavet> listaLotes=new ArrayList();
+			Integer numeroMuestras=0;
 			//LoteBeanPlacaVisavet lotePlaca;
 			for (int i=0; i<idsLotes.length;i++) {
 				// cuando ya este el servicio BeanLote lote=servicioLotes.obtenerLote(idsLotes[i]);
 				// para probar
 				LoteBeanPlacaVisavet lotePlaca = loteServicio.findByIdByPlacas(Integer.parseInt(idsLotes[i]));
-				
+				numeroMuestras+=lotePlaca.getListaMuestras().size();
 				listaLotes.add(lotePlaca);
 		        //lotePlacaVisavetBean.setTotalMuestras(getBean(i).getListaMuestras().size()+lotePlacaVisavetBean.getTotalMuestras());
 			} 
-			
+			lotePlacaVisavetBean.setTotalMuestras(numeroMuestras);
 			// para probar
 			List<Integer> tamanoLista= new ArrayList();
 			tamanoLista.add(20);
@@ -335,6 +353,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			//fin probar
 			
 			vista.addObject("lotePlacaVisavetBean",lotePlacaVisavetBean);
+			vista.addObject("botonAltaNoMostrar", this.isLotesConPlacas(listaLotes));
 			//vista.addObject("listaLotes",listaLotes);
 			// los mostramos en la vista
 			return vista;
@@ -428,7 +447,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			return vista; */
 			Page<BeanPlacaVisavetUCM> pagina= null;
 			ModelAndView vista = new ModelAndView("VistaListadoPlacasVisavet");
-		
+		if (busqueda == null) new BusquedaPlacasVisavetBean();
 			busqueda= this.rellenarBusquedaPlacas(busqueda);
 			pagina = servicioLaboratorioUni.buscarPlacas(busqueda, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), ORDENACION_PLACAS));
 			//model.addAttribute("paginaLotes", paginaLotes);
@@ -440,10 +459,9 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		}
 		@RequestMapping(value = "/laboratorioUni/buscarPlacas", method = RequestMethod.POST)
 		public ModelAndView buscarPlacasPost(@ModelAttribute("busquedaPlacasVisavetBean") BusquedaPlacasVisavetBean busquedaPlacasVisavetBean, Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
-		System.out.println("entra en post ");
-			ModelAndView vista= this.buscarPlacas(busquedaPlacasVisavetBean, request, session, pageable);
-			System.out.println("fin post");
-			return  vista;
+	
+			return  this.buscarPlacas(busquedaPlacasVisavetBean, request, session, pageable);
+			
 		}
 				// buscar placas segun los criterios de busqueda 
 				@RequestMapping(value = "/laboratorioUni/buscarPlacasProcesar", method = RequestMethod.POST)
@@ -520,15 +538,43 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 					return "VistaLotesPlacasVisavet :: #trGroup";
 					
 				}
-				
+		private Integer calcularPlacasVisavetEspera(BeanLaboratorioCentro laboratorio)	{
+			Integer suma=0;
+			Set<PlacaLaboratorio> placasLaboratorios= laboratorio.getPlacaLaboratorios();
+			for (PlacaLaboratorio placaLaboratorio:placasLaboratorios) {
+				for (PlacaVisavetPlacaLaboratorio placaRelacion: placaLaboratorio.getPlacaVisavetPlacaLaboratorios()) {
+					if (placaRelacion.getPlacaVisavet().getEstadoPlacaVisavet().getId()== 4 || placaRelacion.getPlacaVisavet().getEstadoPlacaVisavet().getId()==5) 
+				     suma++;
+				}
+			}
+			return suma;
+		}
 			
 		@RequestMapping(value = "/laboratorioUni/consultarOcupacionLaboratorios", method = RequestMethod.GET)
-	   public String asignarPlacasGet( Model model, HttpServletRequest request, HttpSession session) throws Exception {
+	   public String asignarPlacasGet(@RequestParam("idPlaca") Integer idPlaca, Model model, HttpServletRequest request, HttpSession session) throws Exception {
 		//	
 			List<BeanLaboratorioCentro> laboratorios=laboratorioCentroServicio.listaLaboratoriosCentroOrdenada();
 		    model.addAttribute("laboratorios", laboratorios);
+		    for (BeanLaboratorioCentro laboratorio: laboratorios) {
+		    	laboratorio.setPlacasVisavetaLaEspera(this.calcularPlacasVisavetEspera(laboratorio));
+		    }
 			return "VistaListadoPlacasVisavet :: #trLaboratorio";
 		}		
+		
+		
+		@RequestMapping(value="/laboratorioUni/asignarLaboratorio", method=RequestMethod.GET)
+		public ModelAndView asignarPlacasPost(@RequestParam("idPlaca") Integer idPlaca, @RequestParam("laboratorio") Integer laboratorio,Model model,HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+			//PlacaLaboratorioVisavetBean  placa=laboratorioVisavetServicio.buscarPlaca(idPlaca);
+			BeanPlacaVisavetUCM placa= servicioLaboratorioUni.buscarPlacaById(idPlaca);
+			//BeanLaboratorioCentro laboratorioBean =laboratorioCentroServicio.buscarLaboratorioById(laboratorio);
+			BeanEstado estado= new BeanEstado();
+			estado.setEstado(Estado.PLACAVISAVET_ASIGNADA);
+			estado.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
+			placa.setEstado(estado);
+		BeanPlacaVisavetUCM placab= servicioLaboratorioUni.guardarPlacaConLaboratorio(placa, laboratorio);
+		    return this.buscarPlacas((BusquedaPlacasVisavetBean) session.getAttribute("busqueda"), request, session, pageable);
+		}
+
 }
 
 
