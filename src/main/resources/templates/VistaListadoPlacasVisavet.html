@@ -136,7 +136,7 @@
                           <i class="fa fa-flask" aria-hidden="true" title="Asignar laboratorio" style="font-size: 1.2em;"></i>
 						</a>
 						<i  title="Asignar laboratorio" th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_FINALIZADA' or  #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}" class="fa fa-flask"  aria-hidden="true" style="font-size: 1.2em;color:grey;"></i>
-					  <a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}"  th:data-id="${unResultado.id}" th:onClick="cambiarEstadoaEnviada(this.getAttribute('data-id'))">
+					  <a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}"  th:data-id="${unResultado.id}" th:data-laboratorio="${unResultado.laboratorioCentro.nombre}" data-toggle="modal"  data-target="#modalConfirmRecibido"   th:attr="data-target='#modalConfirmRecibido'" th:onClick="|cambiarEstadoaEnviada(this.getAttribute('data-id'),this.getAttribute('data-laboratorio'));|">
 					  	<i class="fa fa-share-square" title="Confirmar Enviada" aria-hidden="true" style="font-size: 1.2em;"></i>
 						</a>
 						<i th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}"  class="fa fa-share-square" title="Confirmar Enviada" aria-hidden="true"  style="font-size: 1.2em;color:grey;"></i>
@@ -156,7 +156,55 @@
 	</div>
 		</div> 	
 	<!-- Empiezan los modales -->
+			<!--  Confirmar Recibido -->
+			    	<div class="modal fade" id="modalConfirmRecibido" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">Confirmar placa enviada</h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	
+								          	<div id="tablaMuestras">
+												<table>
+													<thead class="thead-light">	
+									    				<tr>
+										      				<th>Número de Placa</th>
+															<th>Laboratorio</th>
+															
+															
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td><span id="idPlaca"></span></td>					
+															<td><span id="laboratorio"></span></td>
+																
+																													
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    <input type="hidden" id="id" value=""></input>
+									    <button type="button" id="aceptarConfirmacion"  class="btn btn-secondary" data-dismiss="modal"  th:onclick="|confirmarPlacaEnviada()|">Aceptar</button>
+										<button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
+									
+									    						        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
 		
+			
+			
+			
+		
+<!--  	 fin  Recibido -->
 	<!-- consultar Muestras -->
 <div id="modalConsultarMuestras" class="modal fade modal1 in" role="dialog">
    <div id="ventanaConfirmRecibido" class="modal-dialog ">

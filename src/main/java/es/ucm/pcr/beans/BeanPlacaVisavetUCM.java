@@ -20,6 +20,7 @@ private String tamano;
 private Date fechaCreacion;
 private BeanEstado estado;
 private Integer idLaboratorioCentro;
+private BeanLaboratorioCentro laboratorioCentro;
 
 public List<LoteBeanPlacaVisavet> getListaLotes() {
 	return listaLotes;
@@ -57,6 +58,13 @@ public Integer getIdLaboratorioCentro() {
 public void setIdLaboratorioCentro(Integer idLaboratorioCentro) {
 	this.idLaboratorioCentro = idLaboratorioCentro;
 }
+
+public BeanLaboratorioCentro getLaboratorioCentro() {
+	return laboratorioCentro;
+}
+public void setLaboratorioCentro(BeanLaboratorioCentro laboratorioCentro) {
+	this.laboratorioCentro = laboratorioCentro;
+}
 public static BeanPlacaVisavetUCM modelToBean(PlacaVisavet placaVisavet) {
 
 	BeanPlacaVisavetUCM bean = new BeanPlacaVisavetUCM();
@@ -76,6 +84,15 @@ public static BeanPlacaVisavetUCM modelToBean(PlacaVisavet placaVisavet) {
 	for (Lote l:placaVisavet.getLotes()) {
 	lote=LoteBeanPlacaVisavet.modelToBean(l);
 	listaLotes.add(lote);
+	}
+	
+	if (placaVisavet.getLaboratorioCentro()!= null) {
+		BeanLaboratorioCentro laboratorioCentro= new BeanLaboratorioCentro();
+		//LaboratorioCentro laboratorioCentro = new BeanLaboratorioCentro();
+		laboratorioCentro.setId(placaVisavet.getLaboratorioCentro().getId());
+		laboratorioCentro.setNombre(placaVisavet.getLaboratorioCentro().getNombre());
+	    bean.setLaboratorioCentro(laboratorioCentro);
+	    bean.setIdLaboratorioCentro(placaVisavet.getLaboratorioCentro().getId());
 	}
 	
 	/*List<MuestraListadoPlacasLaboratorioBean> listadoMuestras = new ArrayList<MuestraListadoPlacasLaboratorioBean>();

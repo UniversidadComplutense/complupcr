@@ -55,6 +55,11 @@ public class Muestra implements java.io.Serializable {
 	public Muestra() {
 	}
 
+	public Muestra(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	public Muestra(Centro centro, EstadoMuestra estadoMuestra, String etiqueta, String tipoMuestra) {
 		this.centro = centro;
 		this.estadoMuestra = estadoMuestra;

@@ -40,3 +40,8 @@ fieldset legend {
 #tablaMuestras table  { border-collapse: collapse; width: 100%; }
 #tablaMuestras th, td { padding: 8px 16px; }
 #tablaMuestras th     { background:#eee; }
+
+
+.custom-file-label::after {
+	content: "Buscar..." !important;
+}
