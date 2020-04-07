@@ -44,6 +44,11 @@ public class PlacaVisavet implements java.io.Serializable {
 
 	public PlacaVisavet() {
 	}
+	
+	public PlacaVisavet(Integer id) {
+		super();
+		this.id = id;
+	}
 
 	public PlacaVisavet(LaboratorioVisavet laboratorioVisavet) {
 		this.laboratorioVisavet = laboratorioVisavet;
