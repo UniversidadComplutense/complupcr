@@ -31,11 +31,11 @@ import es.ucm.pcr.servicios.UsuarioServicio;
 @Controller
 public class UsuarioControlador {
 	
-	@Autowired
-	UsuarioRepositorio usuarioRepositorio;
+//	@Autowired
+//	UsuarioRepositorio usuarioRepositorio;
 	
-	@Autowired
-	RolRepositorio rolRepositorio;
+//	@Autowired
+//	RolRepositorio rolRepositorio;
 	
 	@Autowired
 	UsuarioServicio usuarioServicio;
@@ -117,7 +117,8 @@ public class UsuarioControlador {
 			// No todos los campos son modificables, el mail por ejemplo
 			// va asociado a la pwd, y es único, por lo que no modificable
 			// Buscamos el usuario a modificar, y volcamos los datos recogidos por el formulario
-			Optional<Usuario> usuario = usuarioRepositorio.findById(beanUsuario.getId());
+//			Optional<Usuario> usuario = usuarioRepositorio.findById(beanUsuario.getId());
+			Optional<Usuario> usuario = usuarioServicio.buscarUsuarioPorId(beanUsuario.getId());
 			// añadimos campos del formulario
 //			usuarioRepositorio.save(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get(), roles));
 			usuarioServicio.guardar(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get(), roles));
@@ -136,7 +137,8 @@ public class UsuarioControlador {
 		ModelAndView vista = new ModelAndView("VistaUsuario");
 		
 		// Busco el usuario a modificar
-		Optional<Usuario> usuario = usuarioRepositorio.findById(idUsuario);
+//		Optional<Usuario> usuario = usuarioRepositorio.findById(idUsuario);
+		Optional<Usuario> usuario = usuarioServicio.buscarUsuarioPorId(idUsuario);
 		// cargo el beanUsuario con lo datos del usuario a modificar
 		BeanUsuarioGestion beanUsuario = usuarioServicio.mapeoEntidadBeanUsuario(usuario.get());
 		
