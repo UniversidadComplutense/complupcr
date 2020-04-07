@@ -101,13 +101,17 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		List<BeanLaboratorioCentro> listaLaboratorioCentro = new ArrayList<BeanLaboratorioCentro>();
 		for (LaboratorioCentro laboratorioCentro: laboratorioCentroRepositorio.findAll())
 		{
-			listaLaboratorioCentro.add(new BeanLaboratorioCentro(
-					laboratorioCentro.getId(), 
-					laboratorioCentro.getNombre(),
-					laboratorioCentro.getDocumentos(),
-					laboratorioCentro.getPlacaLaboratorios(),
-					laboratorioCentro.getEquipos(),
-					"L"));
+			BeanLaboratorioCentro beanLaboratorioCentro = new BeanLaboratorioCentro();
+			beanLaboratorioCentro = mapeoEntidadBeanLaboratorioCentro(laboratorioCentro);
+			listaLaboratorioCentro.add(beanLaboratorioCentro);
+			
+//			listaLaboratorioCentro.add(new BeanLaboratorioCentro(
+//					laboratorioCentro.getId(), 
+//					laboratorioCentro.getNombre(),
+//					laboratorioCentro.getDocumentos(),
+//					laboratorioCentro.getPlacaLaboratorios(),
+//					laboratorioCentro.getEquipos(),
+//					"L"));
 		}
 		//	Ordeno por nombre
 		Collections.sort(listaLaboratorioCentro);
@@ -129,6 +133,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	public void borrarLaboratorioCentro (Integer idLaboratorioCentro) throws Exception{
 		laboratorioCentroRepositorio.deleteById(idLaboratorioCentro);
+	}
+	
+	public Optional <LaboratorioCentro> buscarLaboratorioCentroPorId (Integer idLaboratorioCentro) throws Exception{
+		return laboratorioCentroRepositorio.findById(idLaboratorioCentro);
 	}
 	
 	@Override

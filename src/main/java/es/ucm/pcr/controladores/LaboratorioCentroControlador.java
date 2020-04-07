@@ -25,8 +25,8 @@ import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 @Controller
 public class LaboratorioCentroControlador {
 
-	@Autowired
-	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
+//	@Autowired
+//	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
 	
 	@Autowired
 	LaboratorioCentroServicio laboratorioCentroServicio;
@@ -40,19 +40,22 @@ public class LaboratorioCentroControlador {
 	
 		// cargo todos los laboratorioCentros de BBDD
 		List<BeanLaboratorioCentro> listaLaboratorioCentro = new ArrayList<BeanLaboratorioCentro>();
-		for (LaboratorioCentro laboratorioCentro: laboratorioCentroRepositorio.findAll())
-		{
-			listaLaboratorioCentro.add(new BeanLaboratorioCentro(
-					laboratorioCentro.getId(), 
-					laboratorioCentro.getNombre(),
-					laboratorioCentro.getDocumentos(),
-					laboratorioCentro.getPlacaLaboratorios(),
-					laboratorioCentro.getEquipos(),
-					"L"));
-		}
-		//	Ordeno por ap1, ap2, nombre
-		Collections.sort(listaLaboratorioCentro);
+		listaLaboratorioCentro = laboratorioCentroServicio.listaLaboratoriosCentroOrdenada();
 		vista.addObject("listaLaboratorioCentro", listaLaboratorioCentro);
+		
+//		for (LaboratorioCentro laboratorioCentro: laboratorioCentroRepositorio.findAll())
+//		{
+//			listaLaboratorioCentro.add(new BeanLaboratorioCentro(
+//					laboratorioCentro.getId(), 
+//					laboratorioCentro.getNombre(),
+//					laboratorioCentro.getDocumentos(),
+//					laboratorioCentro.getPlacaLaboratorios(),
+//					laboratorioCentro.getEquipos(),
+//					"L"));
+//		}
+//		//	Ordeno por ap1, ap2, nombre
+//		Collections.sort(listaLaboratorioCentro);
+//		vista.addObject("listaLaboratorioCentro", listaLaboratorioCentro);
 	
 		return vista;
 	}	
@@ -89,7 +92,8 @@ public class LaboratorioCentroControlador {
 			if (beanLaboratorioCentro.getAccion().equals("M"))
 			{	
 				// Buscamos el laboratorioCentro a modificar, y volcamos los datos recogidos por el formulario
-				Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroRepositorio.findById(beanLaboratorioCentro.getId());
+//				Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroRepositorio.findById(beanLaboratorioCentro.getId());
+				Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroServicio.buscarLaboratorioCentroPorId(beanLaboratorioCentro.getId());
 				// añadimos campos del formulario
 //				laboratorioCentro.get().setNombre(beanLaboratorioCentro.getNombre());
 //				laboratorioCentroRepositorio.save(laboratorioCentro.get());
@@ -110,7 +114,8 @@ public class LaboratorioCentroControlador {
 			ModelAndView vista = new ModelAndView("VistaLaboratorioCentro");
 			
 			// Busco el laboratorioCentro a modificar
-			Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroRepositorio.findById(idLaboratorioCentro);
+//			Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroRepositorio.findById(idLaboratorioCentro);
+			Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroServicio.buscarLaboratorioCentroPorId(idLaboratorioCentro);
 			// cargo el beanLaboratorioCentro con lo datos del laboratorioCentro a modificar
 //			BeanLaboratorioCentro beanLaboratorioCentro = new BeanLaboratorioCentro();
 //			beanLaboratorioCentro.setId(laboratorioCentro.get().getId());
