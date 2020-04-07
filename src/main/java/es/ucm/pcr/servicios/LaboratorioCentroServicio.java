@@ -2,19 +2,18 @@ package es.ucm.pcr.servicios;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
-import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
-import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.Usuario;
 
@@ -67,6 +66,14 @@ public interface LaboratorioCentroServicio {
 	 * @return void >
 	 */
 	public void borrarLaboratorioCentro (Integer idLaboratorioCentro) throws Exception;
+	
+	/**
+	 * Buscat Laboratorio por Id
+	 * 
+	 * @param Integer idLaboratorioCentro
+	 * @return void Optional <LaboratorioCentro>
+	 */
+	public Optional <LaboratorioCentro> buscarLaboratorioCentroPorId (Integer idLaboratorioCentro) throws Exception;
 	
 	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable);
 	PlacaLaboratorioCentroBean buscarPlaca (Integer id);
