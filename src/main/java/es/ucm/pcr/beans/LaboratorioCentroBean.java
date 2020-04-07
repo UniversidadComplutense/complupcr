@@ -9,7 +9,7 @@ public class LaboratorioCentroBean {
 	private String universidad;
 	private List<PlacaLaboratorioCentroBean> placas;
 	private List<EquipoLaboratorioCentroBean> equipos;
-
+	private Integer placasVisavetaLaEspera;
 	
 	public String getId() {
 		return id;
@@ -49,6 +49,14 @@ public class LaboratorioCentroBean {
 
 	public void setEquipos(List<EquipoLaboratorioCentroBean> equipos) {
 		this.equipos = equipos;
+	}
+	public Integer getPlacasVisavetaLaEspera() {
+		return placasVisavetaLaEspera;
+	}
+
+
+	public void setPlacasVisavetaLaEspera(Integer placasVisavetaLaEspera) {
+		this.placasVisavetaLaEspera = placasVisavetaLaEspera;
 	}
 
 }

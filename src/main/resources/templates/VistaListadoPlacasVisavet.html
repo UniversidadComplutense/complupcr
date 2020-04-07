@@ -98,69 +98,47 @@
 	<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">	
 		<div id="capaResultados" 
 			class="row formPnl1"  th:unless="${(pagina == null)}">
-		 	<table class="col-xs-12 table" th:id="tablaResultadosCabecera" >
+		 	<table class="col-xs-12 table" th:id="tablaResultados" >
 			 <thead class="thead-light">
 				<tr>
-				<th  style="text-align: left;"></th>
-					<th  style="text-align: left;">#Placa</th>
-					<th  style="text-align: left;">F. Creación</th>
-					<th  style="text-align: left;">#Lotes</th>
-					<th  style="text-align: left;">Nº Muestras</th>
-					<th  style="text-align: left;">Estado</th>
-				    <th  style="text-align: left;">Laboratorio</th>
-				    <th  style="text-align: left;">Acciones</th>
+				    <th scope="col"></th>
+					<th scope="col">#Placa</th>
+					<th scope="col">F. Creación</th>
+					<th scope="col">#Lotes</th>
+					<th scope="col">Nº Muestras</th>
+					<th scope="col">Estado</th>
+				    <th scope="col">Laboratorio</th>
+				    <th scope="col">Acciones</th>
 				</tr>
 				</thead>
-				</table>
-			
-					<table class="col-xs-12 table" th:id="tablaResultadosLotes" >
-						
+				<tbody>	
 			 	<tr th:id="trGroup+${count.index}"  th:each="unResultado,count : ${pagina.getContent()}">
-					
-							<td width="1%">	<span th:text="${unResultado.id}"></span>
-								</td>
-								<td width="1%">
-									<span th:text="${#dates.format(unResultado.fechaCreacion, 'dd-mm-yyyy')}"></span>
-								
-								</td>
-                            <td width="10%">
-                            <p th:id="lotes+${unResultado.id}" th:each="lote: ${unResultado.listaLotes}">
+					<td><span th:text="${unResultado.id}"></span></td>
+					<td><span th:text="${#dates.format(unResultado.fechaCreacion, 'dd-mm-yyyy')}"></span></td>
+                    <td> <p th:id="lotes+${unResultado.id}" th:each="lote: ${unResultado.listaLotes}">
                             <input type="text" id="lote+${count.index}" th:value="${lote.id}"/>
 							<span th:text="${lote.numLote}"></span>
-							</p>
-							</td>
-                              <td id="mensajes_log" style="text-align: center;" width="1%">
-                                    <a  data-toggle="modal" href="#modalConsultarMuestras"  th:data-id="${unResultado.id}"  th:onClick="|consultarMuestras(this.getAttribute('data-id'));|">
-                                                                           
-                            <i class="fa fa-table" aria-hidden="true"
-										style="font-size: 1.2em;"></i>
-							</a>
-                         
-								</td>
-								
-								<td width="16%">
-								<span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
-						<!-- 	<input th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}"  id="procesarBoton"   type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" th:data-id="${unResultado.id}" onclick="procesarLotesDesdePlacas(this.getAttribute('data-id')"/>
-							 -->
-								<input th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}"  id="procesarBoton"   type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" th:data-id="${unResultado.id}" onclick="procesarLotesDesdePlacas(this.getAttribute('data-id'))"/>
-								  <a  th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_FINALIZADA'}" data-toggle="modal" href="#modalLaboratorio"  th:data-id="${unResultado.id}"  th:onClick="|asignarLaboratorio(this.getAttribute('data-id'));|">
-                                                                           
-                            <i class="fa fa-table" aria-hidden="true"
-										style="font-size: 1.2em;"></i>
-							</a>
-                         
-								  </td>
-								  
+						</p>
+					</td>
+                     <td> <a  data-toggle="modal" href="#modalConsultarMuestras"  th:data-id="${unResultado.id}"  th:onClick="|consultarMuestras(this.getAttribute('data-id'));|">
+                          <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+					      </a>
+                     </td>
+                     <td>
+						<span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
+						<input th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}"  id="procesarBoton"   type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" th:data-id="${unResultado.id}" onclick="procesarLotesDesdePlacas(this.getAttribute('data-id'))"/>
+						<a  th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_FINALIZADA'}" data-toggle="modal"  data-target="#modalLaboratorio"   th:attr="data-target='#modalLaboratorio'" th:data-id="${unResultado.id}"  th:onClick="|consultarOcupacionLaboratorio(this.getAttribute('data-id'));|">
+                          <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+						</a>
+							
+						
+						
+                    </td>		  
 					</tr>	
-					
+				</tbody>		
 			</table>
 			
 			
-	
-			
-
-			
-				
 		
 		</div> 
 	<!--  <div th:include="fragmentos :: paginador(${busquedaLotes.urlPaginada},${paginaLotes},${busquedaLotes.orden},${busquedaLotes.sentidoOrden},'0')"></div>
@@ -216,61 +194,54 @@
 						</div><!-- 2 -->
 	</div> <!-- 1 -->
 	
-	<!--  Fin consultar Muestras -->
-<div id="modalLaboratorio" class="modal fade modal1 in" role="dialog">
-   <div id="ventanaConsultarMuestras" class="modal-dialog ">
-    
-	<div class="modal-content">
-         <div class="modal-header" id="modal-header">
-         <button class="close" data-dismiss="modal" type="button">×</button>
-	
-         <h4 class="modal-title"> <span id="modalTitleNombre" class="info">Asignar laboratorio</span>
-         </h4>
-        </div>
 
-	<div id="mensajeSinSeleccionarTit" style="display: block; height: 70px;">
-		<span style="text-align: center; padding-top: 30px; padding-left: 30px;"></span>
-	  <form id="laboratorioForm" action="" th:modelAttribute="beanPlacaVisavetUCM" >
-						<label class="col-xs-2">Laboratorio asignado:</label>
-			    <select class="form-control form-control-sm" id="laboratorio">
-			    <option value="">Seleccione</option>
-					<option th:each="var: ${busqueda.listaLaboratorioCentro}"
-									th:value="${var.id}" th:text="${var.nombre}"
-									th:select="${busqueda.idLaboratorioCentro}">Laboratorio</option>
-				</select>
-							    <div id="capaMuestrasMostrar">
-							<table class="col-xs-12 table" th:id="tablaLaboratorios" >
-					     	<tr id="trLaboratorio">	</tr>
-			            	 <tr id="trLaboratorio"  th:each="laboratorio, count : ${laboratorios}">
-			            	
-				              <td><span th:text="${#strings.toString(laboratorio.id)}"></td>
-				              <td><span th:text="${#strings.toString(laboratorio.nombre)}"></td>
-				            </tr>
-							   
-							   
-							    </table>
-							    </div>	
-									<div class="modal-footer">
-									<input type="hidden" id="id" value=""></input>
-									  	<button type="button" id="cerrarConfirmacion" data-dismiss="modal">Cerrar</button>
-										
-									</div>
-						</form>
-
-							</div>
-
-
-
-
-						</div>
-						</div>
-						
-	</div> 	
-		<!-- Fin asignarLaboratorio -->
 		</div>
 		</div>			
 
-	
+<!--  Fin consultar Muestras -->
+<div th:id="modalLaboratorio" class="modal fade" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true" >
+   <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+         <div class="modal-header" id="modal-header">
+         <button class="close" data-dismiss="modal" type="button">×</button>
+	     <h4 class="modal-title"> <span id="modalTitleNombre" class="info">Asignar Placa a laboratorio</span>
+         </h4>
+         </div>
+         <div class="modal-body">
+		 <form id="laboratorioForm" action="" th:modelAttribute="beanPlacaVisavetUCM" >
+			 <label class="col-xs-2">Laboratorio a asignar:</label>
+			    <select class="form-control form-control-sm" id="laboratorio">
+			    <option value="">Seleccione</option>
+				<option th:each="var: ${busqueda.listaLaboratorioCentro}"
+									th:value="${var.id}" th:text="${var.nombre}"
+									th:select="${busqueda.idLaboratorioCentro}">Laboratorio</option>
+				</select>
+				<div id="capaMuestrasMostrar">
+				<table class="col-xs-12 table" th:id="tablaLaboratorios" >
+				  <thead><tr><th scope="col">Nombre</th><th scope="col">Nº de equipos</th><th scope="col">Placas a la espera</th>
+				  </tr>
+				  </thead>
+					 <tr id="trLaboratorio">	</tr>
+			     <tr id="trLaboratorio"  th:each="laboratorio, count : ${laboratorios}">
+			      <td><span th:text="${#lists.size(laboratorio.nombre)}"></td>
+			             <td><span th:text="${#lists.size(laboratorio.equipos)}"></td>
+				         <td><span th:text="${#strings.toString(laboratorio.placasVisavetaLaEspera)}"></td>
+				      </tr>  
+				      
+				</table>
+			  </div>	
+			<div class="modal-footer">
+			<input type="text" id="idPlaca" value=""></input>	
+			<button type="button" id="asignarLaboratorio" class="btn btn-secondary" onClick="asignarLaboratoriodesdeModal();">Asignar Laboratorio</button>
+			<button type="button" id="cerrarConfirmacion" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+			</div>
+			</form>
+         </div>
+     </div>
+   </div>
+						
+	</div> 	
+		<!-- Fin asignarLaboratorio -->	
 	
 <object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 <object th:include="fragmentos :: scripts" th:remove="tag"></object>

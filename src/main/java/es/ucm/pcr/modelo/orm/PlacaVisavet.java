@@ -100,7 +100,7 @@ public class PlacaVisavet implements java.io.Serializable {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "idLaboratorioCentro", nullable = false)
+	@JoinColumn(name = "idLaboratorioCentro", nullable = true)
 	public LaboratorioCentro getLaboratorioCentro() {
 		return this.laboratorioCentro;
 	}

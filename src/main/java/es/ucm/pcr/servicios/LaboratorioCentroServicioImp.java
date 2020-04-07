@@ -321,5 +321,22 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	
 	
+	
+	public BeanLaboratorioCentro buscarLaboratorioById(Integer id) {
+		Optional<LaboratorioCentro> laboratorioOp= laboratorioCentroRepositorio.findById(id);
+		
+		if (laboratorioOp.isPresent()) {
+			LaboratorioCentro laboratorioCentro=laboratorioOp.get();
+			return new BeanLaboratorioCentro(
+					laboratorioCentro.getId(), 
+					laboratorioCentro.getNombre(),
+					laboratorioCentro.getDocumentos(),
+					laboratorioCentro.getPlacaLaboratorios(),
+					laboratorioCentro.getEquipos(),
+					"L");
+		}
+		else return null;
+	}
+	
 	//Fin Diana- metodos para jefe de servicio
 }
