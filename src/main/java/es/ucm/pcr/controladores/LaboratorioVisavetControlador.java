@@ -28,8 +28,8 @@ import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 @Controller
 public class LaboratorioVisavetControlador {
 
-	@Autowired
-	LaboratorioVisavetRepositorio laboratorioVisavetRepositorio;
+//	@Autowired
+//	LaboratorioVisavetRepositorio laboratorioVisavetRepositorio;
 	
 	@Autowired
 	LaboratorioVisavetServicio laboratorioVisavetServicio;
@@ -43,20 +43,23 @@ public class LaboratorioVisavetControlador {
 	
 		// cargo todos los laboratorioVisavets de BBDD
 		List<BeanLaboratorioVisavet> listaLaboratorioVisavet = new ArrayList<BeanLaboratorioVisavet>();
-		for (LaboratorioVisavet laboratorioVisavet: laboratorioVisavetRepositorio.findAll())
-		{
-			listaLaboratorioVisavet.add(
-					new BeanLaboratorioVisavet( laboratorioVisavet.getId(), 
-												laboratorioVisavet.getNombre(), 
-												laboratorioVisavet.getCapacidad(),
-												laboratorioVisavet.getOcupacion(),
-												laboratorioVisavet.getDocumentos(),
-												laboratorioVisavet.getPlacaVisavets(),
-												"L"));
-		}
-		//	Ordeno por ap1, ap2, nombre
-		Collections.sort(listaLaboratorioVisavet);
+		listaLaboratorioVisavet = laboratorioVisavetServicio.listaLaboratoriosVisavetOrdenada();
 		vista.addObject("listaLaboratorioVisavet", listaLaboratorioVisavet);
+		
+//		for (LaboratorioVisavet laboratorioVisavet: laboratorioVisavetRepositorio.findAll())
+//		{
+//			listaLaboratorioVisavet.add(
+//					new BeanLaboratorioVisavet( laboratorioVisavet.getId(), 
+//												laboratorioVisavet.getNombre(), 
+//												laboratorioVisavet.getCapacidad(),
+//												laboratorioVisavet.getOcupacion(),
+//												laboratorioVisavet.getDocumentos(),
+//												laboratorioVisavet.getPlacaVisavets(),
+//												"L"));
+//		}
+//		//	Ordeno por ap1, ap2, nombre
+//		Collections.sort(listaLaboratorioVisavet);
+//		vista.addObject("listaLaboratorioVisavet", listaLaboratorioVisavet);
 	
 		return vista;
 	}	
@@ -96,7 +99,8 @@ public class LaboratorioVisavetControlador {
 			if (beanLaboratorioVisavet.getAccion().equals("M"))
 			{	
 				// Buscamos el laboratorioVisavet a modificar, y volcamos los datos recogidos por el formulario
-				Optional<LaboratorioVisavet> laboratorioVisavet = laboratorioVisavetRepositorio.findById(beanLaboratorioVisavet.getId());
+//				Optional<LaboratorioVisavet> laboratorioVisavet = laboratorioVisavetRepositorio.findById(beanLaboratorioVisavet.getId());
+				Optional<LaboratorioVisavet> laboratorioVisavet = laboratorioVisavetServicio.buscarLaboratorioVisavetPorId(beanLaboratorioVisavet.getId());
 				// añadimos campos del formulario
 //				laboratorioVisavet.get().setNombre(beanLaboratorioVisavet.getNombre());
 //				laboratorioVisavet.get().setCapacidad(beanLaboratorioVisavet.getCapacidad());
@@ -119,7 +123,8 @@ public class LaboratorioVisavetControlador {
 			ModelAndView vista = new ModelAndView("VistaLaboratorioVisavet");
 			
 			// Busco el laboratorioVisavet a modificar
-			Optional<LaboratorioVisavet> laboratorioVisavet = laboratorioVisavetRepositorio.findById(idLaboratorioVisavet);
+			Optional<LaboratorioVisavet> laboratorioVisavet = laboratorioVisavetServicio.buscarLaboratorioVisavetPorId(idLaboratorioVisavet);
+//			Optional<LaboratorioVisavet> laboratorioVisavet = laboratorioVisavetRepositorio.findById(idLaboratorioVisavet);
 			// cargo el beanLaboratorioVisavet con lo datos del laboratorioVisavet a modificar
 //			BeanLaboratorioVisavet beanLaboratorioVisavet = new BeanLaboratorioVisavet();
 //			beanLaboratorioVisavet.setId(laboratorioVisavet.get().getId());

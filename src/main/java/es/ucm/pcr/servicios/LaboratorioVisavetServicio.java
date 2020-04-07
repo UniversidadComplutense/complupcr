@@ -3,6 +3,7 @@ package es.ucm.pcr.servicios;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -62,6 +63,14 @@ public interface LaboratorioVisavetServicio {
 	 * @return void >
 	 */
 	public void borrarLaboratorioVisavet (Integer idLaboratorioVisavet) throws Exception;	
+
+	/**
+	 * Buscat Laboratorio por Id
+	 * 
+	 * @param Integer idLaboratorioVisavet
+	 * @return void Optional <LaboratorioVisavet>
+	 */
+	public Optional <LaboratorioVisavet> buscarLaboratorioVisavetPorId (Integer idLaboratorioVisavet) throws Exception;
 
 	
 	// JAVI
