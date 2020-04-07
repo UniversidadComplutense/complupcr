@@ -92,7 +92,6 @@ public class LaboratorioVisavetUCMController {
 	}
 
 private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes) throws Exception {
-	busquedaLotes.setIdCentro(0);
 
 	busquedaLotes.setListaBeanEstado(BeanEstado.estadosLoteLaboratorioVisavet());
 	busquedaLotes.setListaCentros(centroServicio.listaCentrosOrdenada());
@@ -103,7 +102,15 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		
 		Page<LoteBeanPlacaVisavet> paginaLotes = null;
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
-	
+		 busquedaLotes.setMostrarProcesar(false);
+		
+		for (String rol:sesionServicio.getRoles()){
+			if (rol.equals("ROLE_TECNICOLABORATORIO")|| rol.equals("ROLE_ADMIN")) {
+				 busquedaLotes.setMostrarProcesar(true);
+				 break;
+			}
+		}
+	 
 		busquedaLotes= this.rellenarBusquedaLotes(busquedaLotes);
 		paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), ORDENACION));
 		//model.addAttribute("paginaLotes", paginaLotes);
@@ -218,6 +225,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 		LoteCentroBean beanLote = loteServicio.findById(id);
+		beanLote.setFechaRecibido(new Date());
 		BeanEstado estado= new BeanEstado();
 		estado.setTipoEstado(TipoEstado.EstadoLote);
 		estado.setEstado(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS);
@@ -244,7 +252,9 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				*/	
 		loteServicio.actualizarEstadoLote(beanLote, estado);
 		//LoteCentroBean lote = loteServicio.guardarLotePlavaVisavet(beanLote,estado);
-		return  this.buscarLotes((BusquedaLotesBean) session.getAttribute("busquedaLotes"), request, session, pageable);
+		BusquedaLotesBean busqueda=(BusquedaLotesBean) session.getAttribute("busquedaLotes");
+		if (busqueda ==null) busqueda= new BusquedaLotesBean();
+		return  this.buscarLotes(busqueda, request, session, pageable);
 				/*	Page<LoteBeanPlacaVisavet> paginaLotes = null;
 					paginaLotes = new PageImpl<LoteBeanPlacaVisavet>(list, pageable,pageable.getPageSize());
 					// fin para probar 
@@ -265,7 +275,10 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		estado.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
 		placa.setEstado(estado);
 	   BeanPlacaVisavetUCM placab= servicioLaboratorioUni.guardar(placa); 
-	    return this.buscarPlacas((BusquedaPlacasVisavetBean) session.getAttribute("busqueda"), request, session, pageable);
+	   BusquedaPlacasVisavetBean busqueda=(BusquedaPlacasVisavetBean) session.getAttribute("busqueda");
+	  if (busqueda ==null) busqueda= new BusquedaPlacasVisavetBean();
+		
+	    return this.buscarPlacas(busqueda, request, session, pageable);
 	}
 	
 		// refrescar  datos con ajax
@@ -519,6 +532,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 					// para jugar
 					//lotePlacaVisavetBean.getPlaca().setListaLotes(lotePlacaVisavetBean.getListaLotesDisponibles());
 					List<LoteBeanPlacaVisavet> listaLotesDisponibles= new ArrayList();
+					if (lotePlacaVisavetBean == null)lotePlacaVisavetBean= new LotePlacaVisavetBean();
 						for (LoteBeanPlacaVisavet lote:lotePlacaVisavetBean.getListaLotesDisponibles()) {
 				      
 						// busco la que tenga el mismo idPlaca lotePlacaVisavetBean.getPlaca()
@@ -537,6 +551,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 					estado.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
 					estado.setEstado(Estado.PLACAVISAVET_INICIADA);
 					placaVisavet.setEstado(estado);
+					placaVisavet.setFechaCreacion(new Date());
 					// al guardar no estoy metiendo lotes
 					placaVisavet = servicioLaboratorioUni.guardarConLote(placaVisavet);
 					
@@ -582,7 +597,9 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			estado.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
 			placa.setEstado(estado);
 		BeanPlacaVisavetUCM placab= servicioLaboratorioUni.guardarPlacaConLaboratorio(placa, laboratorio);
-		    return this.buscarPlacas((BusquedaPlacasVisavetBean) session.getAttribute("busqueda"), request, session, pageable);
+		BusquedaPlacasVisavetBean busqueda= (BusquedaPlacasVisavetBean) session.getAttribute("busqueda");
+		if (busqueda ==null) busqueda=new BusquedaPlacasVisavetBean();
+		    return this.buscarPlacas(busqueda, request, session, pageable);
 		}
 
 }

@@ -22,6 +22,7 @@ private Integer idCentro;
 private String urlPaginada="/laboratorioUni/buscarLotesGet";
 private String orden;
 private String sentidoOrden;
+private Boolean mostrarProcesar;
 
 public String getIdLaboratorio() {
 	return idLaboratorio;
@@ -100,6 +101,14 @@ public String getSentidoOrden() {
 }
 public void setSentidoOrden(String sentidoOrden) {
 	this.sentidoOrden = sentidoOrden;
+}
+
+
+public Boolean getMostrarProcesar() {
+	return mostrarProcesar;
+}
+public void setMostrarProcesar(Boolean mostrarProcesar) {
+	this.mostrarProcesar = mostrarProcesar;
 }
 public String getCriterioNumLote() {
 	return StringUtils.isBlank(numLote) ? null : "%" + numLote + "%";
