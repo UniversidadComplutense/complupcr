@@ -24,9 +24,6 @@ import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 
 @Controller
 public class LaboratorioCentroControlador {
-
-//	@Autowired
-//	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
 	
 	@Autowired
 	LaboratorioCentroServicio laboratorioCentroServicio;
@@ -42,21 +39,6 @@ public class LaboratorioCentroControlador {
 		List<BeanLaboratorioCentro> listaLaboratorioCentro = new ArrayList<BeanLaboratorioCentro>();
 		listaLaboratorioCentro = laboratorioCentroServicio.listaLaboratoriosCentroOrdenada();
 		vista.addObject("listaLaboratorioCentro", listaLaboratorioCentro);
-		
-//		for (LaboratorioCentro laboratorioCentro: laboratorioCentroRepositorio.findAll())
-//		{
-//			listaLaboratorioCentro.add(new BeanLaboratorioCentro(
-//					laboratorioCentro.getId(), 
-//					laboratorioCentro.getNombre(),
-//					laboratorioCentro.getDocumentos(),
-//					laboratorioCentro.getPlacaLaboratorios(),
-//					laboratorioCentro.getEquipos(),
-//					"L"));
-//		}
-//		//	Ordeno por ap1, ap2, nombre
-//		Collections.sort(listaLaboratorioCentro);
-//		vista.addObject("listaLaboratorioCentro", listaLaboratorioCentro);
-	
 		return vista;
 	}	
 
@@ -82,22 +64,14 @@ public class LaboratorioCentroControlador {
 			// Damos de alta nuevo laboratorioCentro
 			if (beanLaboratorioCentro.getAccion().equals("A"))
 			{
-//				LaboratorioCentro laboratorioCentro = new LaboratorioCentro();
-//				laboratorioCentro.setNombre(beanLaboratorioCentro.getNombre());
-//				laboratorioCentroRepositorio.save(laboratorioCentro);
-//				laboratorioCentroRepositorio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 				laboratorioCentroServicio.guardarLaboratorioCentro(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 			}
 			// Modificamos laboratorioCentro existente
 			if (beanLaboratorioCentro.getAccion().equals("M"))
 			{	
 				// Buscamos el laboratorioCentro a modificar, y volcamos los datos recogidos por el formulario
-//				Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroRepositorio.findById(beanLaboratorioCentro.getId());
 				Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroServicio.buscarLaboratorioCentroPorId(beanLaboratorioCentro.getId());
 				// añadimos campos del formulario
-//				laboratorioCentro.get().setNombre(beanLaboratorioCentro.getNombre());
-//				laboratorioCentroRepositorio.save(laboratorioCentro.get());
-//				laboratorioCentroRepositorio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 				laboratorioCentroServicio.guardarLaboratorioCentro(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 			}
 
@@ -114,13 +88,8 @@ public class LaboratorioCentroControlador {
 			ModelAndView vista = new ModelAndView("VistaLaboratorioCentro");
 			
 			// Busco el laboratorioCentro a modificar
-//			Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroRepositorio.findById(idLaboratorioCentro);
 			Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroServicio.buscarLaboratorioCentroPorId(idLaboratorioCentro);
 			// cargo el beanLaboratorioCentro con lo datos del laboratorioCentro a modificar
-//			BeanLaboratorioCentro beanLaboratorioCentro = new BeanLaboratorioCentro();
-//			beanLaboratorioCentro.setId(laboratorioCentro.get().getId());
-//			beanLaboratorioCentro.setNombre(laboratorioCentro.get().getNombre());
-			 
 			BeanLaboratorioCentro beanLaboratorioCentro = laboratorioCentroServicio.mapeoEntidadBeanLaboratorioCentro(laboratorioCentro.get());
 			
 			// le indicamos la acción a relizar: M modificación de un laboratorioCentro
@@ -135,7 +104,6 @@ public class LaboratorioCentroControlador {
 		@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 		public ModelAndView borrarLaboratorioCentro(@RequestParam("idLaboratorioCentro") Integer idLaboratorioCentro) throws Exception {
 			
-//			laboratorioCentroRepositorio.deleteById(idLaboratorioCentro);
 			laboratorioCentroServicio.borrarLaboratorioCentro(idLaboratorioCentro);
 			
 			// Volvemos a grabar mas centros
