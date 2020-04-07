@@ -333,6 +333,38 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 	}
 	
+	//metodo que nos dice si una muestra está resuelta o no
+	private Boolean muestraResuelta(Muestra m) {
+		Boolean resuelta = false;		
+		//una muestra está resuelta si tiene estado resuelta, tiene resultado y fecha de resultado		
+		if(m.getEstadoMuestra().getId() == Estado.MUESTRA_RESUELTA.getCodNum() &&
+		   m.getResultado()!=null && !m.getResultado().isEmpty() && m.getFechaResultado() !=null) {
+			resuelta = true;
+		}
+		return resuelta;
+	}
+	
+	
+	//metodo que nos dirá si las muestras de la placa pasada por parámetro tiene un resultado definitivo 
+	@Override
+	public Boolean tienenResultadoDefinitivoLasMuestrasDeLaPlaca(Integer idPlaca) {		
+		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);
+		//si la placa no tiene muestras devolvemos false
+		if(placa.getMuestras().size()==0) {
+			return false;
+		}else {			
+			//recorremos las muestras de la placa y si alguna no está resuelta
+			// es decir	no tiene el estado resuelta, no tiene resultado o no tiene fecha de resultado) devolvemos false
+			for(Muestra m : placa.getMuestras()) {
+				if(this.muestraResuelta(m)==false) {
+					return false;
+				}
+			}
+		}		
+		return true;
+	}
+	
+	//Fin Diana- metodos para jefe de servicio
 	
 	
 	
@@ -352,5 +384,5 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		else return null;
 	}
 	
-	//Fin Diana- metodos para jefe de servicio
+	
 }
