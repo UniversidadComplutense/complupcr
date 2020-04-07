@@ -9,42 +9,86 @@
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
-	
+
 	<div class="container">
-		<h4>GESTIÓN DE CENTROS</h4>
-
-		<a th:href="@{/gestor/altaCentro}" class="btn btn-primary eBtn">Añadir Centro</a>
-
-		</p>
-
-		<div class="card">
-			<div class="card-block">
-				<table class="table table-hover">
-					<thead>
-						<tr>
-							<th>Centro</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="centro :${listaCentros}">
-							<td th:text="${centro.codCentro}"></td>
-							<td th:text="${centro.nombre}"></td>							
-							<td>							
- 								<a th:href="@{/gestor/borrarCentro(idCentro=${centro.id})}" class="btn btn-danger delBtn">Borrar</a>
-								<a th:href="@{/gestor/editarCentro(idCentro=${centro.id})}" class="btn btn-primary eBtn">Editar</a>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				<hr />
-
-
+		<div
+			class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
+			<label>Gestión de centros</label>
+		</div>
+		<div th:if="${mensajeError !=null}"
+			class="alert alert-danger alert-dismissible fade show m-1 mt-2"
+			role="alert">
+			<label th:text="${mensajeError}"></label>
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="row justify-content-middle m-2">
+			<div class="col-2">
+				<a th:href="@{/gestor/altaCentro}" class="btn btn-secondary eBtn">Nuevo
+					Centro</a>
 			</div>
 		</div>
-	</div>
 
-	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
-	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+		<!-- Lista de centros existentes -->
+
+		<div class="row justify-content-center mt-3">
+			<table class="table">
+				<thead class="thead-light">
+					<tr>
+						<th class="p-1" scope="col">Código</th>
+						<th class="p-1" scope="col">Nombre</th>
+						<th class="p-1" scope="col">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="centro :${listaCentros}">
+						<td class="p-1" th:text="${centro.codCentro}"></td>
+						<td class="p-1" th:text="${centro.nombre}"></td>
+						<td class="p-1"><a style="color: black"
+							th:href="@{/gestor/editarCentro(idCentro=${centro.id})}"
+							title="Editar"> <i class="fa fa-edit" aria-hidden="true"
+								style="font-size: 1.2em;"></i>
+						</a> <a style="color: black"
+							th:data-href="@{/gestor/borrarCentro(idCentro=${centro.id})}"
+							title="Borrar" data-toggle="modal" data-target="#confirm-borrar"> <i class="fa fa-eraser" aria-hidden="true"
+								style="font-size: 1.2em;"></i>
+						</a>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- Diálogo confirmación borrado -->
+		<div class="modal fade" id="confirm-borrar"  tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Confirmación</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p>¿Está seguro de que quiere borrar este elemento?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Cancelar</button>
+						<a class="btn btn-danger btn-borrar">Borrar</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+		<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+		<script>
+		$('#confirm-borrar').on('show.bs.modal', function(e) {
+		    $(this).find('.btn-borrar').attr('href', $(e.relatedTarget).data('href'));
+		});
+		</script>
+	</div>
 </body>
 </html>

@@ -63,14 +63,9 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 		List<BeanLaboratorioVisavet> listaLaboratorioVisavet = new ArrayList<BeanLaboratorioVisavet>();
 		for (LaboratorioVisavet laboratorioVisavet: laboratorioVisavetRepositorio.findAll())
 		{
-			listaLaboratorioVisavet.add(
-					new BeanLaboratorioVisavet( laboratorioVisavet.getId(), 
-												laboratorioVisavet.getNombre(), 
-												laboratorioVisavet.getCapacidad(),
-												laboratorioVisavet.getOcupacion(),
-												laboratorioVisavet.getDocumentos(),
-												laboratorioVisavet.getPlacaVisavets(),
-												"L"));
+			BeanLaboratorioVisavet beanLaboratorioVisavet = new BeanLaboratorioVisavet();
+			beanLaboratorioVisavet = mapeoEntidadBeanLaboratorioVisavet(laboratorioVisavet);
+			listaLaboratorioVisavet.add(beanLaboratorioVisavet);
 		}
 		//	Ordeno por ap1, ap2, nombre
 		Collections.sort(listaLaboratorioVisavet);
@@ -94,6 +89,10 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	public void borrarLaboratorioVisavet (Integer idLaboratorioVisavet) throws Exception
 	{
 		laboratorioVisavetRepositorio.deleteById(idLaboratorioVisavet);
+	}
+	
+	public Optional <LaboratorioVisavet> buscarLaboratorioVisavetPorId (Integer idLaboratorioVisavet) throws Exception{
+			return laboratorioVisavetRepositorio.findById(idLaboratorioVisavet);
 	}
 	
 	// JAVI para buscar placas Visavet e incorporarlas a 'BusquedaPlacasVisavetBean'
