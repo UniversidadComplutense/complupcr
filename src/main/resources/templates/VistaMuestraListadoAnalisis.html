@@ -143,10 +143,7 @@
 		</div>
 		<!-- fin modal para mostrar un alert -->
 
-		<div class="row justify-content-end mt-3">
-			<!-- <div class="col-1">
-				<a th:href="@{/centroSalud/muestra/nueva}" class="btn btn-secondary">Nueva</a>				
-			</div> -->
+		<div class="row justify-content-end mt-3">			
 			<div class="col-1">
 				<button type="submit" class="btn btn-secondary">Buscar</button>
 			</div>
@@ -166,11 +163,9 @@
 						<th scope="col">Placa</th>
 						<th scope="col">Fecha envío</th>
 						<th scope="col">Fecha resultado</th>
-						<th scope="col">Resultado</th>
-						<!-- <th scope="col">Lote</th> -->
-						<!-- <th scope="col">Modificar</th> -->
-						<th scope="col">Asignar</th>
-						<th scope="col">Revisar</th>
+						<th scope="col">Resultado</th>						
+						<!-- <th scope="col">Asignar</th> -->
+						<th scope="col">Acciones</th>
 					</tr>
 				</thead>
 				<tbody th:if="${listadoMuestras != null}" th:each="muestra : ${listadoMuestras}">	
@@ -178,14 +173,17 @@
 					<tr >
 						<td>
 							<!-- th:checked="${muestra.estado == 'cerrada'}"  -->
-							<input
+							<input class="form-check-input, justify-content-center"
 									th:disabled="${muestra.esCerrable == false}"
 									type="checkbox" name="idCerrar" th:id="idCerrar"									
 									th:onClick="|AniadirOQuitarElementoAListaDeMuestrasACerrar(this, '${muestra.id}')|">
 							</input>
 						</td> 
 						<td class="clickable" data-toggle="collapse" th:data-target="${'#analistas'+ muestra.id}" aria-expanded="false" th:aria-controls="${'analistas'+ muestra.id}">
-							<i class="fa fa-folder"></i>
+							<!-- <i class="fa fa-folder"></i> -->
+							<a href=# style="color:black" data-toggle="tooltip" title="Ver analistas">					         
+					          <i class="fa fa-child" aria-hidden="true" style="font-size: 1.2em;"></i>
+					         </a>
 						</td>					
 						<!-- <td>
 							<span th:text="${muestra.nombrePaciente}"></span>
@@ -210,34 +208,26 @@
 						</td>
 						<td>
 							<span th:text="${muestra.estadoMuestra}"></span>
-						</td>
-						<!-- <td>
-							<span th:text="${muestra.codNumLote}"></span>
-						</td> -->
-						<!--  
-						<td>
-					        <a th:href="@{/coordinador/convocatorias/modificaconvocatoria(id=${muestra.id} )}" data-toggle="tooltip" title="Modificar">
-					          <span class="glyphicon glyphicon-pencil"></span>
-					        </a>
-					    </td>
-					    -->
-					    <td>
+						</td>						
+					    <!-- <td>
 					        <a th:href="@{/analisis/asignar(idMuestra=${muestra.id} )}" data-toggle="tooltip" title="Asignar">					         
 					          <i class="fa fa-child" aria-hidden="true"></i>
 					        </a>
-						</td>
+						</td> -->
 						<td>
-					        <a th:href="@{/analisis/revisar(idMuestra=${muestra.id} )}" data-toggle="tooltip" title="Revisar">					         
-					          <i class="fa fa-pencil" aria-hidden="true"></i>
+							<!-- ACCIONES -->					        
+					        <a style="color:black" th:href="@{/analisis/revisar(idMuestra=${muestra.id} )}" data-toggle="tooltip" title="Revisar">					         
+					          <i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
 						</td>
 					</tr>				
 					<!-- id="group-of-rows-1" -->	
 					<tr th:id="${'analistas'+ muestra.id}" class="collapse table-warning">
 						<td></td>
-						<td><i class="fa fa-folder-open"></i></td>
-						<td colspan="5">							
-							<label>Analistas asignados</label>
+						<td></td>
+						<!-- <td><i class="fa fa-folder-open"></i></td> -->
+						<td colspan="2">							
+							<label>Analistas</label>
 							<ul th:each="analistaLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
 								<li><span th:text="${analistaLab.beanUsuario.nom}"></span>; 
 									<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
@@ -245,14 +235,25 @@
 								</li>
 							</ul>						
 						</td>
-						<td colspan="5">							
-							<label>Voluntarios asignados</label>
+						<td colspan="2">							
+							<label>Voluntarios</label>
 							<ul th:each="voluntarioLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
 								<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span>; 
 									<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
 									<span th:text="${voluntarioLab.valoracion}"></span> 
 								</li>
 							</ul>						
+						</td>
+						<td colspan="2">							
+							<label>Otros voluntarios</label>
+							<ul th:each="voluntarioSinLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVolSinLabCentro}">							
+								<li><span th:text="${voluntarioSinLab.beanUsuario.nom}"></span>; 
+									<!-- <span th:text="${voluntarioSinLab.fechaAsignacion}"></span>;  -->
+									<span th:text="${voluntarioSinLab.valoracion}"></span> 
+								</li>
+							</ul>						
+						</td>
+						<td colspan="1">
 						</td>
 					</tr>	
 			
