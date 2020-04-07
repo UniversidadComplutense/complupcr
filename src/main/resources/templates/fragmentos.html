@@ -22,7 +22,7 @@
 
 <link th:href="@{/css/pcr-ucm.css}" href="static/css/pcr-ucm.css"
 	rel="stylesheet" />
-		
+
 <!-- Data-toggle -->
 <link th:href="@{/css/bootstrap4-toggle.min.css}"
 	href="static/css/bootstrap4-toggle.min.css" rel="stylesheet">
@@ -30,7 +30,7 @@
 <link rel="stylesheet" th:href="@{/css/bootstrap-select.min.css}"
 	href="static/css/bootstrap-select.min.css">
 <!-- - -->
-	
+
 
 <link rel="shortcut icon" th:href="@{/img/logoucm.ico}"
 	href="static/img/logoucm.ico" type="image/x-icon" />
@@ -101,14 +101,16 @@
 				<span th:text="${@pcrTHExpressions.getEmailUsuario()}">pericopalotes@ucm.es</span>
 			</div>
 			<div class="col text-right" sec:authorize="isAuthenticated()">
-				<span th:text="${@pcrTHExpressions.getPieDerecho()}">Zona derecha del pie de página</span>
+				<span th:text="${@pcrTHExpressions.getPieDerecho()}">Zona
+					derecha del pie de página</span>
 			</div>
 		</div>
 	</div>
 </div>
 
 <!--/* PAGINADOR  */-->
-<div th:fragment="paginador(urlPaginada, pagina, orden,sentidoOrden,fila)"
+<div
+	th:fragment="paginador(urlPaginada, pagina, orden,sentidoOrden,fila)"
 	class="table-pagination">
 
 	<ul class="pagination"
@@ -168,9 +170,36 @@
 		src="static/js/bootstrap-select.min.js"></script>
 
 	<script src="static/js/funcionesLaboratorioVisavet.js"
-	th:src="@{/js/funcionesLaboratorioVisavet.js}"></script>
-	
-	<script src="static/js/laboratorioCentro.js"
-	th:src="@{/js/laboratorioCentro.js}"></script>
+		th:src="@{/js/funcionesLaboratorioVisavet.js}"></script>
+	<script>
+		$('#confirm-borrar').on('show.bs.modal', function(e) {
+		    $(this).find('.btn-borrar').attr('href', $(e.relatedTarget).data('href'));
+		});
+	</script>
+</div>
+
+<!-- Diálogo confirmación borrado -->
+<div th:fragment="modal-borrar" id="modal-borrar">
+	<div class="modal fade" id="confirm-borrar" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmación</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>¿Está seguro de que quiere borrar este elemento?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancelar</button>
+					<a class="btn btn-danger btn-borrar">Borrar</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 </html>

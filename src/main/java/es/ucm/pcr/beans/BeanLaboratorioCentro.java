@@ -16,6 +16,8 @@ public class BeanLaboratorioCentro implements Comparable <BeanLaboratorioCentro>
 	private Set<PlacaLaboratorio> placaLaboratorios = new HashSet<PlacaLaboratorio>(0);
 	private Set<Equipo> equipos = new HashSet<Equipo>(0);
 	private String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA
+	private Integer placasVisavetaLaEspera;
+	
 	
 	public BeanLaboratorioCentro() {
 		super();
@@ -91,6 +93,16 @@ public class BeanLaboratorioCentro implements Comparable <BeanLaboratorioCentro>
 	}
 
 	
+
+	public Integer getPlacasVisavetaLaEspera() {
+		return placasVisavetaLaEspera;
+	}
+
+
+	public void setPlacasVisavetaLaEspera(Integer placasVisavetaLaEspera) {
+		this.placasVisavetaLaEspera = placasVisavetaLaEspera;
+	}
+
 
 	@Override
 	public String toString() {

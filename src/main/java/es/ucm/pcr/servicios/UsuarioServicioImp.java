@@ -310,27 +310,6 @@ public class UsuarioServicioImp implements UsuarioServicio {
 			BeanUsuarioGestion beanUsuarioGestion = new BeanUsuarioGestion();
 			beanUsuarioGestion = mapeoEntidadBeanUsuario (usuario);
 			listaUsuarios.add(beanUsuarioGestion);
-//			beanUsuarioGestion.setAccion("L");
-//			beanUsuarioGestion.setAcertadas(usuario.getAcertadas());
-//			beanUsuarioGestion.setApellido1(usuario.getApellido1());
-//			beanUsuarioGestion.setApellido2(usuario.getApellido2());
-//			beanUsuarioGestion.setAsignadas(usuario.getAsignadas());
-//			beanUsuarioGestion.setCentro(usuario.getCentro());
-//			beanUsuarioGestion.setDocumentos(usuario.getDocumentos());
-//			beanUsuarioGestion.setEmail(usuario.getEmail());
-//			beanUsuarioGestion.setHabilitado(usuario.getHabilitado());
-//			beanUsuarioGestion.setId(usuario.getId());
-//			beanUsuarioGestion.setIdLaboratorioCentro(usuario.getIdLaboratorioCentro());
-//			beanUsuarioGestion.setIdLaboratorioVisavet(usuario.getIdLaboratorioVisavet());
-//			beanUsuarioGestion.setNombre(usuario.getNombre());
-//			beanUsuarioGestion.setPassword(usuario.getPassword());
-//			beanUsuarioGestion.setRols(usuario.getRols());
-//			beanUsuarioGestion.setUsuarioMuestras(usuario.getUsuarioMuestras());
-//			// Tipo de centro seleccionado
-//			
-//			// Centro Seccionado
-			
-			
 		}
 		//	Ordeno por ap1, ap2, nombre
 		Collections.sort(listaUsuarios);
@@ -366,6 +345,10 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	
 	public void borrarUsuario (Integer idUsuario) throws Exception{
 		usurep.deleteById(idUsuario);
+	}
+	
+	public Optional<Usuario> buscarUsuarioPorId (Integer idUsuario) throws Exception{
+		return usurep.findById(idUsuario);
 	}
 
 	//metodos de obtencion de usuarios analistas de laboratoriocentro, voluntarios de laboratoriocentro y voluntarios sin laboratoriocentro

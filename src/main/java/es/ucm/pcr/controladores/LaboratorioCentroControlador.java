@@ -1,13 +1,13 @@
 package es.ucm.pcr.controladores;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,14 +19,10 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
-import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 
 @Controller
 public class LaboratorioCentroControlador {
-
-	@Autowired
-	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
 	
 	@Autowired
 	LaboratorioCentroServicio laboratorioCentroServicio;
@@ -37,23 +33,15 @@ public class LaboratorioCentroControlador {
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView GestionLaboratorioCentro(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaGestionLaboratorioCentro");
-	
+		String mensajeError = (String) session.getAttribute("mensajeError");
+		if (mensajeError != null) {
+			vista.addObject("mensajeError", mensajeError);
+			session.removeAttribute("mensajeError");
+		}
 		// cargo todos los laboratorioCentros de BBDD
 		List<BeanLaboratorioCentro> listaLaboratorioCentro = new ArrayList<BeanLaboratorioCentro>();
-		for (LaboratorioCentro laboratorioCentro: laboratorioCentroRepositorio.findAll())
-		{
-			listaLaboratorioCentro.add(new BeanLaboratorioCentro(
-					laboratorioCentro.getId(), 
-					laboratorioCentro.getNombre(),
-					laboratorioCentro.getDocumentos(),
-					laboratorioCentro.getPlacaLaboratorios(),
-					laboratorioCentro.getEquipos(),
-					"L"));
-		}
-		//	Ordeno por ap1, ap2, nombre
-		Collections.sort(listaLaboratorioCentro);
+		listaLaboratorioCentro = laboratorioCentroServicio.listaLaboratoriosCentroOrdenada();
 		vista.addObject("listaLaboratorioCentro", listaLaboratorioCentro);
-	
 		return vista;
 	}	
 
@@ -62,8 +50,8 @@ public class LaboratorioCentroControlador {
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView AltaLaboratorioCentro(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLaboratorioCentro");
-	
 		BeanLaboratorioCentro beanLaboratorioCentro = new BeanLaboratorioCentro();
+		
 		// le indicamos la acción a relizar: A alta de un rol
 		beanLaboratorioCentro.setAccion("A");
 		vista.addObject("formBeanLaboratorioCentro", beanLaboratorioCentro);
@@ -79,21 +67,14 @@ public class LaboratorioCentroControlador {
 			// Damos de alta nuevo laboratorioCentro
 			if (beanLaboratorioCentro.getAccion().equals("A"))
 			{
-//				LaboratorioCentro laboratorioCentro = new LaboratorioCentro();
-//				laboratorioCentro.setNombre(beanLaboratorioCentro.getNombre());
-//				laboratorioCentroRepositorio.save(laboratorioCentro);
-//				laboratorioCentroRepositorio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 				laboratorioCentroServicio.guardarLaboratorioCentro(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 			}
 			// Modificamos laboratorioCentro existente
 			if (beanLaboratorioCentro.getAccion().equals("M"))
 			{	
 				// Buscamos el laboratorioCentro a modificar, y volcamos los datos recogidos por el formulario
-				Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroRepositorio.findById(beanLaboratorioCentro.getId());
+				Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroServicio.buscarLaboratorioCentroPorId(beanLaboratorioCentro.getId());
 				// añadimos campos del formulario
-//				laboratorioCentro.get().setNombre(beanLaboratorioCentro.getNombre());
-//				laboratorioCentroRepositorio.save(laboratorioCentro.get());
-//				laboratorioCentroRepositorio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 				laboratorioCentroServicio.guardarLaboratorioCentro(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 			}
 
@@ -110,12 +91,8 @@ public class LaboratorioCentroControlador {
 			ModelAndView vista = new ModelAndView("VistaLaboratorioCentro");
 			
 			// Busco el laboratorioCentro a modificar
-			Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroRepositorio.findById(idLaboratorioCentro);
+			Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroServicio.buscarLaboratorioCentroPorId(idLaboratorioCentro);
 			// cargo el beanLaboratorioCentro con lo datos del laboratorioCentro a modificar
-//			BeanLaboratorioCentro beanLaboratorioCentro = new BeanLaboratorioCentro();
-//			beanLaboratorioCentro.setId(laboratorioCentro.get().getId());
-//			beanLaboratorioCentro.setNombre(laboratorioCentro.get().getNombre());
-			 
 			BeanLaboratorioCentro beanLaboratorioCentro = laboratorioCentroServicio.mapeoEntidadBeanLaboratorioCentro(laboratorioCentro.get());
 			
 			// le indicamos la acción a relizar: M modificación de un laboratorioCentro
@@ -128,10 +105,13 @@ public class LaboratorioCentroControlador {
 
 		@RequestMapping(value = "/gestor/borrarLaboratorioCentro", method = RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
-		public ModelAndView borrarLaboratorioCentro(@RequestParam("idLaboratorioCentro") Integer idLaboratorioCentro) throws Exception {
-			
-//			laboratorioCentroRepositorio.deleteById(idLaboratorioCentro);
+		public ModelAndView borrarLaboratorioCentro(@RequestParam("idLaboratorioCentro") Integer idLaboratorioCentro, HttpSession session) throws Exception {
+			try {
 			laboratorioCentroServicio.borrarLaboratorioCentro(idLaboratorioCentro);
+			} catch (DataIntegrityViolationException e) {
+				String mensaje = "No se puede borrar el centro " + laboratorioCentroServicio.buscarLaboratorioById(idLaboratorioCentro).getNombre() + " porque tiene información asociada.";
+				session.setAttribute("mensajeError", mensaje);
+			}
 			
 			// Volvemos a grabar mas centros
 			ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaLaboratorioCentro",true));	

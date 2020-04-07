@@ -47,6 +47,11 @@ public class PlacaVisavet implements java.io.Serializable {
 
 	public PlacaVisavet() {
 	}
+	
+	public PlacaVisavet(Integer id) {
+		super();
+		this.id = id;
+	}
 
 	public PlacaVisavet(LaboratorioVisavet laboratorioVisavet) {
 		this.laboratorioVisavet = laboratorioVisavet;
@@ -100,7 +105,7 @@ public class PlacaVisavet implements java.io.Serializable {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "idLaboratorioCentro", nullable = false)
+	@JoinColumn(name = "idLaboratorioCentro", nullable = true)
 	public LaboratorioCentro getLaboratorioCentro() {
 		return this.laboratorioCentro;
 	}

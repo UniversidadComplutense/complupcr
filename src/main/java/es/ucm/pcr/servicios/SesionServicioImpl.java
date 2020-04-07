@@ -135,13 +135,13 @@ public class SesionServicioImpl implements SesionServicio {
 //		Jefe de servicio
 		if (this.tieneRol("ADMIN") || this.tieneRol("JEFESERVICIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Asignar y revisar muestras", "/analisis/", null);
+			opcionSecundaria = new MenuBean("Revisar muestras", "/analisis/", null);
 			menuSecundario.add(opcionSecundaria);
 			//opcionSecundaria = new MenuBean("Revisar  muestras", "", null);
 			//menuSecundario.add(opcionSecundaria);
 			//opcionSecundaria = new MenuBean("Estado  muestras", "", null);
 			//menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Coger placas", "/analisis/cogerPlacas", null);
+			opcionSecundaria = new MenuBean("Coger y asignar placas", "/analisis/cogerPlacas", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Jefe de servicio", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
@@ -161,7 +161,7 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Laboratorios Centros UCM","/gestor/listaLaboratorioCentro",null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Laboratorios Logísticos","/gestor/listaLaboratorioVisavet",null);
+			opcionSecundaria = new MenuBean("Laboratorios Visavet","/gestor/listaLaboratorioVisavet",null);
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Usuarios","/gestor/listaUsuarios",null);
 			menuSecundario.add(opcionSecundaria);

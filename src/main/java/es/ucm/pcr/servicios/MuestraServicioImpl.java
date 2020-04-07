@@ -16,8 +16,9 @@ import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanBusquedaMuestraAnalisis;
 import es.ucm.pcr.beans.BeanEstado;
-import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
+import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.BeanResultado;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
@@ -49,6 +50,9 @@ public class MuestraServicioImpl implements MuestraServicio {
 	
 	@Autowired
 	private Enviocorreo envioCorreoImp;	
+	
+	@Autowired
+	private ServicioLog servicioLog;
 	
 	@Override
 	public Page<MuestraListadoBean> findMuestraByParam(MuestraBusquedaBean params, Pageable pageable) {
@@ -111,13 +115,18 @@ public class MuestraServicioImpl implements MuestraServicio {
 		muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_INICIADA.getCodNum()));
 		if (muestraBean.getIdLote() != null) {
 			muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ASIGNADA_LOTE.getCodNum()));
-			muestra.setLote(new Lote(muestraBean.getIdLote()));
+			muestra.setLote(new Lote(muestraBean.getIdLote()));			
 		} 
 		
 		Paciente paciente = muestra.getPaciente();
 		muestra = muestraRepositorio.save(muestra);
 		paciente.setMuestra(muestra);
 		pacienteRepositorio.save(paciente);
+		
+		BeanEstado estadoMuestra = new BeanEstado();
+		estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, muestra.getEstadoMuestra().getId());
+		servicioLog.actualizarEstadoMuestra(muestra.getId(), estadoMuestra);
+		
 		return MuestraCentroBean.modelToBean(findByIdMuestra(muestra.getId()));
 	}
 	
@@ -197,7 +206,7 @@ public class MuestraServicioImpl implements MuestraServicio {
 		Muestra muestra = findByIdMuestra(id);
 		
 		// si el lote esta enviado no se puede borrar la muestra
-		if (muestra != null && muestra.getLote() != null && estadosValidosBorrarMuestra.contains(muestra.getLote().getEstadoLote().getId())) {
+		if (muestra != null && (muestra.getLote() == null || (muestra.getLote() != null && estadosValidosBorrarMuestra.contains(muestra.getLote().getEstadoLote().getId())))) {
 			return true;
 		}
 		return false;		
@@ -206,6 +215,7 @@ public class MuestraServicioImpl implements MuestraServicio {
 	@Override
 	public boolean borrar(Integer id) {
 		try {
+			// TODO - borrar estados!!!???
 			muestraRepositorio.deleteById(id);
 			return true;
 		} catch (Exception e) {
