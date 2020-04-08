@@ -72,13 +72,13 @@
 				<div class="custom-control custom-radio custom-control-inline">
 					<input type="radio" id="option1" name="option1"
 						class="custom-control-input" value="A"
- 						th:field="*{habilitado}" th:checked="*{habilitado == 'A'} ? 'checked' : ''"> 
+ 						th:field="*{habilitado}" > 
 						<label class="custom-control-label" for="option1">Activo</label>
 				</div>
 				<div class="custom-control custom-radio custom-control-inline">
 					<input type="radio" id="option2" name="option2"
 						class="custom-control-input" value="B"
- 						th:field="*{habilitado}" th:checked="*{habilitado == 'B'} ? 'checked' : ''"> 						
+ 						th:field="*{habilitado}" th:checked="${habilitado == 'B' OR habilitado == 'I'}"> 						
 						<label class="custom-control-label" for="option2">Bloqueado</label>
 				</div>
 			</div> 
