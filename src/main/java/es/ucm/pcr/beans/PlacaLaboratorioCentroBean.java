@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
@@ -102,6 +103,27 @@ public class PlacaLaboratorioCentroBean {
 	public void setPlacasVisavetSeleccionadas(String placasVisavetSeleccionadas) {
 		this.placasVisavetSeleccionadas = placasVisavetSeleccionadas;
 	}
+	
+	
+	
+	public boolean esEditable() {
+		return (this.getId() == null);		
+	}
+	
+	
+	public boolean esRellenable() {
+		
+		if (this.getBeanEstado() != null && this.getBeanEstado().getEstado().getCodNum() == Estado.PLACA_INICIADA.getCodNum()) {
+			Integer capacidadPlacaLaboratorio = Integer.valueOf(this.getNumeroMuestras());
+
+			for (PlacaLaboratorioVisavetBean placaVisavet : this.getPlacasVisavet()) {
+				capacidadPlacaLaboratorio -= Integer.valueOf(placaVisavet.getNumeroMuestras());
+			}		
+			return capacidadPlacaLaboratorio >= 20;	
+		} 
+		return false;		
+	}
+	
 
 	public static PlacaLaboratorioCentroBean modelToBean(PlacaLaboratorio placaLaboratorio) {
 
