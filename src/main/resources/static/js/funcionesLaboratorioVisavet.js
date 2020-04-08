@@ -132,7 +132,7 @@ function cambiarEstadoaEnviada(id, laboratorio){
 	
 	$("#idPlaca").html(id);
 	$("#laboratorio").html(laboratorio);
-	$("#id").val(id);
+	$("#idConfirmar").val(id);
 }
 function confirmarPlacaEnviada(){
 	var url = "";
