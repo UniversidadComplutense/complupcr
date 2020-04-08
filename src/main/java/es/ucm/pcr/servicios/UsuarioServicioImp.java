@@ -179,7 +179,8 @@ public class UsuarioServicioImp implements UsuarioServicio {
 				"<p><strong>Este es un correo automático enviado por la aplicación COVID-19.</strong></p>"
 						+ "<p><strong>No responda a este mensaje.</strong></p>",
 				"");
-		// le ponemos como E: enviado, pero en la pantalla se muestra como activo, al igual que A: activo
+		// AL final ponemos  los  cuatro valores por pantalla
+		// le ponemos como E: Enviado, y cuando  active su cuenta, se cambia a A: Activado
 		usuario.setHabilitado("E");
 		// Añado los roles seleccionado
 		Set<Rol> rolesSeleccionados = new HashSet<Rol>(0);
