@@ -684,11 +684,11 @@ public class AnalisisControlador {
 			criteriosBusquedaPlacaAsignadaParaRevision.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum());
 			criteriosBusquedaPlacaAsignadaParaRevision.setValoracion(null);
 			List<PlacaLaboratorioCentroBean> listaPlacasAsignadasParaRevision = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevision, pageable).getContent();
-			System.out.println("listaPlacasAsignadasParaAnalisis tiene: "+ listaPlacasAsignadasParaRevision.size());			
+			System.out.println("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.size());			
 			
 			
 			//vista.addObject("listaPlacasListasParaAnalisis", listaPlacasListasParaAnalisis);
-			vista.addObject("listaPlacasAsignadasParaAnalisis", listaPlacasAsignadasParaRevision);
+			vista.addObject("listaPlacasAsignadasParaRevision", listaPlacasAsignadasParaRevision);
 			
 			return vista;
 
