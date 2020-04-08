@@ -101,8 +101,6 @@ public class UsuarioControlador {
 		// añadimos los centros
 		Map<Integer,String> mapaCentros = centroServicio.mapaCentros(centroServicio.listaCentrosOrdenada());
 		vista.addObject("mapaCentros", mapaCentros);
-
-		vista.addObject("espaciosBlanco", "   ");
 		
 		return vista;
 	}
