@@ -143,8 +143,10 @@
 														</tr>
 													</thead>
 													<tbody>
-														<tr th:if="${unResultado.listaLotes != null}" th:each="lote : ${unResultado.listaLotes}">
-															<td><span th:text="${lote.numLote}"></span></td>					
+														<tr th:if="${unResultado.listaLotes != null}" th:each="lote,count : ${unResultado.listaLotes}">
+															<td>
+															<input type="text" id="lote+${count.index}" th:value="${lote.id}"/>
+															<span th:text="${lote.numLote}"></span></td>					
 															<td><span th:text="${#lists.size(lote.listaMuestras)}"></span></td>
 																													
 														</tr>		
