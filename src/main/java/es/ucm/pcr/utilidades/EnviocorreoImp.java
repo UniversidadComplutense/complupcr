@@ -227,4 +227,16 @@ public class EnviocorreoImp implements Enviocorreo {
 		return "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 	}
 
+	@Override
+	public void correoBienVenidaUsuario(Usuario user) {
+		SimpleMailMessage simpleMailMessage = constructWelcomeEmail(env.getProperty("app.url"), user);
+		send(user.getEmail(), simpleMailMessage.getSubject(), simpleMailMessage.getText(), null, "",
+				"<p><strong>Este es un correo automático enviado por la aplicación COVID-19.</strong></p>"
+						+ "<p><strong>No responda a este mensaje.</strong></p>",
+				"");
+		user.setHabilitado("E");
+		usuarioServicio.guardar(user);
+		
+	}
+
 }
