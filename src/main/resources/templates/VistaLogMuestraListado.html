@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - LOG MUESTRA</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+	<div class="container">	
+	<form action="#" th:action="@{/gestor/log/list}" method="post" th:object="${beanBusqueda}" id="formBusqueda" role="form">
+		
+		<div class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
+		  	<label>Consulta log muestra</label>
+		</div>
+		
+		<!-- CRITERIOS BUSQUEDA LOG -->
+		<fieldset id="datosBusquedaLog" class="form-group border p-2 m-1">
+			<legend class="w-auto font-weight-bold m-0">Log muestra</legend>
+			<div class="row">
+				<div class="col-3 m-0 form-group">
+					<label >Etiqueta</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{etiquetaMuestra}"  th:value="*{etiquetaMuestra}" maxlength="100"/>
+				</div>
+			
+				<!-- <div class="col-3 m-0 form-group">
+					<label>Lote</label>				 	
+				 	<select class="form-control form-control-sm" th:field="*{idLote}"  th:value="*{idLote}">
+				 		<option value="">Seleccione</option>
+				 		<option th:each="var: ${listaLotes}"
+									th:value="${var.id}" th:text="${var.numLote}"
+									th:select="*{idLote}"></option>
+				 	</select> 				 	
+					</div>			-->	
+			</div>			
+		</fieldset>
+		
+
+		<div class="row justify-content-end mt-3">
+			<div class="col-1">
+				<button type="submit" class="btn btn-secondary">Buscar</button>
+			</div>
+		</div>	
+		
+		<!-- RESULTADO -->
+		<div class="row justify-content-center mt-3">
+			<table class="table">
+				<thead class="thead-light">	
+	    			<tr>
+	    				<th scope="col">Etiqueta muestra</th>
+	    				<th scope="col">Centro salud</th>
+	      				<th scope="col">Paciente</th>	      				
+						<th scope="col">Estado</th>
+						<th scope="col">Autor</th>	
+						<th scope="col">Fecha</th>										
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${listadoLogMuestras != null}" th:each="log : ${listadoLogMuestras}">
+						<td><span th:text="${log.descMuestra}"></span></td>
+						<td><span th:text="${log.descCentroSalud}"></span></td>
+						<td><span th:text="${log.descPaciente}"></span></td>
+						<td><span th:text="${log.descEstadoMuestra}"></span></td>
+						<td><span th:text="${log.nombreAutorCambio}"></span></td>
+						<td><span th:text="${#dates.format(log.fechaCambio, 'dd/MM/yyyy HH:mm:ss')}"></span></td>															
+					</tr>		
+				</tbody>
+			</table>
+		</div>
+	</form>
+
+	</div>
+	
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+	
+</body>
+</html>

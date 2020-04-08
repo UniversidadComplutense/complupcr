@@ -5,6 +5,7 @@ var n=0;
 $("#tablaResultados tbody tr").each(function () 
 {
 n++;
+alert(n);
 });
 
 //BORRA LAS n-1 FILAS VISIBLES DE LA TABLA
@@ -12,11 +13,31 @@ n++;
 //DEJANDO LA PRIMERA FILA VISIBLE, MÁS LA FILA PLANTILLA OCULTA
 for(i=n-1;i>0;i--)
 {
+	
 $("#tablaResultados tbody tr:eq('"+i+"')").remove();
 
 };
 //$("#tablaResultadosLotes thead").remove();
 };
+function eliminaFilastrGroup(){
+	//OBTIENE EL NÚMERO DE FILAS DE LA TABLA
+	var n=0;
+	$("#trGroup").each(function () 
+	{ 
+		$("#trGroup").remove();
+	  alert("borra");
+	n++;
+	});
+
+	//BORRA LAS n-1 FILAS VISIBLES DE LA TABLA
+	//LAS BORRA DE LA ULTIMA FILA HASTA LA SEGUNDA
+	//DEJANDO LA PRIMERA FILA VISIBLE, MÁS LA FILA PLANTILLA OCULTA
+	/*for(i=n-1;i>0;i--)
+	{
+	$("#tablaResultados tbody tr:eq('"+i+"')").remove();
+
+	};*/
+}
 function eliminarCabecera(){
 	$("#tablaResultadosCabecera thead").remove();
 	$("#tablaResultadosCabecera").append("<thead><th>#Lote</th><th>Centro</th><th>F.Entrada</th><th>#Muestras</th><th>Test</th><th>Estado</th></thead>");
@@ -95,7 +116,8 @@ function cambiarOrdenColumna(orden,sentidoOrden,numPagina,sizePagina){
 	//	eliminarCabecera();
 		//eliminaFilas();
 		//$("#tablaResultadosLotes").append("<thead><th>#Lote</th><th>Centro</th><th>F.Entrada</th><th>#Muestras</th><th>Test</th><th>Estado</th></thead>");
-	$("#trGroup").html(respuesta);
+	
+		
 	});
 
 }
@@ -103,7 +125,7 @@ function cambiarOrdenColumna(orden,sentidoOrden,numPagina,sizePagina){
 function loadConfirmarEnvio(id, numLote, centroProcedencia){
 	
 	$("#numeroLote").html(numLote);
-	$("#centro").html(centroProcedencia);
+	$("#centroModal").html(centroProcedencia);
 	$("#id").val(id);
 }
 function cambiarEstadoaEnviada(id, laboratorio){
@@ -181,9 +203,9 @@ function procesarLotesDesdePlacas(idPlaca) {
 		
 			//lotesProcesar
 			$("#lotes"+idPlaca +" input").each(function () 
-					{ alert($("#lotes"+idPlaca +" input").val());
+					{ 
 			lotesProcesar+=$("#lotes"+idPlaca +" input").val()+":";
-			alert(lotesProcesar);
+			
 		});
 	
 	
@@ -225,7 +247,10 @@ function asignarPlaca(){
 	$("#criteriosBusqueda").show();
 	var url = "";
 	//var urlAbs = getAbsolutePath();
-	
+	if ($("#tamano option:selected").val() < $("#totalMuestra").text()){
+		alert ("El tamaño de la placa es menor al número de muestras");
+	}
+	else {
 	url="/laboratorioUni/asignarPlaca?idPlaca="+$("#numPlacaSpan").text();
 	sBody=$('#formularioPrueba').serialize();
 	
@@ -235,12 +260,19 @@ function asignarPlaca(){
         dataType: 'html',
         data:  sBody
 	}).done(function(respuesta) {
-		alert(respuesta);
 		eliminaFilas();
 		
-	    $("#trGroup").html(respuesta);
+		/*$("#tablaResultados tbody").append(respuesta); 
+		*/
+		  var tratarRespuest=respuesta.replace("<tr id=\"trGroup\">", "");
+		  tratarRespuest=tratarRespuest.replace("</tr>", "");
+		 
+		  $("#trGroup").html(respuesta);
+	    $("#grabar").attr("disabled", false);
+	    $("#grabaryFinalizar").attr("disabled", false);
 		
 	});
+	}
 }
 function consultarOcupacionLaboratorio(idPlaca){
 	var url="/laboratorioUni/consultarOcupacionLaboratorios?idPlaca="+idPlaca;
@@ -251,7 +283,7 @@ function consultarOcupacionLaboratorio(idPlaca){
         url:   url,
         dataType: 'html'
 	}).done(function(respuesta) {
-		alert(respuesta);
+		
 		$("#idPlaca").val(idPlaca);
 		
 	    $("#trLaboratorio").html(respuesta);
@@ -260,10 +292,9 @@ function consultarOcupacionLaboratorio(idPlaca){
 }
 
 function asignarLaboratoriodesdeModal(){
-	alert ($("#laboratorio option:selected").val());
 	
 	var url="/laboratorioUni/asignarLaboratorio?idPlaca="+$("#idPlaca").val()+"&laboratorio="+$("#laboratorio option:selected").val();
-	alert(url);
+	
 	
 	/*$.ajax({
         type:  'GET',
@@ -281,4 +312,20 @@ function asignarLaboratoriodesdeModal(){
 function seleccionAccion(accion){
 	$("#accion").val(accion);
 	$("#formularioConReferencias").submit();
+}
+function habilitarBotonProcesar(){
+	var nFilas = $("#tablaResultados tr").length;
+	var lotesProcesar=false;
+	if (nFilas>0) {
+	 
+	 for (var i=0; i<nFilas;i++){
+		 var seleccionado="#seleccionado"+i;
+		if ($(seleccionado).is(':checked')) {
+			//lotesProcesar
+		lotesProcesar=true;
+		}
+	 }
+	}
+	if (lotesProcesar)
+	$("#procesarBoton").attr("disabled", false);
 }

@@ -75,13 +75,16 @@ public class MuestraListadoBean extends MuestraBusquedaBean {
 		return bean;
 	}
 	
-	private static String nombreCompletoPaciente(Paciente paciente) {
-		String nombreCompleto = paciente.getNombrePaciente();
-		if (StringUtils.isNotEmpty(paciente.getApellido1paciente())) {
-			nombreCompleto = nombreCompleto.concat(" ").concat(paciente.getApellido1paciente());
-		}
-		if (StringUtils.isNotEmpty(paciente.getApellido2paciente())) {
-			nombreCompleto = nombreCompleto.concat(" ").concat(paciente.getApellido2paciente());
+	public static String nombreCompletoPaciente(Paciente paciente) {
+		String nombreCompleto = "";
+		if (paciente != null) {
+			nombreCompleto = paciente.getNombrePaciente();
+			if (StringUtils.isNotEmpty(paciente.getApellido1paciente())) {
+				nombreCompleto = nombreCompleto.concat(" ").concat(paciente.getApellido1paciente());
+			}
+			if (StringUtils.isNotEmpty(paciente.getApellido2paciente())) {
+				nombreCompleto = nombreCompleto.concat(" ").concat(paciente.getApellido2paciente());
+			}
 		}
 		return nombreCompleto;
 	}
