@@ -137,11 +137,13 @@ public class LoteServicioImpl implements LoteServicio {
 			if (estadoActualizar.getEstado().getCodNum() == Estado.LOTE_RECIBIDO_CENTRO_ANALISIS.getCodNum()) {
 				// TODO - ACTUALIZAR ESTADO LOTE RECIBIDO
 				lote.setEstadoLote(new EstadoLote(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS.getCodNum()));
+				lote.setFechaRecibido(new Date());
 			}
 			if (estadoActualizar.getEstado().getCodNum() == Estado.LOTE_PROCESADO_CENTRO_ANALISIS.getCodNum()) {
 				// TODO - ACTUALIZAR ESTADO LOTE PROCESADO
 				lote.setEstadoLote(new EstadoLote(Estado.LOTE_PROCESADO_CENTRO_ANALISIS.getCodNum()));
 			}
+			
 		}	
 		loteRepositorio.save(lote);
 	}	

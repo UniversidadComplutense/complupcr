@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
@@ -19,6 +20,8 @@ public class PlacaLaboratorioCentroBean {
 	private List<PlacaLaboratorioVisavetBean> placasVisavet;
 	private List<DocumentoBean> documentos;
 	private List<MuestraListadoPlacasLaboratorioBean> muestras;
+	private List<PlacaLaboratorioVisavetBean> placasVisavetParaCombinar;
+	private String placasVisavetSeleccionadas;
 
 	
 	public Integer getId() {
@@ -85,7 +88,43 @@ public class PlacaLaboratorioCentroBean {
 		this.muestras = muestras;
 	}
 
+	public List<PlacaLaboratorioVisavetBean> getPlacasVisavetParaCombinar() {
+		return placasVisavetParaCombinar;
+	}
+
+	public void setPlacasVisavetParaCombinar(List<PlacaLaboratorioVisavetBean> placasVisavetParaCombinar) {
+		this.placasVisavetParaCombinar = placasVisavetParaCombinar;
+	}
 	
+	public String getPlacasVisavetSeleccionadas() {
+		return placasVisavetSeleccionadas;
+	}
+
+	public void setPlacasVisavetSeleccionadas(String placasVisavetSeleccionadas) {
+		this.placasVisavetSeleccionadas = placasVisavetSeleccionadas;
+	}
+	
+	
+	
+	public boolean esEditable() {
+		return (this.getId() == null);		
+	}
+	
+	
+	public boolean esRellenable() {
+		
+		if (this.getBeanEstado() != null && this.getBeanEstado().getEstado().getCodNum() == Estado.PLACA_INICIADA.getCodNum()) {
+			Integer capacidadPlacaLaboratorio = Integer.valueOf(this.getNumeroMuestras());
+
+			for (PlacaLaboratorioVisavetBean placaVisavet : this.getPlacasVisavet()) {
+				capacidadPlacaLaboratorio -= Integer.valueOf(placaVisavet.getNumeroMuestras());
+			}		
+			return capacidadPlacaLaboratorio >= 20;	
+		} 
+		return false;		
+	}
+	
+
 	public static PlacaLaboratorioCentroBean modelToBean(PlacaLaboratorio placaLaboratorio) {
 
 		PlacaLaboratorioCentroBean bean = new PlacaLaboratorioCentroBean();
@@ -149,6 +188,7 @@ public class PlacaLaboratorioCentroBean {
 		if (placaLaboratorioCentroBean.getNumeroMuestras() != null) {
 			placa.setNumeromuestras(placaLaboratorioCentroBean.getNumeroMuestras());
 		}
+		
 		
 
 		// TODO rellenar LaboratorioCentro

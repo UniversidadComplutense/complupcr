@@ -21,7 +21,15 @@ private Date fechaCreacion;
 private BeanEstado estado;
 private Integer idLaboratorioCentro;
 private BeanLaboratorioCentro laboratorioCentro;
+private List<MuestraBeanLaboratorioVisavet>  listaMuestras;
 
+
+public List<MuestraBeanLaboratorioVisavet> getListaMuestras() {
+	return listaMuestras;
+}
+public void setListaMuestras(List<MuestraBeanLaboratorioVisavet> listaMuestras) {
+	this.listaMuestras = listaMuestras;
+}
 public List<LoteBeanPlacaVisavet> getListaLotes() {
 	return listaLotes;
 }
@@ -80,12 +88,20 @@ public static BeanPlacaVisavetUCM modelToBean(PlacaVisavet placaVisavet) {
 
 	LoteBeanPlacaVisavet lote = new LoteBeanPlacaVisavet();
 	List<LoteBeanPlacaVisavet> listaLotes = new ArrayList();
-	
+	List<MuestraBeanLaboratorioVisavet> listaMuestras = new ArrayList();
 	for (Lote l:placaVisavet.getLotes()) {
 	lote=LoteBeanPlacaVisavet.modelToBean(l);
 	listaLotes.add(lote);
+	
+   
+	
+	for (Muestra m:l.getMuestras()) {
+	
+	listaMuestras.add(MuestraBeanLaboratorioVisavet.modelToBean(m));
 	}
 	
+	}
+	bean.setListaMuestras(listaMuestras);
 	if (placaVisavet.getLaboratorioCentro()!= null) {
 		BeanLaboratorioCentro laboratorioCentro= new BeanLaboratorioCentro();
 		//LaboratorioCentro laboratorioCentro = new BeanLaboratorioCentro();
@@ -100,6 +116,7 @@ public static BeanPlacaVisavetUCM modelToBean(PlacaVisavet placaVisavet) {
 	
 	bean.setMuestras(listadoMuestras);
 	*/
+	
 	bean.setListaLotes(listaLotes);
 	return bean;
 

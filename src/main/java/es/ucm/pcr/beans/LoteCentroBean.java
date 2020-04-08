@@ -21,7 +21,7 @@ public class LoteCentroBean {
 	private Integer idEstado;
 	private boolean tieneMuestras;
 	private Integer numeroMuestras;
-	
+	private Date fechaRecibido;
 	public LoteCentroBean() {
 		super();	
 	}
@@ -111,6 +111,14 @@ public class LoteCentroBean {
 	public void setNumeroMuestras(Integer numeroMuestras) {
 		this.numeroMuestras = numeroMuestras;
 	}
+	
+	public Date getFechaRecibido() {
+		return fechaRecibido;
+	}
+
+	public void setFechaRecibido(Date fechaRecibido) {
+		this.fechaRecibido = fechaRecibido;
+	}
 
 	public static Lote beanToModel(LoteCentroBean loteBean) {
 		Lote lote = new Lote();
@@ -136,6 +144,7 @@ public class LoteCentroBean {
 		BeanEstado beanEstado = new BeanEstado();
 		loteBean.setEstado(beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoLote, lote.getEstadoLote().getId()));
 		loteBean.setFechaEnvio(lote.getFechaEnvio());
+		loteBean.setFechaRecibido(lote.getFechaRecibido());
 		if (lote.getLaboratorioVisavet() != null) {
 			loteBean.setIdLaboratorio(lote.getLaboratorioVisavet().getId());
 		}

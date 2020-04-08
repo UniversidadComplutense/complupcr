@@ -167,6 +167,8 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Usuarios","/gestor/listaUsuarios",null);
 			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Consulta log muestras","/gestor/log",null);
+			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Gestor", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}

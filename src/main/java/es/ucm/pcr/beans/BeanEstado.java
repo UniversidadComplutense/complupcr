@@ -262,7 +262,7 @@ public class BeanEstado {
 	}
 	
 	/**
-	 * Estados de una placa de laboratorio de un centro
+	 * Estados de búsqueda de una placa de laboratorio para un responsable de PCR
 	 * @return
 	 */
 	public static List<BeanEstado> estadosPlacaLabCentro() {
@@ -272,8 +272,7 @@ public class BeanEstado {
 		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_PREPARADA_PARA_PCR));
 		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_FINALIZADA_PCR));
 		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_LISTA_PARA_ANALISIS));
-		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_ASIGNADA_PARA_ANALISIS));
-		
+		//estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_ASIGNADA_PARA_ANALISIS));		
 		return estadosPlacaLabCentro;
 	}
 	

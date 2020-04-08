@@ -39,10 +39,10 @@ public interface PlacaVisavetRepositorio extends JpaRepository<PlacaVisavet, Int
 	public void save(Optional<PlacaVisavet> placa);
 	
 	// yoli esta query no da resultados probar LEFT JOIN placa.placaVisavetPlacaLaboratorios placaVLaboratorio "
-	@Query("SELECT placa FROM PlacaVisavet placa "
+	@Query("SELECT distinct placa FROM PlacaVisavet placa "
 			+ "JOIN placa.laboratorioVisavet laboratorioVisavet "
 			+ "JOIN placa.estadoPlacaVisavet estadoPlacaVisavet "
-			 + "LEFT JOIN placa.lotes lotes "
+			+ "LEFT JOIN placa.lotes lotes "
 			+ "LEFT JOIN placa.muestras muestras "
 			+ "LEFT JOIN placa.placaVisavetPlacaLaboratorios placaVLaboratorio "
 			+ "WHERE 1=1 and "

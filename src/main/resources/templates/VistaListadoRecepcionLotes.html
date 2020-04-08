@@ -119,8 +119,8 @@
 						
 			 	<tr id="trGroup+${count.index}"  th:each="unResultado,count : ${paginaLotes.getContent()}">
 					
-				    <td><!-- <span th:text="${@pcrTHExpressions.tieneRol('TECNICOLABORATORIO')}"></span>-->
-						<input  type="checkbox" name="seleccionado" th:disabled="${#strings.toString(unResultado.estado.Estado) != 'LOTE_RECIBIDO_CENTRO_ANALISIS'}" th:id="seleccionado+${count.index}" th:value="${unResultado.id}" />
+				    <td>
+						<input th:if="${busquedaLotes.mostrarProcesar}" type="checkbox" name="seleccionado" th:disabled="${#strings.toString(unResultado.estado.Estado) != 'LOTE_RECIBIDO_CENTRO_ANALISIS'}" th:id="seleccionado+${count.index}" th:value="${unResultado.id}" onClick="habilitarBotonProcesar();"/>
 					</td>
 					<td><span th:text="${unResultado.numLote}"></span></td>
                     <td><span th:text="${unResultado.centroProcedencia}"></span></td>
@@ -213,7 +213,7 @@
 													<tbody>
 														<tr>
 															<td><span id="numeroLote"></span></td>					
-															<td><span id="centro"></span></td>
+															<td><span id="centroModal"></span></td>
 																
 																													
 														</tr>		
@@ -238,12 +238,12 @@
 		
 <!--  	 fin  Recibido -->
 			
-				
+				<input id="procesarBoton" disabled th:if="${busquedaLotes.mostrarProcesar} and ${paginaLotes.getContent().size()>0}" type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" onclick="procesarLotes()"/>
+		
 		
 		</div> <!--  capa de resultados -->
 		<!-- <div th:include="fragmentos :: paginador(${busquedaLotes.urlPaginada},${paginaLotes},${busquedaLotes.orden},${busquedaLotes.sentidoOrden},'0')"></div>
 		-->
-		<input id="procesarBoton" type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" onclick="procesarLotes()"/>
 		</div>
 
 	</div>
