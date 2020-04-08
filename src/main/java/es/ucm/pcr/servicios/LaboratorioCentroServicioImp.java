@@ -30,9 +30,11 @@ import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.PlacaVisavet;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.modelo.orm.UsuarioMuestra;
 import es.ucm.pcr.repositorio.EstadoPlacaLaboratorioRepositorio;
@@ -179,6 +181,17 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		return new PlacaLaboratorioCentroBean();
 	}
 
+	// JAVI
+	@Override
+	public void finalizarPCR(Integer id) {				
+		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
+		if (placa.isPresent()) {
+			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()) {
+				placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_FINALIZADA_PCR.getCodNum()));
+				placaLaboratorioRepositorio.save(placa.get());
+			}			
+		}
+	}
 
 	//Diana- metodos para jefe de servicio (replica de metodos de Javi con mi bean)
 	

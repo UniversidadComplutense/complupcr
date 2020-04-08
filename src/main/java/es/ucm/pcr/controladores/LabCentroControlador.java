@@ -1,7 +1,6 @@
 package es.ucm.pcr.controladores;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
@@ -130,7 +131,6 @@ public class LabCentroControlador {
 		
 		ModelAndView vista = new ModelAndView("PlacaVisavetRecepcionar");
 		PlacaLaboratorioVisavetBean placa = laboratorioVisavetServicio.buscarPlaca(id);
-		vista.addObject("mostrarMensaje", false);
 		
 		if (placa.getBeanEstado().getEstado().getCodNum() == Estado.PLACAVISAVET_ASIGNADA.getCodNum()) {
 			vista.addObject("recepcionable", true);
@@ -145,12 +145,10 @@ public class LabCentroControlador {
 	public ModelAndView recepcionarPlacaVisavetPOST(@Valid @ModelAttribute("placa") PlacaLaboratorioCentroBean placa, BindingResult result) throws Exception {
 
 		ModelAndView vista = new ModelAndView("PlacaVisavetRecepcionar");	
-		vista.addObject("mostrarMensaje", false);
 		
 		if (!result.hasErrors()) {
 			laboratorioVisavetServicio.recepcionarPlaca(placa.getId());
 			vista.addObject("mensaje", "La placa se ha recepcionado correctamente.");
-			vista.addObject("mostrarMensaje", true);
 			vista.addObject("recepcionable", false);
 		}
 				
@@ -206,7 +204,6 @@ public class LabCentroControlador {
 	public ModelAndView consultarPlaca(HttpSession session, @PathVariable Integer idPlaca) throws Exception {
 
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
-		vista.addObject("mostrarMensaje", false);
 		vista.addObject("placa", laboratorioCentroServicio.buscarPlaca(idPlaca));		
 		return vista;
 	}
@@ -231,7 +228,6 @@ public class LabCentroControlador {
 		placa.setNumeroMuestras("");
 		placa.setPlacasVisavetSeleccionadas("");
 		
-		vista.addObject("mostrarMensaje", false);
 		vista.addObject("nueva", true);
 		vista.addObject("editable", placa.esEditable());
 		vista.addObject("rellenable", placa.esRellenable());
@@ -245,7 +241,6 @@ public class LabCentroControlador {
 	public ModelAndView nuevaPlacaPOST(@Valid @ModelAttribute("placa") PlacaLaboratorioCentroBean placa, BindingResult result) throws Exception {
 
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
-		vista.addObject("mostrarMensaje", false);
 		
 		// Transformamos en un Array el String que viene de la vista con los IDs de las placas Visavet seleccionadas
 		String[] listaIDsPlacasVisavetSeleccinadas = placa.getPlacasVisavetSeleccionadas().split(":");
@@ -257,7 +252,6 @@ public class LabCentroControlador {
 		
 		if (!result.hasErrors()) {
 			placa = laboratorioCentroServicio.guardarPlaca(placa);
-			vista.addObject("mostrarMensaje", true);
 			vista.addObject("mensaje", "La placa " + placa.getId() + " se ha creado correctamente.");			
 		}
 		
@@ -286,14 +280,24 @@ public class LabCentroControlador {
 		
 		placa.setPlacasVisavetSeleccionadas("");
 		
-		
-		vista.addObject("mostrarMensaje", false);
 		vista.addObject("nueva", false);
 		vista.addObject("rellenable", placa.esRellenable());
 		vista.addObject("editable", placa.esEditable());
 		vista.addObject("placa", placa);
 		return vista;
 	}
+	
+	
+	@RequestMapping(value="/gestionPlacas/finalPCR", method=RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
+	public ModelAndView finalPCRplacaPOST(@ModelAttribute("placa") PlacaLaboratorioCentroBean placa, RedirectAttributes redirectAttributes) throws Exception {
+		
+		laboratorioCentroServicio.finalizarPCR(placa.getId());		
+		redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " ha finalizado correctamente la prueba PCR.");
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placa.getId(), true));
+		return respuesta;
+	}
+	
 	
 
 }

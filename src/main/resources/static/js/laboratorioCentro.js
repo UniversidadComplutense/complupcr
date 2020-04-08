@@ -36,6 +36,13 @@ function revisarEstadoBotonRellenarPlaca(){
 	}
 }
 
+// Dar por finalizado PCR de una placa
+function finalizarPCR() {
+    $("#formGuardarFinalizadoPCR").submit();
+}
+
+
+
 
 
 

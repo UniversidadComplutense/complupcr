@@ -92,4 +92,6 @@ public interface LaboratorioCentroServicio {
 	
 	
 	public BeanLaboratorioCentro buscarLaboratorioById(Integer id);
+
+	public void finalizarPCR(Integer id);
 }	
