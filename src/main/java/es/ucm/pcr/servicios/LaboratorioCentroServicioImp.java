@@ -22,6 +22,7 @@ import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
+import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
@@ -367,6 +368,20 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	//Fin Diana- metodos para jefe de servicio
 	
+	//Diana- metodos para los analistas de placas
+	@Override
+	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda,
+			Pageable pageable) {
+		
+		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();		
+		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = placaLaboratorioRepositorio.findByParams(criteriosBusqueda, pageable); 		
+		for (PlacaLaboratorio placa : PagePlacasLaboratorioCentro.getContent()) {
+			listaPlacasLaboratorioCentroBean.add(PlacaLaboratorioCentroBean.modelToBean(placa));
+		}		
+		Page<PlacaLaboratorioCentroBean> placasLaboratorioCentro = new PageImpl<>(listaPlacasLaboratorioCentroBean, pageable, PagePlacasLaboratorioCentro.getTotalElements());		
+		return placasLaboratorioCentro;
+	}
+	//fin Diana- metodos para los analistas de placas
 	
 	
 	public BeanLaboratorioCentro buscarLaboratorioById(Integer id) {
