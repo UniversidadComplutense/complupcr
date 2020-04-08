@@ -13,7 +13,7 @@
 	<div class="row justify-content-center mt-1, titulo-menu">
 		<h5></h5>
 	</div>
-	<div th:if="${mostrarMensaje}" class="alert alert-warning">
+	<div th:if="${mensaje != null}" class="alert alert-warning">
 		<span th:text="${mensaje}"></span>
 	</div>
 	<form action="#" th:action="@{/laboratorioCentro/recepcionPlacas/recepcionar}" method="post" th:object="${placa}" id="formGuardar" role="form">
@@ -57,7 +57,7 @@
 			<div class="col-2 justify-content-begin mt-3">
 				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/recepcionPlacas} + '\''" class="btn btn-secondary">Volver</button>				
 			</div>			
-			<div class="col-2 justify-content-begin mt-3">
+			<div th:if="${recepcionable}" class="col-2 justify-content-begin mt-3">
 				<button th:disabled="!${recepcionable}" type="submit" class="btn btn-secondary">Recepcionar placa</button>
 			</div>			
 		</div>					
