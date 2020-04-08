@@ -150,7 +150,8 @@
 								</td>
 								<td width="38%">
 								<input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].referenciaInterna}"/>
-								<input th:id="${unaMuestra.referenciaInterna}" th:value="${unaMuestra.referenciaInterna}"></span>
+								<!-- th:id="${unaMuestra.referenciaInterna}" th:value="${unaMuestra.referenciaInterna}" -->
+								<input th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].referenciaInterna}" ></span>
 								</td>
 					</tr>
 					</tbody>

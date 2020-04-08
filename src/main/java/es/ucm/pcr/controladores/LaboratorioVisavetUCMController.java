@@ -56,6 +56,7 @@ import es.ucm.pcr.servicios.CentroServicio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 import es.ucm.pcr.servicios.LoteServicio;
+import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
 import es.ucm.pcr.servicios.ServicioLotes;
 import es.ucm.pcr.servicios.SesionServicio;
@@ -80,6 +81,8 @@ public class LaboratorioVisavetUCMController {
 	LaboratorioCentroServicio laboratorioCentroServicio;
     @Autowired
     LaboratorioVisavetServicio laboratorioVisavetServicio;
+    @Autowired
+    MuestraServicio muestraServicio;
 
 	@SuppressWarnings("unused")
 	private final static Logger log = LoggerFactory.getLogger(LaboratorioVisavetUCMController.class);
@@ -510,10 +513,16 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				
 			
 				for (LoteBeanPlacaVisavet lote: lotePlacaVisavetBean.getPlaca().getListaLotes()) {
-			  placa.setId(lote.getIdPlacaVisavet());
-			  placa.setEstado(estado);
-				
+			    placa.setId(lote.getIdPlacaVisavet());
+			    placa.setEstado(estado);
 				placa = servicioLaboratorioUni.guardar(placa);
+				
+				//obtenemos las muestras y guardamos la referencia
+				for (MuestraBeanLaboratorioVisavet m: lote.getListaMuestras()) {
+					m= muestraServicio.guardarReferencia(m);
+				}
+				
+				
 				}
 		//creo q no hace falta		lotePlacaVisavetBean.setPlaca(placa);
 				BusquedaPlacasVisavetBean busquedaPlacasVisavetBean = new BusquedaPlacasVisavetBean();
