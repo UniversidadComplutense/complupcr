@@ -65,13 +65,15 @@ public class DocumentoControlador {
 	private Map<Integer, String> URL_VOLVER = Stream
 			.of(new Object[][] { 
 					{ URL_VOLVER_MUESTRA_DESDE_MUESTRAS, "/centroSalud/muestra/list" },
-					{ URL_VOLVER_PLACA_LABORATORIO_DESDE, "/analisis/cogerPlacas" },
+					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_COGERPLACAS_JEFE, "/analisis/cogerPlacas" },
+					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_REVISARPLACAS_ANALISTA, "/analisis/listarPlacasAnalista" },
 					{ URL_VOLVER_PLACA_VISAVET_DESDE, "/centroSalud/lote/list" }})
 			.collect(Collectors.toMap(d -> (Integer) d[0], d -> (String) d[1]));
 		
 	public static final Integer URL_VOLVER_MUESTRA_DESDE_MUESTRAS = 1;
-	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE = 2;
-	public static final Integer URL_VOLVER_PLACA_VISAVET_DESDE = 3;
+	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE_COGERPLACAS_JEFE = 2;
+	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE_REVISARPLACAS_ANALISTA = 3;
+	public static final Integer URL_VOLVER_PLACA_VISAVET_DESDE = 4;
 	
 
 	@InitBinder("elementoDoc")

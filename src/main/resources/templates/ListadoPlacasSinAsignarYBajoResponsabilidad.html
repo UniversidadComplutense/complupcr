@@ -249,8 +249,8 @@
 					         <a href=# data-toggle="tooltip" style="color:black" title="Ver documentación">					         
 					          <i class="fa fa-file-text-o" aria-hidden="true" style="font-size: 1.2em;"></i>
 					         </a> -->
-					         <!-- TODO - PENDIENTE DE OCULTAR -->
-						     <a style="color:black;cursor: pointer;" th:href="@{/documento/placaLaboratorio(id=${placaAsignada.id})}" title="Documentos">
+					         <!-- TODO - PENDIENTE DE OCULTAR -->					        
+						     <a style="color:black;cursor: pointer;" th:href="@{/documento/placaLaboratorio(id=${placaAsignada.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_PLACA_LABORATORIO_DESDE_COGERPLACAS_JEFE})}" title="Documentos">
 						       <i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;"></i>
 						     </a>					         
 						</td>					
