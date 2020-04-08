@@ -5,6 +5,7 @@ var n=0;
 $("#tablaResultados tbody tr").each(function () 
 {
 n++;
+alert(n);
 });
 
 //BORRA LAS n-1 FILAS VISIBLES DE LA TABLA
@@ -12,6 +13,7 @@ n++;
 //DEJANDO LA PRIMERA FILA VISIBLE, MÁS LA FILA PLANTILLA OCULTA
 for(i=n-1;i>0;i--)
 {
+	
 $("#tablaResultados tbody tr:eq('"+i+"')").remove();
 
 };
@@ -21,9 +23,9 @@ function eliminaFilastrGroup(){
 	//OBTIENE EL NÚMERO DE FILAS DE LA TABLA
 	var n=0;
 	$("#trGroup").each(function () 
-	{
+	{ 
 		$("#trGroup").remove();
-	
+	  alert("borra");
 	n++;
 	});
 
@@ -114,7 +116,8 @@ function cambiarOrdenColumna(orden,sentidoOrden,numPagina,sizePagina){
 	//	eliminarCabecera();
 		//eliminaFilas();
 		//$("#tablaResultadosLotes").append("<thead><th>#Lote</th><th>Centro</th><th>F.Entrada</th><th>#Muestras</th><th>Test</th><th>Estado</th></thead>");
-	$("#trGroup").html(respuesta);
+	
+		
 	});
 
 }
@@ -257,10 +260,14 @@ function asignarPlaca(){
         dataType: 'html',
         data:  sBody
 	}).done(function(respuesta) {
-		alert (respuesta);
-		eliminaFilastrGroup();
-		$("#tablaResultados tbody").append(respuesta);
-	    $("#trGroup").html(respuesta);
+		eliminaFilas();
+		
+		/*$("#tablaResultados tbody").append(respuesta); 
+		*/
+		  var tratarRespuest=respuesta.replace("<tr id=\"trGroup\">", "");
+		  tratarRespuest=tratarRespuest.replace("</tr>", "");
+		 
+		  $("#trGroup").html(respuesta);
 	    $("#grabar").attr("disabled", false);
 	    $("#grabaryFinalizar").attr("disabled", false);
 		
