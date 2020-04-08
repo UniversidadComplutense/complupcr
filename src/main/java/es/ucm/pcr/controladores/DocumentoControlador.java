@@ -110,7 +110,7 @@ public class DocumentoControlador {
 		return vista;
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN','RESPONSABLEPCR')")
+	@PreAuthorize("hasAnyRole('ADMIN','RESPONSABLEPCR', 'JEFESERVICIO', 'ANALISTALABORATORIO', 'VOLUNTARIO')")
 	@RequestMapping(value = "/placaLaboratorio", method = RequestMethod.GET)
 	public ModelAndView documentosPlacaLaboratorio(HttpSession session,
 			@RequestParam(value = "id", required = true) Integer id,
