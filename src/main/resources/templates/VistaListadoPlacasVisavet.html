@@ -115,7 +115,9 @@
 					<td><span th:text="${unResultado.id}"></span></td>
 					<td><span th:text="${#dates.format(unResultado.fechaCreacion, 'dd-mm-yyyy')}"></span></td>
                     <td> <!-- ${unResultado.listaLotes}">  -->
-                    
+                    <p th:id="lotes+${unResultado.id}" style="display:none" th:each="lote: ${unResultado.listaLotes}">
+                            <input type="text" id="lote+${count.index}" th:value="${lote.id}"/>
+                            </p>
                             <a data-toggle="modal" data-target="#modalConsultarLotes" th:attr="data-target='#modalConsultarLotes'+${unResultado.id}" style="cursor: pointer;" title="Ver lotes">                                                 
                     <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i><span th:text="${#lists.size(unResultado.listaLotes)}"></span>	
                        </a>

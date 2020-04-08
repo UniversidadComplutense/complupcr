@@ -137,13 +137,19 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	public BeanPlacaVisavetUCM guardar(BeanPlacaVisavetUCM beanPlacaVisavetUCM) {
 	
 		PlacaVisavet placa = BeanPlacaVisavetUCM.beanToModel(beanPlacaVisavetUCM);						
- 
-		// Placa nueva
+       
 		if (beanPlacaVisavetUCM.getId() == null) {
 			placa.setFechaCreacion(new Date());
 			placa.setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_INICIADA.getCodNum()));
 			
 		}
+		/*else {
+			Optional<PlacaVisavet> placaBBDDOpt=placaVisavetRepositorio.findById(beanPlacaVisavetUCM.getId());
+	        if (placaBBDDOpt.get()!=null)
+	        	placa.setDocumentos(placaBBDDOpt.getDocumentos());
+	            placa.(placaBBDDOpt.getDocumentos());
+				// Placa nueva
+		}*/
 		placa.setLaboratorioVisavet(new LaboratorioVisavet(sesionServicio.getUsuario().getIdLaboratorioVisavet()));
 		placa = placaVisavetRepositorio.save(placa);
 		return BeanPlacaVisavetUCM.modelToBean(placa);

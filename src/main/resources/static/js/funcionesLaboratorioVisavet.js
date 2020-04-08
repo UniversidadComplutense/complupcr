@@ -208,9 +208,10 @@ function procesarLotesDesdePlacas(idPlaca) {
 			
 		});
 	
-	
+	if (lotesProcesar !=""){
 	var url="/laboratorioUni/procesarLotes?lotes="+lotesProcesar;
 	window.location=url;
+	}
 }
 
 // funcion que al ser pulsada da de alta una nueva placa vacia
