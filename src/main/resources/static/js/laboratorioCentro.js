@@ -41,6 +41,11 @@ function finalizarPCR() {
     $("#formGuardarFinalizadoPCR").submit();
 }
 
+//Asignar equipo PCR a una placa
+function asignarEquipoPCR() {
+    $("#formGuardarAsignarEquipoPCR").submit();
+}
+
 
 
 

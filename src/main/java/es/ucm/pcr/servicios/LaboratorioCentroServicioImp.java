@@ -192,6 +192,21 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			}			
 		}
 	}
+	
+	// JAVI
+	@Override
+	public void asignarEquipoPCR(Integer id) {				
+		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
+		if (placa.isPresent()) {
+			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_INICIADA.getCodNum()) {
+				
+				//TODO asignar a un equipo del laboratorio si así nos lo piden finalmente
+				
+				placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()));
+				placaLaboratorioRepositorio.save(placa.get());
+			}			
+		}
+	}
 
 	//Diana- metodos para jefe de servicio (replica de metodos de Javi con mi bean)
 	

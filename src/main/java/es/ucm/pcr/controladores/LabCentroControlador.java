@@ -134,7 +134,9 @@ public class LabCentroControlador {
 		
 		if (placa.getBeanEstado().getEstado().getCodNum() == Estado.PLACAVISAVET_ASIGNADA.getCodNum()) {
 			vista.addObject("recepcionable", true);
-		}			
+		} else {
+			vista.addObject("recepcionable", false);
+		}
 		vista.addObject("placa", placa);
 		return vista;
 	}
@@ -294,6 +296,17 @@ public class LabCentroControlador {
 		
 		laboratorioCentroServicio.finalizarPCR(placa.getId());		
 		redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " ha finalizado correctamente la prueba PCR.");
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placa.getId(), true));
+		return respuesta;
+	}
+	
+	
+	@RequestMapping(value="/gestionPlacas/asignarEquipo", method=RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
+	public ModelAndView asignarEquipoPCRPOST(@ModelAttribute("placa") PlacaLaboratorioCentroBean placa, RedirectAttributes redirectAttributes) throws Exception {
+		
+		laboratorioCentroServicio.asignarEquipoPCR(placa.getId());		
+		redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " está preparada para prueba PCR.");
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placa.getId(), true));
 		return respuesta;
 	}
