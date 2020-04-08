@@ -82,7 +82,7 @@ public class PlacaLaboratorioCentroAsignacionesBean extends PlacaLaboratorioCent
 		BeanListaAsignaciones beanListaAsignaciones = new BeanListaAsignaciones();
 		//analistas de la muestra(serán los mismos analistas que la placa), 
 		//rellenamos los analistas de la placa a partir de los analistas de la primera muestra de la placa (porque son los mismos para todas las muestras)
-		Set<Muestra> setMuestras = placaLaboratorio.getMuestras();		
+		Set<Muestra> setMuestras = placaLaboratorio.getMuestras();
 		for (Muestra muestra : setMuestras) {
 			for(UsuarioMuestra usuMuestra: muestra.getUsuarioMuestras()) {
 				Usuario usu = usuMuestra.getUsuario();
@@ -121,8 +121,11 @@ public class PlacaLaboratorioCentroAsignacionesBean extends PlacaLaboratorioCent
 						//beanAsigVol.setValoracion("P"); //la valoración no tiene sentido a nivel de placa (se valoran las muestras no las placas)
 						beanListaAsignaciones.getListaAnalistasVolSinLabCentro().add(beanAsigVolSinCentro);
 					}
-				}
+				}				
 			}
+			//en cuanto obtengamos los datos de los analistas de la primera muestra nos salimos del bucle
+			break;
+			
 		}
 		beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
 		bean.setBeanAnalisis(beanAnalisis);	
