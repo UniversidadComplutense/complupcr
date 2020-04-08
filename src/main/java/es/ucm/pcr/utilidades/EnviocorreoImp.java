@@ -206,7 +206,7 @@ public class EnviocorreoImp implements Enviocorreo {
 
 	public SimpleMailMessage constructWelcomeEmail(String contextPath, Usuario user) {
 		String url = contextPath + "/regenerarContrasena";
-		String message = "<p>Bien venido " + user.getNombre()
+		String message = "<p>Bienvenido " + user.getNombre()
 				+ ",</p><p>Ha sido dado de alta en la aplicación de gesión y seguimiento de tests PCR Covid-19.</p>"
 				+ "<p>Para poder acceder debe solicitar el cambio de contraseña, indicando su e-mail ("
 				+ user.getEmail() + ") a través del siguente enlace:</p>";
