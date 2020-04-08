@@ -66,21 +66,33 @@
 			</div>
  
  			<div class="form-group">
-				<label class="text_formulario">Estado de la activación</label>
+				<label class="text_formulario">Estado del usuario</label>
 			</div>
  			<div class="form-group">
 				<div class="custom-control custom-radio custom-control-inline">
 					<input type="radio" id="option1" name="option1"
-						class="custom-control-input" value="S"
-						th:field="*{habilitado}" th:checked="*{habilitado != 'I'} ? 'checked' : ''"> <label
-						class="custom-control-label" for="option1">Habilitado</label>
+						class="custom-control-input" value="A"
+ 						th:field="*{habilitado}"> 
+						<label class="custom-control-label" for="option1">Activo</label>
 				</div>
 				<div class="custom-control custom-radio custom-control-inline">
 					<input type="radio" id="option2" name="option2"
-						class="custom-control-input" value="N"
-						th:field="*{habilitado}" th:checked="*{habilitado == 'I'} ? 'checked' : ''"> <label
-						class="custom-control-label" for="option2">No habilitado</label>
+						class="custom-control-input" value="B"
+ 						th:field="*{habilitado}" > 						
+						<label class="custom-control-label" for="option2">Bloqueado</label>
 				</div>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="option3" name="option3"
+						class="custom-control-input" value="E"
+ 						th:field="*{habilitado}" > 						
+						<label class="custom-control-label" for="option3">Enviado</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="option4" name="option4"
+						class="custom-control-input" value="I"
+ 						th:field="*{habilitado}" > 						
+						<label class="custom-control-label" for="option4">Inhabilitado</label>
+				</div>				
 			</div> 
 
 			<!-- roles del usuario -->

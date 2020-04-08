@@ -13,16 +13,23 @@
 	<form action="#" th:action="@{/gestor/log/list}" method="post" th:object="${beanBusqueda}" id="formBusqueda" role="form">
 		
 		<div class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
-		  	<label>Consulta log muestra</label>
+		  	<label>Consulta estados muestra</label>
 		</div>
 		
 		<!-- CRITERIOS BUSQUEDA LOG -->
 		<fieldset id="datosBusquedaLog" class="form-group border p-2 m-1">
-			<legend class="w-auto font-weight-bold m-0">Log muestra</legend>
+			<legend class="w-auto font-weight-bold m-0">Datos muestra</legend>
 			<div class="row">
-				<div class="col-3 m-0 form-group">
+				<div class="col-4 m-0 form-group">
 					<label >Etiqueta</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="*{etiquetaMuestra}"  th:value="*{etiquetaMuestra}" maxlength="100"/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('etiquetaMuestra')}" th:errors="*{etiquetaMuestra}"></label>
+				</div>
+				
+				<div class="col-4 m-0 form-group">
+					<label >NHC</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{nhcPaciente}"  th:value="*{nhcPaciente}" maxlength="45"/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('nhcPaciente')}" th:errors="*{nhcPaciente}"></label>
 				</div>
 			
 				<!-- <div class="col-3 m-0 form-group">
@@ -51,7 +58,8 @@
 	    			<tr>
 	    				<th scope="col">Etiqueta muestra</th>
 	    				<th scope="col">Centro salud</th>
-	      				<th scope="col">Paciente</th>	      				
+	      				<th scope="col">Paciente</th>
+	      				<th scope="col">NHC</th>	      				
 						<th scope="col">Estado</th>
 						<th scope="col">Autor</th>	
 						<th scope="col">Fecha</th>										
@@ -62,6 +70,7 @@
 						<td><span th:text="${log.descMuestra}"></span></td>
 						<td><span th:text="${log.descCentroSalud}"></span></td>
 						<td><span th:text="${log.descPaciente}"></span></td>
+						<td><span th:text="${log.nhcPaciente}"></span></td>
 						<td><span th:text="${log.descEstadoMuestra}"></span></td>
 						<td><span th:text="${log.nombreAutorCambio}"></span></td>
 						<td><span th:text="${#dates.format(log.fechaCambio, 'dd/MM/yyyy HH:mm:ss')}"></span></td>															

@@ -18,7 +18,8 @@ public interface LogMuestrasRepositorio extends JpaRepository<LogMuestras, Integ
 
 	@Query("SELECT logMuestra FROM LogMuestras logMuestra "
 			+ "WHERE 1=1 "
-			+ "and (:#{#params.etiquetaMuestra} is null or logMuestra.muestra.etiqueta = :#{#params.etiquetaMuestra}) "
+			+ "and (:#{#params.etiquetaMuestra} is null or :#{#params.etiquetaMuestra} = '' or logMuestra.muestra.etiqueta = :#{#params.etiquetaMuestra}) "			
+			+ "and (:#{#params.nhcPaciente} is null or :#{#params.nhcPaciente} = '' or logMuestra.muestra.paciente.nhc = :#{#params.nhcPaciente}) "
 			+ "and (:#{#params.idLote} is null or logMuestra.lote.id = :#{#params.idLote}) "
 			+ "and (:#{#params.idPlacaLaboratorio} is null or logMuestra.placaLaboratorio.id = :#{#params.idPlacaLaboratorio}) "
 			+ "and (:#{#params.idPlacaVisavet} is null or logMuestra.placaVisavet.id = :#{#params.idPlacaVisavet}) ")
