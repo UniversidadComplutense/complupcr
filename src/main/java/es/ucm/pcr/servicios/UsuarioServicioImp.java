@@ -12,6 +12,8 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ import es.ucm.pcr.repositorio.CentroRepositorio;
 import es.ucm.pcr.repositorio.PasswordTokenRepositorio;
 import es.ucm.pcr.repositorio.RolRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
+import es.ucm.pcr.utilidades.EnviocorreoImp;
 
 @Service
 @Transactional
@@ -52,6 +55,12 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	
 	@Autowired
 	BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private Environment env;
+	
+	@Autowired
+	EnviocorreoImp enviocorreoImp;
 	
 	@Override
 	public Usuario buscarUsuarioPorEmail(String email) {
@@ -163,14 +172,14 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		usuario.setId(beanUsuario.getId());
 		usuario.setNombre(beanUsuario.getNombre());
 		// el Pwd se asigna por otros medios, pero no puede ir vacio
-		if (beanUsuario.getPassword() == null)
-		{
-			usuario.setPassword("PWD");
-		}
-		else
-		{
-			usuario.setPassword(beanUsuario.getPassword());
-		}		
+		usuario.setPassword(passwordEncoder.encode("PWD"));
+		// Enviamos mail para cambio de Pwd 
+		SimpleMailMessage simpleMailMessage = enviocorreoImp.constructWelcomeEmail(env.getProperty("app.url"), usuario);
+		enviocorreoImp.send(usuario.getEmail(), simpleMailMessage.getSubject(), simpleMailMessage.getText(), null, "",
+				"<p><strong>Este es un correo automático enviado por la aplicación COVID-19.</strong></p>"
+						+ "<p><strong>No responda a este mensaje.</strong></p>",
+				"");
+		usuario.setHabilitado("E");
 		// Añado los roles seleccionado
 		Set<Rol> rolesSeleccionados = new HashSet<Rol>(0);
 		if(roles != null) 
