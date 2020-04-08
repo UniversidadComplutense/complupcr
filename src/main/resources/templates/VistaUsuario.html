@@ -25,7 +25,19 @@
 		<form action="#" th:action="@{/gestor/altaUsuario}" method="post"
 			th:object="${formBeanUsuario}" id="ALTAUsuario" role="form" name="formularioUsuario">
 
-			<h4>GESTION DE USUARIO</h4>
+			<div
+				class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
+				<label>Información del usuario</label>
+			</div>
+			<div th:if="${mensajeError !=null}"
+				class="alert alert-danger alert-dismissible fade show m-1 mt-2"
+				role="alert">
+				<label th:text="${mensajeError}"></label>
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
 
 			<div class="form-group">
 				<label class="text_formulario">Nombre Usuario</label> <input
@@ -40,9 +52,9 @@
 			</div>
 
 			<div class="form-group">
-				<label class="textalta 06/04 11:27_formulario">Segundo Apellido Usuario</label> <input
+				<label class="text_formulario">Segundo Apellido Usuario</label> <input
 					type="text" class="form-control" th:field="${formBeanUsuario.apellido2}"
-					th:value="${formBeanUsuario.apellido2}" required="required" />
+					th:value="${formBeanUsuario.apellido2}" />
 			</div>
 
  			<!-- En modificacion no modificamos el mail, eso es cosa del alta de usuarios -->
@@ -60,13 +72,13 @@
 				<div class="custom-control custom-radio custom-control-inline">
 					<input type="radio" id="option1" name="option1"
 						class="custom-control-input" value="S"
-						th:field="*{habilitado}"> <label
+						th:field="*{habilitado}" th:checked="*{habilitado != 'I'} ? 'checked' : ''"> <label
 						class="custom-control-label" for="option1">Habilitado</label>
 				</div>
 				<div class="custom-control custom-radio custom-control-inline">
 					<input type="radio" id="option2" name="option2"
 						class="custom-control-input" value="N"
-						th:field="*{habilitado}"> <label
+						th:field="*{habilitado}" th:checked="*{habilitado == 'I'} ? 'checked' : ''"> <label
 						class="custom-control-label" for="option2">No habilitado</label>
 				</div>
 			</div> 
@@ -83,40 +95,42 @@
 				</th:block>
 			</div>
 			
-			<div class="form-group">
-				<label class="text_formulario">Tipo de Centro</label>
-			</div>
+<!-- 			<div class="form-group"> -->
+<!-- 				<label class="text_formulario">Tipo de Centro</label> -->
+<!-- 			</div> -->
 			
-			<div class="form-group">
-			<main>
-				<!-- Todos los radio deben tener el mismo name para poder obtener su valor -->
-				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="CENTROSALUD" name="tipoCentroSeleccionado"
-						onclick="centroSalud()"
-						class="custom-control-input" value="C"
-						th:field="*{tipoCentroSeleccionado}"> <label
-						class="custom-control-label" for="CENTROSALUD">Centros de salud</label>
-				</div>
-				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="LABUCM" name="tipoCentroSeleccionado"
-						onclick="labUcm()"
-						class="custom-control-input" value="L"
-						th:field="*{tipoCentroSeleccionado}"> <label
-						class="custom-control-label" for="LABUCM">Laboratorio Centros UCM</label>
-				</div>
-				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="LABVISAVET" name="tipoCentroSeleccionado"
-						onclick="labVisavet()"
-						class="custom-control-input" value="V"
-						th:field="*{tipoCentroSeleccionado}"> <label
-						class="custom-control-label" for="LABVISAVET">Laboratorio Logístico</label>
-				</div>	
-				</main>			
-			</div> 	
+<!-- 			<div class="form-group"> -->
+<!-- 			<main> -->
+<!-- 				Todos los radio deben tener el mismo name para poder obtener su valor -->
+<!-- 				<div class="custom-control custom-radio custom-control-inline"> -->
+<!-- 					<input type="radio" id="CENTROSALUD" name="tipoCentroSeleccionado" -->
+<!-- 						onclick="centroSalud()" -->
+<!-- 						class="custom-control-input" value="C" -->
+<!-- 						th:field="*{tipoCentroSeleccionado}"> <label -->
+<!-- 						class="custom-control-label" for="CENTROSALUD">Centros de salud</label> -->
+<!-- 				</div> -->
+<!-- 				<div class="custom-control custom-radio custom-control-inline"> -->
+<!-- 					<input type="radio" id="LABUCM" name="tipoCentroSeleccionado" -->
+<!-- 						onclick="labUcm()" -->
+<!-- 						class="custom-control-input" value="L" -->
+<!-- 						th:field="*{tipoCentroSeleccionado}"> <label -->
+<!-- 						class="custom-control-label" for="LABUCM">Laboratorio Centros UCM</label> -->
+<!-- 				</div> -->
+<!-- 				<div class="custom-control custom-radio custom-control-inline"> -->
+<!-- 					<input type="radio" id="LABVISAVET" name="tipoCentroSeleccionado" -->
+<!-- 						onclick="labVisavet()" -->
+<!-- 						class="custom-control-input" value="V" -->
+<!-- 						th:field="*{tipoCentroSeleccionado}"> <label -->
+<!-- 						class="custom-control-label" for="LABVISAVET">Laboratorio Logístico</label> -->
+<!-- 				</div>	 -->
+<!-- 				</main>			 -->
+<!-- 			</div> 	 -->
 				
 			<main>
-				<div class="form-group">	
+				<div class="form-group">
+					<label>Centro de salud</label>	
 					<select class="form-control" id="IDCENTROSALUD" th:field="*{centroSeleccionado}">
+						<option value="">Seleccione</option> 
 				     	<option th:each="var: ${mapaCentros}" th:value="${var.key}" 
 				     	th:text="${var.value}" th:select="${formBeanUsuario.centroSeleccionado}"
 				     	
@@ -126,7 +140,9 @@
 				</div>				
 				
 				<div class="form-group">	
+					<label>Laboratorio Centro UCM</label>
 					<select class="form-control" id="IDLABUCM" th:field="*{idLaboratorioCentro}">
+						<option value="">Seleccione</option>
 				     	<option th:each="var: ${mapaLaboratoriosCentro}" th:value="${var.key}" 
 				     	th:text="${var.value}" th:select="${formBeanUsuario.idLaboratorioCentro}"
 				     	
@@ -135,8 +151,10 @@
 				     </select>		
 				</div> 				
 				
-			 	<div class="form-group">	
+			 	<div class="form-group">
+			 	<label>Laboratorio Visavet</label>	
 					<select class="form-control" id="IDLABVISAVET" th:field="*{idLaboratorioVisavet}">
+					<option value="">Seleccione</option>
 				     	<option th:each="var: ${mapaLaboratoriosVisavet}" th:value="${var.key}" 
 				     	th:text="${var.value}" th:select="${formBeanUsuario.idLaboratorioVisavet}"
 				     	
@@ -148,24 +166,16 @@
 			
 			<!--  Los campos id, acción y tipoCentroSeleccionado van ocultos en la pantalla 
 			-->
-			<div class="form-group">
-				<label class="text_formulario"></label> 
 				<input type="hidden" class="form-control"
 					th:field="${formBeanUsuario.accion}"
 					th:value="${formBeanUsuario.accion}"  />
-			</div>
-			<div class="form-group">
-				<label class="text_formulario"></label> 
 				<input type="hidden" class="form-control"
 					th:field="${formBeanUsuario.id}"
 					th:value="${formBeanUsuario.id}"  />
-			</div>
-			<!--  Los campos id, acción y tipoCentroSeleccionado van ocultos en la pantalla 
-			-->
 
 			<div class="row align-content-center">
 				<div class="col-4 mx-auto">
-					<button type="submit" class="btn btn-primary">Guardar Usuario</button>
+					<button type="submit" class="btn btn-secondary">Guardar</button>
 				</div>
 			</div>
 
@@ -175,7 +185,6 @@
 
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
-	<script th:src="@{/js/gestionUsuario.js}"></script>
 	
 </body>
 </html>

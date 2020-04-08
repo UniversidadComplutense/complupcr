@@ -68,7 +68,7 @@
 				<th:block th:switch="*{tipoElemento}">
 					<a th:case="${T(es.ucm.pcr.beans.ElementoDocumentacionBean).TIPO_ELEMENTO_MUESTRA}" th:href="@{/centroSalud/muestra/list}" class="btn btn-secondary">Volver</a>
 					<a th:case="${T(es.ucm.pcr.beans.ElementoDocumentacionBean).TIPO_ELEMENTO_PLACA_VISAVET}" th:href="@{/centroSalud/muestra/list}" class="btn btn-secondary">Volver</a>
-					<a th:case="${T(es.ucm.pcr.beans.ElementoDocumentacionBean).TIPO_ELEMENTO_PLACA_LABORATORIO}" th:href="@{/centroSalud/muestra/list}" class="btn btn-secondary">Volver</a>
+					<a th:case="${T(es.ucm.pcr.beans.ElementoDocumentacionBean).TIPO_ELEMENTO_PLACA_LABORATORIO}" th:href="@{/analisis/cogerPlacas}" class="btn btn-secondary">Volver</a>
 				</th:block>				
 			</div>
 		</div>			
