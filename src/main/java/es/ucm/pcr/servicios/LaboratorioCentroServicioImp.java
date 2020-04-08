@@ -139,6 +139,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		return laboratorioCentroRepositorio.findById(idLaboratorioCentro);
 	}
 	
+	// JAVI
 	@Override
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda,
 			Pageable pageable) {
@@ -152,7 +153,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		return placasLaboratorioCentro;
 	}
 
-	
+	//JAVI
 	@Override
 	public PlacaLaboratorioCentroBean guardarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean) {
 		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);						
@@ -168,7 +169,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 	}
 	
-	
+	// JAVI
 	@Override
 	public PlacaLaboratorioCentroBean buscarPlaca(Integer id) {
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);

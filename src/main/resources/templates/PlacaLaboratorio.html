@@ -26,9 +26,10 @@
 					<label>Identificador</label>
 				 	<input type="text" class="form-control form-control-sm" th:value="${placa.id}"/>
 				</div>				
-				<div class="col-3 form-group">
+				<div class="col-4 form-group">
 					<label>Capacidad</label>
-				 	<select class="form-control form-control-sm" th:field="${placa.numeroMuestras}"  th:value="${placa.numeroMuestras}">
+				 	<select th:id="capacidadPlacaLab" class="form-control form-control-sm" th:field="${placa.numeroMuestras}" 
+				 			th:value="${placa.numeroMuestras}" onchange="revisarEstadoBotonCrearPlaca();">
 				 		<option value="">Seleccione</option>
 				 		<option value="20">20</option>
 				 		<option value="96">96</option>
@@ -47,7 +48,7 @@
 			</div>					
 		</fieldset>
 		
-		<div th:if="${nueva || placa.beanEstado.estado.codNum == 1}">
+		<div th:if="${nueva || rellenable}">
 		<fieldset id="placasVisavet" class="form-group border p-2">
 			<legend class="w-auto">Placas VISAVET</legend>
 			<!-- PLACAS VISAVET PARA COMBINAR -->
@@ -141,8 +142,8 @@
 			<div class="col-2 justify-content-begin mt-3">
 				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas} + '\''" class="btn btn-secondary">Volver</button>				
 			</div>
-			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 1}" class="col-2 justify-content-begin mt-3">
-				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/rellenar} + '\''" th:disabled="${nueva}" class="btn btn-secondary">Rellenar</button>			
+			<div th:if="${!nueva && rellenable}" class="col-2 justify-content-begin mt-3">
+				<button th:id="btnRellenarPlaca" type="button" th:disabled="disabled" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/rellenar} + '\''" class="btn btn-secondary">Rellenar</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 1}" class="col-3 justify-content-begin mt-3">
 				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/asignarEquipo} + '\''" th:disabled="${nueva}" class="btn btn-secondary">Asignar equipo PCR</button>			
@@ -154,7 +155,7 @@
 				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/resultados} + '\''" th:disabled="${nueva}" class="btn btn-secondary">Asignar resultados PCR</button>			
 			</div>			
 			<div th:if="${nueva}" class="col-2 justify-content-begin mt-3">
-				<button th:disabled="!${editable}" type="submit" class="btn btn-secondary">Crear placa</button>
+				<button th:id="btnCrearPlaca" th:disabled="${editable == 'false' || placa.numeroMuestras == ''|| placa.placasVisavetSeleccionadas == ''}" type="submit" class="btn btn-secondary">Crear placa</button>
 			</div>			
 		</div>					
 	</form>
