@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-Covid19</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+	
+<div class="container">	
+
+<fieldset class="form-group border p-2">
+	<div id="placasPendientes" class="container">
+		<div class="row justify-content-center mt-1, titulo-menu">
+			<h5>PLACAS PENDIENTES</h5>
+		</div>
+		<div class="row justify-content-center mt-3">
+		    <div class="col-lg-12">
+				<table class="table">
+				  <thead class="thead-light">
+				    <tr>
+				     <!--  <th scope="col"><input class="form-check-input, justify-content-center" type="checkbox" value="" id="" disabled></th> -->
+				      <th scope="col">Identificador</th>				      
+					  <th scope="col">NHC</th>
+					  <th scope="col">Etiqueta</th>
+					  <th scope="col">Fecha asignación</th>	
+					  <th scope="col"></th>			    
+				    </tr>
+				  </thead>
+				  <tbody><!--  th:if="${listaPlacasListasParaAnalisis != null}" th:each="placa : ${listaPlacasListasParaAnalisis}"> -->
+				    <tr>
+				      <!-- <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td> -->
+				      <td>1</td>
+				      <td>nhc1</td>
+				      <td>etiqueta1</td>
+				      <td>25/03/2020</td>				      				      	
+				      <td>
+					      <!-- <a class="btn btn-secondary" th:href="@{/analisis/revisar(idMuestra=${muestra.id} )}" data-toggle="tooltip" title="Revisar">	 -->				         
+					      <a class="btn btn-secondary" th:href="@{/analisis/revisarAnalista(idMuestra=1)}" data-toggle="tooltip" title="Revisar">
+					      Revisar	 
+					      </a>
+					  </td>				      		      
+				    </tr>	
+				    <tr>
+				      <!-- <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td> -->
+				      <td>2</td>
+				      <td>nhc2</td>
+				      <td>etiqueta2</td>
+				      <td>28/03/2020</td>
+				      <td>
+					      <!-- <a class="btn btn-secondary" th:href="@{/analisis/revisar(idMuestra=${muestra.id} )}" data-toggle="tooltip" title="Revisar">	 -->				         
+					      <a class="btn btn-secondary" th:href="@{/analisis/revisarAnalista(idMuestra=2)}" data-toggle="tooltip" title="Revisar">
+					      Revisar	 
+					      </a>
+					  </td>				      
+				    </tr>	
+				    <tr>
+				      <!-- <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td> -->
+				      <td>3</td>
+				      <td>nhc3</td>
+				      <td>etiqueta3</td>
+				      <td>30/03/2020</td>
+				      <td>
+					      <!-- <a class="btn btn-secondary" th:href="@{/analisis/revisar(idMuestra=${muestra.id} )}" data-toggle="tooltip" title="Revisar">	 -->				         
+					      <a class="btn btn-secondary" th:href="@{/analisis/revisarAnalista(idMuestra=3)}" data-toggle="tooltip" title="Revisar">
+					      Revisar	 
+					      </a>
+					  </td>				      
+				    </tr>	
+				    <tr>
+				      <!-- <td><input class="form-check-input, justify-content-center" type="checkbox" value="" id=""></td> -->
+				      <td>4</td>
+				      <td>nhc4</td>
+				      <td>etiqueta4</td>
+				      <td>01/04/2020</td>
+				      <td>
+					      <!-- <a class="btn btn-secondary" th:href="@{/analisis/revisar(idMuestra=${muestra.id} )}" data-toggle="tooltip" title="Revisar">	 -->				         
+					      <a class="btn btn-secondary" th:href="@{/analisis/revisarAnalista(idMuestra=4)}" data-toggle="tooltip" title="Revisar">
+					      Revisar	 
+					      </a>
+					  </td>			      
+				    </tr>				    
+				  </tbody>
+				</table>
+				
+			</div>									  		
+	  </div>
+	</div>
+</fieldset>
+	
+	
+	<!-- Modal Marcar placa para resultados-->
+	<div class="modal fade" id="modalMarcarPlacaParaResultados" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="MarcarPlacaParaResultadosLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="MarcarPlacaParaResultadosLabel">PCR Completa</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <h6>Esperando resultado</h6>
+	        <button type="button" class="btn btn-secondary">Cargar CSV</button>
+	        <button type="button" class="btn btn-secondary">Cargar HOJA DE TRABAJO</button>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+</div>
+		
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+</body>
+</html>
