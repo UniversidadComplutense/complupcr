@@ -52,6 +52,7 @@ import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.BeanResultado;
 import es.ucm.pcr.beans.BeanRolUsuario;
 import es.ucm.pcr.beans.BeanUsuario;
+import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.GuardarAsignacionMuestraBean;
@@ -639,15 +640,62 @@ public class AnalisisControlador {
 
 		
 		
-		
-		
-		
 		//FIN FUNCIONALIDAD JEFE: COGER PLACAS Y ASIGNAR ANALISTAS A PLACAS
 		
 		
 		//ANALISTA O VOLUNTARIOS (SOLO ANALIZAN)
 		
-				
+		
+		//ANALISTAS- REVISAR PLACA		
+		
+		@RequestMapping(value = "/listarPlacasAnalista", method = RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO')")
+		public ModelAndView listarPlacasAsignadasAnalistaGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+
+			ModelAndView vista = new ModelAndView("ListadoPlacasARevisarAnalista");
+			
+			System.out.println("estoy en listarPlacasAsignadasAnalistaGET");
+			
+			//recupero el usuario logado			
+			Usuario user = sesionServicio.getUsuario();
+			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
+			
+			//buscamos las placas pendientes de revisar por el analista
+			//serán aquellas placas cuyas muestras hayan sido asignadas al usuario logado y cuyas muestras no tengan ya valoración por el analista
+			//son las que están asignadas al analista para que las revise subiendo el excel
+
+			/*
+			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
+			// del centro del usuario jefe logado
+			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
+			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
+			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
+			List<PlacaLaboratorioCentroBean> listaPlacasListasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaListaParaAnalisis, pageable).getContent();
+			System.out.println("listaPlacasListasParaAnalisis tiene: "+ listaPlacasListasParaAnalisis.size());
+			*/
+			
+			// Buscamos las placas cuyas muestras esten asignadas al usuario logado con estado 'Asignada analissta'
+			//y que no tengan aun valoracion por el analista			 
+			
+			BusquedaPlacaLaboratorioAnalistaBean criteriosBusquedaPlacaAsignadaParaRevision = new BusquedaPlacaLaboratorioAnalistaBean();			
+			criteriosBusquedaPlacaAsignadaParaRevision.setIdEstadoPlaca(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
+			criteriosBusquedaPlacaAsignadaParaRevision.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
+			criteriosBusquedaPlacaAsignadaParaRevision.setIdAnalistaMuestras(user.getId());
+			criteriosBusquedaPlacaAsignadaParaRevision.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum());
+			criteriosBusquedaPlacaAsignadaParaRevision.setValoracion(null);
+			List<PlacaLaboratorioCentroBean> listaPlacasAsignadasParaRevision = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevision, pageable).getContent();
+			System.out.println("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.size());			
+			
+			
+			//vista.addObject("listaPlacasListasParaAnalisis", listaPlacasListasParaAnalisis);
+			vista.addObject("listaPlacasAsignadasParaRevision", listaPlacasAsignadasParaRevision);
+			
+			return vista;
+
+		}
+		//FIN ANALISTAS-REVISAR PLACA
+		
+		//ANALISTAS- REVISAR MUESTRA		
 		@RequestMapping(value = "/listarMuestrasAnalista", method = RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO')")
 		public ModelAndView listarMuestrasAsignadasAnalistaGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
@@ -743,6 +791,7 @@ public class AnalisisControlador {
 			redirectAttributes.addFlashAttribute("mensaje", "Resultado de muestra guardado");
 			return new RedirectView("/analisis/revisarAnalista?idMuestra="+idMuestra, true);
 		}
+		//ANALISTAS- REVISAR MUESTRA	
 		
 		//FIN ANALISTA O VOLUNTARIOS (SOLO ANALIZAN)
 		

@@ -149,7 +149,9 @@ public class SesionServicioImpl implements SesionServicio {
 //			Analista
 		if (this.tieneRol("ADMIN") || this.tieneRol("ANALISTALABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Revisar muestras", "/analisis/listarMuestrasAnalista", null);
+			//opcionSecundaria = new MenuBean("Revisar muestras", "/analisis/listarMuestrasAnalista", null);
+			//menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Revisar placas", "/analisis/listarPlacasAnalista", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Analista", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
@@ -164,6 +166,8 @@ public class SesionServicioImpl implements SesionServicio {
 			opcionSecundaria = new MenuBean("Laboratorios Visavet","/gestor/listaLaboratorioVisavet",null);
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Usuarios","/gestor/listaUsuarios",null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Consulta log muestras","/gestor/log",null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Gestor", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);

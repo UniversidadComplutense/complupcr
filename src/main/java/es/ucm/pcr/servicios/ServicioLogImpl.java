@@ -1,20 +1,30 @@
 package es.ucm.pcr.servicios;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanEstado;
+import es.ucm.pcr.beans.LogMuestraBusquedaBean;
+import es.ucm.pcr.beans.LogMuestraListadoBean;
+import es.ucm.pcr.beans.MuestraListadoBean;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.LogMuestras;
 import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
+import es.ucm.pcr.modelo.orm.Paciente;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.PlacaVisavet;
+import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.LogMuestrasRepositorio;
 import es.ucm.pcr.repositorio.LoteRepositorio;
 import es.ucm.pcr.repositorio.MuestraRepositorio;
@@ -94,6 +104,41 @@ public class ServicioLogImpl implements ServicioLog {
 				muestra.getPlacaLaboratorio(), new EstadoMuestra(estadoActualizar.getEstado().getCodNum()), new Date(),
 				sesionServicio.getUsuario());
 		logMuestrasRepositorio.save(logMuestras);
+	}
+	
+	@Override
+	public Page<LogMuestraListadoBean> findLogMuestraByParam(LogMuestraBusquedaBean params, Pageable pageable) {
+		List<LogMuestraListadoBean> listMuestrasBean = new ArrayList<LogMuestraListadoBean>();
+		
+		Page<LogMuestras> muestrasPage = logMuestrasRepositorio.findByParams(params, pageable); 
+		
+		LogMuestraListadoBean logMuestra = new LogMuestraListadoBean();
+		for (LogMuestras l : muestrasPage.getContent()) {
+			logMuestra = new LogMuestraListadoBean();
+			logMuestra.setId(l.getId());
+			logMuestra.setDescLote(l.getLote() != null ? l.getLote().getNumeroLote() : "");
+			logMuestra.setDescCentroSalud(l.getMuestra().getCentro().getNombre());
+			logMuestra.setDescMuestra(l.getMuestra().getEtiqueta());
+			Paciente paciente = l.getMuestra().getPaciente();
+			logMuestra.setDescPaciente(MuestraListadoBean.nombreCompletoPaciente(paciente));
+			logMuestra.setDescEstadoMuestra(l.getEstadoMuestra().getDescripcion());
+			logMuestra.setFechaCambio(l.getFechaCambio());
+			Usuario usuario = l.getAutorCambio();
+			logMuestra.setNombreAutorCambio(usuario.getNombre() + " " + usuario.getApellido1() + (usuario.getApellido2() != null ? usuario.getApellido2() : ""));
+			listMuestrasBean.add(logMuestra);
+		}
+		
+		Page<LogMuestraListadoBean> listMuestrasBeanPage = new PageImpl<>(listMuestrasBean, pageable, muestrasPage.getTotalElements());
+		
+		return listMuestrasBeanPage;
+	}
+	
+	@Override
+	public void borrarEstadosMuestra(Integer idMuestra) {
+		LogMuestraBusquedaBean logBusqueda = new LogMuestraBusquedaBean();
+		logBusqueda.setIdMuestra(idMuestra);
+		List<LogMuestras> logMuestras = logMuestrasRepositorio.findByParams(logBusqueda);
+		logMuestrasRepositorio.deleteAll(logMuestras);
 	}
 
 }

@@ -206,7 +206,7 @@ public class EnviocorreoImp implements Enviocorreo {
 
 	public SimpleMailMessage constructWelcomeEmail(String contextPath, Usuario user) {
 		String url = contextPath + "/regenerarContrasena";
-		String message = "<p>Bien venido " + user.getNombre()
+		String message = "<p>Bienvenido " + user.getNombre()
 				+ ",</p><p>Ha sido dado de alta en la aplicación de gesión y seguimiento de tests PCR Covid-19.</p>"
 				+ "<p>Para poder acceder debe solicitar el cambio de contraseña, indicando su e-mail ("
 				+ user.getEmail() + ") a través del siguente enlace:</p>";
@@ -225,6 +225,18 @@ public class EnviocorreoImp implements Enviocorreo {
 
 	public String getAppUrl(HttpServletRequest request) {
 		return "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+	}
+
+	@Override
+	public void correoBienVenidaUsuario(Usuario user) {
+		SimpleMailMessage simpleMailMessage = constructWelcomeEmail(env.getProperty("app.url"), user);
+		send(user.getEmail(), simpleMailMessage.getSubject(), simpleMailMessage.getText(), null, "",
+				"<p><strong>Este es un correo automático enviado por la aplicación COVID-19.</strong></p>"
+						+ "<p><strong>No responda a este mensaje.</strong></p>",
+				"");
+		user.setHabilitado("E");
+		usuarioServicio.guardar(user);
+		
 	}
 
 }

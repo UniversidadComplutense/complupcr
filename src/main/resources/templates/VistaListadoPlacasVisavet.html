@@ -353,7 +353,7 @@
          <div class="modal-body">
 		 <form id="laboratorioForm" action="" th:modelAttribute="beanPlacaVisavetUCM" >
 			 <label class="col-xs-2">Laboratorio a asignar:</label>
-			    <select class="form-control form-control-sm" id="laboratorio">
+			    <select class="form-control form-control-sm" id="laboratorioLab">
 			    <option value="">Seleccione</option>
 				<option th:each="var: ${busqueda.listaLaboratorioCentro}"
 									th:value="${var.id}" th:text="${var.nombre}"
@@ -374,7 +374,7 @@
 				</table>
 			  </div>	
 			<div class="modal-footer">
-			<input type="text" id="idPlaca" value=""></input>	
+			<input type="text" id="idPlacaLab" value=""></input>	
 			<button type="button" id="asignarLaboratorio" class="btn btn-secondary" onClick="asignarLaboratoriodesdeModal();">Asignar Laboratorio</button>
 			<button type="button" id="cerrarConfirmacion" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
 			</div>

@@ -31,25 +31,25 @@
 			<div class="row">
 				<div class="col-3 m-0 form-group">
 					<label >Nombre</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.nombrePaciente}"  th:value="${beanBusquedaMuestra.nombrePaciente}" maxlength="100"/>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.nombrePaciente}"  th:value="${beanBusquedaMuestra.nombrePaciente}" maxlength="45"/>
 				</div>
 				<div class="col-3 m-0 form-group">
 					<label >Primer apellido</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.primerApellido}"  th:value="${beanBusquedaMuestra.primerApellido}" maxlength="100"/>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.primerApellido}"  th:value="${beanBusquedaMuestra.primerApellido}" maxlength="45"/>
 				</div>	
 				<div class="col-3 m-0 form-group">
 					<label >Segundo apellido</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.segundoApellido}"  th:value="${beanBusquedaMuestra.segundoApellido}" maxlength="100"/>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.segundoApellido}"  th:value="${beanBusquedaMuestra.segundoApellido}" maxlength="45"/>
 				</div>				
 			</div>
 			<div class="row">
 				<div class="col-3 m-0 form-group">
 					<label >NHC</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.nhcPaciente}"  th:value="${beanBusquedaMuestra.nhcPaciente}" maxlength="10"/>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.nhcPaciente}"  th:value="${beanBusquedaMuestra.nhcPaciente}" maxlength="45"/>
 				</div>
 				<div class="col-3 m-0 form-group">
 					<label >Correo</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.emailPaciente}"  th:value="${beanBusquedaMuestra.emailPaciente}" maxlength="25"/>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.emailPaciente}"  th:value="${beanBusquedaMuestra.emailPaciente}" maxlength="200"/>
 				</div>					
 			</div>
 		</fieldset>
@@ -60,7 +60,7 @@
 			<div class="row">
 				<div class="col-3 m-0 form-group">
 					<label >Etiqueta</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.etiquetaMuestra}"  th:value="${beanBusquedaMuestra.etiquetaMuestra}" maxlength="10"/>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.etiquetaMuestra}"  th:value="${beanBusquedaMuestra.etiquetaMuestra}" maxlength="100"/>
 				</div>	
 				<div class="col-3 m-0 form-group">
 					<label >Fecha envío</label>
@@ -173,10 +173,13 @@
 					        <a th:if="${muestra.fechaEnvioMuestraIni} == null" style="color:black;cursor: pointer;" th:href="@{/centroSalud/muestra/borrar(id=${muestra.id})}" title="Borrar">
 					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
-					        <!-- TODO - PENDIENTE DE OCULTAR -->
-					        <a style="color:black;cursor: pointer;" th:href="@{/documento/muestra(id=${muestra.id})}" title="Documentos">
+					        <!-- TODO - PENDIENTE DE OCULTAR 
+					        <a style="color:black;cursor: pointer;" 
+					        		th:href="@{/documento/muestra(id=${muestra.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_MUESTRA_DESDE_MUESTRAS})}" 
+					        		title="Documentos">
 					          	<i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
+					        -->
 						</td>						
 					</tr>		
 				</tbody>
