@@ -1,9 +1,12 @@
 package es.ucm.pcr.beans;
 
+import org.apache.commons.lang.StringUtils;
+
 public class LogMuestraBusquedaBean {
 
 	private Integer idMuestra;
 	private String etiquetaMuestra;
+	private String nhcPaciente;
 	private Integer idCentro;
 	private Integer idLote;
 	private Integer idPlacaLaboratorio;
@@ -21,11 +24,25 @@ public class LogMuestraBusquedaBean {
 	}
 
 	public String getEtiquetaMuestra() {
+		if (etiquetaMuestra != null) {
+			etiquetaMuestra = StringUtils.trim(etiquetaMuestra);			
+		}
 		return etiquetaMuestra;
 	}
 
 	public void setEtiquetaMuestra(String etiquetaMuestra) {
 		this.etiquetaMuestra = etiquetaMuestra;
+	}
+
+	public String getNhcPaciente() {
+		if (nhcPaciente != null) {
+			nhcPaciente = StringUtils.trim(nhcPaciente);
+		}
+		return nhcPaciente;
+	}
+
+	public void setNhcPaciente(String nhcPaciente) {
+		this.nhcPaciente = nhcPaciente;
 	}
 
 	public Integer getIdCentro() {
