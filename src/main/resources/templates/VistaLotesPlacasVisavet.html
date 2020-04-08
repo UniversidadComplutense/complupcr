@@ -31,7 +31,7 @@
         <div class="row justify-content-end mt-3">
 			<div class="col-2">
 			<!-- -->
-				<button type="button" th:disabled="${botonAltaNoMostrar}"  th:onClick="|altaNuevaPlaca(); return false|"  class="btn btn-secondary">Alta nueva placa</button>
+				<button type="button"  th:disabled="${botonAltaNoMostrar}" th:onClick="|altaNuevaPlaca(); return false|"  class="btn btn-secondary">Alta nueva placa</button>
 			</div>
 		</div>	   
 
@@ -95,6 +95,7 @@
 		
 				<table class="col-xs-12 table"  id="tablaResultados" >
 				<thead class="thead-light">
+				
 				<tr>
 				    <th width="25%">#Placa</th>
 					<th width="25%">#Lote</th>
@@ -102,16 +103,16 @@
 					<th width="25%">Nº de muestras</th>
 				</tr>
 				</thead>
-				<!--   </table>
-				<table class="col-xs-12 table"> -->
+				 </table>
+				<table class="col-xs-12" style="border: none;width:100%"  id="tablaLotes"> 
 				<tbody>
-				 <tr id="trGroup"></tr>
-				<tr id="trGroup" th:each="unResultado,count : ${lotePlacaVisavetBean.placa.listaLotes}">
+				
+				<tr id="trGroup"  style="border: none;" th:fragment="trGroup" th:each="unResultado,count : ${lotePlacaVisavetBean.placa.listaLotes}">
 				 <td colspan="4">  
 					   
-					    <table  class="col-xs-12 table"  id="tablaMuestras">
+					    <table  class="col-xs-12"  style="border: none;" width="100%" id="tablaMuestras">
 				    <tbody>
-				    <tr>
+				    <tr  style="border: none;">
 					           <td width="25%">
 					          <input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].idPlacaVisavet}"/>
 								<span th:text="${unResultado.idPlacaVisavet}"></span>
@@ -159,24 +160,18 @@
 			 </tbody>
 		    	</table>
 				
-				
-				 
-				
-				</tr>
-		 	
-		
-			
+				 </tr>
 				</tbody>
-				
 				</table>  
 			<!--  input grabar o grabar y finalizar -->
 			<!-- enviamos el mismo formulario a la misma url con este hidden voy a saber que quiere hacer el usuairo -->
 			<!--  si grabar o grabar y pasar a estado finalizado -->
 			<input type="hidden" th:field="${lotePlacaVisavetBean.accion}" id="accion" />
-			<button type="submit" disabled="!${botonAltaNoMostrar}" id="grabar" th:onClick="|seleccionAccion('grabar'); return false|"  class="btn btn-secondary">Grabar</button>&nbsp;
-			<button type="submit" disabled="!${botonAltaNoMostrar}"  id="grabaryFinalizar" th:onClick="|seleccionAccion('grabaryFinalizar'); return false|"  class="btn btn-secondary">Grabar y Finalizar</button>
 			</div>
 		
+		<button type="submit" id="grabar" th:onClick="|seleccionAccion('grabar'); return false|"  class="btn btn-secondary">Grabar</button>&nbsp;
+			<button type="submit"   id="grabaryFinalizar" th:onClick="|seleccionAccion('grabaryFinalizar'); return false|"  class="btn btn-secondary">Grabar y Finalizar</button>
+			
 		 <!--  capa de resultados -->
 		</form>
 		</div>

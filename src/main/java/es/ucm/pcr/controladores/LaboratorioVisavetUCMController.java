@@ -523,24 +523,21 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				return  this.buscarPlacas(busquedaPlacasVisavetBean, request, session, pageable);
 					
 				}
+				
 				@RequestMapping(value = "/laboratorioUni/asignarPlaca", method = RequestMethod.GET)
 				public String asignarPlacasGet(@RequestParam("idPlaca") int idPlaca,  Model model, HttpServletRequest request, HttpSession session) {
 				// grabar en el servicio la placa junto con el que tenga lote que venga del modelo
 					LotePlacaVisavetBean lotePlacaVisavetBean = (LotePlacaVisavetBean )session.getAttribute("lotePlacaVisavetBean");
-						// ModelAndView vista = new ModelAndView("VistaLotesPlacasVisavet");
-					//añado a la placa 1 a todos los lotes que tenga en la placa
-					// para jugar
-					//lotePlacaVisavetBean.getPlaca().setListaLotes(lotePlacaVisavetBean.getListaLotesDisponibles());
 					List<LoteBeanPlacaVisavet> listaLotesDisponibles= new ArrayList();
 					if (lotePlacaVisavetBean == null)lotePlacaVisavetBean= new LotePlacaVisavetBean();
 						for (LoteBeanPlacaVisavet lote:lotePlacaVisavetBean.getListaLotesDisponibles()) {
-				      
-						// busco la que tenga el mismo idPlaca lotePlacaVisavetBean.getPlaca()
-						
-					lote.setIdPlacaVisavet(idPlaca);
-	                
-					listaLotesDisponibles.add(lote);
-					// lotePlacaVisavetBean.setListaLotesDisponibles(lotePlacaVisavetBean.getPlaca().getListaLotes());
+				      	
+					      lote.setIdPlacaVisavet(idPlaca);
+					      BeanEstado estado=new BeanEstado();
+						  estado.setTipoEstado(TipoEstado.EstadoLote);
+						  estado.setEstado(Estado.LOTE_PROCESADO_CENTRO_ANALISIS);
+							
+	                      listaLotesDisponibles.add(lote);
 					
 					} 
 					lotePlacaVisavetBean.setListaLotesDisponibles(listaLotesDisponibles);
@@ -558,7 +555,8 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 					lotePlacaVisavetBean.setPlaca(placaVisavet);
 					//vista.addObject("lotePlacaVisavetBean",lotePlacaVisavetBean);
 					model.addAttribute("lotePlacaVisavetBean",lotePlacaVisavetBean);
-					return "VistaLotesPlacasVisavet :: #trGroup";
+					return "VistaLotesPlacasVisavet :: trGroup";
+				
 					
 				}
 		private Integer calcularPlacasVisavetEspera(BeanLaboratorioCentro laboratorio)	{
