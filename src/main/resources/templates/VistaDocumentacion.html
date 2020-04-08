@@ -14,6 +14,8 @@
 	<form action="#" th:action="@{/documento/guardar}" method="post" enctype="multipart/form-data" th:object="${elementoDoc}" id="formGuardar" role="form">
 		<input type="hidden" th:field="*{tipoElemento}" th:value="*{tipoElemento}" />
 		<input type="hidden" th:field="*{id}" th:value="*{id}" />
+		<input type="hidden" th:field="*{codiUrl}" th:value="*{codiUrl}" />
+		<input type="hidden" th:field="*{urlVolver}" th:value="*{urlVolver}" />
 		
 		<!-- MENSAJES AVISO -->
 		<div th:classappend="${mensaje == null} ? visible : d-none" class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
@@ -62,14 +64,7 @@
 				<button type="submit" id="submitButton" class="btn btn-secondary">Subir documento</button>				
 			</div>
 			<div class="col-1">
-				<!-- Boton volver dependiendo del tipo de elemento (TODO - INCLUIR EL RESTO DE VOLVER)
-				Diana!, este volver va a muestras del centro salud
-				-->
-				<th:block th:switch="*{tipoElemento}">
-					<a th:case="${T(es.ucm.pcr.beans.ElementoDocumentacionBean).TIPO_ELEMENTO_MUESTRA}" th:href="@{/centroSalud/muestra/list}" class="btn btn-secondary">Volver</a>
-					<a th:case="${T(es.ucm.pcr.beans.ElementoDocumentacionBean).TIPO_ELEMENTO_PLACA_VISAVET}" th:href="@{/centroSalud/muestra/list}" class="btn btn-secondary">Volver</a>
-					<a th:case="${T(es.ucm.pcr.beans.ElementoDocumentacionBean).TIPO_ELEMENTO_PLACA_LABORATORIO}" th:href="@{/analisis/cogerPlacas}" class="btn btn-secondary">Volver</a>
-				</th:block>				
+				<a th:href="*{urlVolver}" class="btn btn-secondary">Volver</a>			
 			</div>
 		</div>			
 		
@@ -100,7 +95,7 @@
 							<a style="color:black;cursor: pointer;" th:href="@{/documento/descargar(id=${doc.id})}" title="Borrar">
 					          	<i class="fa fa-download" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
-					        <a style="color:black;cursor: pointer;" th:href="@{/documento/borrar(idDoc=${doc.id}, id=*{id}, tipoElemento=*{tipoElemento})}" title="Borrar">
+					        <a style="color:black;cursor: pointer;" th:href="@{/documento/borrar(idDoc=${doc.id}, id=*{id}, tipoElemento=*{tipoElemento}, url=*{codiUrl})}" title="Borrar">
 					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>					        
 						</td>						

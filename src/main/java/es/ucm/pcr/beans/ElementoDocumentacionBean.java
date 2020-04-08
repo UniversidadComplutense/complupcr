@@ -16,6 +16,8 @@ public class ElementoDocumentacionBean {
 	private Integer tipoElemento;
 	private List<DocumentoBean> documentos;
 	private MultipartFile file;
+	private Integer codiUrl;
+	private String urlVolver;
 
 	public Integer getId() {
 		return id;
@@ -58,6 +60,22 @@ public class ElementoDocumentacionBean {
 
 	public void setFile(MultipartFile file) {
 		this.file = file;
+	}
+
+	public Integer getCodiUrl() {
+		return codiUrl;
+	}
+
+	public void setCodiUrl(Integer codiUrl) {
+		this.codiUrl = codiUrl;
+	}
+
+	public String getUrlVolver() {
+		return urlVolver;
+	}
+
+	public void setUrlVolver(String urlVolver) {
+		this.urlVolver = urlVolver;
 	}
 
 }

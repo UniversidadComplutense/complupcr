@@ -58,6 +58,21 @@ public class DocumentoControlador {
 	public static final Integer ACCION_GUARDAR_DOCUMENTO = 1;
 	public static final Integer ACCION_BORRAR_DOCUMENTO_OK = 2;
 	public static final Integer ACCION_BORRAR_DOCUMENTO_KO = 3;
+	
+	/**
+	 * URL'S DE VUELTA DE SUBIDA DE DOCUMENTACION DEPENDIENDO DESDE DONDE SE HA LLAMADO
+	 */
+	private Map<Integer, String> URL_VOLVER = Stream
+			.of(new Object[][] { 
+					{ URL_VOLVER_MUESTRA_DESDE_MUESTRAS, "/centroSalud/muestra/list" },
+					{ URL_VOLVER_PLACA_LABORATORIO_DESDE, "/analisis/cogerPlacas" },
+					{ URL_VOLVER_PLACA_VISAVET_DESDE, "/centroSalud/lote/list" }})
+			.collect(Collectors.toMap(d -> (Integer) d[0], d -> (String) d[1]));
+		
+	public static final Integer URL_VOLVER_MUESTRA_DESDE_MUESTRAS = 1;
+	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE = 2;
+	public static final Integer URL_VOLVER_PLACA_VISAVET_DESDE = 3;
+	
 
 	@InitBinder("elementoDoc")
 	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session)
@@ -69,11 +84,14 @@ public class DocumentoControlador {
 
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD', 'JEFESERVICIO', 'ANALISTALABORATORIO', 'VOLUNTARIO')")
 	@RequestMapping(value = "/muestra", method = RequestMethod.GET)
-	public ModelAndView documentosMuestra(HttpSession session, @RequestParam(value = "id", required = true) Integer id)
-			throws Exception {
+	public ModelAndView documentosMuestra(HttpSession session, 
+			@RequestParam(value = "id", required = true) Integer id,
+			@RequestParam(value = "url", required = true) Integer url) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaDocumentacion");
 
 		ElementoDocumentacionBean elementoDoc = documentoServicio.obtenerDocumentosMuestra(id);
+		elementoDoc.setCodiUrl(url);
+		elementoDoc.setUrlVolver(URL_VOLVER.get(url));
 		vista.addObject("elementoDoc", elementoDoc);
 		return vista;
 	}
@@ -81,10 +99,13 @@ public class DocumentoControlador {
 	@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO')")
 	@RequestMapping(value = "/placaVisavet", method = RequestMethod.GET)
 	public ModelAndView documentosPlaceVisavet(HttpSession session,
-			@RequestParam(value = "id", required = true) Integer id) throws Exception {
+			@RequestParam(value = "id", required = true) Integer id,
+			@RequestParam(value = "url", required = true) Integer url) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaDocumentacion");
 
 		ElementoDocumentacionBean elementoDoc = documentoServicio.obtenerDocumentosPlacaVisavet(id);
+		elementoDoc.setCodiUrl(url);
+		elementoDoc.setUrlVolver(URL_VOLVER.get(url));
 		vista.addObject("elementoDoc", elementoDoc);
 		return vista;
 	}
@@ -92,10 +113,13 @@ public class DocumentoControlador {
 	@PreAuthorize("hasAnyRole('ADMIN','RESPONSABLEPCR')")
 	@RequestMapping(value = "/placaLaboratorio", method = RequestMethod.GET)
 	public ModelAndView documentosPlacaLaboratorio(HttpSession session,
-			@RequestParam(value = "id", required = true) Integer id) throws Exception {
+			@RequestParam(value = "id", required = true) Integer id,
+			@RequestParam(value = "url", required = true) Integer url) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaDocumentacion");
 
 		ElementoDocumentacionBean elementoDoc = documentoServicio.obtenerDocumentosPlacaLaboratorio(id);
+		elementoDoc.setCodiUrl(url);
+		elementoDoc.setUrlVolver(URL_VOLVER.get(url));
 		vista.addObject("elementoDoc", elementoDoc);
 		return vista;
 	}
@@ -143,7 +167,7 @@ public class DocumentoControlador {
 		}
 
 		redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_GUARDAR_DOCUMENTO));
-		return redirectDocumentosTipoElemento(bean.getId(), bean.getTipoElemento());
+		return redirectDocumentosTipoElemento(bean.getId(), bean.getTipoElemento(), bean.getCodiUrl());
 	}
 
 	@RequestMapping(value = "/borrar", method = RequestMethod.GET)
@@ -151,7 +175,7 @@ public class DocumentoControlador {
 	public ModelAndView borrar(HttpSession session, @RequestParam(value = "idDoc", required = true) Integer idDoc,
 			@RequestParam(value = "id", required = true) Integer id,
 			@RequestParam(value = "tipoElemento", required = true) Integer tipoElemento,
-
+			@RequestParam(value = "url", required = true) Integer url,
 			RedirectAttributes redirectAttributes) throws Exception {
 
 		boolean borrado = documentoServicio.borrar(idDoc);
@@ -160,7 +184,7 @@ public class DocumentoControlador {
 		} else {
 			redirectAttributes.addFlashAttribute("mensajeError", ACCIONES_MENSAJE.get(ACCION_BORRAR_DOCUMENTO_KO));
 		}
-		return redirectDocumentosTipoElemento(id, tipoElemento);
+		return redirectDocumentosTipoElemento(id, tipoElemento, url);
 	}
 
 	/**
@@ -170,16 +194,16 @@ public class DocumentoControlador {
 	 * @param tipoElemento
 	 * @return
 	 */
-	private ModelAndView redirectDocumentosTipoElemento(Integer id, Integer tipoElemento) {
+	private ModelAndView redirectDocumentosTipoElemento(Integer id, Integer tipoElemento, Integer url) {
 
 		if (tipoElemento.equals(ElementoDocumentacionBean.TIPO_ELEMENTO_MUESTRA)) {
-			return new ModelAndView(new RedirectView("/documento/muestra/?id=" + id, true));
+			return new ModelAndView(new RedirectView("/documento/muestra/?id=" + id + "&url=" + url, true));
 		}
 		if (tipoElemento.equals(ElementoDocumentacionBean.TIPO_ELEMENTO_PLACA_LABORATORIO)) {
-			return new ModelAndView(new RedirectView("/documento/placaLaboratorio/?id=" + id, true));
+			return new ModelAndView(new RedirectView("/documento/placaLaboratorio/?id=" + id + "&url=" + url, true));
 		}
 		if (tipoElemento.equals(ElementoDocumentacionBean.TIPO_ELEMENTO_PLACA_VISAVET)) {
-			return new ModelAndView(new RedirectView("/documento/placaVisavet/?id=" + id, true));
+			return new ModelAndView(new RedirectView("/documento/placaVisavet/?id=" + id + "&url=" + url, true));
 		}
 		return null;
 	}
