@@ -5,6 +5,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -46,7 +47,7 @@ public class PlacaVisavetPlacaLaboratorio implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idplacaLaboratorio", nullable = false)
 	public PlacaLaboratorio getPlacaLaboratorio() {
 		return this.placaLaboratorio;
@@ -56,7 +57,7 @@ public class PlacaVisavetPlacaLaboratorio implements java.io.Serializable {
 		this.placaLaboratorio = placaLaboratorio;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idplacaVisavet", nullable = false)
 	public PlacaVisavet getPlacaVisavet() {
 		return this.placaVisavet;

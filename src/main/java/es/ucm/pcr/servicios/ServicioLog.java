@@ -1,6 +1,11 @@
 package es.ucm.pcr.servicios;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import es.ucm.pcr.beans.BeanEstado;
+import es.ucm.pcr.beans.LogMuestraBusquedaBean;
+import es.ucm.pcr.beans.LogMuestraListadoBean;
 
 public interface ServicioLog {
 
@@ -35,5 +40,20 @@ public interface ServicioLog {
 	 * @param estado
 	 */
 	public void actualizarEstadoMuestraPorPlacaLaboratorio(Integer idPlacaLaboratorio, BeanEstado estado);
+	
+	/**
+	 * Busqueda de logs por parametros
+	 * 
+	 * @param params
+	 * @param pageable
+	 * @return
+	 */
+	public Page<LogMuestraListadoBean> findLogMuestraByParam(LogMuestraBusquedaBean params, Pageable pageable);
+	
+	/**
+	 * Borra estados asociados a una muestra
+	 * @param idMuestra
+	 */
+	public void borrarEstadosMuestra(Integer idMuestra);
 
 }

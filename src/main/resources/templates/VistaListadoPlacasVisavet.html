@@ -101,12 +101,11 @@
 		 	<table class="col-xs-12 table" th:id="tablaResultados" >
 			 <thead class="thead-light">
 				<tr>
-				    <th scope="col"></th>
+				    
 					<th scope="col">#Placa</th>
 					<th scope="col">F. Creación</th>
 					<th scope="col">#Lotes</th>
 					<th scope="col">Nº Muestras</th>
-					
 				    <th scope="col">Estado</th>
 				    <th scope="col">Acciones</th>
 				</tr>
@@ -115,14 +114,102 @@
 			 	<tr th:id="trGroup+${count.index}"  th:each="unResultado,count : ${pagina.getContent()}">
 					<td><span th:text="${unResultado.id}"></span></td>
 					<td><span th:text="${#dates.format(unResultado.fechaCreacion, 'dd-mm-yyyy')}"></span></td>
-                    <td> <p th:id="lotes+${unResultado.id}" th:each="lote: ${unResultado.listaLotes}">
-                            <input type="text" id="lote+${count.index}" th:value="${lote.id}"/>
-							<span th:text="${lote.numLote}"></span>
-						</p>
+                    <td> <!-- ${unResultado.listaLotes}">  -->
+                    
+                            <a data-toggle="modal" data-target="#modalConsultarLotes" th:attr="data-target='#modalConsultarLotes'+${unResultado.id}" style="cursor: pointer;" title="Ver lotes">                                                 
+                    <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i><span th:text="${#lists.size(unResultado.listaLotes)}"></span>	
+                       </a>
+                       
+                           <!--  un modal -->
+                           
+                           	<div class="modal fade" th:id="modalConsultarLotes+${unResultado.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-xl" role="document">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">Lotes Placa - <b><span th:text="${unResultado.id}"/></b> con <span th:text="${#lists.size(unResultado.listaLotes)}"/> lotes</h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	
+								          	<div id="tablaMuestras" >
+												<table>
+													<thead class="thead-light">	
+									    				<tr>
+										      				<th>Lote</th>
+															<th>Número de muestras</th>
+															
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${unResultado.listaLotes != null}" th:each="lote : ${unResultado.listaLotes}">
+															<td><span th:text="${lote.numLote}"></span></td>					
+															<td><span th:text="${#lists.size(lote.listaMuestras)}"></span></td>
+																													
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>							        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+		
+		  
+                           <!-- fin modal -->
 					</td>
-                     <td> <a  data-toggle="modal" href="#modalConsultarMuestras"  th:data-id="${unResultado.id}"  th:onClick="|consultarMuestras(this.getAttribute('data-id'));|">
-                          <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
-					      </a>
+                     <td> 
+<a data-toggle="modal" data-target="#modalConsultarMuestras" th:attr="data-target='#modalConsultarMuestras'+${unResultado.id}" style="cursor: pointer;" title="Ver muestras">                                                 
+                    <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i><span th:text="${#lists.size(unResultado.listaMuestras)}"></span>	
+                       </a>
+                       
+                           <!--  un modal -->
+                           
+                           	<div class="modal fade" th:id="modalConsultarMuestras+${unResultado.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-xl" role="document">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">Muestras Placa - <b><span th:text="${unResultado.id}"/></b> con <span th:text="${#lists.size(unResultado.listaMuestras)}"/> muestras</h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	
+								          	<div id="tablaMuestras" >
+												<table>
+													<thead class="thead-light">	
+									    				<tr>
+										      				<th>Etiqueta</th>
+															<th>Tipo Muestra</th>
+															<th>Referencia Interna</th>
+															
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${unResultado.listaMuestras != null}" th:each="muestra : ${unResultado.listaMuestras}">
+															<td><span th:text="${muestra.etiqueta}"></span></td>					
+															<td><span th:text="${muestra.tipoMuestra}"></span></td>
+															<td><span th:text="${muestra.referenciaInterna}"></span></td>		
+																													
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>							        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+		
+		  
+                           <!-- fin modal -->
                      </td>
                      <td>
 						<span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>

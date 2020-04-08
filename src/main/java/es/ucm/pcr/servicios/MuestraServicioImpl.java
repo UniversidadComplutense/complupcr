@@ -215,7 +215,7 @@ public class MuestraServicioImpl implements MuestraServicio {
 	@Override
 	public boolean borrar(Integer id) {
 		try {
-			// TODO - borrar estados!!!???
+			servicioLog.borrarEstadosMuestra(id);
 			muestraRepositorio.deleteById(id);
 			return true;
 		} catch (Exception e) {

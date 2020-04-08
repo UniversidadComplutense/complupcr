@@ -36,6 +36,7 @@ public class Lote implements java.io.Serializable {
 	private PlacaVisavet placaVisavet;
 	private String numeroLote;
 	private Date fechaEnvio;
+	private Date fechaRecibido;
 	private int capacidad;
 	private LaboratorioVisavet laboratorioVisavet;
 	private Set<Muestra> muestras = new HashSet<Muestra>(0);
@@ -137,6 +138,16 @@ public class Lote implements java.io.Serializable {
 	public void setFechaEnvio(Date fechaEnvio) {
 		this.fechaEnvio = fechaEnvio;
 	}
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaRecibido", length = 10)
+	public Date getFechaRecibido() {
+		return this.fechaRecibido;
+	}
+
+	public void setFechaRecibido(Date fechaRecibido) {
+		this.fechaRecibido = fechaRecibido;
+	}
+
 
 	@Column(name = "capacidad", nullable = false)
 	public int getCapacidad() {
