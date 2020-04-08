@@ -9,6 +9,7 @@ import es.ucm.pcr.beans.BeanBusquedaMuestraAnalisis;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.LoteCentroBean;
+import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
@@ -84,5 +85,6 @@ public interface MuestraServicio {
 	 * @return
 	 */
 	public boolean borrar(Integer id);
+	public MuestraBeanLaboratorioVisavet guardarReferencia(MuestraBeanLaboratorioVisavet muestraBean);
 
 }

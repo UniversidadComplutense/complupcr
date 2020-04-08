@@ -132,7 +132,7 @@ function cambiarEstadoaEnviada(id, laboratorio){
 	
 	$("#idPlaca").html(id);
 	$("#laboratorio").html(laboratorio);
-	$("#id").val(id);
+	$("#idConfirmar").val(id);
 }
 function confirmarPlacaEnviada(){
 	var url = "";
@@ -208,9 +208,10 @@ function procesarLotesDesdePlacas(idPlaca) {
 			
 		});
 	
-	
+	if (lotesProcesar !=""){
 	var url="/laboratorioUni/procesarLotes?lotes="+lotesProcesar;
 	window.location=url;
+	}
 }
 
 // funcion que al ser pulsada da de alta una nueva placa vacia

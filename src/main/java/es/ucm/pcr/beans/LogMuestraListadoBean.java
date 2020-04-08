@@ -9,6 +9,7 @@ public class LogMuestraListadoBean {
 	private String descLote;
 	private String descCentroSalud;
 	private String descPaciente;
+	private String nhcPaciente;
 	private String descEstadoMuestra;
 	private Date fechaCambio;
 	private String nombreAutorCambio;
@@ -54,6 +55,14 @@ public class LogMuestraListadoBean {
 
 	public void setDescPaciente(String descPaciente) {
 		this.descPaciente = descPaciente;
+	}
+
+	public String getNhcPaciente() {
+		return nhcPaciente;
+	}
+
+	public void setNhcPaciente(String nhcPaciente) {
+		this.nhcPaciente = nhcPaciente;
 	}
 
 	public String getDescEstadoMuestra() {

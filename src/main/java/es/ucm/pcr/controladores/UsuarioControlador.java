@@ -82,6 +82,8 @@ public class UsuarioControlador {
 		}
 		// le indicamos la acción a relizar: A alta de un usuario
 		beanUsuario.setAccion("A");
+		// por defecto, en un alta el usuario se activa
+		beanUsuario.setHabilitado("A");
 		vista.addObject("formBeanUsuario", beanUsuario);
 		
 		// Añadimos los roles en BBDD
