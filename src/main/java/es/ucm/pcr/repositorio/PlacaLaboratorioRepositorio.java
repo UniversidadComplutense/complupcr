@@ -47,7 +47,7 @@ public interface PlacaLaboratorioRepositorio extends JpaRepository<PlacaLaborato
 	
 	
 	
-	@Query("SELECT placa FROM PlacaLaboratorio placa "
+	@Query("SELECT DISTINCT placa FROM PlacaLaboratorio placa "
 			+ "JOIN placa.muestras muestra "
 			+ "JOIN muestra.usuarioMuestras usuariomuestra "
 			+ "JOIN usuariomuestra.usuario usuario "

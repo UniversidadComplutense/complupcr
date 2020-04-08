@@ -121,16 +121,17 @@
 					         <!-- <a th:href="@{/analisis/asignarPlaca(idPlaca=${placaAsignada.id} )}" style="color:black" data-toggle="tooltip" title="Asignar">					         
 					          <i class="fa fa-child" aria-hidden="true" style="font-size: 1.2em;"></i>
 					         </a> -->
-					         <!-- <a href=# data-toggle="tooltip" style="color:black" title="Cargar resultados">					         
-					          <i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;"></i>
-					         </a>
+					         <!-- 
 					         <a href=# data-toggle="tooltip" style="color:black" title="Ver documentación">					         
 					          <i class="fa fa-file-text-o" aria-hidden="true" style="font-size: 1.2em;"></i>
-					         </a> -->
+					         </a> -->					         
 					         <!-- TODO - PENDIENTE DE OCULTAR -->					         
 						     <a style="color:black;cursor: pointer;" th:href="@{/documento/placaLaboratorio(id=${placaAsignada.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_PLACA_LABORATORIO_DESDE_REVISARPLACAS_ANALISTA})}" title="Documentos">
 						       <i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;"></i>
-						     </a>					         
+						     </a>
+						     <a href=# data-toggle="tooltip" style="color:black" title="Cargar resultados">					         
+					          <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size: 1.2em;"></i>					         
+					         </a>					         
 						</td>					
 				      				      
 				    </tr>				   				    
