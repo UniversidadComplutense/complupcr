@@ -72,10 +72,6 @@ public class LabCentroControlador {
 		vista.addObject("estadosPlacaVisavet", BeanEstado.estadosPlacaVisavetParaLaboratorioCentro());
 	}
 	
-	private boolean esEditable(PlacaLaboratorioCentroBean placa) {
-		return (placa.getId() == null);		
-	}
-	
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -231,9 +227,14 @@ public class LabCentroControlador {
 		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
 		placa.setPlacasVisavetParaCombinar(listaPlacas.getContent());
 		
+		// Una placa nueva inicialmente no tiene tamaño ni placas Visavet seleccionadas
+		placa.setNumeroMuestras("");
+		placa.setPlacasVisavetSeleccionadas("");
+		
 		vista.addObject("mostrarMensaje", false);
 		vista.addObject("nueva", true);
-		vista.addObject("editable", esEditable(placa));
+		vista.addObject("editable", placa.esEditable());
+		vista.addObject("rellenable", placa.esRellenable());
 		vista.addObject("placa", placa);		
 		return vista;
 	}
@@ -246,15 +247,23 @@ public class LabCentroControlador {
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		vista.addObject("mostrarMensaje", false);
 		
-		// System.out.println(placa.getPlacasVisavetSeleccionadas());
+		// Transformamos en un Array el String que viene de la vista con los IDs de las placas Visavet seleccionadas
+		String[] listaIDsPlacasVisavetSeleccinadas = placa.getPlacasVisavetSeleccionadas().split(":");
+		
+		for (String idPlacaVisavet : listaIDsPlacasVisavetSeleccinadas) {
+			System.out.println(idPlacaVisavet);
+		}
+		
 		
 		if (!result.hasErrors()) {
 			placa = laboratorioCentroServicio.guardarPlaca(placa);
 			vista.addObject("mostrarMensaje", true);
-			vista.addObject("mensaje", "Los cambios se han guardado correctamente.");			
+			vista.addObject("mensaje", "La placa " + placa.getId() + " se ha creado correctamente.");			
 		}
 		
-		vista.addObject("nueva", true);
+		vista.addObject("nueva", false);
+		vista.addObject("editable", false);
+		vista.addObject("rellenable", placa.esEditable());
 		vista.addObject("placa", placa);
 		return vista;
 	}
@@ -262,13 +271,26 @@ public class LabCentroControlador {
 	
 	@RequestMapping(value = "/gestionPlacas/modificar", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView modificarPlaca(HttpSession session, @RequestParam(value = "id", required = true) Integer id) throws Exception {
+	public ModelAndView modificarPlaca(HttpSession session, @RequestParam(value = "id", required = true) Integer id, 
+										@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
 		
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		PlacaLaboratorioCentroBean placa = laboratorioCentroServicio.buscarPlaca(id);
+				
+		// Recuperamos las placas VISAVET que se pueden combinar (recepcionadas).
+		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = new BusquedaRecepcionPlacasVisavetBean();
+		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACAVISAVET_RECIBIDA.getCodNum());
+		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getCentro().getId());
+		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
+		placa.setPlacasVisavetParaCombinar(listaPlacas.getContent());
+		
+		placa.setPlacasVisavetSeleccionadas("");
+		
+		
 		vista.addObject("mostrarMensaje", false);
 		vista.addObject("nueva", false);
-		vista.addObject("editable", esEditable(placa));
+		vista.addObject("rellenable", placa.esRellenable());
+		vista.addObject("editable", placa.esEditable());
 		vista.addObject("placa", placa);
 		return vista;
 	}

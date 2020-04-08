@@ -14,8 +14,27 @@ function anotarPlacasSeleccionadas() {
 		}
 	}
 	$('#placasSeleccionadas').val(placasElegidas);
+	revisarEstadoBotonCrearPlaca();
+	revisarEstadoBotonRellenarPlaca();
 }
 
+function revisarEstadoBotonCrearPlaca(){
+	
+	if ($('#placasSeleccionadas').val() != "" && $('#capacidadPlacaLab').val() != ""){
+		$('#btnCrearPlaca').removeAttr('disabled');  
+	} else {
+		$('#btnCrearPlaca').attr('disabled','disabled');
+	}
+}
+
+function revisarEstadoBotonRellenarPlaca(){
+	
+	if ($('#placasSeleccionadas').val() != ""){
+		$('#btnRellenarPlaca').removeAttr('disabled');  
+	} else {
+		$('#btnRellenarPlaca').attr('disabled','disabled');
+	}
+}
 
 
 
