@@ -29,5 +29,7 @@ public interface Enviocorreo {
 	public SimpleMailMessage constructEmail(String subject, String body, Usuario user);
 
 	public String getAppUrl(HttpServletRequest request);
+	
+	public void correoBienVenidaUsuario(Usuario usuario);
 
 }
