@@ -141,7 +141,7 @@ public class PlacaVisavet implements java.io.Serializable {
 		this.documentos = documentos;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "placaVisavet")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "placaVisavet")
 	public Set<Lote> getLotes() {
 		return this.lotes;
 	}

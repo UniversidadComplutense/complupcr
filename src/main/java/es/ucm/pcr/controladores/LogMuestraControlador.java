@@ -2,7 +2,9 @@ package es.ucm.pcr.controladores;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +28,7 @@ import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.servicios.LoteServicio;
 import es.ucm.pcr.servicios.ServicioLog;
 import es.ucm.pcr.servicios.SesionServicio;
+import es.ucm.pcr.validadores.LogMuestraValidador;
 
 @Controller
 @RequestMapping(value = "/gestor")
@@ -45,6 +51,14 @@ public class LogMuestraControlador {
 	@Autowired
 	private ServicioLog servicioLog;
 	
+	@Autowired
+	private LogMuestraValidador logValidadorMuestra;
+	
+	@InitBinder("beanBusqueda")
+	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session)
+			throws Exception {
+		binder.setValidator(logValidadorMuestra);
+	}
 	
 	@ModelAttribute("listaLotes")
 	public List<LoteListadoBean> lotes() {
@@ -64,10 +78,17 @@ public class LogMuestraControlador {
 	
 	@RequestMapping(value = "/log/list", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
-	public String buscar(HttpSession session, @ModelAttribute LogMuestraBusquedaBean beanBusqueda) throws Exception {
-		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
-		session.setAttribute("beanBusqueda", beanBusqueda);
-		return "redirect:/gestor/log/list";
+	public ModelAndView buscar(@Valid @ModelAttribute("beanBusqueda") LogMuestraBusquedaBean beanBusqueda, BindingResult result, HttpSession session) throws Exception {
+		
+		ModelAndView vista = new ModelAndView("VistaLogMuestraListado");
+		if (result.hasErrors()) {
+			vista.addObject("beanBusqueda", beanBusqueda);
+			
+		} else {		
+			session.setAttribute("beanBusqueda", beanBusqueda);
+			buscarMuestras(beanBusqueda, vista);
+		}
+		return vista;
 	}
 
 	@RequestMapping(value = "/log/list", method = RequestMethod.GET)
