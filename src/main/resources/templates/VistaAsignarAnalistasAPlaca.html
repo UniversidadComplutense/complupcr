@@ -147,7 +147,13 @@
 			 	</div>
 			 </div>
 			
-			  <div class="row justify-content-center mt-3">		    	
+			 <div th:if="${noSePuedeAsignarNuevosAnalistasAPlaca}" class="row justify-content-center mt-3">
+			 	<div id=noMasAsignaciones class="form-group  col-12">
+			 		<label>No es posible asignar nuevos analistas porque todas las muestras de la placa tienen un resultado definitivo</label> 
+			 	</div>
+			 </div>	
+
+			  <div th:unless="${noSePuedeAsignarNuevosAnalistasAPlaca}" class="row justify-content-center mt-3">		    	
 					<div id=analistasLab class="form-group  col-4">
 						<label>Analistas laboratorio: </label> 
 						<select
@@ -195,7 +201,7 @@
 				<a th:href="@{/analisis/cogerPlacas}" class="btn btn-secondary ">Cancelar</a>
 			</div>
 			<div class="col-1">
-				<input type="submit" class="btn btn-primary "
+				<input th:disabled="${noSePuedeAsignarNuevosAnalistasAPlaca}" type="submit" class="btn btn-primary "
 					value="Guardar asignacion"></input>
 			</div>		
 		</div>

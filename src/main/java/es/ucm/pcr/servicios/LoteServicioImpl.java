@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteCentroBean;
@@ -39,6 +40,9 @@ public class LoteServicioImpl implements LoteServicio {
 	
 	@Autowired
 	private MuestraRepositorio muestraRepositorio;
+	
+	@Autowired
+	private ServicioLog servicioLog;
 	
 	@Override
 	public Page<LoteListadoBean> findLoteByParam(LoteBusquedaBean params, Pageable pageable) {
@@ -120,6 +124,10 @@ public class LoteServicioImpl implements LoteServicio {
 					for (Muestra m : lote.getMuestras()) {
 						m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS.getCodNum()));
 						m.setFechaEnvio(new Date());
+						
+						BeanEstado estadoMuestra = new BeanEstado();
+						estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
+						servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
 					}
 					muestraRepositorio.saveAll(lote.getMuestras());
 				}

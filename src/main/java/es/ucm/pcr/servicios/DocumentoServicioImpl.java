@@ -101,9 +101,10 @@ public class DocumentoServicioImpl implements DocumentoServicio {
 	public ElementoDocumentacionBean obtenerDocumentosPlacaLaboratorio(Integer idPlacaLaboratorio) {
 		ElementoDocumentacionBean elDoc = new ElementoDocumentacionBean();
 		PlacaLaboratorio placaLaboratorio = Optional.of(placaLaboratorioRepositorio.findById(idPlacaLaboratorio).get()).orElse(null);
+		System.out.println("el idPlacaLaboratorio: "+ idPlacaLaboratorio +" y placaLaboratorio vale: " + placaLaboratorio.getNumeromuestras());
 		elDoc.setId(placaLaboratorio.getId());
-		// TODO - ESTABLECER DESCRIPCION
-		elDoc.setDescripcion("");
+		// TODO - ESTABLECER DESCRIPCION (Diana: pongo el id de la placa de momento, podemos poner lo que querais)
+		elDoc.setDescripcion("Placa " + placaLaboratorio.getId());
 		elDoc.setTipoElemento(ElementoDocumentacionBean.TIPO_ELEMENTO_PLACA_LABORATORIO);
 		
 		DocumentoBusquedaBean docBusquedaBean = new DocumentoBusquedaBean();

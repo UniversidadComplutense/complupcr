@@ -598,12 +598,16 @@ public class AnalisisControlador {
 			//borro de la lista todal de analistas los asignados
 			beanListadoVoluntariosSinLaboratorioCentro.removeAll(beanListadoAnalistaVolSinCentroABorrar);
 			
+			//no se puede asignar nuevos analistas a la placa si la placa tiene ya todas sus muestras con resultado definitivo
+			Boolean noSePuedeAsignarNuevosAnalistasAPlaca = laboratorioCentroServicio.tienenResultadoDefinitivoLasMuestrasDeLaPlaca(idPlaca);
+			
 			
 			vista.addObject("placaLaboratorioCentroAsignacionesBean", placaLaboratorioCentroAsignacionesBean);
 			vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
 			vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);			
 			vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
 			vista.addObject("beanListadoVoluntariosSinLaboratorioCentro", beanListadoVoluntariosSinLaboratorioCentro);
+			vista.addObject("noSePuedeAsignarNuevosAnalistasAPlaca", noSePuedeAsignarNuevosAnalistasAPlaca);
 			return vista;
 		}
 		

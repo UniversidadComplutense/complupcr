@@ -28,7 +28,6 @@ public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 	private String habilitado;
 	private String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA DE USUARIOS
 	private Integer centroSeleccionado;
-	private String tipoCentroSeleccionado;
 	
 	
 	public BeanUsuarioGestion() {
@@ -39,7 +38,7 @@ public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 	public BeanUsuarioGestion(Integer id, Centro centro, String nombre, String apellido1, String apellido2,
 			String email, String password, Integer idLaboratorioVisavet, Integer idLaboratorioCentro, Integer asignadas,
 			Integer acertadas, Set<Documento> documentos, Set<UsuarioMuestra> usuarioMuestras, Set<Rol> rols,
-			String habilitado, String accion, Integer centroSeleccionado, String tipoCentroSeleccionado) {
+			String habilitado, String accion, Integer centroSeleccionado) {
 		super();
 		this.id = id;
 		this.centro = centro;
@@ -58,7 +57,6 @@ public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 		this.habilitado = habilitado;
 		this.accion = accion;
 		this.centroSeleccionado = centroSeleccionado;
-		this.tipoCentroSeleccionado = tipoCentroSeleccionado;
 	}
 
 
@@ -264,17 +262,6 @@ public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 		this.centroSeleccionado = centroSeleccionado;
 	}
 
-	
-	
-	public String getTipoCentroSeleccionado() {
-		return tipoCentroSeleccionado;
-	}
-
-
-	public void setTipoCentroSeleccionado(String tipoCentroSeleccionado) {
-		this.tipoCentroSeleccionado = tipoCentroSeleccionado;
-	}
-
 
 	@Override
 	public String toString() {
@@ -283,7 +270,7 @@ public class BeanUsuarioGestion implements Comparable<BeanUsuarioGestion>{
 				+ idLaboratorioVisavet + ", idLaboratorioCentro=" + idLaboratorioCentro + ", asignadas=" + asignadas
 				+ ", acertadas=" + acertadas + ", documentos=" + documentos + ", usuarioMuestras=" + usuarioMuestras
 				+ ", rols=" + rols + ", habilitado=" + habilitado + ", accion=" + accion + ", centroSeleccionado="
-				+ centroSeleccionado + ", tipoCentroSeleccionado=" + tipoCentroSeleccionado + "]";
+				+ centroSeleccionado + "]";
 	}
 
 
