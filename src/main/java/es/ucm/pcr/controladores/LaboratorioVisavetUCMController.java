@@ -56,6 +56,7 @@ import es.ucm.pcr.servicios.CentroServicio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 import es.ucm.pcr.servicios.LoteServicio;
+import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
 import es.ucm.pcr.servicios.ServicioLotes;
 import es.ucm.pcr.servicios.SesionServicio;
@@ -80,6 +81,8 @@ public class LaboratorioVisavetUCMController {
 	LaboratorioCentroServicio laboratorioCentroServicio;
     @Autowired
     LaboratorioVisavetServicio laboratorioVisavetServicio;
+    @Autowired
+    MuestraServicio muestraServicio;
 
 	@SuppressWarnings("unused")
 	private final static Logger log = LoggerFactory.getLogger(LaboratorioVisavetUCMController.class);
@@ -510,10 +513,16 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				
 			
 				for (LoteBeanPlacaVisavet lote: lotePlacaVisavetBean.getPlaca().getListaLotes()) {
-			  placa.setId(lote.getIdPlacaVisavet());
-			  placa.setEstado(estado);
-				
+			    placa.setId(lote.getIdPlacaVisavet());
+			    placa.setEstado(estado);
 				placa = servicioLaboratorioUni.guardar(placa);
+				
+				//obtenemos las muestras y guardamos la referencia
+				for (MuestraBeanLaboratorioVisavet m: lote.getListaMuestras()) {
+					m= muestraServicio.guardarReferencia(m);
+				}
+				
+				
 				}
 		//creo q no hace falta		lotePlacaVisavetBean.setPlaca(placa);
 				BusquedaPlacasVisavetBean busquedaPlacasVisavetBean = new BusquedaPlacasVisavetBean();
@@ -523,24 +532,21 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				return  this.buscarPlacas(busquedaPlacasVisavetBean, request, session, pageable);
 					
 				}
+				
 				@RequestMapping(value = "/laboratorioUni/asignarPlaca", method = RequestMethod.GET)
 				public String asignarPlacasGet(@RequestParam("idPlaca") int idPlaca,  Model model, HttpServletRequest request, HttpSession session) {
 				// grabar en el servicio la placa junto con el que tenga lote que venga del modelo
 					LotePlacaVisavetBean lotePlacaVisavetBean = (LotePlacaVisavetBean )session.getAttribute("lotePlacaVisavetBean");
-						// ModelAndView vista = new ModelAndView("VistaLotesPlacasVisavet");
-					//añado a la placa 1 a todos los lotes que tenga en la placa
-					// para jugar
-					//lotePlacaVisavetBean.getPlaca().setListaLotes(lotePlacaVisavetBean.getListaLotesDisponibles());
 					List<LoteBeanPlacaVisavet> listaLotesDisponibles= new ArrayList();
 					if (lotePlacaVisavetBean == null)lotePlacaVisavetBean= new LotePlacaVisavetBean();
 						for (LoteBeanPlacaVisavet lote:lotePlacaVisavetBean.getListaLotesDisponibles()) {
-				      
-						// busco la que tenga el mismo idPlaca lotePlacaVisavetBean.getPlaca()
-						
-					lote.setIdPlacaVisavet(idPlaca);
-	                
-					listaLotesDisponibles.add(lote);
-					// lotePlacaVisavetBean.setListaLotesDisponibles(lotePlacaVisavetBean.getPlaca().getListaLotes());
+				      	
+					      lote.setIdPlacaVisavet(idPlaca);
+					      BeanEstado estado=new BeanEstado();
+						  estado.setTipoEstado(TipoEstado.EstadoLote);
+						  estado.setEstado(Estado.LOTE_PROCESADO_CENTRO_ANALISIS);
+							
+	                      listaLotesDisponibles.add(lote);
 					
 					} 
 					lotePlacaVisavetBean.setListaLotesDisponibles(listaLotesDisponibles);
@@ -558,7 +564,8 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 					lotePlacaVisavetBean.setPlaca(placaVisavet);
 					//vista.addObject("lotePlacaVisavetBean",lotePlacaVisavetBean);
 					model.addAttribute("lotePlacaVisavetBean",lotePlacaVisavetBean);
-					return "VistaLotesPlacasVisavet :: #trGroup";
+					return "VistaLotesPlacasVisavet :: trGroup";
+				
 					
 				}
 		private Integer calcularPlacasVisavetEspera(BeanLaboratorioCentro laboratorio)	{

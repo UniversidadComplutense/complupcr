@@ -82,6 +82,8 @@ public class UsuarioControlador {
 		}
 		// le indicamos la acción a relizar: A alta de un usuario
 		beanUsuario.setAccion("A");
+		// por defecto, en un alta el usuario se activa
+		beanUsuario.setHabilitado("A");
 		vista.addObject("formBeanUsuario", beanUsuario);
 		
 		// Añadimos los roles en BBDD
@@ -100,6 +102,7 @@ public class UsuarioControlador {
 		Map<Integer,String> mapaCentros = centroServicio.mapaCentros(centroServicio.listaCentrosOrdenada());
 		vista.addObject("mapaCentros", mapaCentros);
 
+		vista.addObject("espaciosBlanco", "   ");
 		
 		return vista;
 	}

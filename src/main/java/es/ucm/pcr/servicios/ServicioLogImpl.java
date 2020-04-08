@@ -121,6 +121,7 @@ public class ServicioLogImpl implements ServicioLog {
 			logMuestra.setDescMuestra(l.getMuestra().getEtiqueta());
 			Paciente paciente = l.getMuestra().getPaciente();
 			logMuestra.setDescPaciente(MuestraListadoBean.nombreCompletoPaciente(paciente));
+			logMuestra.setNhcPaciente(paciente != null ? paciente.getNhc() : "");
 			logMuestra.setDescEstadoMuestra(l.getEstadoMuestra().getDescripcion());
 			logMuestra.setFechaCambio(l.getFechaCambio());
 			Usuario usuario = l.getAutorCambio();

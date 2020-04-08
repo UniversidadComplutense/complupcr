@@ -20,6 +20,7 @@ import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.BeanResultado;
+import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
@@ -261,4 +262,36 @@ public class MuestraServicioImpl implements MuestraServicio {
 		mensaje.append("</div>");
 		return mensaje.toString();
 	}
+	
+	
+	// guardar referencia interna muestra
+	@Override
+	public MuestraBeanLaboratorioVisavet guardarReferencia(MuestraBeanLaboratorioVisavet muestraBean) {
+		Muestra muestra = null;						
+		
+		//muestra = MuestraBeanLaboratorioVisavet.beanToModel(muestraBean);
+        Optional<Muestra> muestraOpt=muestraRepositorio.findById(muestraBean.getId());
+        if (muestraOpt.get()!= null) {
+        	Muestra muestrabbdd=muestraOpt.get();
+        	muestrabbdd.setRefInternaVisavet(muestraBean.getReferenciaInterna());
+		// Lote nuevo, resultado pendiente
+		/*if (muestraBean.getId() == null) {
+			muestra.setResultado(BeanResultado.ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE.getCod());		
+		}
+		
+		muestra.setLote(null);
+		muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_INICIADA.getCodNum()));
+		if (muestraBean.getIdLote() != null) {
+			muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ASIGNADA_LOTE.getCodNum()));
+			muestra.setLote(new Lote(muestraBean.getIdLote()));			
+		} 
+		
+		Paciente paciente = muestra.getPaciente();
+		*/
+		muestra = muestraRepositorio.save(muestrabbdd);
+		return MuestraBeanLaboratorioVisavet.modelToBean(muestra);
+        }
+		return null;
+	}
+	
 }

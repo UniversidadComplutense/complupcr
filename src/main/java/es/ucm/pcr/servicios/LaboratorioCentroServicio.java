@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
+import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
@@ -88,6 +89,8 @@ public interface LaboratorioCentroServicio {
 	public List<BeanElemento> buscarPlacasBeanElementoAsignadasAJefe(Usuario usuario);
 	public void guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca);
 	public Boolean tienenResultadoDefinitivoLasMuestrasDeLaPlaca(Integer idPlaca);
+	
+	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
 	
 	
 	

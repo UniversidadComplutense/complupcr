@@ -5,7 +5,7 @@ var n=0;
 $("#tablaResultados tbody tr").each(function () 
 {
 n++;
-alert(n);
+
 });
 
 //BORRA LAS n-1 FILAS VISIBLES DE LA TABLA
@@ -25,7 +25,7 @@ function eliminaFilastrGroup(){
 	$("#trGroup").each(function () 
 	{ 
 		$("#trGroup").remove();
-	  alert("borra");
+	
 	n++;
 	});
 
@@ -132,7 +132,7 @@ function cambiarEstadoaEnviada(id, laboratorio){
 	
 	$("#idPlaca").html(id);
 	$("#laboratorio").html(laboratorio);
-	$("#id").val(id);
+	$("#idConfirmar").val(id);
 }
 function confirmarPlacaEnviada(){
 	var url = "";
@@ -208,9 +208,10 @@ function procesarLotesDesdePlacas(idPlaca) {
 			
 		});
 	
-	
+	if (lotesProcesar !=""){
 	var url="/laboratorioUni/procesarLotes?lotes="+lotesProcesar;
 	window.location=url;
+	}
 }
 
 // funcion que al ser pulsada da de alta una nueva placa vacia
@@ -261,13 +262,9 @@ function asignarPlaca(){
         data:  sBody
 	}).done(function(respuesta) {
 		eliminaFilas();
-		
-		/*$("#tablaResultados tbody").append(respuesta); 
-		*/
-		  var tratarRespuest=respuesta.replace("<tr id=\"trGroup\">", "");
-		  tratarRespuest=tratarRespuest.replace("</tr>", "");
-		 
-		  $("#trGroup").html(respuesta);
+	
+	    $("#tablaLotes tbody").html(respuesta);
+	   // $("#trGroup").load(url, sBody);
 	    $("#grabar").attr("disabled", false);
 	    $("#grabaryFinalizar").attr("disabled", false);
 		
@@ -284,7 +281,7 @@ function consultarOcupacionLaboratorio(idPlaca){
         dataType: 'html'
 	}).done(function(respuesta) {
 		
-		$("#idPlaca").val(idPlaca);
+		$("#idPlacaLab").val(idPlaca);
 		
 	    $("#trLaboratorio").html(respuesta);
 		
@@ -293,7 +290,7 @@ function consultarOcupacionLaboratorio(idPlaca){
 
 function asignarLaboratoriodesdeModal(){
 	
-	var url="/laboratorioUni/asignarLaboratorio?idPlaca="+$("#idPlaca").val()+"&laboratorio="+$("#laboratorio option:selected").val();
+	var url="/laboratorioUni/asignarLaboratorio?idPlaca="+$("#idPlacaLab").val()+"&laboratorio="+$("#laboratorioLab option:selected").val();
 	
 	
 	/*$.ajax({
