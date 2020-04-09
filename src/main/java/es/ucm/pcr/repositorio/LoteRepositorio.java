@@ -25,7 +25,8 @@ public interface LoteRepositorio extends PagingAndSortingRepository<Lote, Intege
 			+ "(:#{#params.criterioNumLote} is null or lote.numeroLote like :#{#params.criterioNumLote}) and "
 			+ "(:#{#params.fechaEnvioIni} is null or lote.fechaEnvio >= :#{#params.fechaEnvioIni}) and "
 			+ "(:#{#params.fechaEnvioFin} is null or lote.fechaEnvio <= :#{#params.fechaEnvioFin}) and "
-			+ "(:#{#params.idEstado} is null or estadoLote.id = :#{#params.idEstado}) ")
+			+ "(:#{#params.idEstado} is null or estadoLote.id = :#{#params.idEstado}) and"
+			+ "(:#{#params.laboratorioVisavet} is null or lote.laboratorioVisavet = :#{#params.laboratorioVisavet}) ")
 /*
 	@Query("SELECT lote FROM Lote lote "
 			+ "JOIN lote.centro centro "
