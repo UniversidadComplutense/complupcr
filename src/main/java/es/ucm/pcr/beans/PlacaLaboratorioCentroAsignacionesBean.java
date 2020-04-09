@@ -15,8 +15,13 @@ import es.ucm.pcr.modelo.orm.UsuarioMuestra;
 
 public class PlacaLaboratorioCentroAsignacionesBean extends PlacaLaboratorioCentroBean{
 	
-	//es PlacaLaboratorioCentroBean al que le añadimos el beanAnalisis
+	//es PlacaLaboratorioCentroBean al que le añadimos el beanAnalisis y fechaAsignacionAAnalistaLogado
+	
 	private BeanAnalisis beanAnalisis; //analistas de laboratorio y voluntarios que se asignan las placas (y a sus respesctivas muestras) por parte del jefe de servicio)  F6y F7
+	
+	//será la fecha en la que se asignó la placa (y todas sus muestras) al analista que ha iniciado sesion, 
+	//solo se rellena al recuperar las placas asignadas al analista que inicia sesion
+	private Date fechaAsignacionAAnalistaLogado;   
 	
 	public PlacaLaboratorioCentroAsignacionesBean() {
 		super();
@@ -29,6 +34,13 @@ public class PlacaLaboratorioCentroAsignacionesBean extends PlacaLaboratorioCent
 
 	public void setBeanAnalisis(BeanAnalisis beanAnalisis) {
 		this.beanAnalisis = beanAnalisis;
+	}
+	public Date getFechaAsignacionAAnalistaLogado() {
+		return fechaAsignacionAAnalistaLogado;
+	}
+
+	public void setFechaAsignacionAAnalistaLogado(Date fechaAsignacionAAnalistaLogado) {
+		this.fechaAsignacionAAnalistaLogado = fechaAsignacionAAnalistaLogado;
 	}
 
 	public static PlacaLaboratorioCentroAsignacionesBean modelToBean(PlacaLaboratorio placaLaboratorio) {

@@ -674,7 +674,7 @@ public class AnalisisControlador {
 			System.out.println("listaPlacasListasParaAnalisis tiene: "+ listaPlacasListasParaAnalisis.size());
 			*/
 			
-			// Buscamos las placas cuyas muestras esten asignadas al usuario logado con estado 'Asignada analissta'
+			// Buscamos las placas en estado PLACA_ASIGNADA_PARA_ANALISIS cuyas muestras esten asignadas al usuario logado con estado 'MUESTRA_ASIGNADA_ANALISTA'
 			//y que no tengan aun valoracion por el analista			 
 			
 			BusquedaPlacaLaboratorioAnalistaBean criteriosBusquedaPlacaAsignadaParaRevision = new BusquedaPlacaLaboratorioAnalistaBean();			
@@ -683,7 +683,7 @@ public class AnalisisControlador {
 			criteriosBusquedaPlacaAsignadaParaRevision.setIdAnalistaMuestras(user.getId());
 			criteriosBusquedaPlacaAsignadaParaRevision.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum());
 			criteriosBusquedaPlacaAsignadaParaRevision.setValoracion(null);
-			List<PlacaLaboratorioCentroBean> listaPlacasAsignadasParaRevision = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevision, pageable).getContent();
+			List<PlacaLaboratorioCentroAsignacionesBean> listaPlacasAsignadasParaRevision = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevision, pageable).getContent();
 			System.out.println("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.size());			
 			
 			

@@ -88,7 +88,10 @@ public interface LaboratorioCentroServicio {
 	public void guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca);
 	public Boolean tienenResultadoDefinitivoLasMuestrasDeLaPlaca(Integer idPlaca);
 	
-	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
+	//public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
+	public Page<PlacaLaboratorioCentroAsignacionesBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable); 
+	
+	
 	
 	
 	

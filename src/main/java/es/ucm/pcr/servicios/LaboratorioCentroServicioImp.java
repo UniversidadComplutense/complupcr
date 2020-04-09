@@ -370,16 +370,30 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	//Diana- metodos para los analistas de placas
 	@Override
-	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda,
+	public Page<PlacaLaboratorioCentroAsignacionesBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda,
 			Pageable pageable) {
 		
-		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();		
+		List<PlacaLaboratorioCentroAsignacionesBean> listaPlacasLaboratorioCentroAsignacionesBean = new ArrayList<PlacaLaboratorioCentroAsignacionesBean>();		
 		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = placaLaboratorioRepositorio.findByParams(criteriosBusqueda, pageable); 		
 		for (PlacaLaboratorio placa : PagePlacasLaboratorioCentro.getContent()) {
-			listaPlacasLaboratorioCentroBean.add(PlacaLaboratorioCentroBean.modelToBean(placa));
+			PlacaLaboratorioCentroAsignacionesBean placaLaboratorioCentroAsignacionesBean = PlacaLaboratorioCentroAsignacionesBean.modelToBean(placa);
+			//ponemos como fecha de asignacion de la placa la misma fecha de asignacion que cualquiera de sus muestras que esten asignadas al analista logado
+			for (Muestra m: placa.getMuestras()) {
+				System.out.println("la muestra tiene id: "+ m.getId());
+				for(UsuarioMuestra um: m.getUsuarioMuestras()) {
+					//System.out.println("el usuario muestra tiene idusuariomuestra: "+ um.getIdUsuarioMuestra());
+					//System.out.println("um.getUsuario().getId() vale: "+ um.getUsuario().getId());
+					//System.out.println("criteriosBusqueda.getIdAnalistaMuestras() vale: "+ criteriosBusqueda.getIdAnalistaMuestras());
+					
+					if(um.getUsuario().getId()==criteriosBusqueda.getIdAnalistaMuestras()) {
+						placaLaboratorioCentroAsignacionesBean.setFechaAsignacionAAnalistaLogado(um.getFechaAsignacion());						
+					}
+				}					
+			}
+			listaPlacasLaboratorioCentroAsignacionesBean.add(placaLaboratorioCentroAsignacionesBean);
 		}		
-		Page<PlacaLaboratorioCentroBean> placasLaboratorioCentro = new PageImpl<>(listaPlacasLaboratorioCentroBean, pageable, PagePlacasLaboratorioCentro.getTotalElements());		
-		return placasLaboratorioCentro;
+		Page<PlacaLaboratorioCentroAsignacionesBean> placasLaboratorioCentroAsignaciones = new PageImpl<>(listaPlacasLaboratorioCentroAsignacionesBean, pageable, PagePlacasLaboratorioCentro.getTotalElements());		
+		return placasLaboratorioCentroAsignaciones;
 	}
 	//fin Diana- metodos para los analistas de placas
 	
