@@ -57,7 +57,7 @@ public class PcrTHExpressions {
 			}
 			return "Laboratorio: " + sesionServicio.getLaboratorioVisavet().getNombre();
 		}
-		if (sesionServicio.tieneRol("RESPONSABLEPCR") || sesionServicio.tieneRol("JEFESERVICIO") || sesionServicio.tieneRol("ANALISTALABORATORIO")) {
+		if (sesionServicio.tieneRol("RESPONSABLEPCR") || sesionServicio.tieneRol("ANALISTALABORATORIO")) {
 			if (sesionServicio.getLaboratorioCentro() == null) {
 				return "Laboratorio: Sin laboratorio asignado";
 			}
@@ -65,6 +65,9 @@ public class PcrTHExpressions {
 		}
 		if (sesionServicio.tieneRol("VOLUNTARIO")) {
 			return "Voluntario";
+		}
+		if ( sesionServicio.tieneRol("JEFESERVICIO")) {
+			return "Jefe de Servicio";
 		}
 		if (sesionServicio.tieneRol("AUDITOR")) {
 			return "Auditor";
