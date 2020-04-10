@@ -61,6 +61,7 @@ import es.ucm.pcr.beans.GuardarCogerYDevolverPlacasBean;
 import es.ucm.pcr.beans.MuestraBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
+import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesAnalistaBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 //import es.ucm.pcr.beans.BeanMuestraCentro;
 //import es.ucm.pcr.validadores.ValidadorMuestra;
@@ -566,7 +567,7 @@ public class AnalisisControlador {
 			
 			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la placa para no mostrarlos como posibles a asignar en el desplegable
 			//listaAnalistasLab
-			List<BeanAsignacion> beanListadoAnalistaLabAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasLab();
+			List<BeanAsignacion> beanListadoAnalistaLabAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasLab();
 			List<BeanUsuario> beanListadoAnalistaLabABorrar = new ArrayList<BeanUsuario>();
 			//convierto la lista BeanAsignacion en lista BeanUsuario
 			for(BeanAsignacion beanAsig: beanListadoAnalistaLabAsignados) {
@@ -577,7 +578,7 @@ public class AnalisisControlador {
 			beanListadoAnalistaLab.removeAll(beanListadoAnalistaLabABorrar);
 			
 			//listaAnalistasVol			
-			List<BeanAsignacion> beanListadoAnalistaVolAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasVol();
+			List<BeanAsignacion> beanListadoAnalistaVolAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasVol();
 			List<BeanUsuario> beanListadoAnalistaVolABorrar = new ArrayList<BeanUsuario>();
 			//convierto la lista BeanAsignacion en lista BeanUsuario
 			for(BeanAsignacion beanAsig: beanListadoAnalistaVolAsignados) {
@@ -589,7 +590,7 @@ public class AnalisisControlador {
 			
 			
 			//listaAnalistasVolSinCentro			
-			List<BeanAsignacion> beanListadoAnalistaVolSinLabCentroAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasVolSinLabCentro();
+			List<BeanAsignacion> beanListadoAnalistaVolSinLabCentroAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasVolSinLabCentro();
 			List<BeanUsuario> beanListadoAnalistaVolSinCentroABorrar = new ArrayList<BeanUsuario>();
 			//convierto la lista BeanAsignacion en lista BeanUsuario
 			for(BeanAsignacion beanAsig: beanListadoAnalistaVolSinLabCentroAsignados) {
@@ -683,7 +684,7 @@ public class AnalisisControlador {
 			criteriosBusquedaPlacaAsignadaParaRevision.setIdAnalistaMuestras(user.getId());
 			criteriosBusquedaPlacaAsignadaParaRevision.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum());
 			criteriosBusquedaPlacaAsignadaParaRevision.setValoracion(null);
-			List<PlacaLaboratorioCentroAsignacionesBean> listaPlacasAsignadasParaRevision = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevision, pageable).getContent();
+			List<PlacaLaboratorioCentroAsignacionesAnalistaBean> listaPlacasAsignadasParaRevision = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevision, pageable).getContent();
 			System.out.println("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.size());			
 			
 			

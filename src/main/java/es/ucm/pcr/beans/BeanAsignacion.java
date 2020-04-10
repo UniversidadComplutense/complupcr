@@ -40,10 +40,6 @@ public class BeanAsignacion {
 	}
 
 
-	public void setFechaValoracion(Date fechaValoracion) {
-		this.fechaValoracion = fechaValoracion;
-	}
-
 
 	public String getValoracion() {
 		return valoracion;
@@ -55,7 +51,13 @@ public class BeanAsignacion {
 	}
 
 
+	public Date getFechaValoracion() {
+		return fechaValoracion;
+	}
 
+	public void setFechaValoracion(Date fechaValoracion) {
+		this.fechaValoracion = fechaValoracion;
+	}
 
 	@Override
 	public String toString() {

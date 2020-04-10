@@ -151,6 +151,33 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		return bean;
 	}
 	
+	public static BeanListadoMuestraAnalisis modelToBeanAnalista(Muestra muestra, Integer idUsuarioLogado) {
+		//cargamos todos los datos de BeanListadoMuestraAnalisis y ademas le añadimos a cada muestra el beanAnalisis asociado al usaurio logado
+		BeanListadoMuestraAnalisis bean = 	BeanListadoMuestraAnalisis.modelToBean(muestra);
+		
+		BeanAsignacion beanAsignacionUsuarioLogado = new BeanAsignacion();
+		Set<UsuarioMuestra> usuarioMuestras = muestra.getUsuarioMuestras(); //conjunto de usuarios asignados a la muestra (analistas, voluntarios y jefes)
+		for(UsuarioMuestra usuMu: usuarioMuestras) {
+			//nos quedamos solo con el usumuestra de usuario logado
+			Usuario usu = usuMu.getUsuario();
+			Integer idUsu = usu.getId();
+			System.out.println("id usu vale: " + idUsu);
+			if(idUsu==idUsuarioLogado) {						
+				BeanUsuario beanUsuLogado = BeanUsuario.modelToBean(usu);
+				//no puedo asociarle el rol porque puede tener varios
+				//BeanRolUsuario beanRolUsuario = new BeanRolUsuario();				
+				//beanUsuLogado.setBeanRolUsuario(beanRolUsuario.asignarRolUsuarioPorCodNum(usuarioLogado.get));
+				beanAsignacionUsuarioLogado.setBeanUsuario(beanUsuLogado);
+				beanAsignacionUsuarioLogado.setFechaAsignacion(usuMu.getFechaAsignacion());
+				beanAsignacionUsuarioLogado.setValoracion(usuMu.getValoracion());
+				beanAsignacionUsuarioLogado.setFechaValoracion(usuMu.getFechaValoracion());
+			}
+		}
+		bean.getBeanAnalisis().setAsignacionUsuarioLogado(beanAsignacionUsuarioLogado);
+		
+		return bean;
+	}
+	
 	
 	private static String nombreCompletoPaciente(Paciente paciente) {
 		String nombreCompleto = paciente.getNombrePaciente();

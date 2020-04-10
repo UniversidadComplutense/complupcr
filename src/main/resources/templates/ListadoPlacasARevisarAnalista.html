@@ -49,7 +49,7 @@
 				      </td> -->
 				      <td><span th:text="${placaAsignada.id}"></span></td>
 				      <td><span th:text="${placaAsignada.laboratorioCentro.nombre}"></span></td>
-				      <td><span th:text="${placaAsignada.fechaAsignacionAAnalistaLogado}"></span></td>
+				      <td><span th:text="${#dates.format(placaAsignada.fechaAsignacionAAnalistaLogado, 'dd/MM/yyyy')}"></span></td>				     
 				      <td><span th:text="${#lists.size(placaAsignada.muestras)}"></span></td>
 				      <td>
 				      <div th:if="${#lists.size(placaAsignada.muestras) > 0}">								
@@ -84,13 +84,17 @@
 															<th>Resultado</th>
 															<th>Notificado</th> -->
 															<th>Estado</th>
+															<th>Usuario</th>
+															<th>fechaAsignacion</th>
+															<th>valoracion</th>
+															<th>fecha valoracion</th>
 														</tr>
 													</thead>
 													<tbody>
 														<tr th:if="${placaAsignada.muestras != null}" th:each="muestra : ${placaAsignada.muestras}">
 															<td><span th:text="${muestra.id}"></span></td>
-															<td><span th:text="${muestra.etiqueta}"></span></td>					
-															<td><span th:text="${muestra.refInterna}"></span></td>
+															<td><span th:text="${muestra.etiquetaMuestra}"></span></td>					
+															<td><span th:text="${muestra.refInternaMuestra}"></span></td>
 															<!-- 
 															<td><span th:text="${muestra.idPlacaLaboratorio}"></span></td>															
 															<td><span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span></td>
@@ -98,7 +102,12 @@
 															<td><span th:text="${muestra.estadoMuestra}"></span></td>		
 															<td><span th:text="${muestra.notificado} ? 'Sí' : 'No'"></span></td>	
 															-->	
-															<td><span th:text="${muestra.estado}"></span></td>													
+															<td><span th:text="${muestra.estadoMuestra}"></span></td>
+															
+															<td><span th:text="${muestra.beanAnalisis.asignacionUsuarioLogado.beanUsuario.id}"></span></td>
+															<td><span th:text="${#dates.format(muestra.beanAnalisis.asignacionUsuarioLogado.fechaAsignacion, 'dd/MM/yyyy')}"></span></td>															
+															<td><span th:text="${muestra.beanAnalisis.asignacionUsuarioLogado.valoracion}"></span></td>
+															<td><span th:text="${#dates.format(muestra.beanAnalisis.asignacionUsuarioLogado.fechaValoracion, 'dd/MM/yyyy')}"></span></td>
 														</tr>		
 													</tbody>
 												</table>
