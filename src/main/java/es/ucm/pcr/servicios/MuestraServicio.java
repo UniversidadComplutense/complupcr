@@ -43,6 +43,13 @@ public interface MuestraServicio {
 	public Page<BeanListadoMuestraAnalisis> findMuestraByParam(BeanBusquedaMuestraAnalisis params, Pageable pageable);
 	
 	/**
+	 * Busca muestra por id
+	 * @param id
+	 * @return BeanListadoMuestraAnalisis
+	 */
+	public BeanListadoMuestraAnalisis buscarMuestra(Integer id); 
+	
+	/**
 	 * Guardar muestra
 	 * @param muestraBean
 	 * @return muestra guardada

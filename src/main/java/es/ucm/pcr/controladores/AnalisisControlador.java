@@ -312,8 +312,9 @@ public class AnalisisControlador {
 			for(String codnumMuestra: parts) {
 				Integer codnumLeeInt = Integer.parseInt(codnumMuestra);
 				System.out.println("el codnum vale: " + codnumLeeInt);
-				BeanListadoMuestraAnalisis beanElementList = this.getBean(codnumLeeInt);
-				listaBeanListadoMuestraAnalisis.add(beanElementList);
+				//obtenemos la muestra
+				BeanListadoMuestraAnalisis beanMuestraAnalisis = muestraServicio.buscarMuestra(codnumLeeInt);				
+				listaBeanListadoMuestraAnalisis.add(beanMuestraAnalisis);
 				
 			}
 			return listaBeanListadoMuestraAnalisis;

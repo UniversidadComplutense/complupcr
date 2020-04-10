@@ -267,7 +267,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		for(PlacaLaboratorio placa: lisaPlacasJefe) {
 			BeanElemento beanElementoPlaca = new BeanElemento();
 			beanElementoPlaca.setCodigo(placa.getId());
-			beanElementoPlaca.setDescripcion("Placa " + placa.getId() + ", muestras: " + placa.getNumeromuestras());
+			beanElementoPlaca.setDescripcion("Placa " + placa.getId() + ", muestras: " + placa.getMuestras().size());
 			listaBeanPlacasLaboratorioDeJefe.add(beanElementoPlaca);			
 		}		
 		//añado el elemento seleccione al principio
