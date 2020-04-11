@@ -128,7 +128,7 @@ public class EnviocorreoImp implements Enviocorreo {
 			}
 			String perfilesEjecucionActivos = System.getProperty("spring.profiles.active");
 //			if (perfilesEjecucionActivos.equals("desarrollo") || perfilesEjecucionActivos.equals("integracion"))
-			if (perfilesEjecucionActivos.contains("desarrollo") || perfilesEjecucionActivos.contains("integracion")) {
+			if (perfilesEjecucionActivos.contains("desarrollo")) {
 				helper.setTo("fherasm@ucm.es");
 			}
 
