@@ -1,7 +1,19 @@
 stages:
+  - test
   - package
   - integracion
   - log
+test:
+  stage: test
+  tags:
+    - maven
+    - jdk11
+  only:
+    - integracion
+    - produccion
+  script:
+    - echo "Testing PCR-Covid19"
+    - mvn test  
 package:
   stage: package
   tags: 
@@ -15,7 +27,7 @@ package:
       - target/covid19.jar
   script:
     - echo "Construyendo proyecto covid19"
-    - mvn package -U
+    - mvn -Dmaven.test.skip=true package -U 
 integracion1:
   stage: integracion
   tags:
