@@ -7,8 +7,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-//@ActiveProfiles(profiles = "test")
-@ActiveProfiles(profiles = "integracion")
+@ActiveProfiles(profiles = "test")
+//@ActiveProfiles(profiles = "integracion")
 @SpringBootTest
 public class PcrCovid19ApplicationTests {
 
