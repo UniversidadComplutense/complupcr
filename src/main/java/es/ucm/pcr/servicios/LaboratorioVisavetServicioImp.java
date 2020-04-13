@@ -157,7 +157,7 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	public void recepcionarPlaca(Integer id) {				
 		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(id);
 		if (placa.isPresent()) {
-			if (placa.get().getEstadoPlacaVisavet().getId() == Estado.PLACAVISAVET_ASIGNADA.getCodNum()) {
+			if (placa.get().getEstadoPlacaVisavet().getId() == Estado.PLACAVISAVET_ENVIADA.getCodNum()) {
 				placa.get().setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_RECIBIDA.getCodNum()));
 				placa.get().setFechaRecepcionLaboratorioCentro(new Date());
 				placaVisavetRepositorio.save(placa.get());

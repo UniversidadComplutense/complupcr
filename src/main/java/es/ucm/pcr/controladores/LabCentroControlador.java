@@ -132,7 +132,7 @@ public class LabCentroControlador {
 		ModelAndView vista = new ModelAndView("PlacaVisavetRecepcionar");
 		PlacaLaboratorioVisavetBean placa = laboratorioVisavetServicio.buscarPlaca(id);
 		
-		if (placa.getBeanEstado().getEstado().getCodNum() == Estado.PLACAVISAVET_ASIGNADA.getCodNum()) {
+		if (placa.getBeanEstado().getEstado().getCodNum() == Estado.PLACAVISAVET_ENVIADA.getCodNum()) {
 			vista.addObject("recepcionable", true);
 		} else {
 			vista.addObject("recepcionable", false);

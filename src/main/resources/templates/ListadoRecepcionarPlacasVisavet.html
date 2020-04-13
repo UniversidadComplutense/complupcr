@@ -38,7 +38,7 @@
 				<div class="col-3 form-group">
 					<label>Estado</label>
 				 	<select class="form-control form-control-sm" th:field="${busquedaPlacaVisavetBean.idEstadoPlaca}"  th:value="${busquedaPlacaVisavetBean.idEstadoPlaca}">
-				 		<option value="">Seleccione</option>
+				 		<option value="0">Seleccione</option>
 				 		<option th:each="var: ${estadosPlacaVisavet}"
 									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
 									th:select="${busquedaPlacaVisavetBean.idEstadoPlaca}">Estado</option>				 		
