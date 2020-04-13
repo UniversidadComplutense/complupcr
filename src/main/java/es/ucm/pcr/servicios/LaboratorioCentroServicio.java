@@ -58,7 +58,7 @@ public interface LaboratorioCentroServicio {
 	 * @param LaboratorioCentro
 	 * @return void >
 	 */
-	public void guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception;
+	public LaboratorioCentro guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception;
 	
 	/**
 	 * Borrar Laboratorio

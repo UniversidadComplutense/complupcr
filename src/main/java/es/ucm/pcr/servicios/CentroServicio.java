@@ -45,9 +45,9 @@ public interface CentroServicio {
 	 * Guardar Centro
 	 * 
 	 * @param Centro
-	 * @return void >
+	 * @return Centro >
 	 */
-	public void guardarCentro (Centro centro) throws Exception;
+	public Centro guardarCentro (Centro centro) throws Exception;
 	
 	/**
 	 * Borrar Centro
