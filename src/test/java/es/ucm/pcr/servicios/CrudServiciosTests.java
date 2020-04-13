@@ -25,7 +25,7 @@ public class CrudServiciosTests {
 	public void getCentro() throws Exception {
 		Optional<Centro> centroop = centroServicio.buscarCentroPorId(1);
 		Centro centro = centroop.get();
-		assertEquals("El código de centro coincide","BOTA",centro.getCodCentro());
+		assertEquals("El código de centro coincide","BOT",centro.getCodCentro());
 		
 	}
 	
