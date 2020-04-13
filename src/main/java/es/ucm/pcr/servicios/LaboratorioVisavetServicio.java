@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
 import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
-import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 
 public interface LaboratorioVisavetServicio {
@@ -54,7 +53,7 @@ public interface LaboratorioVisavetServicio {
 	 * @param LaboratorioVisavet
 	 * @return void >
 	 */
-	public void guardarLaboratorioVisavet (LaboratorioVisavet laboratorioVisavet) throws Exception;
+	public LaboratorioVisavet save(LaboratorioVisavet laboratorioVisavet) throws Exception;
 	
 	/**
 	 * Borrar Laboratorio Visavet
@@ -62,15 +61,15 @@ public interface LaboratorioVisavetServicio {
 	 * @param Integer idLaboratorioVisavet
 	 * @return void >
 	 */
-	public void borrarLaboratorioVisavet (Integer idLaboratorioVisavet) throws Exception;	
+	public void deleteById(Integer idLaboratorioVisavet) throws Exception;	
 
 	/**
-	 * Buscat Laboratorio por Id
+	 * Buscar Laboratorio por Id
 	 * 
 	 * @param Integer idLaboratorioVisavet
 	 * @return void Optional <LaboratorioVisavet>
 	 */
-	public Optional <LaboratorioVisavet> buscarLaboratorioVisavetPorId (Integer idLaboratorioVisavet) throws Exception;
+	public Optional <LaboratorioVisavet> findById(Integer idLaboratorioVisavet) throws Exception;
 
 	
 	// JAVI
@@ -81,8 +80,12 @@ public interface LaboratorioVisavetServicio {
 
 	// JAVI
 	public void recepcionarPlaca(Integer id);
-	
-	
-	
-	
+
+	/**
+	 * Buscar laboratorio visavet por nombre
+	 * 
+	 * @param nombre
+	 * @return Optional<LaboratorioVisavet>
+	 */
+	public Optional<LaboratorioVisavet> findByNombre(String nombre);
 }

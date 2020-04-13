@@ -67,15 +67,15 @@ public class LaboratorioCentroControlador {
 			// Damos de alta nuevo laboratorioCentro
 			if (beanLaboratorioCentro.getAccion().equals("A"))
 			{
-				laboratorioCentroServicio.guardarLaboratorioCentro(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
+				laboratorioCentroServicio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 			}
 			// Modificamos laboratorioCentro existente
 			if (beanLaboratorioCentro.getAccion().equals("M"))
 			{	
 				// Buscamos el laboratorioCentro a modificar, y volcamos los datos recogidos por el formulario
-				Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroServicio.buscarLaboratorioCentroPorId(beanLaboratorioCentro.getId());
+				Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroServicio.findById(beanLaboratorioCentro.getId());
 				// añadimos campos del formulario
-				laboratorioCentroServicio.guardarLaboratorioCentro(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
+				laboratorioCentroServicio.save(laboratorioCentroServicio.mapeoBeanEntidadLaboratorioCentro(beanLaboratorioCentro));
 			}
 
 			// Volvemos a grabar mas laboratorioCentro
@@ -91,7 +91,7 @@ public class LaboratorioCentroControlador {
 			ModelAndView vista = new ModelAndView("VistaLaboratorioCentro");
 			
 			// Busco el laboratorioCentro a modificar
-			Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroServicio.buscarLaboratorioCentroPorId(idLaboratorioCentro);
+			Optional<LaboratorioCentro> laboratorioCentro = laboratorioCentroServicio.findById(idLaboratorioCentro);
 			// cargo el beanLaboratorioCentro con lo datos del laboratorioCentro a modificar
 			BeanLaboratorioCentro beanLaboratorioCentro = laboratorioCentroServicio.mapeoEntidadBeanLaboratorioCentro(laboratorioCentro.get());
 			
@@ -107,7 +107,7 @@ public class LaboratorioCentroControlador {
 		@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 		public ModelAndView borrarLaboratorioCentro(@RequestParam("idLaboratorioCentro") Integer idLaboratorioCentro, HttpSession session) throws Exception {
 			try {
-			laboratorioCentroServicio.borrarLaboratorioCentro(idLaboratorioCentro);
+			laboratorioCentroServicio.deleteById(idLaboratorioCentro);
 			} catch (DataIntegrityViolationException e) {
 				String mensaje = "No se puede borrar el centro " + laboratorioCentroServicio.buscarLaboratorioById(idLaboratorioCentro).getNombre() + " porque tiene información asociada.";
 				session.setAttribute("mensajeError", mensaje);

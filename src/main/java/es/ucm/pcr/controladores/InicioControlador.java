@@ -97,7 +97,7 @@ public class InicioControlador {
 
 	@RequestMapping(value = "/regenerarContrasena", method = RequestMethod.POST)
 	public String regenerarContrasenaPost(HttpServletRequest request, @RequestParam("email") String userEmail) {
-		Usuario user = usuarioServicio.buscarUsuarioPorEmail(userEmail);
+		Usuario user = usuarioServicio.findByEmail(userEmail);
 		if (user == null) {
 			return "redirect:/regenerarContrasena?error";
 		}

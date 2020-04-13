@@ -191,7 +191,7 @@ public class EnviocorreoImp implements Enviocorreo {
 							+ "<p><strong>No responda a este mensaje.</strong></p>",
 					"");
 			user.setHabilitado("E");
-			usuarioServicio.guardar(user);
+			usuarioServicio.save(user);
 		}
 
 	}
@@ -235,7 +235,7 @@ public class EnviocorreoImp implements Enviocorreo {
 						+ "<p><strong>No responda a este mensaje.</strong></p>",
 				"");
 		user.setHabilitado("E");
-		usuarioServicio.guardar(user);
+		usuarioServicio.save(user);
 		
 	}
 
