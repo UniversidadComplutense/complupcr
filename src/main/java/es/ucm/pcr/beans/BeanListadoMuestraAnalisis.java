@@ -117,7 +117,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 			Set<Rol> rolesUsu = usu.getRols();			
 			for(Rol rol: rolesUsu) {
 				//si el usuario tiene el rol analista
-				if(rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_ANALISTALABORATORIO.getId()) {
+				if(rol.getId().equals(BeanRolUsuario.RolUsuario.ROL_USUARIO_ANALISTALABORATORIO.getId())) {
 					BeanAsignacion beanAsigAna = new BeanAsignacion();
 					BeanUsuario ana = BeanUsuario.modelToBean(usu);					
 					ana.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_ANALISTALABORATORIO)); //TODO mirar como poner estoo
@@ -128,7 +128,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);					
 				}
 				//si el usuario tiene el rol voluntario y tiene idLaboratorioCentro
-				if((rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()!= null)) {
+				if((rol.getId().equals(BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()!= null))) {
 					BeanAsignacion beanAsigVol = new BeanAsignacion();
 					BeanUsuario vol = BeanUsuario.modelToBean(usu);					
 					vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO)); //TODO mirar como poner estoo					
@@ -139,7 +139,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
 				}				
 				//si el usuario tiene el rol voluntario y no tiene idLaboratorioCentro
-				if((rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()== null)) {
+				if((rol.getId().equals(BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()== null))) {
 					//si tiene rol VOLUNTARIO y no está asignado a ningun laboratorioCentro
 					BeanAsignacion beanAsigVolSinCentro = new BeanAsignacion();
 					BeanUsuario beanUsuVolSinCentro = BeanUsuario.modelToBean(usu);
@@ -200,9 +200,11 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 			Usuario usu = usuMu.getUsuario();			
 			//si el usumuestra es el mismo que el usuario logado rellenamos el beanAsignacionUsuarioLogado			
 			Integer idUsu = usu.getId();
+			System.out.println("id usuarioMuestra vale: " + usuMu.getIdUsuarioMuestra());
 			System.out.println("id usu vale: " + idUsu);
 			System.out.println("is usuario logado vale: " + idUsuarioLogado);
-			if(idUsu==idUsuarioLogado) {						
+			if(idUsu.equals(idUsuarioLogado)) {
+				System.out.println("ENTRO EN EL IF, id usuarioMuestra vale: " + usuMu.getIdUsuarioMuestra());
 				BeanUsuario beanUsuLogado = BeanUsuario.modelToBean(usu);
 				//no puedo asociarle el rol porque puede tener varios
 				//BeanRolUsuario beanRolUsuario = new BeanRolUsuario();				
@@ -216,7 +218,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 			Set<Rol> rolesUsu = usu.getRols();			
 			for(Rol rol: rolesUsu) {
 				//si el usuario tiene el rol analista
-				if(rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_ANALISTALABORATORIO.getId()) {
+				if(rol.getId().equals(BeanRolUsuario.RolUsuario.ROL_USUARIO_ANALISTALABORATORIO.getId())) {
 					BeanAsignacion beanAsigAna = new BeanAsignacion();
 					BeanUsuario ana = BeanUsuario.modelToBean(usu);					
 					ana.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_ANALISTALABORATORIO)); //TODO mirar como poner estoo
@@ -227,7 +229,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);					
 				}
 				//si el usuario tiene el rol voluntario y tiene idLaboratorioCentro
-				if((rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()!= null)) {
+				if((rol.getId().equals(BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()!= null))) {
 					BeanAsignacion beanAsigVol = new BeanAsignacion();
 					BeanUsuario vol = BeanUsuario.modelToBean(usu);					
 					vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO)); //TODO mirar como poner estoo					
@@ -238,7 +240,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
 				}				
 				//si el usuario tiene el rol voluntario y no tiene idLaboratorioCentro
-				if((rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()== null)) {
+				if((rol.getId().equals(BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()== null))) {
 					//si tiene rol VOLUNTARIO y no está asignado a ningun laboratorioCentro
 					BeanAsignacion beanAsigVolSinCentro = new BeanAsignacion();
 					BeanUsuario beanUsuVolSinCentro = BeanUsuario.modelToBean(usu);
@@ -254,6 +256,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		}
 		beanAnalisis.setAsignacionUsuarioLogado(beanAsignacionUsuarioLogado);
 		beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
+		System.out.println("beanAnalisis vale: " + beanAnalisis.toString());
 		bean.setBeanAnalisis(beanAnalisis);
 		BeanResultado beanResultado = new BeanResultado();
 		bean.setResultado(beanResultado.asignarTipoEstadoYCodNum(muestra.getResultado()).getResultadoMuestra().getDescripcion());

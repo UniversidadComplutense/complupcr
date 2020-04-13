@@ -65,8 +65,12 @@ public class BeanAnalisis {
 	@Override
 	public String toString() {
 		return "BeanAnalisis [resultadoAnalisis=" + resultadoAnalisis + ", fechaResultadoAnalisis="
-				+ fechaResultadoAnalisis + ", beanListaAsignaciones=" + beanListaAsignaciones + "]";
+				+ fechaResultadoAnalisis + ", beanListaAsignaciones=" + beanListaAsignaciones
+				+ ", asignacionUsuarioLogado=" + asignacionUsuarioLogado + "]";
 	}
+
+
+	
 
 	
 

@@ -11,9 +11,6 @@
 <div class="container">	
 
 
-<!-- <form id="formularioDevolverPlacas" action="#"
-			th:action="@{/analisis/devolverPlacas}" method="post"
-			role="form" th:object="${guardarCogerYDevolverPlacasBean}"> -->
 <fieldset class="form-group border p-2">	
 	<div id="placasPendientes" class="container">
 		<div class="row justify-content-center mt-1, titulo-menu">
@@ -157,7 +154,154 @@
 	  </div>
 	</div>
 </fieldset>	
-</form>	
+
+<fieldset class="form-group border p-2">	
+	<div id="placasValoradas" class="container">
+		<div class="row justify-content-center mt-1, titulo-menu">
+			<h5>PLACAS VALORADAS</h5>
+		</div>
+		<div th:if="${mensaje !=null}"
+						class="alert alert-success alert-dismissible fade show"
+						role="alert">
+						<label th:text="${mensaje}"></label>
+						<button type="button" class="close" data-dismiss="alert"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+		</div>
+		<div class="row justify-content-center mt-3">
+		    <div class="col-lg-12">
+				<table class="table">
+				  <thead class="thead-light">
+				    <tr>
+				      <!-- <th scope="col"><input class="form-check-input, justify-content-center" type="checkbox" value="" id="" disabled></th> -->
+				      <th scope="col">Identificador</th>
+				      <th scope="col">Laboratorio</th>
+				      <th scope="col">Fecha asignación</th>
+				      <th scope="col">Nº de muestras</th>
+				      <th scope="col">Muestras</th>	
+				      <th scope="col">Acciones</th>			      
+				    </tr>
+				  </thead>
+				  <tbody th:if="${listaPlacasAsignadasParaRevisionYaRevisadas!= null}" th:each="placaAsignadaYaRevisada : ${listaPlacasAsignadasParaRevisionYaRevisadas}">
+				    <tr>
+				      <!-- <td>
+				      	<input class="form-check-input, justify-content-center" type="checkbox" th:field="*{listaIdsPlacasSeleccionadosParaDevolver}" name="certificates" th:value="${placaAsignada.id}"/>
+				      </td> -->
+				      <td><span th:text="${placaAsignadaYaRevisada.id}"></span></td>
+				      <td><span th:text="${placaAsignadaYaRevisada.laboratorioCentro.nombre}"></span></td>
+				      <td><span th:text="${#dates.format(placaAsignadaYaRevisada.fechaAsignacionAAnalistaLogado, 'dd/MM/yyyy')}"></span></td>				     
+				      <td><span th:text="${#lists.size(placaAsignadaYaRevisada.muestras)}"></span></td>
+				      <td>
+				      <div th:if="${#lists.size(placaAsignadaYaRevisada.muestras) > 0}">								
+							<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${placaAsignadaYaRevisada.id}" style="cursor: pointer;" title="Ver muestras">
+								<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+							</a>
+							<span th:text="${#lists.size(placaAsignadaYaRevisada.muestras)}"></span>
+							
+							<!-- MODAL MUESTRAS DE PLACA ASIGNADA YA REVISADA-->							
+							<div class="modal fade" th:id="modal-warning+${placaAsignadaYaRevisada.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-xl" role="document">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">Muestras Placa - <b><span th:text="${placaAsignadaYaRevisada.id}"/></b> con <span th:text="${#lists.size(placaAsignadaYaRevisada.muestras)}"/> muestras</h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	<!-- Muestras de la placa -->
+								          	<div id="tablaMuestras" class="tableFixHead">
+												<table>
+													<thead class="thead-light">	
+									    				<tr>
+										      				<th>Id</th>
+															<th>Etiqueta</th>
+															<th>Ref. interna</th>
+																														
+															<!--<th>Placa</th> 
+															<th>Fecha envío</th>
+															<th>Fecha resultado</th>
+															<th>Resultado</th>
+															<th>Notificado</th> -->
+															<th>Estado</th>
+															<th>Usuario</th>
+															<th>fechaAsignacion</th>
+															<th>valoracion</th>
+															<th>fecha valoracion</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${placaAsignadaYaRevisada.muestras != null}" th:each="muestra : ${placaAsignadaYaRevisada.muestras}">
+															<td><span th:text="${muestra.id}"></span></td>
+															<td><span th:text="${muestra.etiquetaMuestra}"></span></td>					
+															<td><span th:text="${muestra.refInternaMuestra}"></span></td>
+															<!-- 
+															<td><span th:text="${muestra.idPlacaLaboratorio}"></span></td>															
+															<td><span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span></td>
+															<td><span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/MM/yyyy')}"></span></td>
+															<td><span th:text="${muestra.estadoMuestra}"></span></td>		
+															<td><span th:text="${muestra.notificado} ? 'Sí' : 'No'"></span></td>	
+															-->	
+															<td><span th:text="${muestra.estadoMuestra}"></span></td>
+															
+															<td><span th:text="${muestra.beanAnalisis.asignacionUsuarioLogado.beanUsuario.id}"></span></td>
+															<td><span th:text="${#dates.format(muestra.beanAnalisis.asignacionUsuarioLogado.fechaAsignacion, 'dd/MM/yyyy')}"></span></td>															
+															<td><span th:text="${muestra.beanAnalisis.asignacionUsuarioLogado.valoracion}"></span></td>
+															<td><span th:text="${#dates.format(muestra.beanAnalisis.asignacionUsuarioLogado.fechaValoracion, 'dd/MM/yyyy')}"></span></td>
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>							        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+							<!-- FIN MODAL MUESTRAS DE PLACA ASIGNADA YA REVISADA-->
+														
+					  </div>
+					  </td>
+							
+						
+						<td>
+							<!-- ACCIONES-->
+					         <!-- <a th:href="@{/analisis/asignarPlaca(idPlaca=${placaAsignada.id} )}" style="color:black" data-toggle="tooltip" title="Asignar">					         
+					          <i class="fa fa-child" aria-hidden="true" style="font-size: 1.2em;"></i>
+					         </a> -->
+					         <!-- 
+					         <a href=# data-toggle="tooltip" style="color:black" title="Ver documentación">					         
+					          <i class="fa fa-file-text-o" aria-hidden="true" style="font-size: 1.2em;"></i>
+					         </a> -->					         
+					         <!-- TODO - PENDIENTE DE OCULTAR -->					         
+						     <a style="color:black;cursor: pointer;" th:href="@{/documento/placaLaboratorio(id=${placaAsignadaYaRevisada.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_PLACA_LABORATORIO_DESDE_REVISARPLACAS_ANALISTA})}" title="Documentos">
+						       <i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;"></i>
+						     </a>
+						     <!-- Son placas ya valoradas, aquí impedimos que se puedan cargar resultados porque ya se han cargado -->
+						     <!-- 
+						     <a href=# data-toggle="tooltip" style="color:black" title="Cargar resultados">					         
+					          <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size: 1.2em;"></i>					         
+					         </a>
+					          -->					         
+						</td>					
+				      				      
+				    </tr>				   				    
+				  </tbody>
+				</table>
+				<!-- <div class="container">
+					<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalMarcarPlacaParaResultados">Devolver los seleccionados</button>			    
+				</div> -->
+				<!-- <div class="col-1">
+				<input type="submit" class="btn btn-secondary"
+					value="Devolver los seleccionados"></input>
+				</div> -->
+			</div>									  		
+	  </div>
+	</div>
+</fieldset>	
+
 
 
 

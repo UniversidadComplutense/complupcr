@@ -90,7 +90,7 @@ public class PlacaLaboratorioCentroAsignacionesAnalistaBean extends PlacaLaborat
 			for(UsuarioMuestra usuMuestra: muestra.getUsuarioMuestras()) {
 				Usuario usu = usuMuestra.getUsuario();
 				//si el usuario es el usuario logado rellenamos el bean				
-				if(usu.getId()==idUsuarioAnalistaLogado) {						
+				if(usu.getId().equals(idUsuarioAnalistaLogado)) {						
 					BeanUsuario beanUsuLogado = BeanUsuario.modelToBean(usu);
 					//no puedo asociarle el rol porque puede tener varios
 					//BeanRolUsuario beanRolUsuario = new BeanRolUsuario();				
@@ -106,7 +106,7 @@ public class PlacaLaboratorioCentroAsignacionesAnalistaBean extends PlacaLaborat
 				
 				for(Rol rol: usu.getRols()) {
 					//si el usuario tiene el rol analista
-					if(rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_ANALISTALABORATORIO.getId()) {
+					if(rol.getId().equals(BeanRolUsuario.RolUsuario.ROL_USUARIO_ANALISTALABORATORIO.getId())) {
 						//si tiene rol ANALISTALABORATORIO
 						BeanAsignacion beanAsigAna = new BeanAsignacion();
 						BeanUsuario beanUsuAnalista = BeanUsuario.modelToBean(usu);
@@ -117,7 +117,7 @@ public class PlacaLaboratorioCentroAsignacionesAnalistaBean extends PlacaLaborat
 						beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);
 					}
 					//si el usuario tiene el rol voluntario y tiene idLaboratorioCentro
-					if((rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()!= null)) {
+					if((rol.getId().equals(BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()!= null))) {
 						//si tiene rol VOLUNTARIO
 						BeanAsignacion beanAsigVol = new BeanAsignacion();
 						BeanUsuario beanUsuVol = BeanUsuario.modelToBean(usu);
@@ -128,7 +128,7 @@ public class PlacaLaboratorioCentroAsignacionesAnalistaBean extends PlacaLaborat
 						beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
 					}
 					//si el usuario tiene el rol voluntario y no tiene idLaboratorioCentro
-					if((rol.getId()== BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()== null)) {
+					if((rol.getId().equals(BeanRolUsuario.RolUsuario.ROL_USUARIO_VOLUNTARIO.getId()) && (usu.getIdLaboratorioCentro()== null))) {
 						//si tiene rol VOLUNTARIO y no está asignado a ningun laboratorioCentro
 						BeanAsignacion beanAsigVolSinCentro = new BeanAsignacion();
 						BeanUsuario beanUsuVolSinCentro = BeanUsuario.modelToBean(usu);
@@ -153,6 +153,11 @@ public class PlacaLaboratorioCentroAsignacionesAnalistaBean extends PlacaLaborat
 
 	
 
+	}
+	@Override
+	public String toString() {
+		return "PlacaLaboratorioCentroAsignacionesAnalistaBean [idAnalistaLogado=" + idAnalistaLogado
+				+ ", fechaAsignacionAAnalistaLogado=" + fechaAsignacionAAnalistaLogado + "]";
 	}
 		
 		
@@ -197,4 +202,9 @@ public class PlacaLaboratorioCentroAsignacionesAnalistaBean extends PlacaLaborat
 	}
 
 */
+	
+	
+	
+	
+	
 }

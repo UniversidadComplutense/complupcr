@@ -658,23 +658,24 @@ public class AnalisisControlador {
 			
 			System.out.println("estoy en listarPlacasAsignadasAnalistaGET");
 			
-			//recupero el usuario logado			
+			//recupero el usuario logado
 			Usuario user = sesionServicio.getUsuario();
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 			
-			//buscamos las placas pendientes de revisar por el analista
+			/*
+			//si uso el sesionServicio tengo problemas cuando se pierde la sesion, si uso el securityContextHolder si no hay sesion lo hace bien y me lleva a la pagina de inicio			
+			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			Usuario user = pcrUserDetails.getUsuario();
+			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
+			*/
+			
+			
+			
+			//Placas Pendientes: buscamos las placas pendientes de revisar por el analista
 			//serán aquellas placas cuyas muestras hayan sido asignadas al usuario logado y cuyas muestras no tengan ya valoración por el analista
 			//son las que están asignadas al analista para que las revise subiendo el excel
-
-			/*
-			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
-			// del centro del usuario jefe logado
-			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
-			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
-			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
-			List<PlacaLaboratorioCentroBean> listaPlacasListasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaListaParaAnalisis, pageable).getContent();
-			System.out.println("listaPlacasListasParaAnalisis tiene: "+ listaPlacasListasParaAnalisis.size());
-			*/
+		
 			
 			// Buscamos las placas en estado PLACA_ASIGNADA_PARA_ANALISIS cuyas muestras esten asignadas al usuario logado con estado 'MUESTRA_ASIGNADA_ANALISTA'
 			//y que no tengan aun valoracion por el analista			 
@@ -686,11 +687,34 @@ public class AnalisisControlador {
 			criteriosBusquedaPlacaAsignadaParaRevision.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum());
 			criteriosBusquedaPlacaAsignadaParaRevision.setValoracion(null);
 			List<PlacaLaboratorioCentroAsignacionesAnalistaBean> listaPlacasAsignadasParaRevision = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevision, pageable).getContent();
-			System.out.println("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.size());			
+			System.out.println("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.size());
+			System.out.println("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.toString());
+			
+			
+			//Placas Valoradas por analista: 
+			//serán aquellas placas cuyas muestras hayan sido asignadas al usuario logado y cuyas muestras ya tengan una valoración por el analista
+			//son las que están asignadas al analista para las que ya ha cargado el excel con las valoraciones de las muestras
+		
+			
+			// Buscamos las placas en estado PLACA_ASIGNADA_PARA_ANALISIS cuyas muestras esten asignadas al usuario logado con estado 'MUESTRA_ASIGNADA_ANALISTA'
+			//y que tengan una valoracion por el analista			 
+			
+			BusquedaPlacaLaboratorioAnalistaBean criteriosBusquedaPlacaAsignadaParaRevisionYaValorada = new BusquedaPlacaLaboratorioAnalistaBean();			
+			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdEstadoPlaca(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
+			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
+			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdAnalistaMuestras(user.getId());
+			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum());
+			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setValoracion("X"); //pongo cualquier dato distinto de null
+			List<PlacaLaboratorioCentroAsignacionesAnalistaBean> listaPlacasAsignadasParaRevisionYaRevisadas = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevisionYaValorada, pageable).getContent();
+			System.out.println("listaPlacasAsignadasParaRevisionYaRevisadas tiene: "+ listaPlacasAsignadasParaRevisionYaRevisadas.size());
+			
+			
+			
 			
 			
 			//vista.addObject("listaPlacasListasParaAnalisis", listaPlacasListasParaAnalisis);
 			vista.addObject("listaPlacasAsignadasParaRevision", listaPlacasAsignadasParaRevision);
+			vista.addObject("listaPlacasAsignadasParaRevisionYaRevisadas", listaPlacasAsignadasParaRevisionYaRevisadas);
 			
 			return vista;
 

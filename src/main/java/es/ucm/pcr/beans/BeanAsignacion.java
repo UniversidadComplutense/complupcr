@@ -59,11 +59,14 @@ public class BeanAsignacion {
 		this.fechaValoracion = fechaValoracion;
 	}
 
+
 	@Override
 	public String toString() {
 		return "BeanAsignacion [beanUsuario=" + beanUsuario + ", fechaAsignacion=" + fechaAsignacion + ", valoracion="
 				+ valoracion + ", fechaValoracion=" + fechaValoracion + "]";
 	}
+
+	
 
 	
 		
