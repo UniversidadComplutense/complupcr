@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 
+import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
+
 
 public class LoteBusquedaBean {
 
@@ -14,6 +16,7 @@ public class LoteBusquedaBean {
 	private Date fechaEnvioIni;
 	private Date fechaEnvioFin;
 	private Integer idCentro;
+	private LaboratorioVisavet laboratorioVisavet;
 	
 	public LoteBusquedaBean() {
 		super();		
@@ -89,5 +92,14 @@ public class LoteBusquedaBean {
 	public String getCriterioNumLote() {
 		return StringUtils.isBlank(numLote) ? null : "%" + numLote + "%";
 	}
+
+	public LaboratorioVisavet getLaboratorioVisavet() {
+		return laboratorioVisavet;
+	}
+
+	public void setLaboratorioVisavet(LaboratorioVisavet laboratorioVisavet) {
+		this.laboratorioVisavet = laboratorioVisavet;
+	}
+
 	
 }

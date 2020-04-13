@@ -128,7 +128,7 @@ public class EnviocorreoImp implements Enviocorreo {
 			}
 			String perfilesEjecucionActivos = System.getProperty("spring.profiles.active");
 //			if (perfilesEjecucionActivos.equals("desarrollo") || perfilesEjecucionActivos.equals("integracion"))
-			if (perfilesEjecucionActivos.contains("desarrollo") || perfilesEjecucionActivos.contains("integracion")) {
+			if (perfilesEjecucionActivos.contains("desarrollo")) {
 				helper.setTo("fherasm@ucm.es");
 			}
 
@@ -140,9 +140,9 @@ public class EnviocorreoImp implements Enviocorreo {
 
 			String paginahtml =
 					// Pongo texto de correo para Titulos propios
-					"<html><head> <title>COVID-19</title>" + "<meta http-equiv=" + quote + "Content-Type" + quote
+					"<html><head> <title>PCR Covid-19</title>" + "<meta http-equiv=" + quote + "Content-Type" + quote
 							+ " content=" + quote + "text/html" + quote + "; charset=utf-8" + quote + "/>"
-							+ "</head> <body> <h2 style=\"background-color: orange;color: white;font-size: 3em;font-family: Verdana;font-size: 32px;padding: 0.2em 1em;text-align: center;margin: 10;\">COVID-19</h2>"
+							+ "</head> <body> <h2 style=\"background-color: orange;color: white;font-size: 3em;font-family: Verdana;font-size: 32px;padding: 0.2em 1em;text-align: center;margin: 10;\">PCR Covid-19</h2>"
 							+ "<div align=\"center\">" + " <p> " + cabecera + " </p>	" + " <p> " + texto
 							+ " </p>	" + " <p> " + pie + " </p>	" + "</div>" + "</body> </html>";
 
@@ -200,7 +200,7 @@ public class EnviocorreoImp implements Enviocorreo {
 		String url = contextPath + "/modificarContrasena?id=" + user.getId() + "&token=" + token;
 		String message = "<p>Hola " + user.getNombre()
 				+ ",</p><p>Puede realizar el cambio de contraseña a través del siguente enlace:</p>";
-		return constructEmail("Restablecer contraseña COVID-19",
+		return constructEmail("Restablecer contraseña PCR Covid-19",
 				message + " <p><a href=\"" + url + "\">Cambio de contraseña<a> </p><p> Un cordial saludo.</p>", user);
 	}
 

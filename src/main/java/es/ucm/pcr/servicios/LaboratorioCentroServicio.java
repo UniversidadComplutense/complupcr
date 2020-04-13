@@ -58,7 +58,7 @@ public interface LaboratorioCentroServicio {
 	 * @param LaboratorioCentro
 	 * @return void >
 	 */
-	public void guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception;
+	public LaboratorioCentro guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception;
 	
 	/**
 	 * Borrar Laboratorio
@@ -78,7 +78,9 @@ public interface LaboratorioCentroServicio {
 	
 	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable);
 	PlacaLaboratorioCentroBean buscarPlaca (Integer id);
-	PlacaLaboratorioCentroBean guardarPlaca (PlacaLaboratorioCentroBean placaLaboratorioCentroBean);	
+	PlacaLaboratorioCentroBean guardarPlaca (PlacaLaboratorioCentroBean placaLaboratorioCentroBean);
+	public void finalizarPCR(Integer id);
+	public void asignarEquipoPCR(Integer id);
 	
 	public PlacaLaboratorioCentroAsignacionesBean buscarPlacaAsignaciones(Integer id);
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda, Pageable pageable); 	
@@ -95,4 +97,6 @@ public interface LaboratorioCentroServicio {
 	
 	
 	public BeanLaboratorioCentro buscarLaboratorioById(Integer id);
+
+
 }	

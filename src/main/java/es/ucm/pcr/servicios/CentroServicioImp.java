@@ -93,8 +93,8 @@ public class CentroServicioImp implements CentroServicio{
 		return mapaCentros;
 	}
 	
-	public void guardarCentro (Centro centro) throws Exception{
-		centroRepositorio.save(centro);
+	public Centro guardarCentro (Centro centro) throws Exception{
+		return centroRepositorio.save(centro);
 	}
 	
 	public void BorrarCentro (Integer idCentro) throws Exception{

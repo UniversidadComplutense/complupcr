@@ -17,10 +17,10 @@
 
 	<properties>
 		<java.version>11</java.version>
-			<javax.mail.version>1.4.7</javax.mail.version>
-	
-	 	<net.sf.jasperreports.version>6.2.0</net.sf.jasperreports.version> 
-	
+		<javax.mail.version>1.4.7</javax.mail.version>
+
+		<net.sf.jasperreports.version>6.2.0</net.sf.jasperreports.version>
+
 	</properties>
 
 	<dependencies>
@@ -65,6 +65,20 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- TEST CONTAINER DEPENDENCIES -->
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers</artifactId>
+			<version>1.13.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>mysql</artifactId>
+			<version>1.13.0</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -87,10 +101,10 @@
 					<groupId>bouncycastle</groupId>
 					<artifactId>bcprov-jdk14</artifactId>
 				</exclusion>
-				
+
 			</exclusions>
 		</dependency>
-		
+
 		<!-- mail -->
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -104,8 +118,8 @@
 			<groupId>org.springframework.integration</groupId>
 			<artifactId>spring-integration-mail</artifactId>
 		</dependency>
-		
-	
+
+
 	</dependencies>
 
 	<build>

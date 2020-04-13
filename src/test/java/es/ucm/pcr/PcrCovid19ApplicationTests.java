@@ -7,12 +7,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@ActiveProfiles(profiles = "desarrollolocal")
+@ActiveProfiles(profiles = "test")
 @SpringBootTest
-class PcrCovid19ApplicationTests {
+public class PcrCovid19ApplicationTests {
 
 	@Test
-	void contextLoads() {
+	public void contextLoads() {
 	}
 
 }

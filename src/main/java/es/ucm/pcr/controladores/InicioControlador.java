@@ -105,7 +105,7 @@ public class InicioControlador {
 		usuarioServicio.createPasswordResetTokenForUser(user, token);
 		SimpleMailMessage simpleMailMessage = envioCorreoImp.constructResetTokenEmail(envioCorreoImp.getAppUrl(request), token, user);
 		envioCorreoImp.send(userEmail, simpleMailMessage.getSubject(), simpleMailMessage.getText(), null, "",
-				"<p><strong>Este es un correo automático enviado por la aplicación COVID-19.</strong></p>"
+				"<p><strong>Este es un correo automático enviado por la aplicación PCR Covid-19.</strong></p>"
 						+ "<p><strong>No responda a este mensaje.</strong></p>",
 				"");
 		return "redirect:/regenerarContrasena?enviado";

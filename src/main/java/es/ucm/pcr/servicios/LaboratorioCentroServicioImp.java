@@ -2,13 +2,13 @@ package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,6 @@ import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
-import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
@@ -128,14 +127,15 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		return mapalaboratorioCentro;
 	}
 	
-	public void guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception{
-		laboratorioCentroRepositorio.save(laboratorioCentro);
+	public LaboratorioCentro guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception{
+		return laboratorioCentroRepositorio.save(laboratorioCentro);
 	}
 	
 	public void borrarLaboratorioCentro (Integer idLaboratorioCentro) throws Exception{
 		laboratorioCentroRepositorio.deleteById(idLaboratorioCentro);
 	}
 	
+	@Transactional
 	public Optional <LaboratorioCentro> buscarLaboratorioCentroPorId (Integer idLaboratorioCentro) throws Exception{
 		return laboratorioCentroRepositorio.findById(idLaboratorioCentro);
 	}
@@ -180,6 +180,32 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		return new PlacaLaboratorioCentroBean();
 	}
 
+	// JAVI
+	@Override
+	public void finalizarPCR(Integer id) {				
+		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
+		if (placa.isPresent()) {
+			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()) {
+				placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_FINALIZADA_PCR.getCodNum()));
+				placaLaboratorioRepositorio.save(placa.get());
+			}			
+		}
+	}
+	
+	// JAVI
+	@Override
+	public void asignarEquipoPCR(Integer id) {				
+		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
+		if (placa.isPresent()) {
+			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_INICIADA.getCodNum()) {
+				
+				//TODO asignar a un equipo del laboratorio si así nos lo piden finalmente
+				
+				placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()));
+				placaLaboratorioRepositorio.save(placa.get());
+			}			
+		}
+	}
 
 	//Diana- metodos para jefe de servicio (replica de metodos de Javi con mi bean)
 	

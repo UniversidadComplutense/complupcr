@@ -28,7 +28,7 @@ public interface PlacaVisavetRepositorio extends JpaRepository<PlacaVisavet, Int
 			+ "(:#{#params.fechaEnviadaFin} is null or placa.fechaEnviadaLaboratorioCentro <= :#{#params.fechaEnviadaFin}) and "
 			+ "(:#{#params.fechaRecepcionInicio} is null or placa.fechaRecepcionLaboratorioCentro >= :#{#params.fechaRecepcionInicio}) and "
 			+ "(:#{#params.fechaRecepcionFin} is null or placa.fechaRecepcionLaboratorioCentro <= :#{#params.fechaRecepcionFin}) and "
-			+ "(:#{#params.idEstadoPlaca} is null or placa.estadoPlacaVisavet.id = :#{#params.idEstadoPlaca}) and" 
+			+ "(:#{#params.idEstadoPlaca} is null or placa.estadoPlacaVisavet.id = :#{#params.idEstadoPlaca}) and " 
 			+ "(:#{#params.idLaboratorioCentro} is null or placa.laboratorioCentro.id = :#{#params.idLaboratorioCentro})")
 	public Page<PlacaVisavet> findByParams(@Param("params") BusquedaRecepcionPlacasVisavetBean params,
 			Pageable pageable);	

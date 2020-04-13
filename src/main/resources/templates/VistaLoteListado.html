@@ -80,25 +80,25 @@
 			<table class="table">
 				<thead class="thead-light">	
 	    			<tr>
-	      				<th scope="col">Código</th>
-						<th scope="col">Laboratorio</th>
-						<th scope="col">Estado</th>
-						<th scope="col">Fecha envío</th>
-						<th scope="col">Capacidad</th>
-						<!-- <th scope="col">Numero muestras</th>-->
-						<th scope="col">Muestras</th>
-						<th scope="col">Acciones</th>
+	      				<th class="p-1" scope="col">Código</th>
+						<th class="p-1" scope="col">Laboratorio</th>
+						<th class="p-1" scope="col">Estado</th>
+						<th class="p-1" scope="col">Fecha envío</th>
+						<th class="p-1" scope="col">Capacidad</th>
+						<!-- <th class="p-1" scope="col">Numero muestras</th>-->
+						<th class="p-1" scope="col">Muestras</th>
+						<th class="p-1" scope="col">Acciones</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:if="${listadoLotes != null}" th:each="lote : ${listadoLotes}">
-						<td><span th:text="${lote.numLote}"></span></td>					
-						<td><span th:text="${lote.descLaboratorio}"></span></td>
-						<td><span th:text="${lote.descEstado}"></span></td>
-						<td><span th:text="${#dates.format(lote.fechaEnvio, 'dd/MM/yyyy')}"></span></td>
-						<td><span th:text="${lote.capacidad}"></span></td>
-						<!-- <td><span th:text="${#lists.size(lote.muestras)}"></span></td> -->
-						<td>
+						<td class="p-1"><span th:text="${lote.numLote}"></span></td>					
+						<td class="p-1"><span th:text="${lote.descLaboratorio}"></span></td>
+						<td class="p-1"><span th:text="${lote.descEstado}"></span></td>
+						<td class="p-1"><span th:text="${#dates.format(lote.fechaEnvio, 'dd/MM/yyyy')}"></span></td>
+						<td class="p-1"><span th:text="${lote.capacidad}"></span></td>
+						<!-- <td class="p-1"><span th:text="${#lists.size(lote.muestras)}"></span></td> -->
+						<td class="p-1">
 							<div th:if="${#lists.size(lote.muestras) == 0}">
 								<a style="cursor: pointer;color:grey">
 									<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
@@ -156,7 +156,7 @@
 							</div>
 							<!-- FIN MODAL MUESTRAS -->	
 						</td>
-						<td>
+						<td class="p-1">
 							<!-- ACCIONES -->
 							<a style="color:black" th:href="@{/centroSalud/lote/modificar(id=${lote.id})}" title="Modificar">
 					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
@@ -164,7 +164,7 @@
 					        <a th:if="${#lists.size(lote.muestras) > 0}" style="color:grey;cursor: pointer;" title="Borrar">
 					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>			        
-					        <a th:if="${#lists.size(lote.muestras) == 0}" style="color:black;cursor: pointer;" th:href="@{/centroSalud/lote/borrar(id=${lote.id})}" title="Borrar">
+					        <a th:if="${#lists.size(lote.muestras) == 0}" style="color:black;cursor: pointer;" th:data-href="@{/centroSalud/lote/borrar(id=${lote.id})}" title="Borrar" data-toggle="modal" data-target="#confirm-borrar">
 					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
 					         
@@ -176,14 +176,38 @@
 	</form>
 
 	</div>
-	
+	<!-- Modal confirmación borrado -->
+	<div class="modal fade" id="confirm-borrar" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmación</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>¿Está seguro de que quiere borrar este elemento?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancelar</button>
+					<a class="btn btn-danger btn-borrar">Borrar</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Fin modal -->
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
 	<script type="text/javascript">
     	$('.alert').on('closed.bs.alert', function () {
 		    $('#alertInfo').removeClass('d-none');
 	    });
-	    
+    	$('#confirm-borrar').on('show.bs.modal', function(e) {
+    	    $(this).find('.btn-borrar').attr('href', $(e.relatedTarget).data('href'));
+    	});
     </script>
 </body>
 </html>
