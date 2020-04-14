@@ -11,6 +11,11 @@
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 
 	<div class="container">
+	
+		<form action="#" th:action="@{/gestor/listaUsuarios}" method="post"
+			th:object="${formBeanBusquedaUsuario}" id="FORMBUSQUEDAUSUARIO" role="form" name="formularioBusquedaUsuario">
+		
+	
 		<div class="alert alert-secondary m-1 mt-2" role="alert"
 			id="alertInfo">
 			<label>Gestión de usuarios</label>
@@ -26,8 +31,14 @@
 		</div>
 		<div class="row justify-content-middle m-2">
 			<div class="col-2">
-				<a th:href="@{/gestor/altaUsuario}" class="btn btn-secondary eBtn">Nuevo
-					usuario</a>
+				<a th:href="@{/gestor/altaUsuario}" class="btn btn-secondary eBtn">Nuevo usuario</a>
+			</div>
+			<div class="col-2">
+				<button type="submit" class="btn btn-secondary eBtn">Busqueda</button>
+			</div>
+			<div class="col-5">
+			<input type="text" class="form-control", th:field="${formBeanBusquedaUsuario.busqueda}"
+					th:value="${formBeanBusquedaUsuario.busqueda}" />
 			</div>
 		</div>
 		<div class="row justify-content-center mt-3">
@@ -60,6 +71,9 @@
 			</table>
 
 		</div>
+		</form>
+	</div>
+		
 		<!-- Modal confirmación borrado -->
 	<div class="modal fade" id="confirm-borrar" tabindex="-1" role="dialog">
 		<div class="modal-dialog" role="document">
