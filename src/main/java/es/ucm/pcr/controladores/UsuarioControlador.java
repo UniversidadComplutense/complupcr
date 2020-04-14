@@ -101,7 +101,6 @@ public class UsuarioControlador {
 		// añadimos los centros
 		Map<Integer,String> mapaCentros = centroServicio.mapaCentros(centroServicio.listaCentrosOrdenada());
 		vista.addObject("mapaCentros", mapaCentros);
-
 		
 		return vista;
 	}
@@ -117,7 +116,7 @@ public class UsuarioControlador {
 		if (beanUsuario.getAccion().equals("A"))
 		{
 			try {
-			usuarioServicio.guardar(usuarioServicio.mapeoBeanEntidadUsuarioAlta(beanUsuario, roles));
+			usuarioServicio.save(usuarioServicio.mapeoBeanEntidadUsuarioAlta(beanUsuario, roles));
 			} catch (DataIntegrityViolationException e) {
 				mensaje = "Ya existe un usuario con ese email.";
 				session.setAttribute("mensajeError", mensaje);
@@ -132,9 +131,9 @@ public class UsuarioControlador {
 			// No todos los campos son modificables, el mail por ejemplo
 			// va asociado a la pwd, y es único, por lo que no modificable
 			// Buscamos el usuario a modificar, y volcamos los datos recogidos por el formulario
-			Optional<Usuario> usuario = usuarioServicio.buscarUsuarioPorId(beanUsuario.getId());
+			Optional<Usuario> usuario = usuarioServicio.findById(beanUsuario.getId());
 			// añadimos campos del formulario
-			usuarioServicio.guardar(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get(), roles));
+			usuarioServicio.save(usuarioServicio.mapeoBeanEntidadUsuarioModificar(beanUsuario, usuario.get(), roles));
 		}
 
 		// Volvemos a centros
@@ -150,7 +149,7 @@ public class UsuarioControlador {
 		ModelAndView vista = new ModelAndView("VistaUsuario");
 		
 		// Busco el usuario a modificar
-		Optional<Usuario> usuario = usuarioServicio.buscarUsuarioPorId(idUsuario);
+		Optional<Usuario> usuario = usuarioServicio.findById(idUsuario);
 		// cargo el beanUsuario con lo datos del usuario a modificar
 		BeanUsuarioGestion beanUsuario = usuarioServicio.mapeoEntidadBeanUsuario(usuario.get());
 		
@@ -182,9 +181,9 @@ public class UsuarioControlador {
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView borrarUsuario(@RequestParam("idUsuario") Integer idUsuario, HttpSession session) throws Exception {
 		try {
-		usuarioServicio.borrarUsuario(idUsuario);
+		usuarioServicio.deleteById(idUsuario);
 		} catch (DataIntegrityViolationException e) {
-			String mensaje = "No se puede borrar el usuario " + usuarioServicio.buscarUsuarioPorId(idUsuario).get().getEmail() + " porque tiene información asociada.";
+			String mensaje = "No se puede borrar el usuario " + usuarioServicio.findById(idUsuario).get().getEmail() + " porque tiene información asociada.";
 			session.setAttribute("mensajeError", mensaje);
 		}
 			

@@ -1,7 +1,6 @@
 package es.ucm.pcr.controladores;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,11 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanLaboratorioVisavet;
-
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
-
-import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
-import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 
 @Controller
@@ -73,16 +68,16 @@ public class LaboratorioVisavetControlador {
 			// Damos de alta nuevo laboratorioVisavet
 			if (beanLaboratorioVisavet.getAccion().equals("A"))
 			{
-				laboratorioVisavetServicio.guardarLaboratorioVisavet(laboratorioVisavetServicio.mapeoBeanEntidadLaboratorioVisavet(beanLaboratorioVisavet));
+				laboratorioVisavetServicio.save(laboratorioVisavetServicio.mapeoBeanEntidadLaboratorioVisavet(beanLaboratorioVisavet));
 				
 			}
 			// Modificamos laboratorioVisavet existente, menos mail
 			if (beanLaboratorioVisavet.getAccion().equals("M"))
 			{	
 				// Buscamos el laboratorioVisavet a modificar, y volcamos los datos recogidos por el formulario
-				Optional<LaboratorioVisavet> laboratorioVisavet = laboratorioVisavetServicio.buscarLaboratorioVisavetPorId(beanLaboratorioVisavet.getId());
+				Optional<LaboratorioVisavet> laboratorioVisavet = laboratorioVisavetServicio.findById(beanLaboratorioVisavet.getId());
 				// añadimos campos del formulario
-				laboratorioVisavetServicio.guardarLaboratorioVisavet(laboratorioVisavetServicio.mapeoBeanEntidadLaboratorioVisavet(beanLaboratorioVisavet));
+				laboratorioVisavetServicio.save(laboratorioVisavetServicio.mapeoBeanEntidadLaboratorioVisavet(beanLaboratorioVisavet));
 			}
 
 			// Volvemos a grabar mas laboratorioVisavet
@@ -98,7 +93,7 @@ public class LaboratorioVisavetControlador {
 			ModelAndView vista = new ModelAndView("VistaLaboratorioVisavet");
 			
 			// Busco el laboratorioVisavet a modificar
-			Optional<LaboratorioVisavet> laboratorioVisavet = laboratorioVisavetServicio.buscarLaboratorioVisavetPorId(idLaboratorioVisavet);
+			Optional<LaboratorioVisavet> laboratorioVisavet = laboratorioVisavetServicio.findById(idLaboratorioVisavet);
 			// cargo el beanLaboratorioVisavet con lo datos del laboratorioVisavet a modificar
 			BeanLaboratorioVisavet beanLaboratorioVisavet = laboratorioVisavetServicio.mapeoEntidadBeanLaboratorioVisavet(laboratorioVisavet.get());
 			
@@ -114,9 +109,9 @@ public class LaboratorioVisavetControlador {
 		@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 		public ModelAndView borrarLaboratorioVisavet(@RequestParam("idLaboratorioVisavet") Integer idLaboratorioVisavet, HttpSession session) throws Exception {
 			try {
-			laboratorioVisavetServicio.borrarLaboratorioVisavet(idLaboratorioVisavet);
+			laboratorioVisavetServicio.deleteById(idLaboratorioVisavet);
 			} catch (DataIntegrityViolationException e) {
-				String mensaje = "No se puede borrar el centro " + laboratorioVisavetServicio.buscarLaboratorioVisavetPorId(idLaboratorioVisavet).get().getNombre() + " porque tiene información asociada.";
+				String mensaje = "No se puede borrar el centro " + laboratorioVisavetServicio.findById(idLaboratorioVisavet).get().getNombre() + " porque tiene información asociada.";
 				session.setAttribute("mensajeError", mensaje);
 			}
 			

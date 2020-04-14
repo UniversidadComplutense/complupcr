@@ -36,6 +36,18 @@ function revisarEstadoBotonRellenarPlaca(){
 	}
 }
 
+// Dar por finalizado PCR de una placa
+function finalizarPCR() {
+    $("#formGuardarFinalizadoPCR").submit();
+}
+
+//Asignar equipo PCR a una placa
+function asignarEquipoPCR() {
+    $("#formGuardarAsignarEquipoPCR").submit();
+}
+
+
+
 
 
 

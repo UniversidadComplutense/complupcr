@@ -27,6 +27,7 @@ import es.ucm.pcr.utilidades.AppUtil;
  * 
  * @author Joni Karppinen
  * @since 20.2.2015
+ * Bueno
  */
 
 @RestController

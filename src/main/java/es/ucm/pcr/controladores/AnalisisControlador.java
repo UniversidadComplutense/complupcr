@@ -785,7 +785,7 @@ public class AnalisisControlador {
 			//recupero el usuario logado
 			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			Usuario user = usuarioServicio.buscarUsuarioPorEmail(pcrUserDetails.getUser().getUsuario().getEmail());
+			Usuario user = usuarioServicio.findByEmail(pcrUserDetails.getUser().getUsuario().getEmail());
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 
 			/*

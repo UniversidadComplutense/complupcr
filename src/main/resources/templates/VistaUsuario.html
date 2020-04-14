@@ -38,10 +38,10 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-
+			
 			<div class="form-group">
 				<label class="text_formulario">Nombre Usuario</label> <input
-					type="text" class="form-control" th:field="${formBeanUsuario.nombre}"
+					type="text" class="form-control", th:field="${formBeanUsuario.nombre}"
 					th:value="${formBeanUsuario.nombre}" required="required" />
 			</div>
 
@@ -99,13 +99,17 @@
 			<div class="form-group">
 				<label class="text_formulario">Roles</label>
 			</div>
-			<div class="form-group">				
+			
+ 			<div class="form-group">						
 				<th:block th:each="rol : ${listaRoles}">
 					<input type="checkbox" name="roles" th:value="${rol.id}"
 						th:checked="${rol.seleccionado}" />
 					<label th:text="${rol.nombre}"></label>
+					<br />
+					
 				</th:block>
 			</div>
+			
 			
 <!-- 			<div class="form-group"> -->
 <!-- 				<label class="text_formulario">Tipo de Centro</label> -->

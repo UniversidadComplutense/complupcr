@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +103,7 @@ public class LoteServicioImpl implements LoteServicio {
 	}
 	
 	@Override
+	@Transactional
 	public LoteCentroBean findById(Integer id) {
 		Lote lote = findByIdLote(id);
 		if (lote != null) {

@@ -67,6 +67,8 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		loteBusquedaBean.setIdEstado(busquedaLotes.getCodNumEstadoSeleccionado());
 		//loteBusquedaBean.setIdLaboratorio("");
 	
+		//Pedro: Añado laborarioVisavet del usuario en la sesión a los parámetros de búsqueda
+		loteBusquedaBean.setLaboratorioVisavet(sesionServicio.getLaboratorioVisavet());
 		
 		Page <LoteListadoBean> pageResultados=loteServicio.findLoteByParam(loteBusquedaBean,pageable);
 		

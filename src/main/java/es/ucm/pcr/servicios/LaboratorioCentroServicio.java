@@ -59,7 +59,7 @@ public interface LaboratorioCentroServicio {
 	 * @param LaboratorioCentro
 	 * @return void >
 	 */
-	public void guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception;
+	public LaboratorioCentro save(LaboratorioCentro laboratorioCentro) throws Exception;
 	
 	/**
 	 * Borrar Laboratorio
@@ -67,7 +67,7 @@ public interface LaboratorioCentroServicio {
 	 * @param Integer idLaboratorioCentro
 	 * @return void >
 	 */
-	public void borrarLaboratorioCentro (Integer idLaboratorioCentro) throws Exception;
+	public void deleteById(Integer idLaboratorioCentro) throws Exception;
 	
 	/**
 	 * Buscat Laboratorio por Id
@@ -75,11 +75,13 @@ public interface LaboratorioCentroServicio {
 	 * @param Integer idLaboratorioCentro
 	 * @return void Optional <LaboratorioCentro>
 	 */
-	public Optional <LaboratorioCentro> buscarLaboratorioCentroPorId (Integer idLaboratorioCentro) throws Exception;
+	public Optional <LaboratorioCentro> findById(Integer idLaboratorioCentro) throws Exception;
 	
 	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable);
 	PlacaLaboratorioCentroBean buscarPlaca (Integer id);
-	PlacaLaboratorioCentroBean guardarPlaca (PlacaLaboratorioCentroBean placaLaboratorioCentroBean);	
+	PlacaLaboratorioCentroBean guardarPlaca (PlacaLaboratorioCentroBean placaLaboratorioCentroBean);
+	public void finalizarPCR(Integer id);
+	public void asignarEquipoPCR(Integer id);
 	
 	public PlacaLaboratorioCentroAsignacionesBean buscarPlacaAsignaciones(Integer id);
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda, Pageable pageable); 	
@@ -99,4 +101,6 @@ public interface LaboratorioCentroServicio {
 	
 	
 	public BeanLaboratorioCentro buscarLaboratorioById(Integer id);
+
+
 }	

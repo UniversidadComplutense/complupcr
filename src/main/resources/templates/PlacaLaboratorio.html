@@ -13,7 +13,7 @@
 	<div class="row justify-content-center mt-1, titulo-menu">
 			<h5></h5>
 	</div>
-	<div th:if="${mostrarMensaje}" class="alert alert-warning">
+	<div th:if="${mensaje != null}" class="alert alert-warning">
 		<span th:text="${mensaje}"></span>
 	</div>
 	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/nueva}" method="post" th:object="${placa}" id="formGuardar" role="form">
@@ -146,10 +146,10 @@
 				<button th:id="btnRellenarPlaca" type="button" th:disabled="disabled" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/rellenar} + '\''" class="btn btn-secondary">Rellenar</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 1}" class="col-3 justify-content-begin mt-3">
-				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/asignarEquipo} + '\''" th:disabled="${nueva}" class="btn btn-secondary">Asignar equipo PCR</button>			
+				<button th:id="btnFinalizarPCR" type="button" th:onclick="asignarEquipoPCR();" th:disabled="${nueva}" class="btn btn-secondary">Asignar equipo PCR</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 2}" class="col-3 justify-content-begin mt-3">
-				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/finalPCR} + '\''" th:disabled="${nueva}" class="btn btn-secondary">Finalizado PCR</button>			
+				<button th:id="btnFinalizarPCR" type="button" th:onclick="finalizarPCR();" th:disabled="${nueva}" class="btn btn-secondary">Dar por finalizado PCR</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 3}" class="col-3 justify-content-begin mt-3">
 				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/resultados} + '\''" th:disabled="${nueva}" class="btn btn-secondary">Asignar resultados PCR</button>			
@@ -158,6 +158,16 @@
 				<button th:id="btnCrearPlaca" th:disabled="${editable == 'false' || placa.numeroMuestras == ''|| placa.placasVisavetSeleccionadas == ''}" type="submit" class="btn btn-secondary">Crear placa</button>
 			</div>			
 		</div>					
+	</form>
+	
+	<!-- formuario para botón 'Dar por finalizado PCR' -->
+	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/finalPCR}" method="post" th:object="${placa}" id="formGuardarFinalizadoPCR" role="form">
+		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
+	</form>
+	
+	<!-- formuario para botón 'Asignar equipo PCR' -->
+	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/asignarEquipo}" method="post" th:object="${placa}" id="formGuardarAsignarEquipoPCR" role="form">
+		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
 	</form>
 
 	</div>

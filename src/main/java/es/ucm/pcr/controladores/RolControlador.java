@@ -18,13 +18,13 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanRol;
 import es.ucm.pcr.modelo.orm.Rol;
-import es.ucm.pcr.repositorio.RolRepositorio;
+import es.ucm.pcr.servicios.RolServicio;
 
 @Controller
 public class RolControlador {
 	
 	@Autowired
-	RolRepositorio rolRepositorio;
+	RolServicio rolServicio;
 	
 	//	Muestra una lista ordenada ap1, ap2,nombre con los rols
 	// Punto de entrada a la gestión de rols
@@ -34,7 +34,7 @@ public class RolControlador {
 	
 		// cargo todos los rols de BBDD
 		List<BeanRol> listaRoles = new ArrayList<BeanRol>();
-		for (Rol rol: rolRepositorio.findAll())
+		for (Rol rol: rolServicio.findAll())
 		{
 			listaRoles.add(new BeanRol(rol.getId(), rol.getNombre(), true, "L"));
 		}
@@ -67,7 +67,7 @@ public class RolControlador {
 		{
 			Rol rol = new Rol();
 			rol.setNombre(beanRol.getNombre());
-			rolRepositorio.save(rol);
+			rolServicio.save(rol);
 		}
 		// Modificamos rol existente, menos mail
 		if (beanRol.getAccion().equals("M"))
@@ -75,10 +75,10 @@ public class RolControlador {
 			// No todos los campos son modificables, el mail por ejemplo
 			// va asociado a la pwd, y es único, por lo que no modificable
 			// Buscamos el rol a modificar, y volcamos los datos recogidos por el formulario
-			Optional<Rol> rol = rolRepositorio.findById(beanRol.getId());
+			Optional<Rol> rol = rolServicio.findById(beanRol.getId());
 			// añadimos campos del formulario
 			rol.get().setNombre(beanRol.getNombre());
-			rolRepositorio.save(rol.get());
+			rolServicio.save(rol.get());
 		}
 
 		// Volvemos a grabar mas roles
@@ -93,7 +93,7 @@ public class RolControlador {
 		ModelAndView vista = new ModelAndView("VistaRol");
 		
 		// Busco el rol a modificar
-		Optional<Rol> rol = rolRepositorio.findById(idRol);
+		Optional<Rol> rol = rolServicio.findById(idRol);
 		// cargo el beanRol con lo datos del rol a modificar
 		BeanRol beanRol = new BeanRol();
 		beanRol.setId(rol.get().getId());
@@ -110,7 +110,7 @@ public class RolControlador {
 	@RequestMapping(value = "/gestor/borrarRol", method = RequestMethod.GET)
 	public ModelAndView borrarRol(@RequestParam("idRol") Integer idRol) throws Exception {
 		
-		rolRepositorio.deleteById(idRol);
+		rolServicio.deleteById(idRol);
 		
 		// Volvemos a grabar mas centros
 		ModelAndView vista = new ModelAndView(new RedirectView("/gestor/listaRoles",true));	
