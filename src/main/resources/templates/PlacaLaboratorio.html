@@ -48,7 +48,7 @@
 			</div>					
 		</fieldset>
 		
-		<div th:if="${nueva || rellenable}">
+		<div th:if="${nueva || rellenable || true}">
 		<fieldset id="placasVisavet" class="form-group border p-2">
 			<legend class="w-auto">Placas VISAVET</legend>
 			<!-- PLACAS VISAVET PARA COMBINAR -->
@@ -67,7 +67,7 @@
 					<tbody>
 						<tr th:if="${placa.placasVisavetParaCombinar != null}" th:each="placaVisavet, count : ${placa.placasVisavetParaCombinar}">
 							<td>
-								<input th:id="chkPlaca+${count.index}" class="form-check-input, justify-content-center" type="checkbox" th:value="${placaVisavet.id}" onchange="anotarPlacasSeleccionadas();"/>
+								<input th:id="chkPlaca+${count.index}" class="form-check-input, justify-content-center" type="checkbox" th:checked="${placaVisavet.beanEstado.estado.codNum == 7}" th:value="${placaVisavet.id}" onchange="anotarPlacasSeleccionadas();"/>
 							</td>				
 							<td><span th:text="${placaVisavet.id}"></span></td>									
 							<td><span th:text="${placaVisavet.numeroMuestras}"></span></td>
@@ -85,7 +85,7 @@
 									<span th:text="${#lists.size(placaVisavet.muestras)}"></span>								
 								</div>
 								<!-- MODAL MUESTRAS -->							
-								<div class="modal fade" th:id="modal-warning+${placaVisavetid}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal fade" th:id="modal-warning+${placaVisavet.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
 									<div class="modal-dialog modal-xl" role="document">
 								    	<div class="modal-content">
 								      		<div class="modal-header">
@@ -152,7 +152,7 @@
 				<button th:id="btnFinalizarPCR" type="button" th:onclick="finalizarPCR();" th:disabled="${nueva}" class="btn btn-secondary">Dar por finalizado PCR</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 3}" class="col-3 justify-content-begin mt-3">
-				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/resultados} + '\''" th:disabled="${nueva}" class="btn btn-secondary">Asignar resultados PCR</button>			
+				<button type="button" th:onclick="'window.location.href = \'' + @{/documento/placaLaboratorio?id=} + ${placa.id} + '&url=5' + '\''" th:disabled="${nueva}" class="btn btn-secondary">Asignar resultados PCR</button>			
 			</div>			
 			<div th:if="${nueva}" class="col-2 justify-content-begin mt-3">
 				<button th:id="btnCrearPlaca" th:disabled="${editable == 'false' || placa.numeroMuestras == ''|| placa.placasVisavetSeleccionadas == ''}" type="submit" class="btn btn-secondary">Crear placa</button>

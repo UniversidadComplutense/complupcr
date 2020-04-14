@@ -2,10 +2,12 @@ package es.ucm.pcr.beans;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
+import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaVisavet;
 
@@ -103,17 +105,29 @@ public class PlacaLaboratorioVisavetBean {
 		beanEstado.asignarTipoEstadoYCodNum(BeanEstado.TipoEstado.EstadoPlacaLaboratorioVisavet,
 				placaVisavet.getEstadoPlacaVisavet().getId());
 		bean.setBeanEstado(beanEstado);
-		bean.setNumeroMuestras("" + placaVisavet.getNumeromuestras());
+		if (placaVisavet.getNumeromuestras() == null) {
+			bean.setNumeroMuestras("0");
+		} else {
+			bean.setNumeroMuestras("" + placaVisavet.getNumeromuestras());
+		}
 		bean.setFechaAsignacion(placaVisavet.getFechaAsignadaLaboratorioCentro());
 		bean.setFechaEnvio(placaVisavet.getFechaEnviadaLaboratorioCentro());
 		bean.setFechaRecepcion(placaVisavet.getFechaRecepcionLaboratorioCentro());
 		
 		List<MuestraListadoPlacasLaboratorioBean> listadoMuestras = new ArrayList<MuestraListadoPlacasLaboratorioBean>();
-		Set<Muestra> muestras = placaVisavet.getMuestras();
+
+		// Recuperamos las muestras de la placa Visavet desde el lote
+		
+		Set<Muestra> muestras = new HashSet<Muestra>();
+		
+		Set<Lote> lotes = placaVisavet.getLotes();
+		for (Lote lote : lotes) {
+			muestras.addAll(lote.getMuestras());
+		}
+		
 		for (Muestra muestra : muestras) {
 			MuestraListadoPlacasLaboratorioBean muestraBean = new MuestraListadoPlacasLaboratorioBean();
 			muestraBean.setId(muestra.getId());
-			muestraBean.setIdPlacaVisavet(muestra.getPlacaVisavet().getId());
 			muestraBean.setEstado(muestra.getEstadoMuestra().getDescripcion());
 			muestraBean.setEtiqueta(muestra.getEtiqueta());
 			muestraBean.setRefInterna(muestra.getRefInternaVisavet());

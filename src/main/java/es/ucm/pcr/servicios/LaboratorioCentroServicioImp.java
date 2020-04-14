@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -33,16 +35,22 @@ import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.Paciente;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.PlacaVisavet;
+import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.modelo.orm.UsuarioMuestra;
 import es.ucm.pcr.repositorio.EstadoPlacaLaboratorioRepositorio;
+import es.ucm.pcr.repositorio.EstadoPlacaVisavetRepositorio;
 import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
 import es.ucm.pcr.repositorio.MuestraRepositorio;
 import es.ucm.pcr.repositorio.PlacaLaboratorioRepositorio;
+import es.ucm.pcr.repositorio.PlacaVisavetPlacaLaboratorioRepositorio;
+import es.ucm.pcr.repositorio.PlacaVisavetRepositorio;
 import es.ucm.pcr.repositorio.UsuarioMuestraRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
 
@@ -56,10 +64,16 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	PlacaLaboratorioRepositorio placaLaboratorioRepositorio;
 	
 	@Autowired
+	PlacaVisavetRepositorio placaVisavetRepositorio;
+	
+	@Autowired
 	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
 	
 	@Autowired
 	MuestraRepositorio muestraRepositorio;
+	
+	@Autowired
+	SesionServicio sesionServicio;
 		
 	@Autowired
 	UsuarioRepositorio usuarioRepositorio;	
@@ -68,14 +82,17 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	UsuarioMuestraRepositorio usuarioMuestraRepositorio;	
 	
 	@Autowired
-	EstadoPlacaLaboratorioRepositorio estadoPlacaLaboratorioRepositorio;
-	
+	EstadoPlacaVisavetRepositorio estadoPlacaVisavetRepositorio;
 	
 	@Autowired
-	SesionServicio sesionServicio;
+	EstadoPlacaLaboratorioRepositorio estadoPlacaLaboratorioRepositorio;
+	
+	@Autowired
+	PlacaVisavetPlacaLaboratorioRepositorio placaVisavetPlacaLaboratorioRepositorio;
 	
 	@Autowired
 	private ServicioLog servicioLog;
+	
 	
 	@Autowired
 	MuestraServicio muestraServicio;
@@ -165,11 +182,57 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		return placasLaboratorioCentro;
 	}
 
+	
+	//JAVI
+	@Override
+	public PlacaLaboratorioCentroBean crearPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean) {
+		
+		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
+
+		placa.setFechaCreacion(new Date());
+		placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_INICIADA.getCodNum()));
+		placa.setLaboratorioCentro(new LaboratorioCentro(sesionServicio.getUsuario().getIdLaboratorioCentro()));
+
+		placa = placaLaboratorioRepositorio.save(placa);
+		
+		// Transformamos en un Array el String que viene de la vista con los IDs de las placas Visavet seleccionadas
+		String[] listaIDsPlacasVisavetSeleccinadas = placaLaboratorioCentroBean.getPlacasVisavetSeleccionadas().split(":");
+		
+		// Asignamos a la placa de laboratorio las placas Visavet seleccionadas
+		if (listaIDsPlacasVisavetSeleccinadas.length > 0) {
+			
+			Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>();
+			
+			for (String idPlacaVisavet : listaIDsPlacasVisavetSeleccinadas) {
+
+				PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio = new PlacaVisavetPlacaLaboratorio();
+				PlacaLaboratorio placaLaboratorio = placaLaboratorioRepositorio.getOne(placa.getId());
+				PlacaVisavet placaVisavet = placaVisavetRepositorio.getOne(Integer.valueOf(idPlacaVisavet));
+				
+				// Cambiamos el estado de la placa Visavet a traspasada
+				placaVisavet.setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_TRANSPASADA.getCodNum()));
+				placaVisavet = placaVisavetRepositorio.save(placaVisavet);				
+				placaVisavetPlacaLaboratorio.setPlacaLaboratorio(placaLaboratorio);
+				placaVisavetPlacaLaboratorio.setPlacaVisavet(placaVisavet);
+				
+				placaVisavetPlacaLaboratorioRepositorio.save(placaVisavetPlacaLaboratorio);
+				
+				placaVisavetPlacaLaboratorios.add(placaVisavetPlacaLaboratorio);
+			}
+			placa.setPlacaVisavetPlacaLaboratorios(placaVisavetPlacaLaboratorios);
+			placa = placaLaboratorioRepositorio.save(placa);
+		}		
+		return PlacaLaboratorioCentroBean.modelToBean(placa);
+
+	}
+
+	
 	//JAVI
 	@Override
 	public PlacaLaboratorioCentroBean guardarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean) {
-		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);						
-
+		
+		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
+		
 		// Placa nueva
 		if (placaLaboratorioCentroBean.getId() == null) {
 			placa.setFechaCreacion(new Date());
@@ -184,6 +247,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	// JAVI
 	@Override
 	public PlacaLaboratorioCentroBean buscarPlaca(Integer id) {
+		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
 			return PlacaLaboratorioCentroBean.modelToBean(placa.get());
@@ -193,7 +257,8 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 	// JAVI
 	@Override
-	public void finalizarPCR(Integer id) {				
+	public void finalizarPCR(Integer id) {
+		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
 			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()) {
@@ -205,7 +270,8 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	// JAVI
 	@Override
-	public void asignarEquipoPCR(Integer id) {				
+	public void asignarEquipoPCR(Integer id) {
+		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
 			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_INICIADA.getCodNum()) {
@@ -218,6 +284,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		}
 	}
 
+	
 	//Diana- metodos para jefe de servicio (replica de metodos de Javi con mi bean)
 	
 	@Override
