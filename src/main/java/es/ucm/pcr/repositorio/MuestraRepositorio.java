@@ -1,6 +1,7 @@
 package es.ucm.pcr.repositorio;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import es.ucm.pcr.beans.BeanBusquedaMuestraAnalisis;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.modelo.orm.Muestra;
+import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 
 
 @Repository
@@ -94,5 +96,6 @@ public interface MuestraRepositorio extends PagingAndSortingRepository<Muestra, 
 			Pageable pageable);	
 	
 	
+	Optional<Muestra> findById(Integer id);
 	
 }

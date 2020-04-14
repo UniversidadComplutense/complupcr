@@ -163,7 +163,8 @@
 						<th scope="col">Placa</th>
 						<th scope="col">Fecha envío</th>
 						<th scope="col">Fecha resultado</th>
-						<th scope="col">Resultado</th>						
+						<th scope="col">Resultado</th>
+						<!-- <th scope="col">Estado</th>	 -->						
 						<!-- <th scope="col">Asignar</th> -->
 						<th scope="col">Acciones</th>
 					</tr>
@@ -207,8 +208,11 @@
 							<span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/mm/yyyy')}"></span>
 						</td>
 						<td>
+							<span th:text="${muestra.resultado}"></span>
+						</td>
+						<!-- <td>
 							<span th:text="${muestra.estadoMuestra}"></span>
-						</td>						
+						</td> -->						
 					    <!-- <td>
 					        <a th:href="@{/analisis/asignar(idMuestra=${muestra.id} )}" data-toggle="tooltip" title="Asignar">					         
 					          <i class="fa fa-child" aria-hidden="true"></i>

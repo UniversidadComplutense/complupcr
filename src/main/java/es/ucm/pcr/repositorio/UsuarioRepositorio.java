@@ -42,4 +42,10 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Integer> {
 			+ "(rol.id = :idRol)")			
 	public List<Usuario> findByIdRolAndNotIdLaboratorioCentro(@Param("idRol") Integer idRol);
 	
+	@Query("SELECT usuario FROM Usuario usuario "				
+			+ "WHERE "			
+			+ "(UPPER(usuario.email) like CONCAT('%',UPPER(:#{#busqueda}),'%')) or "		
+			+ "(UPPER(usuario.apellido1) like CONCAT('%',UPPER(:#{#busqueda}),'%'))")	
+	public List<Usuario> findLikeEmailApellido1 (@Param("busqueda") String busqueda);
+
 }

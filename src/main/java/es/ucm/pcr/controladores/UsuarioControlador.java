@@ -18,12 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import es.ucm.pcr.beans.BeanCentro;
+import es.ucm.pcr.beans.BeanBusquedaUsuario;
 import es.ucm.pcr.beans.BeanRol;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
 import es.ucm.pcr.modelo.orm.Usuario;
-import es.ucm.pcr.repositorio.RolRepositorio;
-import es.ucm.pcr.repositorio.UsuarioRepositorio;
 import es.ucm.pcr.servicios.CentroServicio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
@@ -64,8 +62,36 @@ public class UsuarioControlador {
 		listaUsuarios = usuarioServicio.listaUsuariosOrdenada();
 		vista.addObject("listaUsuarios", listaUsuarios);
 		
+		// Bean para la busqueda de usuario
+		BeanBusquedaUsuario beanBusquedaUsuario = new BeanBusquedaUsuario();
+		beanBusquedaUsuario.setBusqueda("Introduzca email o primer apellido");
+		vista.addObject("formBeanBusquedaUsuario", beanBusquedaUsuario);
+		
 		return vista;
 	}
+	
+	
+	//	Muestra una listan de usuarios según criterio de busqueda
+	@RequestMapping(value="/gestor/listaUsuarios", method=RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
+	public ModelAndView busquedaUsuario(
+			@ModelAttribute("formBeanBusquedaUsuario") BeanBusquedaUsuario beanBusquedaUsuario, 
+			HttpSession session) throws Exception {
+		
+		ModelAndView vista = new ModelAndView("VistaGestionUsuario");
+		String mensajeError = (String) session.getAttribute("mensajeError");
+		if (mensajeError != null) {
+			vista.addObject("mensajeError", mensajeError);
+			session.removeAttribute("mensajeError");
+		}
+		// cargo todos los usuarios de BBDD
+		List<BeanUsuarioGestion> listaUsuarios = new ArrayList<BeanUsuarioGestion>();
+		listaUsuarios = usuarioServicio.listaUsuariosOrdenadaLikeEmailApellido1(beanBusquedaUsuario.getBusqueda());
+		vista.addObject("listaUsuarios", listaUsuarios);
+		
+		return vista;
+	}
+	
 	
 	// da de alta un nuevo usuario
 	@RequestMapping(value="/gestor/altaUsuario", method=RequestMethod.GET)

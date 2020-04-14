@@ -236,6 +236,21 @@ public class LoteControlador {
 		return respuesta;
 	}
 	
+	@RequestMapping(value="/lote/enviado", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
+	public ModelAndView loteEnviadoGet(@RequestParam(value = "id", required = true) Integer id, RedirectAttributes redirectAttributes) throws Exception {
+		
+		LoteCentroBean beanLote = loteServicio.findById(id);		
+		BeanEstado beanEstado = new BeanEstado();
+		beanEstado.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum());
+		loteServicio.actualizarEstadoLote(beanLote, beanEstado);		
+		// redirige a la lista
+		
+		redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_ENVIAR_LOTE));
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/list", true));
+		return respuesta;
+	}
+	
 	private void addListsToView(ModelAndView vista) {
 		
 		vista.addObject("listaEstadosLote", BeanEstado.estadosLote());

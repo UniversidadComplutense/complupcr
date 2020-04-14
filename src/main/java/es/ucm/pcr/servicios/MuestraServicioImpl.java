@@ -24,11 +24,13 @@ import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
+import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.Paciente;
+import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 import es.ucm.pcr.repositorio.LoteRepositorio;
 import es.ucm.pcr.repositorio.MuestraRepositorio;
 import es.ucm.pcr.repositorio.PacienteRepositorio;
@@ -100,6 +102,17 @@ public class MuestraServicioImpl implements MuestraServicio {
 		
 		return pageMuestras;
 	}
+	
+	
+	@Override
+	public BeanListadoMuestraAnalisis buscarMuestra(Integer id) {
+		Optional<Muestra> muestra = muestraRepositorio.findById(id);
+		if (muestra.isPresent()) {
+			return BeanListadoMuestraAnalisis.modelToBean(muestra.get());
+		}
+		return new BeanListadoMuestraAnalisis();
+	}
+	
 
 	@Override
 	public MuestraCentroBean guardar(MuestraCentroBean muestraBean) {

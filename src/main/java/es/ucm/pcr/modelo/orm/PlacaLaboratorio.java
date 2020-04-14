@@ -156,5 +156,14 @@ public class PlacaLaboratorio implements java.io.Serializable {
 	public void setMuestras(Set<Muestra> muestras) {
 		this.muestras = muestras;
 	}
+
+	@Override
+	public String toString() {
+		return "PlacaLaboratorio [id=" + id + ", estadoPlacaLaboratorio=" + estadoPlacaLaboratorio
+				+ ", laboratorioCentro=" + laboratorioCentro + ", numeromuestras=" + numeromuestras + ", fechaCreacion="
+				+ fechaCreacion + ", placaVisavetPlacaLaboratorios=" + placaVisavetPlacaLaboratorios + ", documentos="
+				+ documentos + ", usuario=" + usuario + ", muestras=" + muestras + "]";
+	}
+	
 	
 }

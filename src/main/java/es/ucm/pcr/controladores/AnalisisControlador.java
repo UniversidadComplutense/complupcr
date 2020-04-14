@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,12 +56,14 @@ import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
+import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.GuardarAsignacionMuestraBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.GuardarCogerYDevolverPlacasBean;
 import es.ucm.pcr.beans.MuestraBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
+import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesAnalistaBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 //import es.ucm.pcr.beans.BeanMuestraCentro;
 //import es.ucm.pcr.validadores.ValidadorMuestra;
@@ -69,15 +72,20 @@ import es.ucm.pcr.beans.BeanResultado.ResultadoMuestra;
 import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.config.security.PcrUserDetails;
 import es.ucm.pcr.modelo.orm.Usuario;
+import es.ucm.pcr.servicios.DocumentoServicio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.servicios.UsuarioServicio;
+import es.ucm.pcr.validadores.DocumentoValidador;
 
 
 @Controller
 @RequestMapping(value = "/analisis")
 public class AnalisisControlador {
+	
+	@Value("${analisis.numAnalistas}")
+    private Integer  numAnalistas;
 	
 	@Autowired
 	private SesionServicio sesionServicio;
@@ -91,15 +99,28 @@ public class AnalisisControlador {
 	@Autowired
 	private MuestraServicio muestraServicio;
 	
+	@Autowired
+	private DocumentoServicio documentoServicio;
+
+	
 	public static final Sort ORDENACION = Sort.by(Direction.ASC, "etiqueta");
 	
 		//@Autowired
 		//private ValidadorMuestra validadorMuestra;
+	
+		@Autowired
+		private DocumentoValidador documentoValidador;
 		
 		@InitBinder
 		public void initBinder(WebDataBinder binder) {
 		    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 		    binder.registerCustomEditor(Date.class, editor);
+		}
+		
+		@InitBinder("elementoDoc")
+		public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session)
+				throws Exception {
+			binder.setValidator(documentoValidador);
 		}
 		
 //		@InitBinder("beanMuestra")
@@ -311,8 +332,9 @@ public class AnalisisControlador {
 			for(String codnumMuestra: parts) {
 				Integer codnumLeeInt = Integer.parseInt(codnumMuestra);
 				System.out.println("el codnum vale: " + codnumLeeInt);
-				BeanListadoMuestraAnalisis beanElementList = this.getBean(codnumLeeInt);
-				listaBeanListadoMuestraAnalisis.add(beanElementList);
+				//obtenemos la muestra
+				BeanListadoMuestraAnalisis beanMuestraAnalisis = muestraServicio.buscarMuestra(codnumLeeInt);				
+				listaBeanListadoMuestraAnalisis.add(beanMuestraAnalisis);
 				
 			}
 			return listaBeanListadoMuestraAnalisis;
@@ -566,7 +588,7 @@ public class AnalisisControlador {
 			
 			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la placa para no mostrarlos como posibles a asignar en el desplegable
 			//listaAnalistasLab
-			List<BeanAsignacion> beanListadoAnalistaLabAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasLab();
+			List<BeanAsignacion> beanListadoAnalistaLabAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasLab();
 			List<BeanUsuario> beanListadoAnalistaLabABorrar = new ArrayList<BeanUsuario>();
 			//convierto la lista BeanAsignacion en lista BeanUsuario
 			for(BeanAsignacion beanAsig: beanListadoAnalistaLabAsignados) {
@@ -577,7 +599,7 @@ public class AnalisisControlador {
 			beanListadoAnalistaLab.removeAll(beanListadoAnalistaLabABorrar);
 			
 			//listaAnalistasVol			
-			List<BeanAsignacion> beanListadoAnalistaVolAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasVol();
+			List<BeanAsignacion> beanListadoAnalistaVolAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasVol();
 			List<BeanUsuario> beanListadoAnalistaVolABorrar = new ArrayList<BeanUsuario>();
 			//convierto la lista BeanAsignacion en lista BeanUsuario
 			for(BeanAsignacion beanAsig: beanListadoAnalistaVolAsignados) {
@@ -589,7 +611,7 @@ public class AnalisisControlador {
 			
 			
 			//listaAnalistasVolSinCentro			
-			List<BeanAsignacion> beanListadoAnalistaVolSinLabCentroAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisis().getBeanListaAsignaciones().getListaAnalistasVolSinLabCentro();
+			List<BeanAsignacion> beanListadoAnalistaVolSinLabCentroAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasVolSinLabCentro();
 			List<BeanUsuario> beanListadoAnalistaVolSinCentroABorrar = new ArrayList<BeanUsuario>();
 			//convierto la lista BeanAsignacion en lista BeanUsuario
 			for(BeanAsignacion beanAsig: beanListadoAnalistaVolSinLabCentroAsignados) {
@@ -656,25 +678,26 @@ public class AnalisisControlador {
 			
 			System.out.println("estoy en listarPlacasAsignadasAnalistaGET");
 			
-			//recupero el usuario logado			
+			//recupero el usuario logado
 			Usuario user = sesionServicio.getUsuario();
 			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 			
-			//buscamos las placas pendientes de revisar por el analista
-			//serán aquellas placas cuyas muestras hayan sido asignadas al usuario logado y cuyas muestras no tengan ya valoración por el analista
-			//son las que están asignadas al analista para que las revise subiendo el excel
-
 			/*
-			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
-			// del centro del usuario jefe logado
-			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
-			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
-			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
-			List<PlacaLaboratorioCentroBean> listaPlacasListasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaListaParaAnalisis, pageable).getContent();
-			System.out.println("listaPlacasListasParaAnalisis tiene: "+ listaPlacasListasParaAnalisis.size());
+			//si uso el sesionServicio tengo problemas cuando se pierde la sesion, si uso el securityContextHolder si no hay sesion lo hace bien y me lleva a la pagina de inicio			
+			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			Usuario user = pcrUserDetails.getUsuario();
+			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 			*/
 			
-			// Buscamos las placas cuyas muestras esten asignadas al usuario logado con estado 'Asignada analissta'
+			
+			
+			//Placas Pendientes: buscamos las placas pendientes de revisar por el analista
+			//serán aquellas placas cuyas muestras hayan sido asignadas al usuario logado y cuyas muestras no tengan ya valoración por el analista
+			//son las que están asignadas al analista para que las revise subiendo el excel
+		
+			
+			// Buscamos las placas en estado PLACA_ASIGNADA_PARA_ANALISIS cuyas muestras esten asignadas al usuario logado con estado 'MUESTRA_ASIGNADA_ANALISTA'
 			//y que no tengan aun valoracion por el analista			 
 			
 			BusquedaPlacaLaboratorioAnalistaBean criteriosBusquedaPlacaAsignadaParaRevision = new BusquedaPlacaLaboratorioAnalistaBean();			
@@ -683,16 +706,80 @@ public class AnalisisControlador {
 			criteriosBusquedaPlacaAsignadaParaRevision.setIdAnalistaMuestras(user.getId());
 			criteriosBusquedaPlacaAsignadaParaRevision.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum());
 			criteriosBusquedaPlacaAsignadaParaRevision.setValoracion(null);
-			List<PlacaLaboratorioCentroBean> listaPlacasAsignadasParaRevision = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevision, pageable).getContent();
-			System.out.println("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.size());			
+			List<PlacaLaboratorioCentroAsignacionesAnalistaBean> listaPlacasAsignadasParaRevision = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevision, pageable).getContent();
+			System.out.println("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.size());
+			System.out.println("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.toString());
+			
+			
+			//Placas Valoradas por analista: 
+			//serán aquellas placas cuyas muestras hayan sido asignadas al usuario logado y cuyas muestras ya tengan una valoración por el analista
+			//son las que están asignadas al analista para las que ya ha cargado el excel con las valoraciones de las muestras
+		
+			
+			// Buscamos las placas en estado PLACA_ASIGNADA_PARA_ANALISIS cuyas muestras esten asignadas al usuario logado con estado 'MUESTRA_ASIGNADA_ANALISTA'
+			//y que tengan una valoracion por el analista			 
+			
+			BusquedaPlacaLaboratorioAnalistaBean criteriosBusquedaPlacaAsignadaParaRevisionYaValorada = new BusquedaPlacaLaboratorioAnalistaBean();			
+			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdEstadoPlaca(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
+			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
+			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdAnalistaMuestras(user.getId());
+			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum());
+			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setValoracion("X"); //pongo cualquier dato distinto de null
+			List<PlacaLaboratorioCentroAsignacionesAnalistaBean> listaPlacasAsignadasParaRevisionYaRevisadas = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevisionYaValorada, pageable).getContent();
+			System.out.println("listaPlacasAsignadasParaRevisionYaRevisadas tiene: "+ listaPlacasAsignadasParaRevisionYaRevisadas.size());
+			
+			
+			
 			
 			
 			//vista.addObject("listaPlacasListasParaAnalisis", listaPlacasListasParaAnalisis);
 			vista.addObject("listaPlacasAsignadasParaRevision", listaPlacasAsignadasParaRevision);
+			vista.addObject("listaPlacasAsignadasParaRevisionYaRevisadas", listaPlacasAsignadasParaRevisionYaRevisadas);
 			
 			return vista;
 
 		}
+		
+		
+		//subida resultados analista
+		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO', 'VOLUNTARIO')")
+		@RequestMapping(value = "/cargaResultados/placaLaboratorio", method = RequestMethod.GET)
+		public ModelAndView cargarResultadosPlacaLaboratorio(HttpSession session,
+				@RequestParam(value = "id", required = true) Integer id,
+				@RequestParam(value = "url", required = true) Integer url) throws Exception {
+			ModelAndView vista = new ModelAndView("VistaCargarResultados");
+
+			ElementoDocumentacionBean elementoDoc = documentoServicio.obtenerDocumentosPlacaLaboratorio(id);
+			//por ser un documento excel de resultados le asociamos el tipo "RES"
+			elementoDoc.setTipo("RES");
+			elementoDoc.setCodiUrl(url);
+			elementoDoc.setUrlVolver("/analisis/listarPlacasAnalista");
+			vista.addObject("elementoDoc", elementoDoc);
+			return vista;
+		}
+		
+		
+		@RequestMapping(value = "/guardarResultadosPlacaLaboratorio", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO', 'VOLUNTARIO')")
+		public ModelAndView guardarResultadosPlacaLaboratorio(@Valid @ModelAttribute("beanDocumento") ElementoDocumentacionBean bean,
+				BindingResult result, RedirectAttributes redirectAttributes) throws Exception {
+
+			if (result.hasErrors()) {
+				ModelAndView vista = new ModelAndView("VistaCargarResultados");
+				vista.addObject("elementoDoc", bean);
+			} else {
+				System.out.println("El nombre de la columna es: " + bean.getColumna());
+				//guardamos el documento excel asociandolo a la placa 
+				documentoServicio.guardar(bean);
+				//guardamos las valoraciones de las muestras que ha puesto el analista en el excel y si es el ultimo analista de los numAnalistas globales de la aplicacion
+				//entonces guardamos el resultado definitivo
+				laboratorioCentroServicio.guardarResultadosPlacaLaboratorio(bean, numAnalistas);
+			}
+
+			redirectAttributes.addFlashAttribute("mensaje", "Resultado guardado correctamente");			
+			return new ModelAndView(new RedirectView("/analisis/cargaResultados/placaLaboratorio/?id=" + bean.getId() + "&url=" + bean.getCodiUrl(), true));
+		}
+		
 		//FIN ANALISTAS-REVISAR PLACA
 		
 		//ANALISTAS- REVISAR MUESTRA		
