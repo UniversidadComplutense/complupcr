@@ -133,6 +133,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		// inicializamos a enviado para filtrar por estos
 		// tengo que obtener los centros de los que puedo recibir muestras
 		//busquedaLotes.setIdCentro(0);
+		// cargar con 3 si el rol receptor, con 4 si es tecnico 
 		busquedaLotes.setCodNumEstadoSeleccionado(3);
 		this.rellenarBusquedaLotes(busquedaLotes);
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
