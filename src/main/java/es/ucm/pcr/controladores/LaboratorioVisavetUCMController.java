@@ -552,6 +552,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				}
 				
 				@RequestMapping(value = "/laboratorioUni/asignarPlaca", method = RequestMethod.GET)
+				
 				public String asignarPlacasGet(@RequestParam("idPlaca") int idPlaca,  Model model, HttpServletRequest request, HttpSession session) {
 				// grabar en el servicio la placa junto con el que tenga lote que venga del modelo
 					LotePlacaVisavetBean lotePlacaVisavetBean = (LotePlacaVisavetBean )session.getAttribute("lotePlacaVisavetBean");

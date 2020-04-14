@@ -261,8 +261,8 @@ function asignarPlaca(){
         dataType: 'html',
         data:  sBody
 	}).done(function(respuesta) {
-		eliminaFilas();
-	alert (respuesta);
+	//	eliminaFilas();
+	//alert (respuesta);
 	    $("#tablaLotes tbody").html(respuesta);
 	   // $("#trGroup").load(url, sBody);
 	    $("#grabar").attr("disabled", false);
