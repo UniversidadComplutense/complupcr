@@ -2,6 +2,7 @@ package es.ucm.pcr.repositorio;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +32,13 @@ public interface PlacaVisavetRepositorio extends JpaRepository<PlacaVisavet, Int
 			+ "(:#{#params.idEstadoPlaca} is null or placa.estadoPlacaVisavet.id = :#{#params.idEstadoPlaca}) and" 
 			+ "(:#{#params.idLaboratorioCentro} is null or placa.laboratorioCentro.id = :#{#params.idLaboratorioCentro})")
 	public Page<PlacaVisavet> findByParams(@Param("params") BusquedaRecepcionPlacasVisavetBean params,
-			Pageable pageable);	
+			Pageable pageable);
+	
+	
+	@Query("SELECT placa FROM PlacaVisavet placa, PlacaVisavetPlacaLaboratorio pvisplab  "
+			+ "WHERE placa = pvisplab.placaVisavet and pvisplab.placaLaboratorio.id = :idPlacaLaboratorio ")
+	public Set<PlacaVisavet> findByIdPlacaLaboratorio(@Param("idPlacaLaboratorio") Integer idPlacaLaboratorio);	
+		
 	
 
 	//Optional<PlacaVisavet> findById(Integer id);	

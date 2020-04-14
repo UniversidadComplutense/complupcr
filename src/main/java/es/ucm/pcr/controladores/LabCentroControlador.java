@@ -1,7 +1,9 @@
 package es.ucm.pcr.controladores;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -89,14 +91,14 @@ public class LabCentroControlador {
 	
 	@RequestMapping(value = "/recepcionPlacas", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView buscarPlacasVisavetGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+	public ModelAndView buscarPlacasVisavetGET(HttpSession session, @PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
 
 		ModelAndView vista = new ModelAndView("ListadoRecepcionarPlacasVisavet");
 
 		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = new BusquedaRecepcionPlacasVisavetBean();
 
-		// Inicializamos búsqueda con estado 'PLACAVISAVET_ASIGNADA' y laboratorio al que pertenece el usuario
-		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACAVISAVET_ASIGNADA.getCodNum());
+		// Inicializamos búsqueda con estado 'PLACAVISAVET_ENVIADA' y laboratorio al que pertenece el usuario
+		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACAVISAVET_ENVIADA.getCodNum());
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getCentro().getId());
 
 		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
@@ -111,11 +113,10 @@ public class LabCentroControlador {
 	@RequestMapping(value = "/recepcionPlacas", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
 	public ModelAndView buscarPlacasVisavetPOST(HttpSession session, @ModelAttribute BusquedaRecepcionPlacasVisavetBean criteriosBusqueda,
-			@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+			@PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
 
 		ModelAndView vista = new ModelAndView("ListadoRecepcionarPlacasVisavet");
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getCentro().getId());
-		
 		
 		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
 		this.agregarEstadosBusquedaPlacaVisavet(vista);
@@ -161,7 +162,7 @@ public class LabCentroControlador {
 	
 	@RequestMapping(value = "/gestionPlacas", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView buscarPlacasListasParaPcrGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+	public ModelAndView buscarPlacasListasParaPcrGET(HttpSession session, @PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
 
 		ModelAndView vista = new ModelAndView("ListadoPlacasLaboratorio");
 
@@ -213,7 +214,7 @@ public class LabCentroControlador {
 	
 	@RequestMapping(value = "/gestionPlacas/nueva", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-	public ModelAndView nuevaPlacaGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+	public ModelAndView nuevaPlacaGET(HttpSession session, @PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
 	
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");		
 		PlacaLaboratorioCentroBean placa = new PlacaLaboratorioCentroBean();
@@ -244,16 +245,8 @@ public class LabCentroControlador {
 
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		
-		// Transformamos en un Array el String que viene de la vista con los IDs de las placas Visavet seleccionadas
-		String[] listaIDsPlacasVisavetSeleccinadas = placa.getPlacasVisavetSeleccionadas().split(":");
-		
-		for (String idPlacaVisavet : listaIDsPlacasVisavetSeleccinadas) {
-			System.out.println(idPlacaVisavet);
-		}
-		
-		
 		if (!result.hasErrors()) {
-			placa = laboratorioCentroServicio.guardarPlaca(placa);
+			placa = laboratorioCentroServicio.crearPlaca(placa);
 			vista.addObject("mensaje", "La placa " + placa.getId() + " se ha creado correctamente.");			
 		}
 		
@@ -268,17 +261,24 @@ public class LabCentroControlador {
 	@RequestMapping(value = "/gestionPlacas/modificar", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
 	public ModelAndView modificarPlaca(HttpSession session, @RequestParam(value = "id", required = true) Integer id, 
-										@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+										@PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
 		
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		PlacaLaboratorioCentroBean placa = laboratorioCentroServicio.buscarPlaca(id);
+		
+		// Recuperamos las placas Visavet que ya se han combinado en la placa de laboratorio
+		List<PlacaLaboratorioVisavetBean> placasCombinadas = laboratorioVisavetServicio.buscarPlacasPorIdPlacaLaboratorio(placa.getId());
+		placa.setPlacasVisavet(placasCombinadas);
 				
 		// Recuperamos las placas VISAVET que se pueden combinar (recepcionadas).
 		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = new BusquedaRecepcionPlacasVisavetBean();
 		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACAVISAVET_RECIBIDA.getCodNum());
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getCentro().getId());
 		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
-		placa.setPlacasVisavetParaCombinar(listaPlacas.getContent());
+		
+		// Al modificar una placa, en la lista de placas para combinar incluimos las placas ya combinadas anteriormente
+		placasCombinadas.addAll(listaPlacas.getContent());
+		placa.setPlacasVisavetParaCombinar(placasCombinadas);
 		
 		placa.setPlacasVisavetSeleccionadas("");
 		

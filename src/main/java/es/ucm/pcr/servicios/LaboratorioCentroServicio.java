@@ -98,5 +98,7 @@ public interface LaboratorioCentroServicio {
 	
 	public BeanLaboratorioCentro buscarLaboratorioById(Integer id);
 
+	public PlacaLaboratorioCentroBean crearPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean);
+
 
 }	

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -163,6 +164,20 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 				placaVisavetRepositorio.save(placa.get());
 			}			
 		}
+	}
+
+	// JAVI para saber las placas Visavet combinadas en una placa de laboratorio
+	@Override
+	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio) {
+		
+		Set<PlacaVisavet> placas = placaVisavetRepositorio.findByIdPlacaLaboratorio(idPlacaLaboratorio);		
+		List<PlacaLaboratorioVisavetBean> placasVisavet = new ArrayList<PlacaLaboratorioVisavetBean>();
+		for (PlacaVisavet placa : placas) {
+			PlacaLaboratorioVisavetBean bean = new PlacaLaboratorioVisavetBean();
+			bean = PlacaLaboratorioVisavetBean.modelToBean(placa);
+			placasVisavet.add(bean);
+		}		
+		return placasVisavet;
 	}
 
 }
