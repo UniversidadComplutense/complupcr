@@ -276,6 +276,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		estado.setEstado(Estado.PLACAVISAVET_ENVIADA);
 		estado.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
 		placa.setEstado(estado);
+		placa.setFechaEnviadaLaboratorio(new Date());
 	   BeanPlacaVisavetUCM placab= servicioLaboratorioUni.guardar(placa); 
 	   BusquedaPlacasVisavetBean busqueda=(BusquedaPlacasVisavetBean) session.getAttribute("busqueda");
 	  if (busqueda ==null) busqueda= new BusquedaPlacasVisavetBean();
@@ -544,7 +545,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 					      BeanEstado estado=new BeanEstado();
 						  estado.setTipoEstado(TipoEstado.EstadoLote);
 						  estado.setEstado(Estado.LOTE_PROCESADO_CENTRO_ANALISIS);
-							
+						   lote.setEstado(estado);
 	                      listaLotesDisponibles.add(lote);
 					
 					} 
@@ -602,6 +603,8 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			estado.setEstado(Estado.PLACAVISAVET_ASIGNADA);
 			estado.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
 			placa.setEstado(estado);
+			placa.setFechaAsignadaLaboratorio(new Date());
+			
 		BeanPlacaVisavetUCM placab= servicioLaboratorioUni.guardarPlacaConLaboratorio(placa, laboratorio);
 		BusquedaPlacasVisavetBean busqueda= (BusquedaPlacasVisavetBean) session.getAttribute("busqueda");
 		if (busqueda ==null) busqueda=new BusquedaPlacasVisavetBean();
