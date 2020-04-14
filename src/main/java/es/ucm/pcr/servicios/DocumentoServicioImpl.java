@@ -100,8 +100,7 @@ public class DocumentoServicioImpl implements DocumentoServicio {
 	@Override
 	public ElementoDocumentacionBean obtenerDocumentosPlacaLaboratorio(Integer idPlacaLaboratorio) {
 		ElementoDocumentacionBean elDoc = new ElementoDocumentacionBean();
-		PlacaLaboratorio placaLaboratorio = Optional.of(placaLaboratorioRepositorio.findById(idPlacaLaboratorio).get()).orElse(null);
-		System.out.println("el idPlacaLaboratorio: "+ idPlacaLaboratorio +" y placaLaboratorio vale: " + placaLaboratorio.getNumeromuestras());
+		PlacaLaboratorio placaLaboratorio = Optional.of(placaLaboratorioRepositorio.findById(idPlacaLaboratorio).get()).orElse(null);		
 		elDoc.setId(placaLaboratorio.getId());
 		// TODO - ESTABLECER DESCRIPCION (Diana: pongo el id de la placa de momento, podemos poner lo que querais)
 		elDoc.setDescripcion("Placa " + placaLaboratorio.getId());
@@ -124,6 +123,7 @@ public class DocumentoServicioImpl implements DocumentoServicio {
 			documento.setFechaDocumento(new Date());
 			documento.setNombre(elementoDocumentoBean.getFile().getOriginalFilename());
 			documento.setTamanoDocumento(Long.valueOf(elementoDocumentoBean.getFile().getSize()).intValue());
+			documento.setTipo(elementoDocumentoBean.getTipo());
 			documento.setUsuario(sesionServicio.getUsuario());
 			
 			// se establece la muestra al documento

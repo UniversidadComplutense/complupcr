@@ -21,5 +21,11 @@ public interface UsuarioMuestraRepositorio extends JpaRepository<UsuarioMuestra,
 	Optional<UsuarioMuestra> findByIdUsuarioMuestra(Integer idUsuarioMuestra);
 	
 	
+	@Query("SELECT usuariomuestra FROM UsuarioMuestra usuariomuestra "
+			+ "JOIN usuariomuestra.usuario usuario "
+			+ "JOIN usuariomuestra.muestra muestra "
+			+ "WHERE usuario.id = :idUsuario and muestra.id = :idMuestra")
+	public Optional<UsuarioMuestra> findByIdUsuarioAndIdMuestra(@Param("idUsuario") Integer idUsuario, @Param("idMuestra") Integer idMuestra);			
+
 	
 }

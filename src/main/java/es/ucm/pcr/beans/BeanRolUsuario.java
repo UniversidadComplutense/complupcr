@@ -70,30 +70,47 @@ public class BeanRolUsuario implements Comparable<BeanRolUsuario>{
 	}
 	
 	
-	
-
-	/*
-	public BeanRolUsuario asignarTipoEstadoYCodNum(String cod) {
+	public BeanRolUsuario asignarRolUsuarioPorCodNum(Integer cod) {
 
 		switch (cod) {
-			case "PENDIENTE": {
-				this.setResultadoMuestra(ResultadoMuestra.RESULTADO_MUESTRA_PENDIENTE);
+			case 1: {
+				this.setRolUsuario(RolUsuario.ROL_USUARIO_ADMIN);
 				break;
 			}
-			case "NEGATIVO": {
-				this.setResultadoMuestra(ResultadoMuestra.RESULTADO_MUESTRA_NEGATIVO);
+			case 2: {
+				this.setRolUsuario(RolUsuario.ROL_USUARIO_GESTOR);
 				break;
 			}
-			case "POSITIVO": {
-				this.setResultadoMuestra(ResultadoMuestra.RESULTADO_MUESTRA_POSITIVO);
+			case 3: {
+				this.setRolUsuario(RolUsuario.ROL_USUARIO_CENTROSALUD);
 				break;
 			}
-			case "DEBIL": {
-				this.setResultadoMuestra(ResultadoMuestra.RESULTADO_MUESTRA_DEBIL);
+			case 4: {
+				this.setRolUsuario(RolUsuario.ROL_USUARIO_RECEPCIONLABORATORIO);
 				break;
 			}
-			case "REPETIR": {
-				this.setResultadoMuestra(ResultadoMuestra.RESULTADO_MUESTRA_REPETIR);
+			case 5: {
+				this.setRolUsuario(RolUsuario.ROL_USUARIO_TECNICOLABORATORIO);
+				break;
+			}
+			case 6: {
+				this.setRolUsuario(RolUsuario.ROL_USUARIO_RESPONSABLEPCR);
+				break;
+			}
+			case 7: {
+				this.setRolUsuario(RolUsuario.ROL_USUARIO_JEFESERVICIO);
+				break;
+			}
+			case 8: {
+				this.setRolUsuario(RolUsuario.ROL_USUARIO_ANALISTALABORATORIO);
+				break;
+			}
+			case 13: {
+				this.setRolUsuario(RolUsuario.ROL_USUARIO_AUDITOR);
+				break;
+			}
+			case 14: {
+				this.setRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO);
 				break;
 			}
 		}
@@ -101,7 +118,7 @@ public class BeanRolUsuario implements Comparable<BeanRolUsuario>{
 		return this;
 
 	}
-	
+	/*
 	public BeanRolUsuario asignarTipoEstadoDescripcion(String descripcion) {
 
 		switch (descripcion) {

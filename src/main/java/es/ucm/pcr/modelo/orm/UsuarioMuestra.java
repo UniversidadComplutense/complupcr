@@ -110,5 +110,12 @@ public class UsuarioMuestra implements java.io.Serializable {
 		this.fechaValoracion = fechaValoracion;
 	}
 
+	@Override
+	public String toString() {
+		return "UsuarioMuestra [idUsuarioMuestra=" + idUsuarioMuestra + ", usuario=" + usuario
+				+ ", fechaAsignacion=" + fechaAsignacion + ", valoracion=" + valoracion + ", fechaValoracion="
+				+ fechaValoracion + "]";
+	}
+
 	
 }

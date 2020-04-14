@@ -272,6 +272,14 @@ public class Muestra implements java.io.Serializable {
 	public void setNumerodeAnalistasAsignados(Integer numerodeAnalistasAsignados) {
 		this.numerodeAnalistasAsignados = numerodeAnalistasAsignados;
 	}
+
+	@Override
+	public String toString() {
+		return "Muestra [id=" + id + ", centro=" + centro + ", estadoMuestra=" + estadoMuestra + 
+				", etiqueta=" + etiqueta + ", tipoMuestra=" + tipoMuestra + ", resultado="
+				+ resultado + ", usuarioMuestras=" + usuarioMuestras + ", numerodeAnalistasAsignados="
+				+ numerodeAnalistasAsignados + "]";
+	}
 	
 	
 

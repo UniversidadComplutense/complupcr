@@ -110,7 +110,7 @@ public class MuestraValidador implements Validator {
 	/**
 	 * Avisos automaticos
 	 * SI: obligatorio el correo
-	 * NO: obligatorio correo o telefono
+	 * NO: 
 	 * @param muestra
 	 * @param errors
 	 */
@@ -119,11 +119,7 @@ public class MuestraValidador implements Validator {
 			if (StringUtils.isEmpty(muestra.getCorreo())) {
 				errors.rejectValue("avisosAuto", "campo.invalid", "Debe rellenar el correo");
 			}
-		} else {
-			if (StringUtils.isEmpty(muestra.getCorreo()) && StringUtils.isEmpty(muestra.getTelefono())) {
-				errors.rejectValue("avisosAuto", "campo.invalid", "Debe rellenar el correo y/o teléfono");
-			}
-		}
+		} 
 	}
 	
 	/**

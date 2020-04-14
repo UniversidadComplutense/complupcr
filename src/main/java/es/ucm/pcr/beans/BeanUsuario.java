@@ -171,6 +171,8 @@ public class BeanUsuario implements Comparable<BeanUsuario>{
 
 
 
+
+
 	@Override
 	public String toString() {
 		return "BeanUsuario [id=" + id + ", nom=" + nom + ", ap1=" + ap1 + ", ap2=" + ap2 + ", nombreCompleto="

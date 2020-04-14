@@ -25,17 +25,17 @@ public class Equipo implements java.io.Serializable {
 	private Integer id;
 	private LaboratorioCentro laboratorioCentro;
 	private String nombre;
-	private String capacidad;
+	private Integer  capacidad;
 
 	public Equipo() {
 	}
 
-	public Equipo(String nombre, String capacidad) {
+	public Equipo(String nombre, Integer capacidad) {
 		this.nombre = nombre;
 		this.capacidad = capacidad;
 	}
 
-	public Equipo(LaboratorioCentro laboratorioCentro, String nombre, String capacidad) {
+	public Equipo(LaboratorioCentro laboratorioCentro, String nombre, Integer capacidad) {
 		this.laboratorioCentro = laboratorioCentro;
 		this.nombre = nombre;
 		this.capacidad = capacidad;
@@ -73,11 +73,11 @@ public class Equipo implements java.io.Serializable {
 	}
 
 	@Column(name = "capacidad", nullable = false, length = 45)
-	public String getCapacidad() {
+	public Integer getCapacidad() {
 		return this.capacidad;
 	}
 
-	public void setCapacidad(String capacidad) {
+	public void setCapacidad(Integer capacidad) {
 		this.capacidad = capacidad;
 	}
 
