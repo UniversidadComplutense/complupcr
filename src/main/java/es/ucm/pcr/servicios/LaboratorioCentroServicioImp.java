@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
@@ -69,6 +70,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	@Autowired
 	EstadoPlacaLaboratorioRepositorio estadoPlacaLaboratorioRepositorio;
+	
+	@Autowired
+	private ServicioLog servicioLog;
 	
 	public LaboratorioCentro mapeoBeanEntidadLaboratorioCentro(BeanLaboratorioCentro beanLaboratorioCentro) throws Exception{
 		
@@ -235,6 +239,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	}
 	
 	@Override
+	@Transactional
 	public PlacaLaboratorioCentroBean guardarCogerODevolverPlaca(Integer idPlaca, Integer idUsuario, String accion) {
 	//metodo que recibe el idPlaca, y el id de usuario que la quiere coger
 	
@@ -251,6 +256,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			for(Muestra m: placa.getMuestras()) {
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_PENDIENTE_ANALIZAR.getCodNum()));
 				muestraRepositorio.save(m);
+				//guardamos en el log el cambio de estado de la muestra
+				BeanEstado estadoMuestra = new BeanEstado();
+				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
+				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
 			}			
 		}else if(accion.equals("devolver")) {
 			//desasocia la placa del usuario, le cambia el estado de la placa a PLACA_LISTA_PARA_ANALISIS (estado anterior) y ¿Qué hacemos con las muestras?
@@ -263,10 +272,14 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			for(Muestra m: placa.getMuestras()) {
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS.getCodNum()));
 				muestraRepositorio.save(m);
+				//guardamos en el log el cambio de estado de la muestra
+				BeanEstado estadoMuestra = new BeanEstado();
+				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
+				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
 			}	
 		}
-		placa = placaLaboratorioRepositorio.save(placa);			
-		
+		placa = placaLaboratorioRepositorio.save(placa);
+		//TODO guardamos en el log el cambio de estado de la placa (no tenemos tabla de log de placas)
 		
 		return PlacaLaboratorioCentroBean.modelToBean(placa);
 
@@ -307,6 +320,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	//metodo que guarda las nuevas asignaciones de analistas de labCentro, voluntarios de labCentro y voluntarios sin centro a la placa 
 	//se guardan en realidad las asignaciones a las muestras de la placa
 	@Override
+	@Transactional
 	public void guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca) {
 	
 		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(formBeanGuardarAsignacionPlaca.getIdPlaca());
@@ -351,6 +365,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum()));
 				muestra.setNumerodeAnalistasAsignados(numerodeAnalistasAsignadosMuestra);
 				muestraRepositorio.save(muestra);
+				//guardamos en el log el cambio de estado de la muestra
+				BeanEstado estadoMuestra = new BeanEstado();
+				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, muestra.getEstadoMuestra().getId());
+				servicioLog.actualizarEstadoMuestra(muestra.getId(), estadoMuestra);				
 			}
 		}
 		else {
