@@ -36,10 +36,14 @@
 			<div class="col-2">
 				<button type="submit" class="btn btn-secondary eBtn">Busqueda</button>
 			</div>
-			<div class="col-5">
-			<input type="text" class="form-control", th:field="${formBeanBusquedaUsuario.busqueda}"
+<!-- 			<div class="col-3">
+				<label class="text_formulario">Introduzca email o primer apellido</label>
+			</div> -->
+			<div class="col-4">
+				<input type="text" class="form-control", th:field="${formBeanBusquedaUsuario.busqueda}"
 					th:value="${formBeanBusquedaUsuario.busqueda}" />
 			</div>
+			
 		</div>
 		<div class="row justify-content-center mt-3">
 			<table class="table">

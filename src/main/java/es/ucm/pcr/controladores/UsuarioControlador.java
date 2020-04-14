@@ -64,7 +64,7 @@ public class UsuarioControlador {
 		
 		// Bean para la busqueda de usuario
 		BeanBusquedaUsuario beanBusquedaUsuario = new BeanBusquedaUsuario();
-		beanBusquedaUsuario.setBusqueda("Introduzca email o primer apellido para buscar");
+		beanBusquedaUsuario.setBusqueda("Introduzca email o primer apellido");
 		vista.addObject("formBeanBusquedaUsuario", beanBusquedaUsuario);
 		
 		return vista;
