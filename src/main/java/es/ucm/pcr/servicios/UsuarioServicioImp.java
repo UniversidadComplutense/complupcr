@@ -383,4 +383,19 @@ public class UsuarioServicioImp implements UsuarioServicio {
 			return laboratorioVisavetRepositorio.findById(idLabVisavet);
 		}
 	}
+	
+	public List<BeanUsuarioGestion> listaUsuariosOrdenadaLikeEmailApellido1(String busqueda) throws Exception
+	{	
+		List<BeanUsuarioGestion> listaUsuarios = new ArrayList<BeanUsuarioGestion>();
+		for (Usuario usuario: usuarioRepositorio.findLikeEmailApellido1(busqueda))
+		{
+			BeanUsuarioGestion beanUsuarioGestion = new BeanUsuarioGestion();
+			beanUsuarioGestion = mapeoEntidadBeanUsuario (usuario);
+			listaUsuarios.add(beanUsuarioGestion);
+		}
+		//	Ordeno por ap1, ap2, nombre
+		Collections.sort(listaUsuarios);
+		return listaUsuarios;
+
+	}
 }
