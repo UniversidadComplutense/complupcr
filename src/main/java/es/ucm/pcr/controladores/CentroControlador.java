@@ -76,7 +76,7 @@ public class CentroControlador {
 		if (beanCentro.getAccion().equals("A"))
 		{
 			try {
-			centroServicio.guardarCentro(centroServicio.mapeoBeanEntidadCentro(beanCentro));
+			centroServicio.save(centroServicio.mapeoBeanEntidadCentro(beanCentro));
 			} catch (DataIntegrityViolationException e) {
 				mensaje = "Ya existe un centro con ese código.";
 				session.setAttribute("mensajeError", mensaje);
@@ -89,9 +89,9 @@ public class CentroControlador {
 		if (beanCentro.getAccion().equals("M"))
 		{
 			// Buscamos el centro a modificar, y volcamos los datos recogidos por el formulario
-			Optional<Centro> centro = centroServicio.buscarCentroPorId(beanCentro.getId());
+			Optional<Centro> centro = centroServicio.findById(beanCentro.getId());
 			// añadimos campos del formulario
-			centroServicio.guardarCentro(centroServicio.mapeoBeanEntidadCentro(beanCentro));
+			centroServicio.save(centroServicio.mapeoBeanEntidadCentro(beanCentro));
 		}
 
 		// Volvemos a grabar mas centros
@@ -107,7 +107,7 @@ public class CentroControlador {
 		ModelAndView vista = new ModelAndView("VistaCentro");
 		
 		// Busco el centro a modificar
-		Optional<Centro> centro = centroServicio.buscarCentroPorId(idCentro);
+		Optional<Centro> centro = centroServicio.findById(idCentro);
 		// cargo el beanCentro con lo datos del centro a modificar
 		BeanCentro beanCentro = centroServicio.mapeoEntidadBeanCentro(centro.get());
 	
@@ -123,10 +123,10 @@ public class CentroControlador {
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView borrarCentro(@RequestParam("idCentro") Integer idCentro, HttpSession session) throws Exception {
 		try {
-		centroServicio.BorrarCentro(idCentro);
+		centroServicio.deleteById(idCentro);
 		} catch (DataIntegrityViolationException e) {
 			
-			String mensaje = "No se puede borrar el centro " + centroServicio.buscarCentroPorId(idCentro).get().getNombre() + " porque tiene información asociada.";
+			String mensaje = "No se puede borrar el centro " + centroServicio.findById(idCentro).get().getNombre() + " porque tiene información asociada.";
 			session.setAttribute("mensajeError", mensaje);
 		}
 		

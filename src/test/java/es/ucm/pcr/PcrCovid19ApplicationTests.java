@@ -1,18 +1,23 @@
 package es.ucm.pcr;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles(profiles = "desarrollolocal")
+
+@ActiveProfiles(profiles = "test")
 @SpringBootTest
-class PcrCovid19ApplicationTests {
+@TestMethodOrder(OrderAnnotation.class)
+public class PcrCovid19ApplicationTests {
 
+	//Comprobamos que la aplicación arranca
 	@Test
-	void contextLoads() {
+	@Order(1)
+	public void contextLoads() {
 	}
 
 }

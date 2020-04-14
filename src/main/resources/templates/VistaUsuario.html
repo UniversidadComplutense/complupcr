@@ -102,9 +102,10 @@
 			
  			<div class="form-group">						
 				<th:block th:each="rol : ${listaRoles}">
-					<label th:text="${rol.nombre}"></label>
 					<input type="checkbox" name="roles" th:value="${rol.id}"
 						th:checked="${rol.seleccionado}" />
+					<label th:text="${rol.nombre}"></label>
+					<br />
 					
 				</th:block>
 			</div>

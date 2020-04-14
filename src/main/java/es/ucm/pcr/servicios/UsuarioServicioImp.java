@@ -22,10 +22,12 @@ import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
 import es.ucm.pcr.modelo.orm.Centro;
+import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.PasswordResetToken;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.CentroRepositorio;
+import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
 import es.ucm.pcr.repositorio.PasswordTokenRepositorio;
 import es.ucm.pcr.repositorio.RolRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
@@ -61,9 +63,12 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	
 	@Autowired
 	EnviocorreoImp enviocorreoImp;
+
+	@Autowired
+	LaboratorioVisavetRepositorio laboratorioVisavetRepositorio;
 	
 	@Override
-	public Usuario buscarUsuarioPorEmail(String email) {
+	public Usuario findByEmail(String email) {
 		email = email.trim().toLowerCase();
 		Optional<Usuario> usuario = usurep.findByEmail(email);
 		if (usuario.isPresent()) {
@@ -75,7 +80,14 @@ public class UsuarioServicioImp implements UsuarioServicio {
 
 	@Override
 	public Set<Rol> getRoles(Usuario usuario) {
-		return usuario.getRols();
+		Set<Rol> roles = new HashSet<Rol>();
+		Optional<Usuario> user = usuarioRepositorio.findById(usuario.getId()); //Así cogemos sesión hibernate para la relación LAZY
+		if (user.isPresent()) {
+			for (Rol rol : user.get().getRols()) {
+				roles.add(rol);
+			}
+		}
+		return roles;
 	}
 	
 	// Un usuario puede no estar asociado a ningún centro,
@@ -282,7 +294,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
 
 	@Override
 	public void cambiarContrasena(String email, String contrasena) {
-		Usuario user = buscarUsuarioPorEmail(email);
+		Usuario user = findByEmail(email);
 		user.setPassword(passwordEncoder.encode(contrasena));
 		user.setHabilitado("A");
 		usurep.save(user);
@@ -296,16 +308,16 @@ public class UsuarioServicioImp implements UsuarioServicio {
 	}
 
 	@Override 
-	public Usuario guardar(Usuario usuario) {
+	public Usuario save(Usuario usuario) {
 		usurep.save(usuario);
 		return usuario;
 	}
 	
-	public void borrarUsuario (Integer idUsuario) throws Exception{
+	public void deleteById (Integer idUsuario) throws Exception{
 		usurep.deleteById(idUsuario);
 	}
 	
-	public Optional<Usuario> buscarUsuarioPorId (Integer idUsuario) throws Exception{
+	public Optional<Usuario> findById (Integer idUsuario) throws Exception{
 		return usurep.findById(idUsuario);
 	}
 
@@ -351,5 +363,24 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		}
 		return listaUsuariosBean;		
 	}
-	
+
+	@Override
+	public Optional<Centro> getCentro(Usuario usuario) {
+		Centro centro = usuario.getCentro();
+		if (centro != null) {
+			return Optional.of(centro);
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	@Override
+	public Optional<LaboratorioVisavet> getLaboratorioVisavet(Usuario usuario) {
+		Integer idLabVisavet = usuario.getIdLaboratorioVisavet();
+		if (idLabVisavet == null) {
+			return Optional.empty();
+		} else {
+			return laboratorioVisavetRepositorio.findById(idLabVisavet);
+		}
+	}
 }

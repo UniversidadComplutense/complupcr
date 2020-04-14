@@ -39,23 +39,23 @@ public interface CentroServicio {
 	 * @param List<BeanCentro>
 	 * @return Map<String,String>
 	 */
-	public Map<Integer,String> mapaCentros (List<BeanCentro> centros) throws Exception;
+	public Map<Integer,String> mapaCentros(List<BeanCentro> centros) throws Exception;
 	
 	/**
 	 * Guardar Centro
 	 * 
 	 * @param Centro
-	 * @return void >
+	 * @return Centro >
 	 */
-	public void guardarCentro (Centro centro) throws Exception;
+	public Centro save(Centro centro) throws Exception;
 	
 	/**
 	 * Borrar Centro
 	 * 
 	 * @param Integer idCentro
-	 * @return void >
+	 * @return void findById
 	 */
-	public void BorrarCentro (Integer idCentro) throws Exception;
+	public void deleteById(Integer idCentro) throws Exception;
 
 	/**
 	 * Buscar Centro por id
@@ -63,7 +63,14 @@ public interface CentroServicio {
 	 * @param Integer idCentro
 	 * @return Optional<Centro>
 	 */
-	public Optional<Centro> buscarCentroPorId (Integer idCentro) throws Exception;
+	public Optional<Centro> findById(Integer idCentro) throws Exception;
+
+	/**
+	 * Buscar por codCentro
+	 * @param codCentro
+	 * @return Optional<Centro>
+	 */
+	public Optional<Centro> findByCodCentro(String codCentro);
 
 
 }

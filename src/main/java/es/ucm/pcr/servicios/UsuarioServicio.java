@@ -6,6 +6,8 @@ import java.util.Set;
 
 import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
+import es.ucm.pcr.modelo.orm.Centro;
+import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 
@@ -17,7 +19,7 @@ public interface UsuarioServicio {
 	 * @param email
 	 * @return Usuario
 	 */
-	public Usuario buscarUsuarioPorEmail(String email);
+	public Usuario findByEmail(String email);
 
 	/**
 	 * Obtener los roles que tiene asignado un usuario
@@ -87,7 +89,7 @@ public interface UsuarioServicio {
 	 * 
 	 * @return
 	 */
-	public Usuario guardar(Usuario usuario);
+	public Usuario save(Usuario usuario);
 	
 	
 
@@ -95,9 +97,9 @@ public interface UsuarioServicio {
 	 * Borrar Usuario
 	 * 
 	 * @param Integer idUsuario
-	 * @return void >
+	 * @return void 
 	 */
-	public void borrarUsuario (Integer idUsuario) throws Exception;
+	public void deleteById(Integer idUsuario) throws Exception;
 	
 	/**
 	 * Buscar Usuario por Id
@@ -105,7 +107,7 @@ public interface UsuarioServicio {
 	 * @param Integer idUsuario
 	 * @return void Optional<Usuario>
 	 */
-	public Optional<Usuario> buscarUsuarioPorId (Integer idUsuario) throws Exception;
+	public Optional<Usuario> findById(Integer idUsuario) throws Exception;
 	
 	
 	
@@ -131,5 +133,21 @@ public interface UsuarioServicio {
 	 *	 
 	 * @return List<BeanUsuario>
 	 */
-	public List<BeanUsuario> listaUsuariosVoluntariosSinLaboratorioCentro(); 
+	public List<BeanUsuario> listaUsuariosVoluntariosSinLaboratorioCentro();
+
+	/**
+	 * Obtiene el centro del usuario
+	 * 
+	 * @param usuario
+	 * @return Optional<Usuario>
+	 */
+	public Optional<Centro> getCentro(Usuario usuario);
+
+	/**
+	 * Obtiene el laboratorio visavet del usuario
+	 * 
+	 * @param usug1
+	 * @return Optional<LaboratorioVisavet>
+	 */
+	public Optional<LaboratorioVisavet> getLaboratorioVisavet(Usuario usug1); 
 }

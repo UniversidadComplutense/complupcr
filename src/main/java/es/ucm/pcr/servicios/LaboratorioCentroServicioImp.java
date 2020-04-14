@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
+import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesAnalistaBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
@@ -143,15 +146,16 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		return mapalaboratorioCentro;
 	}
 	
-	public void guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception{
-		laboratorioCentroRepositorio.save(laboratorioCentro);
+	public LaboratorioCentro save (LaboratorioCentro laboratorioCentro) throws Exception{
+		return laboratorioCentroRepositorio.save(laboratorioCentro);
 	}
 	
-	public void borrarLaboratorioCentro (Integer idLaboratorioCentro) throws Exception{
+	public void deleteById (Integer idLaboratorioCentro) throws Exception{
 		laboratorioCentroRepositorio.deleteById(idLaboratorioCentro);
 	}
 	
-	public Optional <LaboratorioCentro> buscarLaboratorioCentroPorId (Integer idLaboratorioCentro) throws Exception{
+	@Transactional
+	public Optional <LaboratorioCentro> findById (Integer idLaboratorioCentro) throws Exception{
 		return laboratorioCentroRepositorio.findById(idLaboratorioCentro);
 	}
 	
@@ -357,7 +361,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		for(PlacaLaboratorio placa: lisaPlacasJefe) {
 			BeanElemento beanElementoPlaca = new BeanElemento();
 			beanElementoPlaca.setCodigo(placa.getId());
-			beanElementoPlaca.setDescripcion("Placa " + placa.getId() + ", muestras: " + placa.getNumeromuestras());
+			beanElementoPlaca.setDescripcion("Placa " + placa.getId() + ", muestras: " + placa.getMuestras().size());
 			listaBeanPlacasLaboratorioDeJefe.add(beanElementoPlaca);			
 		}		
 		//añado el elemento seleccione al principio
@@ -461,16 +465,18 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	//Diana- metodos para los analistas de placas
 	@Override
-	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda,
+	public Page<PlacaLaboratorioCentroAsignacionesAnalistaBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda,
 			Pageable pageable) {
 		
-		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();		
-		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = placaLaboratorioRepositorio.findByParams(criteriosBusqueda, pageable); 		
+		List<PlacaLaboratorioCentroAsignacionesAnalistaBean> listaPlacasLaboratorioCentroAsignacionesBean = new ArrayList<PlacaLaboratorioCentroAsignacionesAnalistaBean>();		
+		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = placaLaboratorioRepositorio.findByParamsValoradasAndNotValoradas(criteriosBusqueda, pageable); 		
 		for (PlacaLaboratorio placa : PagePlacasLaboratorioCentro.getContent()) {
-			listaPlacasLaboratorioCentroBean.add(PlacaLaboratorioCentroBean.modelToBean(placa));
+			System.out.println("Placa vale: "+ placa.toString());
+			PlacaLaboratorioCentroAsignacionesAnalistaBean placaLaboratorioCentroAsignacionesAnalistaBean = PlacaLaboratorioCentroAsignacionesAnalistaBean.modelToBean(placa, criteriosBusqueda.getIdAnalistaMuestras());			
+			listaPlacasLaboratorioCentroAsignacionesBean.add(placaLaboratorioCentroAsignacionesAnalistaBean);
 		}		
-		Page<PlacaLaboratorioCentroBean> placasLaboratorioCentro = new PageImpl<>(listaPlacasLaboratorioCentroBean, pageable, PagePlacasLaboratorioCentro.getTotalElements());		
-		return placasLaboratorioCentro;
+		Page<PlacaLaboratorioCentroAsignacionesAnalistaBean> placasLaboratorioCentroAsignacionesAnalista = new PageImpl<>(listaPlacasLaboratorioCentroAsignacionesBean, pageable, PagePlacasLaboratorioCentro.getTotalElements());		
+		return placasLaboratorioCentroAsignacionesAnalista;
 	}
 	//fin Diana- metodos para los analistas de placas
 	

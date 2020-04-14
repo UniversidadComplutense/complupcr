@@ -138,7 +138,7 @@ function confirmarPlacaEnviada(){
 	var url = "";
 	//var urlAbs = getAbsolutePath();
 	
-	var id=$("#id").val();
+	var id=$("#idPlaca").html();
 	url =  '/laboratorioUni/confirmarEnviadaPlaca?id='+id;
 	window.location=url;
 }

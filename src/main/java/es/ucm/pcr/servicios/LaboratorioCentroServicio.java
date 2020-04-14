@@ -13,6 +13,7 @@ import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
+import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesAnalistaBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
@@ -58,7 +59,7 @@ public interface LaboratorioCentroServicio {
 	 * @param LaboratorioCentro
 	 * @return void >
 	 */
-	public void guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception;
+	public LaboratorioCentro save(LaboratorioCentro laboratorioCentro) throws Exception;
 	
 	/**
 	 * Borrar Laboratorio
@@ -66,7 +67,7 @@ public interface LaboratorioCentroServicio {
 	 * @param Integer idLaboratorioCentro
 	 * @return void >
 	 */
-	public void borrarLaboratorioCentro (Integer idLaboratorioCentro) throws Exception;
+	public void deleteById(Integer idLaboratorioCentro) throws Exception;
 	
 	/**
 	 * Buscat Laboratorio por Id
@@ -74,7 +75,7 @@ public interface LaboratorioCentroServicio {
 	 * @param Integer idLaboratorioCentro
 	 * @return void Optional <LaboratorioCentro>
 	 */
-	public Optional <LaboratorioCentro> buscarLaboratorioCentroPorId (Integer idLaboratorioCentro) throws Exception;
+	public Optional <LaboratorioCentro> findById(Integer idLaboratorioCentro) throws Exception;
 	
 	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable);
 	PlacaLaboratorioCentroBean buscarPlaca (Integer id);
@@ -90,7 +91,10 @@ public interface LaboratorioCentroServicio {
 	public void guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca);
 	public Boolean tienenResultadoDefinitivoLasMuestrasDeLaPlaca(Integer idPlaca);
 	
-	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
+	//public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
+	public Page<PlacaLaboratorioCentroAsignacionesAnalistaBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
+	
+	
 	
 	
 	

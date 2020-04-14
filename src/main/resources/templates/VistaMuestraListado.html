@@ -9,192 +9,272 @@
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
-	<div class="container">	
-	<form action="#" th:action="@{/centroSalud/muestra/list}" method="post" th:object="${beanBusquedaMuestra}" id="formBusqueda" role="form">
-		
-		<div th:classappend="${mensaje == null} and ${mensajeError == null} ? visible : d-none" class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
-		  	<label>Búsqueda de muestras</label>
-		</div>
-		
-		<div th:if="${mensaje !=null}" class="alert alert-success alert-dismissible fade show m-1 mt-2" role="alert">
-			<label th:text="${mensaje}"></label>
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		</div>
-		<div th:if="${mensajeError !=null}" class="alert alert-danger alert-dismissible fade show m-1 mt-2" role="alert">
-			<label th:text="${mensajeError}"></label>
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		</div>
-		
-		<!-- CRITERIOS BUSQUEDA PACIENTE -->
-		<fieldset id="datosPaciente" class="form-group border p-2 m-1">
-			<legend class="w-auto font-weight-bold m-0">Paciente</legend>
-			<div class="row">
-				<div class="col-3 m-0 form-group">
-					<label >Nombre</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.nombrePaciente}"  th:value="${beanBusquedaMuestra.nombrePaciente}" maxlength="45"/>
-				</div>
-				<div class="col-3 m-0 form-group">
-					<label >Primer apellido</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.primerApellido}"  th:value="${beanBusquedaMuestra.primerApellido}" maxlength="45"/>
-				</div>	
-				<div class="col-3 m-0 form-group">
-					<label >Segundo apellido</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.segundoApellido}"  th:value="${beanBusquedaMuestra.segundoApellido}" maxlength="45"/>
-				</div>				
-			</div>
-			<div class="row">
-				<div class="col-3 m-0 form-group">
-					<label >NHC</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.nhcPaciente}"  th:value="${beanBusquedaMuestra.nhcPaciente}" maxlength="45"/>
-				</div>
-				<div class="col-3 m-0 form-group">
-					<label >Correo</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.emailPaciente}"  th:value="${beanBusquedaMuestra.emailPaciente}" maxlength="200"/>
-				</div>					
-			</div>
-		</fieldset>
-		
-		<!-- CRITERIOS BUSQUEDA MUESTRAS -->
-		<fieldset id="datosMuestras" class="form-group border p-2 m-1">
-			<legend class="w-auto font-weight-bold m-0">Muestra</legend>
-			<div class="row">
-				<div class="col-3 m-0 form-group">
-					<label >Etiqueta</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.etiquetaMuestra}"  th:value="${beanBusquedaMuestra.etiquetaMuestra}" maxlength="100"/>
-				</div>	
-				<div class="col-3 m-0 form-group">
-					<label >Fecha envío</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaEnvioMuestraIni}"  th:value="${beanBusquedaMuestra.fechaEnvioMuestraIni}"/>
-				</div>
-				<div class="col-3 m-0 form-group">
-					<label >a</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaEnvioMuestraFin}"  th:value="${beanBusquedaMuestra.fechaEnvioMuestraFin}"/>
-				</div>				
-				<div class="col-3 m-0 form-group">
-					<label>Estado de la muestra</label>
-					<select class="form-control form-control-sm" th:field="${beanBusquedaMuestra.estadoResueltaNoticado}"  th:value="${beanBusquedaMuestra.estadoResueltaNoticado}">
-				 		<option value="">Seleccione</option>
-				 		<option value="1">Resuelta sin notificar</option>
-				 		<option value="2">Resuelta notificada</option>
-				 		<option value="3">Resuelta</option>
-				 	</select>
-				</div>							
-			</div>
-			
-			<div class="row">
-				<div class="col-3 m-0">
-					<!-- <label >Ref. interna</label>
-				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.refInternaMuestra}"  th:value="${beanBusquedaMuestra.refInternaMuestra}" maxlength="10"/> -->
-				</div>	
-				<div class="col-3 m-0">
-					<label >Fecha resultado</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaResultadoMuestraIni}"  th:value="${beanBusquedaMuestra.fechaResultadoMuestraIni}"/>
-				</div>
-				<div class="col-3 m-0">
-					<label >a</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaResultadoMuestraFin}"  th:value="${beanBusquedaMuestra.fechaResultadoMuestraFin}"/>
-				</div>	
-				<div class="col-3 m-0 form-group">
-					<label >Resultado</label>
-				 	<select class="form-control form-control-sm" th:field="${beanBusquedaMuestra.estadoMuestra}"  th:value="${beanBusquedaMuestra.estadoMuestra}">
-				 		<option value="">Seleccione</option>
-				 		<option th:each="var: ${listaResultadosMuestra}"
-									th:value="${var.resultadoMuestra.cod}" th:text="${var.resultadoMuestra.descripcion}"
-									th:select="${beanBusquedaMuestra.estadoMuestra}">Estado</option>
-				 	</select>
-				</div>										
-			</div>
-			
-		</fieldset>
+	<div class="container">
+		<form action="#" th:action="@{/centroSalud/muestra/list}"
+			method="post" th:object="${beanBusquedaMuestra}" id="formBusqueda"
+			role="form">
 
-		<div class="row justify-content-end mt-2">
-			<div class="col-1">
-				<a th:href="@{/centroSalud/muestra/nueva}" class="btn btn-secondary">Nueva</a>				
+			<div
+				th:classappend="${mensaje == null} and ${mensajeError == null} ? visible : d-none"
+				class="alert alert-secondary m-1 mt-2" role="alert" id="alertInfo">
+				<label>Búsqueda de muestras</label>
 			</div>
-			<div class="col-1">
-				<button type="submit" class="btn btn-secondary">Buscar</button>
+
+			<div th:if="${mensaje !=null}"
+				class="alert alert-success alert-dismissible fade show m-1 mt-2"
+				role="alert">
+				<label th:text="${mensaje}"></label>
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
 			</div>
-		</div>	
-		
-		<!-- RESULTADO -->
-		<div class="row justify-content-center mt-3">
-			<table class="table">
-				<thead class="thead-light">	
-	    			<tr>
-	      				<th class="p-1" scope="col">Nombre</th>
-						<th class="p-1" scope="col">NHC</th>
-						<th class="p-1" scope="col">Etiqueta</th>
-						<!-- <th class="p-1" scope="col">Ref. interna</th> -->
-						<th class="p-1" scope="col">Fecha envío</th>
-						<th class="p-1" scope="col">Fecha resultado</th>
-						<th class="p-1" scope="col">Resultado</th>
-						<th class="p-1" scope="col">Notificado</th>
-						<th class="p-1" scope="col">Lote</th>
-						<th class="p-1" scope="col">Acciones</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:if="${listadoMuestras != null}" th:each="muestra : ${listadoMuestras}">
-						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
-							<span th:text="${muestra.nombrePaciente}"></span>
-						</td>					
-						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
-							<span th:text="${muestra.nhcPaciente}"></span>							
-						</td>
-						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">							
-							<span th:text="${muestra.etiquetaMuestra}"></span>							
-						</td>
-						<!-- <td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+			<div th:if="${mensajeError !=null}"
+				class="alert alert-danger alert-dismissible fade show m-1 mt-2"
+				role="alert">
+				<label th:text="${mensajeError}"></label>
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!-- CRITERIOS BUSQUEDA PACIENTE -->
+			<fieldset id="datosPaciente" class="form-group border p-2 m-1">
+				<legend class="w-auto font-weight-bold m-0">Paciente</legend>
+				<div class="row">
+					<div class="col-3 m-0 form-group">
+						<label>Nombre</label> <input type="text"
+							class="form-control form-control-sm"
+							th:field="${beanBusquedaMuestra.nombrePaciente}"
+							th:value="${beanBusquedaMuestra.nombrePaciente}" maxlength="45" />
+					</div>
+					<div class="col-3 m-0 form-group">
+						<label>Primer apellido</label> <input type="text"
+							class="form-control form-control-sm"
+							th:field="${beanBusquedaMuestra.primerApellido}"
+							th:value="${beanBusquedaMuestra.primerApellido}" maxlength="45" />
+					</div>
+					<div class="col-3 m-0 form-group">
+						<label>Segundo apellido</label> <input type="text"
+							class="form-control form-control-sm"
+							th:field="${beanBusquedaMuestra.segundoApellido}"
+							th:value="${beanBusquedaMuestra.segundoApellido}" maxlength="45" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-3 m-0 form-group">
+						<label>NHC</label> <input type="text"
+							class="form-control form-control-sm"
+							th:field="${beanBusquedaMuestra.nhcPaciente}"
+							th:value="${beanBusquedaMuestra.nhcPaciente}" maxlength="45" />
+					</div>
+					<div class="col-3 m-0 form-group">
+						<label>Correo</label> <input type="text"
+							class="form-control form-control-sm"
+							th:field="${beanBusquedaMuestra.emailPaciente}"
+							th:value="${beanBusquedaMuestra.emailPaciente}" maxlength="200" />
+					</div>
+				</div>
+			</fieldset>
+
+			<!-- CRITERIOS BUSQUEDA MUESTRAS -->
+			<fieldset id="datosMuestras" class="form-group border p-2 m-1">
+				<legend class="w-auto font-weight-bold m-0">Muestra</legend>
+				<div class="row">
+					<div class="col-3 m-0 form-group">
+						<label>Etiqueta</label> <input type="text"
+							class="form-control form-control-sm"
+							th:field="${beanBusquedaMuestra.etiquetaMuestra}"
+							th:value="${beanBusquedaMuestra.etiquetaMuestra}" maxlength="100" />
+					</div>
+					<div class="col-3 m-0 form-group">
+						<label>Fecha envío</label> <input type="date"
+							class="form-control form-control-sm"
+							th:field="${beanBusquedaMuestra.fechaEnvioMuestraIni}"
+							th:value="${beanBusquedaMuestra.fechaEnvioMuestraIni}" />
+					</div>
+					<div class="col-3 m-0 form-group">
+						<label>a</label> <input type="date"
+							class="form-control form-control-sm"
+							th:field="${beanBusquedaMuestra.fechaEnvioMuestraFin}"
+							th:value="${beanBusquedaMuestra.fechaEnvioMuestraFin}" />
+					</div>
+					<div class="col-3 m-0 form-group">
+						<label>Estado de la muestra</label> <select
+							class="form-control form-control-sm"
+							th:field="${beanBusquedaMuestra.estadoResueltaNoticado}"
+							th:value="${beanBusquedaMuestra.estadoResueltaNoticado}">
+							<option value="">Seleccione</option>
+							<option value="1">Resuelta sin notificar</option>
+							<option value="2">Resuelta notificada</option>
+							<option value="3">Resuelta</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-3 m-0">
+						<!-- <label >Ref. interna</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.refInternaMuestra}"  th:value="${beanBusquedaMuestra.refInternaMuestra}" maxlength="10"/> -->
+					</div>
+					<div class="col-3 m-0">
+						<label>Fecha resultado</label> <input type="date"
+							class="form-control form-control-sm"
+							th:field="${beanBusquedaMuestra.fechaResultadoMuestraIni}"
+							th:value="${beanBusquedaMuestra.fechaResultadoMuestraIni}" />
+					</div>
+					<div class="col-3 m-0">
+						<label>a</label> <input type="date"
+							class="form-control form-control-sm"
+							th:field="${beanBusquedaMuestra.fechaResultadoMuestraFin}"
+							th:value="${beanBusquedaMuestra.fechaResultadoMuestraFin}" />
+					</div>
+					<div class="col-3 m-0 form-group">
+						<label>Resultado</label> <select
+							class="form-control form-control-sm"
+							th:field="${beanBusquedaMuestra.estadoMuestra}"
+							th:value="${beanBusquedaMuestra.estadoMuestra}">
+							<option value="">Seleccione</option>
+							<option th:each="var: ${listaResultadosMuestra}"
+								th:value="${var.resultadoMuestra.cod}"
+								th:text="${var.resultadoMuestra.descripcion}"
+								th:select="${beanBusquedaMuestra.estadoMuestra}">Estado</option>
+						</select>
+					</div>
+				</div>
+
+			</fieldset>
+
+			<div class="row justify-content-end mt-2">
+				<div class="col-1">
+					<a th:href="@{/centroSalud/muestra/nueva}"
+						class="btn btn-secondary">Nueva</a>
+				</div>
+				<div class="col-1">
+					<button type="submit" class="btn btn-secondary">Buscar</button>
+				</div>
+			</div>
+
+			<!-- RESULTADO -->
+			<div class="row justify-content-center mt-3">
+				<table class="table">
+					<thead class="thead-light">
+						<tr>
+							<th class="p-1" scope="col">Nombre</th>
+							<th class="p-1" scope="col">NHC</th>
+							<th class="p-1" scope="col">Etiqueta</th>
+							<!-- <th class="p-1" scope="col">Ref. interna</th> -->
+							<th class="p-1" scope="col">Fecha envío</th>
+							<th class="p-1" scope="col">Fecha resultado</th>
+							<th class="p-1" scope="col">Resultado</th>
+							<th class="p-1" scope="col">Notificado</th>
+							<th class="p-1" scope="col">Lote</th>
+							<th class="p-1" scope="col">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:if="${listadoMuestras != null}"
+							th:each="muestra : ${listadoMuestras}">
+							<td class="p-1"
+								th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+								<span th:text="${muestra.nombrePaciente}"></span>
+							</td>
+							<td class="p-1"
+								th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+								<span th:text="${muestra.nhcPaciente}"></span>
+							</td>
+							<td class="p-1"
+								th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+								<span th:text="${muestra.etiquetaMuestra}"></span>
+							</td>
+							<!-- <td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
 							<span th:text="${muestra.refInternaMuestra}"></span>							
 						</td>-->
-						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
-							<span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span>
-						</td>
-						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
-							<span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/MM/yyyy')}"></span>
-						</td>
-						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
-							<span th:text="${muestra.estadoMuestra}"></span>
-						</td>
-						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
-							<span th:text="${muestra.notificado} ? 'Sí' : 'No'"></span>
-						</td>
-						<td class="p-1" th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
-							<span th:text="${muestra.codNumLote}"></span>
-						</td>
-						<td class="p-1">
-							<!-- ACCIONES -->
-					        <a style="color:black" th:href="@{/centroSalud/muestra/modificar(id=${muestra.id})}" title="Editar">
-					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
-					        </a>
-					        <a th:if="${muestra.fechaEnvioMuestraIni} != null" style="color:grey;cursor: pointer;" title="Borrar">
-					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
-					        </a>			        
-					        <a th:if="${muestra.fechaEnvioMuestraIni} == null" style="color:black;cursor: pointer;" th:href="@{/centroSalud/muestra/borrar(id=${muestra.id})}" title="Borrar">
-					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
-					        </a>
-					        <!-- TODO - PENDIENTE DE OCULTAR 
+							<td class="p-1"
+								th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+								<span
+								th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span>
+							</td>
+							<td class="p-1"
+								th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+								<span
+								th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/MM/yyyy')}"></span>
+							</td>
+							<td class="p-1"
+								th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+								<span th:text="${muestra.estadoMuestra}"></span>
+							</td>
+							<td class="p-1"
+								th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+								<span th:text="${muestra.notificado} ? 'Sí' : 'No'"></span>
+							</td>
+							<td class="p-1"
+								th:onclick="|window.location.href='/centroSalud/muestra/${muestra.id}'|">
+								<span th:text="${muestra.codNumLote}"></span>
+							</td>
+							<td class="p-1">
+								<!-- ACCIONES --> <a style="color: black"
+								th:href="@{/centroSalud/muestra/modificar(id=${muestra.id})}"
+								title="Editar"> <i class="fa fa-edit" aria-hidden="true"
+									style="font-size: 1.2em;"></i>
+							</a> <a th:if="${muestra.fechaEnvioMuestraIni} != null"
+								style="color: grey; cursor: pointer;" title="Borrar"> <i
+									class="fa fa-eraser" aria-hidden="true"
+									style="font-size: 1.2em;"></i>
+							</a> <a th:if="${muestra.fechaEnvioMuestraIni} == null"
+								style="color: black; cursor: pointer;"
+								th:data-href="@{/centroSalud/muestra/borrar(id=${muestra.id})}"
+								title="Borrar" data-toggle="modal" data-target="#confirm-borrar">
+									<i class="fa fa-eraser" aria-hidden="true"
+									style="font-size: 1.2em;"></i>
+							</a> <!-- TODO - PENDIENTE DE OCULTAR 
 					        <a style="color:black;cursor: pointer;" 
 					        		th:href="@{/documento/muestra(id=${muestra.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_MUESTRA_DESDE_MUESTRAS})}" 
 					        		title="Documentos">
 					          	<i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
 					        -->
-						</td>						
-					</tr>		
-				</tbody>
-			</table>
-		</div>
-	</form>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
 
 	</div>
+	<!-- Modal confirmación borrado -->
+	<div class="modal fade" id="confirm-borrar" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmación</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>¿Está seguro de que quiere borrar este elemento?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancelar</button>
+					<a class="btn btn-danger btn-borrar">Borrar</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Fin modal -->
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
-    <object th:replace="fragmentos :: scripts" th:remove="tag"></object>
-    <script type="text/javascript">
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+	<script type="text/javascript">
     	$('.alert').on('closed.bs.alert', function () {
 		    $('#alertInfo').removeClass('d-none');
 	    });
-	    
+    	$('#confirm-borrar').on('show.bs.modal', function(e) {
+    	    $(this).find('.btn-borrar').attr('href', $(e.relatedTarget).data('href'));
+    	});
     </script>
 </body>
 </html>

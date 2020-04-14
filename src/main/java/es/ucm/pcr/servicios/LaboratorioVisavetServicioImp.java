@@ -83,16 +83,16 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 		return mapalaboratorioVisavet;
 	}
 	
-	public void guardarLaboratorioVisavet (LaboratorioVisavet laboratorioVisavet) throws Exception{
-		laboratorioVisavetRepositorio.save(laboratorioVisavet);
+	public LaboratorioVisavet save (LaboratorioVisavet laboratorioVisavet) throws Exception{
+		return laboratorioVisavetRepositorio.save(laboratorioVisavet);
 	}
 	
-	public void borrarLaboratorioVisavet (Integer idLaboratorioVisavet) throws Exception
+	public void deleteById (Integer idLaboratorioVisavet) throws Exception
 	{
 		laboratorioVisavetRepositorio.deleteById(idLaboratorioVisavet);
 	}
 	
-	public Optional <LaboratorioVisavet> buscarLaboratorioVisavetPorId (Integer idLaboratorioVisavet) throws Exception{
+	public Optional <LaboratorioVisavet> findById (Integer idLaboratorioVisavet) throws Exception{
 			return laboratorioVisavetRepositorio.findById(idLaboratorioVisavet);
 	}
 	
@@ -178,6 +178,11 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 			placasVisavet.add(bean);
 		}		
 		return placasVisavet;
+	}
+	
+	@Override
+	public Optional<LaboratorioVisavet> findByNombre(String nombre) {
+		return laboratorioVisavetRepositorio.findByNombre(nombre);
 	}
 
 }

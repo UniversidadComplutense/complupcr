@@ -174,35 +174,5 @@
 		
 	<script src="static/js/laboratorioCentro.js"
 		th:src="@{/js/laboratorioCentro.js}"></script>
-	<script>
-		$('#confirm-borrar').on('show.bs.modal', function(e) {
-		    $(this).find('.btn-borrar').attr('href', $(e.relatedTarget).data('href'));
-		});
-	</script>
-</div>
-
-<!-- Diálogo confirmación borrado -->
-<div th:fragment="modal-borrar" id="modal-borrar">
-	<div class="modal fade" id="confirm-borrar" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Confirmación</h5>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<p>¿Está seguro de que quiere borrar este elemento?</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal">Cancelar</button>
-					<a class="btn btn-danger btn-borrar">Borrar</a>
-				</div>
-			</div>
-		</div>
-	</div>
 </div>
 </html>

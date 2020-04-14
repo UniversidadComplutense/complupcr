@@ -54,7 +54,7 @@ public interface LaboratorioVisavetServicio {
 	 * @param LaboratorioVisavet
 	 * @return void >
 	 */
-	public void guardarLaboratorioVisavet (LaboratorioVisavet laboratorioVisavet) throws Exception;
+	public LaboratorioVisavet save(LaboratorioVisavet laboratorioVisavet) throws Exception;
 	
 	/**
 	 * Borrar Laboratorio Visavet
@@ -62,15 +62,15 @@ public interface LaboratorioVisavetServicio {
 	 * @param Integer idLaboratorioVisavet
 	 * @return void >
 	 */
-	public void borrarLaboratorioVisavet (Integer idLaboratorioVisavet) throws Exception;	
+	public void deleteById(Integer idLaboratorioVisavet) throws Exception;	
 
 	/**
-	 * Buscat Laboratorio por Id
+	 * Buscar Laboratorio por Id
 	 * 
 	 * @param Integer idLaboratorioVisavet
 	 * @return void Optional <LaboratorioVisavet>
 	 */
-	public Optional <LaboratorioVisavet> buscarLaboratorioVisavetPorId (Integer idLaboratorioVisavet) throws Exception;
+	public Optional <LaboratorioVisavet> findById(Integer idLaboratorioVisavet) throws Exception;
 
 	
 	// JAVI
@@ -85,7 +85,13 @@ public interface LaboratorioVisavetServicio {
 	// JAVI
 	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio);
 	
-	
+	/**
+	 * Buscar laboratorio visavet por nombre
+	 * 
+	 * @param nombre
+	 * @return Optional<LaboratorioVisavet>
+	 */
+	public Optional<LaboratorioVisavet> findByNombre(String nombre);
 	
 	
 }

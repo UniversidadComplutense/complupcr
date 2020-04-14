@@ -227,6 +227,11 @@ public class Usuario implements java.io.Serializable {
 	public void setPlacasLaboratorio(Set<PlacaLaboratorio> placasLaboratorio) {
 		this.placasLaboratorio = placasLaboratorio;
 	}
+
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + "]";
+	}
 	
 	
 
