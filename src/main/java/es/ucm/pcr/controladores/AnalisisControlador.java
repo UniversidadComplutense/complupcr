@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -82,6 +83,9 @@ import es.ucm.pcr.validadores.DocumentoValidador;
 @Controller
 @RequestMapping(value = "/analisis")
 public class AnalisisControlador {
+	
+	@Value("${analisis.numAnalistas}")
+    private Integer  numAnalistas;
 	
 	@Autowired
 	private SesionServicio sesionServicio;
@@ -764,8 +768,12 @@ public class AnalisisControlador {
 				ModelAndView vista = new ModelAndView("VistaCargarResultados");
 				vista.addObject("elementoDoc", bean);
 			} else {
-				System.out.println("El nombre de la columna es: " + bean.getColumna());				
+				System.out.println("El nombre de la columna es: " + bean.getColumna());
+				//guardamos el documento excel asociandolo a la placa 
 				documentoServicio.guardar(bean);
+				//guardamos las valoraciones de las muestras que ha puesto el analista en el excel y si es el ultimo analista de los numAnalistas globales de la aplicacion
+				//entonces guardamos el resultado definitivo
+				laboratorioCentroServicio.guardarResultadosPlacaLaboratorio(bean, numAnalistas);
 			}
 
 			redirectAttributes.addFlashAttribute("mensaje", "Resultado guardado correctamente");			

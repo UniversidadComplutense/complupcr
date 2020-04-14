@@ -150,4 +150,13 @@ public interface UsuarioServicio {
 	 * @return Optional<LaboratorioVisavet>
 	 */
 	public Optional<LaboratorioVisavet> getLaboratorioVisavet(Usuario usug1); 
+	
+	/**
+	 * Lista ordenada de  BeanUsuarioGestion por criterios de busqueda
+	 * 
+	 * @param String busqueda: mail o apellido1
+	 * @return List<BeanUsuarioGestion>
+	 */
+	public List<BeanUsuarioGestion> listaUsuariosOrdenadaLikeEmailApellido1(String busqueda) throws Exception;
+	
 }
