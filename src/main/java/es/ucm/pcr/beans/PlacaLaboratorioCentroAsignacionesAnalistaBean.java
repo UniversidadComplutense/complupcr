@@ -13,114 +13,43 @@ import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.modelo.orm.UsuarioMuestra;
 
-public class PlacaLaboratorioCentroAsignacionesBean {
-	//datos de la placa, analistas asignados a la placa y a sus respectivas muestras con todas las valoraciones de los analistas asignados
+public class PlacaLaboratorioCentroAsignacionesAnalistaBean extends PlacaLaboratorioCentroAsignacionesBean{
 	
-	//datos de la placa
-	private Integer id;
-	//private String numeroMuestras;
-	private BeanEstado beanEstado;
-	private LaboratorioCentroBean laboratorioCentro;
-	private Date fechaCreacion;	
-	private List<DocumentoBean> documentos;
-	private List<BeanListadoMuestraAnalisis> muestras;	//las muestras tendran sus analista asignados y sus valoraciones
+	//es PlacaLaboratorioCentroAsignacionesBean pero al cargar sus muestras cargaremos tambien el atributo asignacionUsuario logado
+	//que tendra solo los datos de la valoracion del analista logado
 	
-	//ya no hereda de PlacaLaboratorioCentroBean, al que le añadimos el beanAnalisis y fechaAsignacionAAnalistaLogado
-	
-	//analistas de laboratorio y voluntarios que se asignan las placas
-	//serán los mismos que se asignen a sus respesctivas muestras (por parte del jefe de servicio)  F6y F7
-	private BeanAnalisis beanAnalisisPlaca; 
-	
+	private Integer idAnalistaLogado; 
 	//será la fecha en la que se asignó la placa (y todas sus muestras) al analista que ha iniciado sesion, 
 	//solo se rellena al recuperar las placas asignadas al analista que inicia sesion
-	//private Date fechaAsignacionAAnalistaLogado;   
+	private Date fechaAsignacionAAnalistaLogado;   
 	
-	public PlacaLaboratorioCentroAsignacionesBean() {
+	public PlacaLaboratorioCentroAsignacionesAnalistaBean() {
 		super();
 		// TODO Auto-generated constructor stub
-	}	
-
-	public Integer getId() {
-		return id;
 	}
-	public void setId(Integer id) {
-		this.id = id;
+	public Integer getIdAnalistaLogado() {
+		return idAnalistaLogado;
 	}
-	public BeanEstado getBeanEstado() {
-		return beanEstado;
-	}
-
-	public void setBeanEstado(BeanEstado beanEstado) {
-		this.beanEstado = beanEstado;
-	}
-
-	public LaboratorioCentroBean getLaboratorioCentro() {
-		return laboratorioCentro;
-	}
-	public void setLaboratorioCentro(LaboratorioCentroBean laboratorioCentro) {
-		this.laboratorioCentro = laboratorioCentro;
-	}
-
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	public List<DocumentoBean> getDocumentos() {
-		return documentos;
+	public void setIdAnalistaLogado(Integer idAnalistaLogado) {
+		this.idAnalistaLogado = idAnalistaLogado;
 	}
 
 
-
-	public void setDocumentos(List<DocumentoBean> documentos) {
-		this.documentos = documentos;
+	public Date getFechaAsignacionAAnalistaLogado() {
+		return fechaAsignacionAAnalistaLogado;
 	}
 
-
-
-	public List<BeanListadoMuestraAnalisis> getMuestras() {
-		return muestras;
+	public void setFechaAsignacionAAnalistaLogado(Date fechaAsignacionAAnalistaLogado) {
+		this.fechaAsignacionAAnalistaLogado = fechaAsignacionAAnalistaLogado;
 	}
 
-
-
-	public void setMuestras(List<BeanListadoMuestraAnalisis> muestras) {
-		this.muestras = muestras;
-	}
-
-
-
-	public BeanAnalisis getBeanAnalisisPlaca() {
-		return beanAnalisisPlaca;
-	}
-
-
-
-	public void setBeanAnalisisPlaca(BeanAnalisis beanAnalisisPlaca) {
-		this.beanAnalisisPlaca = beanAnalisisPlaca;
-	}
-
-	
-	
-
-
-	@Override
-	public String toString() {
-		return "PlacaLaboratorioCentroAsignacionesBean [id=" + id + ", beanEstado=" + beanEstado
-				+ ", laboratorioCentro=" + laboratorioCentro + ", fechaCreacion=" + fechaCreacion + ", documentos="
-				+ documentos + ", muestras=" + muestras + ", beanAnalisisPlaca=" + beanAnalisisPlaca + "]";
-	}
-
-	//rellena los datos de la placa y todos los analistas y voluntarios asignados a la placa y a las muestras de la placa
-	public static PlacaLaboratorioCentroAsignacionesBean modelToBean(PlacaLaboratorio placaLaboratorio) {
+	//rellena los datos de la placa y los datos de las muestras de la placa y le añade los datos que corresponden al usuario analista logado
+	public static PlacaLaboratorioCentroAsignacionesAnalistaBean modelToBean(PlacaLaboratorio placaLaboratorio, Integer idUsuarioAnalistaLogado) {
+				
+		PlacaLaboratorioCentroAsignacionesAnalistaBean bean = new PlacaLaboratorioCentroAsignacionesAnalistaBean();
 		
-		//PlacaLaboratorioCentroBean.modelToBean(placaLaboratorio); //llamo al metodo de la clase padre
+		bean.setIdAnalistaLogado(idUsuarioAnalistaLogado);
 		
-		//replica codigo javi en clase padre
-		PlacaLaboratorioCentroAsignacionesBean bean = new PlacaLaboratorioCentroAsignacionesBean();
 
 		bean.setId(placaLaboratorio.getId());
 
@@ -138,7 +67,8 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 		List<BeanListadoMuestraAnalisis> listadoMuestras = new ArrayList<BeanListadoMuestraAnalisis>();
 		Set<Muestra> muestras = placaLaboratorio.getMuestras();
 		for (Muestra muestra : muestras) {
-			BeanListadoMuestraAnalisis muestraBeanAnalisis = BeanListadoMuestraAnalisis.modelToBean(muestra);			
+			//llamamos al metodo modelToBeanAnalistas que cargara tambien el atributo asignacionUsuarioLogado 	
+			BeanListadoMuestraAnalisis muestraBeanAnalisis = BeanListadoMuestraAnalisis.modelToBeanAnalista(muestra, idUsuarioAnalistaLogado); 		
 			listadoMuestras.add(muestraBeanAnalisis);
 		}
 		bean.setMuestras(listadoMuestras);
@@ -151,6 +81,7 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 		//analistas de la placa
 		//beanAnalisis
 		BeanAnalisis beanAnalisis  = new BeanAnalisis();
+		BeanAsignacion beanAsignacionUsuarioLogado = new BeanAsignacion();
 		BeanListaAsignaciones beanListaAsignaciones = new BeanListaAsignaciones();
 		//analistas de la muestra(serán los mismos analistas que la placa), 
 		//rellenamos los analistas de la placa a partir de los analistas de la primera muestra de la placa (porque son los mismos para todas las muestras)
@@ -158,7 +89,21 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 		for (Muestra muestra : setMuestras) {
 			for(UsuarioMuestra usuMuestra: muestra.getUsuarioMuestras()) {
 				Usuario usu = usuMuestra.getUsuario();
-							
+				//si el usuario es el usuario logado rellenamos el bean				
+				if(usu.getId().equals(idUsuarioAnalistaLogado)) {						
+					BeanUsuario beanUsuLogado = BeanUsuario.modelToBean(usu);
+					//no puedo asociarle el rol porque puede tener varios
+					//BeanRolUsuario beanRolUsuario = new BeanRolUsuario();				
+					//beanUsuLogado.setBeanRolUsuario(beanRolUsuario.asignarRolUsuarioPorCodNum(usuarioLogado.get));
+					beanAsignacionUsuarioLogado.setBeanUsuario(beanUsuLogado);
+					beanAsignacionUsuarioLogado.setFechaAsignacion(usuMuestra.getFechaAsignacion());
+					beanAsignacionUsuarioLogado.setValoracion(usuMuestra.getValoracion());
+					beanAsignacionUsuarioLogado.setFechaValoracion(usuMuestra.getFechaValoracion());
+					//la fecha de asignacion de analista logado sera la misma que la fecha de asignacion del analista logado a las muestras
+					bean.setFechaAsignacionAAnalistaLogado(usuMuestra.getFechaAsignacion());
+				}
+				
+				
 				for(Rol rol: usu.getRols()) {
 					//si el usuario tiene el rol analista
 					if(rol.getId().equals(BeanRolUsuario.RolUsuario.ROL_USUARIO_ANALISTALABORATORIO.getId())) {
@@ -199,15 +144,67 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 			break;
 			
 		}
+		beanAnalisis.setAsignacionUsuarioLogado(beanAsignacionUsuarioLogado);
 		beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
 		bean.setBeanAnalisisPlaca(beanAnalisis);	
 
 
 		return bean;
 
-	}
-	
-	
 	
 
+	}
+	@Override
+	public String toString() {
+		return "PlacaLaboratorioCentroAsignacionesAnalistaBean [idAnalistaLogado=" + idAnalistaLogado
+				+ ", fechaAsignacionAAnalistaLogado=" + fechaAsignacionAAnalistaLogado + "]";
+	}
+		
+		
+	
+
+	/*
+	public static PlacaLaboratorio beanToModel(PlacaLaboratorioCentroAsignacionesBean placaLaboratorioCentroBean) {
+
+		PlacaLaboratorio placa = new PlacaLaboratorio();
+
+		if (placaLaboratorioCentroBean.getId() != null) {
+			placa.setId(placaLaboratorioCentroBean.getId());
+		}
+		
+		if (placaLaboratorioCentroBean.getFechaCreacion() != null) {
+			placa.setFechaCreacion(placaLaboratorioCentroBean.getFechaCreacion());
+		}
+
+		if (placaLaboratorioCentroBean.getBeanEstado() != null) {
+			placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(placaLaboratorioCentroBean.getBeanEstado().getEstado().getCodNum()));
+		}
+		
+		if (placaLaboratorioCentroBean.getNumeroMuestras() != null) {
+			placa.setNumeromuestras(placaLaboratorioCentroBean.getNumeroMuestras());
+		}
+		
+
+		// TODO rellenar LaboratorioCentro
+		// placa.setLaboratorioCentro();
+
+		// TODO rellenar documentos
+		//Set<Documento> documentos = new HashSet<Documento>();
+		//placa.setDocumentos(documentos);
+
+		
+
+		// TODO rellenar placas Visavet
+		//Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>();
+		//placa.setPlacaVisavetPlacaLaboratorios(placaVisavetPlacaLaboratorios);
+
+		return placa;
+	}
+
+*/
+	
+	
+	
+	
+	
 }

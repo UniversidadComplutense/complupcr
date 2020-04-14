@@ -21,13 +21,14 @@
 				<thead class="thead-light">	
 	    			<tr>	    			   
 	    				<th scope="col">A</th>
-	      				<th scope="col">Nombre</th>
-						<th scope="col">NHC</th>
+	      				<!-- <th scope="col">Nombre</th>
+						<th scope="col">NHC</th> -->
 						<th scope="col">Etiqueta</th>
-						<!-- <th scope="col">Ref. interna</th> -->
+						<th scope="col">Ref. interna</th>
 						<!-- <th scope="col">Fecha envío</th> -->
-						<th scope="col">Fecha resultado</th>
+						<!-- <th scope="col">Fecha resultado</th> -->
 						<th scope="col">Resultado</th>
+						<!-- <th scope="col">Estado</th> -->
 						<!-- <th scope="col">Lote</th> -->						
 					</tr>
 				</thead>
@@ -35,38 +36,43 @@
 					<!-- data-target="#group-of-rows-1" -->			
 					<tr >						
 						<td class="clickable" data-toggle="collapse" th:data-target="${'#analistasMuestraCerrar'+ muestra.id}" aria-expanded="false" th:aria-controls="${'analistasMuestraCerrar'+ muestra.id}">
-							<i class="fa fa-folder"></i>
-						</td>
-					
-						<td>
+							<!-- <i class="fa fa-folder"></i> -->
+							<a href=# style="color:black" data-toggle="tooltip" title="Ver analistas">					         
+					          <i class="fa fa-child" aria-hidden="true" style="font-size: 1.2em;"></i>
+					         </a>
+						</td>						
+						<!-- <td>
 							<span th:text="${muestra.nombrePaciente}"></span>
 						</td>					
 						<td>
 							<span th:text="${muestra.nhcPaciente}"></span>							
-						</td>
+						</td> -->
 						<td>							
 							<span th:text="${muestra.etiquetaMuestra}"></span>							
 						</td>
-						<!-- <td>
+						<td>
 							<span th:text="${muestra.refInternaMuestra}"></span>							
-						</td> -->
+						</td>
 						<!-- <td>
 							<span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/mm/yyyy')}"></span>
 						</td> -->
+						<!-- <td>
+							<span th:text="${#dates.format(muestra.fechaResultado, 'dd/mm/yyyy')}"></span>
+						</td> -->						
 						<td>
-							<span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/mm/yyyy')}"></span>
+							<span th:text="${muestra.resultado}"></span>
 						</td>
-						<td>
+						<!-- <td>
 							<span th:text="${muestra.estadoMuestra}"></span>
-						</td>
+						</td> -->
 						<!-- <td>
 							<span th:text="${muestra.codNumLote}"></span>
 						</td>	 -->					
 					</tr>				
 					<!-- id="group-of-rows-1" -->	
 					<tr th:id="${'analistasMuestraCerrar'+ muestra.id}" class="collapse table-warning">						
-						<td><i class="fa fa-folder-open"></i></td>
-						<td colspan="3">							
+						<td><!-- <i class="fa fa-folder-open"></i> --></td>
+						<td colspan="1">							
 							<label>Analistas asignados</label>
 							<ul th:each="analistaLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
 								<li><span th:text="${analistaLab.beanUsuario.nom}"></span>; 
@@ -75,12 +81,21 @@
 								</li>
 							</ul>						
 						</td>
-						<td colspan="2">							
+						<td colspan="1">							
 							<label>Voluntarios asignados</label>
 							<ul th:each="voluntarioLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
 								<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span>; 
 									<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
 									<span th:text="${voluntarioLab.valoracion}"></span> 
+								</li>
+							</ul>						
+						</td>
+						<td colspan="1">							
+							<label>Otros voluntarios</label>
+							<ul th:each="voluntarioSinLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVolSinLabCentro}">							
+								<li><span th:text="${voluntarioSinLab.beanUsuario.nom}"></span>; 
+									<!-- <span th:text="${voluntarioSinLab.fechaAsignacion}"></span>;  -->
+									<span th:text="${voluntarioSinLab.valoracion}"></span> 
 								</li>
 							</ul>						
 						</td>
