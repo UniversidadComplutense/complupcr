@@ -21,10 +21,12 @@ import org.springframework.stereotype.Service;
 import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
+import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesAnalistaBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
@@ -69,6 +71,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	@Autowired
 	EstadoPlacaLaboratorioRepositorio estadoPlacaLaboratorioRepositorio;
+	
+	@Autowired
+	private ServicioLog servicioLog;
 	
 	public LaboratorioCentro mapeoBeanEntidadLaboratorioCentro(BeanLaboratorioCentro beanLaboratorioCentro) throws Exception{
 		
@@ -235,6 +240,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	}
 	
 	@Override
+	@Transactional
 	public PlacaLaboratorioCentroBean guardarCogerODevolverPlaca(Integer idPlaca, Integer idUsuario, String accion) {
 	//metodo que recibe el idPlaca, y el id de usuario que la quiere coger
 	
@@ -251,6 +257,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			for(Muestra m: placa.getMuestras()) {
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_PENDIENTE_ANALIZAR.getCodNum()));
 				muestraRepositorio.save(m);
+				//guardamos en el log el cambio de estado de la muestra
+				BeanEstado estadoMuestra = new BeanEstado();
+				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
+				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
 			}			
 		}else if(accion.equals("devolver")) {
 			//desasocia la placa del usuario, le cambia el estado de la placa a PLACA_LISTA_PARA_ANALISIS (estado anterior) y ¿Qué hacemos con las muestras?
@@ -263,10 +273,14 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			for(Muestra m: placa.getMuestras()) {
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS.getCodNum()));
 				muestraRepositorio.save(m);
+				//guardamos en el log el cambio de estado de la muestra
+				BeanEstado estadoMuestra = new BeanEstado();
+				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
+				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
 			}	
 		}
-		placa = placaLaboratorioRepositorio.save(placa);			
-		
+		placa = placaLaboratorioRepositorio.save(placa);
+		//TODO guardamos en el log el cambio de estado de la placa (no tenemos tabla de log de placas)
 		
 		return PlacaLaboratorioCentroBean.modelToBean(placa);
 
@@ -307,6 +321,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	//metodo que guarda las nuevas asignaciones de analistas de labCentro, voluntarios de labCentro y voluntarios sin centro a la placa 
 	//se guardan en realidad las asignaciones a las muestras de la placa
 	@Override
+	@Transactional
 	public void guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca) {
 	
 		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(formBeanGuardarAsignacionPlaca.getIdPlaca());
@@ -351,6 +366,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum()));
 				muestra.setNumerodeAnalistasAsignados(numerodeAnalistasAsignadosMuestra);
 				muestraRepositorio.save(muestra);
+				//guardamos en el log el cambio de estado de la muestra
+				BeanEstado estadoMuestra = new BeanEstado();
+				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, muestra.getEstadoMuestra().getId());
+				servicioLog.actualizarEstadoMuestra(muestra.getId(), estadoMuestra);				
 			}
 		}
 		else {
@@ -410,6 +429,72 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		Page<PlacaLaboratorioCentroAsignacionesAnalistaBean> placasLaboratorioCentroAsignacionesAnalista = new PageImpl<>(listaPlacasLaboratorioCentroAsignacionesBean, pageable, PagePlacasLaboratorioCentro.getTotalElements());		
 		return placasLaboratorioCentroAsignacionesAnalista;
 	}
+	
+	
+	private Integer calculaCuantasValoracionesTieneLaMuestra(Muestra m) {
+		//metodo que nos dice cuantas valoraciones han dado los analistas asignados a la muestra
+		//de una muestra recuperamos todos sus analistas asignados y contamos cuantos han puesto una valoracion
+		Integer cont=0;
+		for(UsuarioMuestra um: m.getUsuarioMuestras()) {
+			if(um.getValoracion()!=null) {
+				cont = cont + 1;
+			}
+		}
+		return cont;
+	}
+	
+	@Override
+	@Transactional
+	//metodo que recibe el ElementoDocumentacionBean (excel con valoraciones) y carga las valoraciones que ha metido el analista en todas las muestras de la placa 
+	public void guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas) {
+		//buscamos todas los registros usuarioMuestra de las muestras de la placa
+		Integer idPlaca = bean.getId(); //aqui solo puede llegar el id de una placa del analista logado que tenga sus muestras sin valorar
+		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);
+		Integer idUsuarioLogado = sesionServicio.getUsuario().getId(); 
+		Date fechaActual = new Date();
+		//por cada muestra de la placa
+		for(Muestra m: placa.getMuestras()) {			
+			//recuperamos el usuarioMuestra asociado al usuario logado (analista que está valorando las muestras de la placa)
+			Optional<UsuarioMuestra> optusumu = usuarioMuestraRepositorio.findByIdUsuarioAndIdMuestra(idUsuarioLogado, m.getId());
+			if (optusumu.isPresent()) {
+				UsuarioMuestra usumu = optusumu.get();
+				//aqui tendriamos que asociarle la valoracion que viene en el excel para esa muestra 
+				//usumu.setValoracion(valoracion);
+				usumu.setFechaValoracion(fechaActual);
+				UsuarioMuestra usumuGuardado = usuarioMuestraRepositorio.save(usumu);
+			}
+			else {
+				log.error("No se ha encontrado el registro de usuario muestra para asignarle la valoracion del analista");
+			}
+			
+			//por cada muestra calculamos si ya se han dado las valoraciones de todos los analistas
+			//en ese caso el resultado sería definitivo y se guardara el resultado en la muestra y se enviará la notificacion 
+			Integer numValoracionesMuestra = this.calculaCuantasValoracionesTieneLaMuestra(m);
+			if(numValoracionesMuestra.equals(numAnalistas)) {
+				//guardamos como resultado definitivo este ultimo resultado que está dando el analista que viene del excel
+				//m.setResultado(valoracion);
+				m.setFechaResultado(fechaActual);				
+				//cambiamos el estado de la muestra a resuelta y la guardamos							
+				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_RESUELTA.getCodNum()));				
+				muestraRepositorio.save(m);
+				//anotamos en el log el cambio de estado de la muestra				
+				BeanEstado estadoMuestra = new BeanEstado();
+				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
+				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
+				//TODO envio de notificaciones a pacientes si tienen notificacion automatica
+				
+			}
+			
+		}			
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	//fin Diana- metodos para los analistas de placas
 	
 	

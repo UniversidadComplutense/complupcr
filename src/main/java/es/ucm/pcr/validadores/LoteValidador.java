@@ -70,5 +70,8 @@ public class LoteValidador implements Validator {
 				errors.rejectValue("capacidad", "campo.invalid", "El lote tiene actualmente " + numeroMuestrasLote + " muestras");
 			}
 		}
+		if (lote.getCapacidad() == null || lote.getCapacidad().intValue() == 0) {
+			errors.rejectValue("capacidad", "campo.invalid", "La capacidad es obligatoria y mayor que 0");
+		}
 	}
 }

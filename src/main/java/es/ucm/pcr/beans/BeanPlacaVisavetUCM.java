@@ -18,6 +18,8 @@ private List<LoteBeanPlacaVisavet> listaLotes;
 private Integer id;
 private String tamano;
 private Date fechaCreacion;
+private Date fechaAsignadaLaboratorio;
+private Date fechaEnviadaLaboratorio;
 private BeanEstado estado;
 private Integer idLaboratorioCentro;
 private BeanLaboratorioCentro laboratorioCentro;
@@ -73,6 +75,24 @@ public BeanLaboratorioCentro getLaboratorioCentro() {
 public void setLaboratorioCentro(BeanLaboratorioCentro laboratorioCentro) {
 	this.laboratorioCentro = laboratorioCentro;
 }
+
+
+public Date getFechaAsignadaLaboratorio() {
+	return fechaAsignadaLaboratorio;
+}
+public void setFechaAsignadaLaboratorio(Date fechaAsignadaLaboratorio) {
+	this.fechaAsignadaLaboratorio = fechaAsignadaLaboratorio;
+}
+
+
+
+
+public Date getFechaEnviadaLaboratorio() {
+	return fechaEnviadaLaboratorio;
+}
+public void setFechaEnviadaLaboratorio(Date fechaEnviadaLaboratorio) {
+	this.fechaEnviadaLaboratorio = fechaEnviadaLaboratorio;
+}
 public static BeanPlacaVisavetUCM modelToBean(PlacaVisavet placaVisavet) {
 
 	BeanPlacaVisavetUCM bean = new BeanPlacaVisavetUCM();
@@ -81,11 +101,12 @@ public static BeanPlacaVisavetUCM modelToBean(PlacaVisavet placaVisavet) {
 	bean.setId(placaVisavet.getId());
 //	bean.setTamano(placaVisavet.getTamano());
 	bean.setFechaCreacion(placaVisavet.getFechaCreacion());
+	bean.setFechaAsignadaLaboratorio(placaVisavet.getFechaAsignadaLaboratorioCentro());
 	BeanEstado beanEstado = new BeanEstado();
 	beanEstado.asignarTipoEstadoYCodNum(BeanEstado.TipoEstado.EstadoPlacaLaboratorioVisavet,
 			placaVisavet.getEstadoPlacaVisavet().getId());
 	bean.setEstado(beanEstado);
-
+    bean.setFechaEnviadaLaboratorio(placaVisavet.getFechaEnviadaLaboratorioCentro());
 	LoteBeanPlacaVisavet lote = new LoteBeanPlacaVisavet();
 	List<LoteBeanPlacaVisavet> listaLotes = new ArrayList();
 	List<MuestraBeanLaboratorioVisavet> listaMuestras = new ArrayList();
@@ -129,7 +150,9 @@ public static PlacaVisavet beanToModel(BeanPlacaVisavetUCM bean) {
 	placaVisavet.setId(bean.getId());
 //	bean.setTamano(placaVisavet.getTamano());
 	placaVisavet.setFechaCreacion(bean.getFechaCreacion());
+	placaVisavet.setFechaAsignadaLaboratorioCentro(bean.getFechaAsignadaLaboratorio());
     placaVisavet.setEstadoPlacaVisavet(new EstadoPlacaVisavet(bean.getEstado().getEstado().getCodNum()));
+    placaVisavet.setFechaEnviadaLaboratorioCentro(bean.getFechaEnviadaLaboratorio());
     /* YOLI  
      */Set<Lote> listaLotes =  new HashSet();
    if (bean.getListaLotes() !=null) {
