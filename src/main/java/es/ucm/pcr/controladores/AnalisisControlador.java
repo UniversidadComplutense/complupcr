@@ -55,6 +55,7 @@ import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
+import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.GuardarAsignacionMuestraBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.GuardarCogerYDevolverPlacasBean;
@@ -70,10 +71,12 @@ import es.ucm.pcr.beans.BeanResultado.ResultadoMuestra;
 import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.config.security.PcrUserDetails;
 import es.ucm.pcr.modelo.orm.Usuario;
+import es.ucm.pcr.servicios.DocumentoServicio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.servicios.UsuarioServicio;
+import es.ucm.pcr.validadores.DocumentoValidador;
 
 
 @Controller
@@ -92,15 +95,28 @@ public class AnalisisControlador {
 	@Autowired
 	private MuestraServicio muestraServicio;
 	
+	@Autowired
+	private DocumentoServicio documentoServicio;
+
+	
 	public static final Sort ORDENACION = Sort.by(Direction.ASC, "etiqueta");
 	
 		//@Autowired
 		//private ValidadorMuestra validadorMuestra;
+	
+		@Autowired
+		private DocumentoValidador documentoValidador;
 		
 		@InitBinder
 		public void initBinder(WebDataBinder binder) {
 		    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 		    binder.registerCustomEditor(Date.class, editor);
+		}
+		
+		@InitBinder("elementoDoc")
+		public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session)
+				throws Exception {
+			binder.setValidator(documentoValidador);
 		}
 		
 //		@InitBinder("beanMuestra")
@@ -719,6 +735,43 @@ public class AnalisisControlador {
 			return vista;
 
 		}
+		
+		
+		//subida resultados analista
+		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO', 'VOLUNTARIO')")
+		@RequestMapping(value = "/cargaResultados/placaLaboratorio", method = RequestMethod.GET)
+		public ModelAndView cargarResultadosPlacaLaboratorio(HttpSession session,
+				@RequestParam(value = "id", required = true) Integer id,
+				@RequestParam(value = "url", required = true) Integer url) throws Exception {
+			ModelAndView vista = new ModelAndView("VistaCargarResultados");
+
+			ElementoDocumentacionBean elementoDoc = documentoServicio.obtenerDocumentosPlacaLaboratorio(id);
+			//por ser un documento excel de resultados le asociamos el tipo "RES"
+			elementoDoc.setTipo("RES");
+			elementoDoc.setCodiUrl(url);
+			elementoDoc.setUrlVolver("/analisis/listarPlacasAnalista");
+			vista.addObject("elementoDoc", elementoDoc);
+			return vista;
+		}
+		
+		
+		@RequestMapping(value = "/guardarResultadosPlacaLaboratorio", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO', 'VOLUNTARIO')")
+		public ModelAndView guardarResultadosPlacaLaboratorio(@Valid @ModelAttribute("beanDocumento") ElementoDocumentacionBean bean,
+				BindingResult result, RedirectAttributes redirectAttributes) throws Exception {
+
+			if (result.hasErrors()) {
+				ModelAndView vista = new ModelAndView("VistaCargarResultados");
+				vista.addObject("elementoDoc", bean);
+			} else {
+				System.out.println("El nombre de la columna es: " + bean.getColumna());				
+				documentoServicio.guardar(bean);
+			}
+
+			redirectAttributes.addFlashAttribute("mensaje", "Resultado guardado correctamente");			
+			return new ModelAndView(new RedirectView("/analisis/cargaResultados/placaLaboratorio/?id=" + bean.getId() + "&url=" + bean.getCodiUrl(), true));
+		}
+		
 		//FIN ANALISTAS-REVISAR PLACA
 		
 		//ANALISTAS- REVISAR MUESTRA		
