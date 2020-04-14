@@ -768,6 +768,7 @@ public class AnalisisControlador {
 				ModelAndView vista = new ModelAndView("VistaCargarResultados");
 				vista.addObject("elementoDoc", bean);
 			} else {
+				System.out.println("El nombre de la hoja es: " + bean.getHoja());
 				System.out.println("El nombre de la columna es: " + bean.getColumna());
 				//guardamos el documento excel asociandolo a la placa 
 				documentoServicio.guardar(bean);

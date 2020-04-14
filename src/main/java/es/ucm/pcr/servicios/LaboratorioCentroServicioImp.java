@@ -38,6 +38,7 @@ import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.Muestra;
+import es.ucm.pcr.modelo.orm.Paciente;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.PlacaVisavet;
 import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
@@ -92,6 +93,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	@Autowired
 	private ServicioLog servicioLog;
 	
+	
+	@Autowired
+	MuestraServicio muestraServicio;
 	
 	public LaboratorioCentro mapeoBeanEntidadLaboratorioCentro(BeanLaboratorioCentro beanLaboratorioCentro) throws Exception{
 		
@@ -521,13 +525,14 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		Integer idUsuarioLogado = sesionServicio.getUsuario().getId(); 
 		Date fechaActual = new Date();
 		//por cada muestra de la placa
-		for(Muestra m: placa.getMuestras()) {			
+		for(Muestra m: placa.getMuestras()) {
+			String valoracionExcelParaMuestra = "POSITIVO"; //TODO, aquí habría que recoger la valoracion del excel para la muestra, esto es un ejemplo
 			//recuperamos el usuarioMuestra asociado al usuario logado (analista que está valorando las muestras de la placa)
 			Optional<UsuarioMuestra> optusumu = usuarioMuestraRepositorio.findByIdUsuarioAndIdMuestra(idUsuarioLogado, m.getId());
 			if (optusumu.isPresent()) {
 				UsuarioMuestra usumu = optusumu.get();
 				//aqui tendriamos que asociarle la valoracion que viene en el excel para esa muestra 
-				//usumu.setValoracion(valoracion);
+				usumu.setValoracion(valoracionExcelParaMuestra);
 				usumu.setFechaValoracion(fechaActual);
 				UsuarioMuestra usumuGuardado = usuarioMuestraRepositorio.save(usumu);
 			}
@@ -538,9 +543,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			//por cada muestra calculamos si ya se han dado las valoraciones de todos los analistas
 			//en ese caso el resultado sería definitivo y se guardara el resultado en la muestra y se enviará la notificacion 
 			Integer numValoracionesMuestra = this.calculaCuantasValoracionesTieneLaMuestra(m);
+			System.out.println("el numero de valoraciones actuales de la muestra con id: "+ m.getId()+" es: " + numValoracionesMuestra);
 			if(numValoracionesMuestra.equals(numAnalistas)) {
 				//guardamos como resultado definitivo este ultimo resultado que está dando el analista que viene del excel
-				//m.setResultado(valoracion);
+				m.setResultado(valoracionExcelParaMuestra);
 				m.setFechaResultado(fechaActual);				
 				//cambiamos el estado de la muestra a resuelta y la guardamos							
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_RESUELTA.getCodNum()));				
@@ -549,7 +555,13 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				BeanEstado estadoMuestra = new BeanEstado();
 				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
 				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
-				//TODO envio de notificaciones a pacientes si tienen notificacion automatica
+				//Envio de notificacion al pacientes si tiene activada la notificacion automatica
+				//recupero el paciente de la muestra
+				Paciente paciente = m.getPaciente();
+				System.out.println("el paciente con id: " + paciente.getId()+" tiene la notificacion automato a: " + paciente.getNotificarAutomato());
+				if(paciente.getNotificarAutomato().equals("S")) {
+					muestraServicio.actualizarNotificacionMuestra(m.getId(), true); //actualiza fecha de notificación y envia correo
+				}
 				
 			}
 			
