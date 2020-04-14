@@ -93,16 +93,21 @@ public class CentroServicioImp implements CentroServicio{
 		return mapaCentros;
 	}
 	
-	public Centro guardarCentro (Centro centro) throws Exception{
+	public Centro save (Centro centro) throws Exception{
 		return centroRepositorio.save(centro);
 	}
 	
-	public void BorrarCentro (Integer idCentro) throws Exception{
+	public void deleteById (Integer idCentro) throws Exception{
 		centroRepositorio.deleteById(idCentro);
 	}
 	
-	public Optional<Centro> buscarCentroPorId (Integer idCentro) throws Exception{
+	public Optional<Centro> findById (Integer idCentro) throws Exception{
 		return centroRepositorio.findById(idCentro);
+	}
+
+	@Override
+	public Optional<Centro> findByCodCentro(String codCentro) {
+		return centroRepositorio.findByCodCentro(codCentro);
 	}
 	
 }

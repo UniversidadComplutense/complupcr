@@ -58,7 +58,7 @@ public interface LaboratorioCentroServicio {
 	 * @param LaboratorioCentro
 	 * @return void >
 	 */
-	public LaboratorioCentro guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception;
+	public LaboratorioCentro save(LaboratorioCentro laboratorioCentro) throws Exception;
 	
 	/**
 	 * Borrar Laboratorio
@@ -66,7 +66,7 @@ public interface LaboratorioCentroServicio {
 	 * @param Integer idLaboratorioCentro
 	 * @return void >
 	 */
-	public void borrarLaboratorioCentro (Integer idLaboratorioCentro) throws Exception;
+	public void deleteById(Integer idLaboratorioCentro) throws Exception;
 	
 	/**
 	 * Buscat Laboratorio por Id
@@ -74,7 +74,7 @@ public interface LaboratorioCentroServicio {
 	 * @param Integer idLaboratorioCentro
 	 * @return void Optional <LaboratorioCentro>
 	 */
-	public Optional <LaboratorioCentro> buscarLaboratorioCentroPorId (Integer idLaboratorioCentro) throws Exception;
+	public Optional <LaboratorioCentro> findById(Integer idLaboratorioCentro) throws Exception;
 	
 	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable);
 	PlacaLaboratorioCentroBean buscarPlaca (Integer id);

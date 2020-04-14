@@ -3,6 +3,7 @@ package es.ucm.pcr.servicios;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,32 @@ public class RolServicioImp implements RolServicio{
 		//	Ordeno por ap1, ap2, nombre
 		Collections.sort(listaRoles);
 		return listaRoles;
+	}
+
+	@Override
+	public Rol save(Rol rol) {
+		return rolRepositorio.save(rol);
+	}
+
+	@Override
+	public List<Rol> findAll() {
+		return rolRepositorio.findAll();
+	}
+
+	@Override
+	public Optional<Rol> findById(Integer id) {
+		return rolRepositorio.findById(id);
+	}
+
+	@Override
+	public void deleteById(Integer id) {
+		rolRepositorio.deleteById(id);
+		
+	}
+
+	@Override
+	public Optional<Rol> findByNombre(String nombre) {
+		return rolRepositorio.findByNombre(nombre);
 	}
 
 }

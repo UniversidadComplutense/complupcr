@@ -129,7 +129,7 @@ public class EnviocorreoImp implements Enviocorreo {
 			String perfilesEjecucionActivos = System.getProperty("spring.profiles.active");
 //			if (perfilesEjecucionActivos.equals("desarrollo") || perfilesEjecucionActivos.equals("integracion"))
 			if (perfilesEjecucionActivos.contains("desarrollo")) {
-				helper.setTo("fherasm@ucm.es");
+				helper.setTo("dades@ucm.es");
 			}
 
 			helper.setSubject(MimeUtility.encodeText("string", "UTF-8", "Q"));
@@ -191,7 +191,7 @@ public class EnviocorreoImp implements Enviocorreo {
 							+ "<p><strong>No responda a este mensaje.</strong></p>",
 					"");
 			user.setHabilitado("E");
-			usuarioServicio.guardar(user);
+			usuarioServicio.save(user);
 		}
 
 	}
@@ -235,7 +235,7 @@ public class EnviocorreoImp implements Enviocorreo {
 						+ "<p><strong>No responda a este mensaje.</strong></p>",
 				"");
 		user.setHabilitado("E");
-		usuarioServicio.guardar(user);
+		usuarioServicio.save(user);
 		
 	}
 

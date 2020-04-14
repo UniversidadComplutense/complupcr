@@ -127,16 +127,16 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		return mapalaboratorioCentro;
 	}
 	
-	public LaboratorioCentro guardarLaboratorioCentro (LaboratorioCentro laboratorioCentro) throws Exception{
+	public LaboratorioCentro save (LaboratorioCentro laboratorioCentro) throws Exception{
 		return laboratorioCentroRepositorio.save(laboratorioCentro);
 	}
 	
-	public void borrarLaboratorioCentro (Integer idLaboratorioCentro) throws Exception{
+	public void deleteById (Integer idLaboratorioCentro) throws Exception{
 		laboratorioCentroRepositorio.deleteById(idLaboratorioCentro);
 	}
 	
 	@Transactional
-	public Optional <LaboratorioCentro> buscarLaboratorioCentroPorId (Integer idLaboratorioCentro) throws Exception{
+	public Optional <LaboratorioCentro> findById (Integer idLaboratorioCentro) throws Exception{
 		return laboratorioCentroRepositorio.findById(idLaboratorioCentro);
 	}
 	
