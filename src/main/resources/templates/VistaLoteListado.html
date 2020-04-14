@@ -167,7 +167,15 @@
 					        <a th:if="${#lists.size(lote.muestras) == 0}" style="color:black;cursor: pointer;" th:data-href="@{/centroSalud/lote/borrar(id=${lote.id})}" title="Borrar" data-toggle="modal" data-target="#confirm-borrar">
 					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
-					         
+					        <a th:if="${lote.fechaEnvio != null || #lists.size(lote.muestras) == 0}" style="color:grey;cursor: pointer;" title="Enviar">
+					          	<i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>			        
+					        <a th:if="${#lists.size(lote.muestras) > 0 && lote.fechaEnvio == null && lote.descLaboratorio != null}" style="color:black;cursor: pointer;" th:href="@{/centroSalud/lote/enviado(id=${lote.id})}" title="Enviar">
+					          	<i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>	
+					        <a th:if="${#lists.size(lote.muestras) > 0 && lote.fechaEnvio == null && lote.descLaboratorio == null}" style="color:black;cursor: pointer;" title="Enviar" data-toggle="modal" data-target="#confirm-asignar-laboratorio">
+					          	<i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>				        
 						</td>						
 					</tr>		
 				</tbody>
@@ -195,6 +203,23 @@
 						data-dismiss="modal">Cancelar</button>
 					<a class="btn btn-danger btn-borrar">Borrar</a>
 				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal aviso asignar laboratorio -->
+	<div class="modal fade" id="confirm-asignar-laboratorio" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Aviso</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>Para enviar el lote debe estar asignado a un laboratorio</p>
+				</div>				
 			</div>
 		</div>
 	</div>
