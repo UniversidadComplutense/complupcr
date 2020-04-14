@@ -67,13 +67,15 @@ public class DocumentoControlador {
 					{ URL_VOLVER_MUESTRA_DESDE_MUESTRAS, "/centroSalud/muestra/list" },
 					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_COGERPLACAS_JEFE, "/analisis/cogerPlacas" },
 					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_REVISARPLACAS_ANALISTA, "/analisis/listarPlacasAnalista" },
-					{ URL_VOLVER_PLACA_VISAVET_DESDE, "/centroSalud/lote/list" }})
+					{ URL_VOLVER_PLACA_VISAVET_DESDE, "/centroSalud/lote/list" },
+					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_ASIGNAR_RESULTADOS_PCR, "/laboratorioCentro/gestionPlacas/modificar?id=" }})
 			.collect(Collectors.toMap(d -> (Integer) d[0], d -> (String) d[1]));
 		
 	public static final Integer URL_VOLVER_MUESTRA_DESDE_MUESTRAS = 1;
 	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE_COGERPLACAS_JEFE = 2;
 	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE_REVISARPLACAS_ANALISTA = 3;
 	public static final Integer URL_VOLVER_PLACA_VISAVET_DESDE = 4;
+	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE_ASIGNAR_RESULTADOS_PCR = 5;
 	
 
 	@InitBinder("elementoDoc")
@@ -121,7 +123,11 @@ public class DocumentoControlador {
 
 		ElementoDocumentacionBean elementoDoc = documentoServicio.obtenerDocumentosPlacaLaboratorio(id);
 		elementoDoc.setCodiUrl(url);
-		elementoDoc.setUrlVolver(URL_VOLVER.get(url));
+		if (url == URL_VOLVER_PLACA_LABORATORIO_DESDE_ASIGNAR_RESULTADOS_PCR) {
+			elementoDoc.setUrlVolver(URL_VOLVER.get(url) + id);
+		} else {
+			elementoDoc.setUrlVolver(URL_VOLVER.get(url));
+		}		
 		vista.addObject("elementoDoc", elementoDoc);
 		return vista;
 	}
