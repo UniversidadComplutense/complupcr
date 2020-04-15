@@ -123,10 +123,8 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	public Page<BeanPlacaVisavetUCM> buscarPlacas(BusquedaPlacasVisavetBean busqueda, Pageable pageable){
 		
 	busqueda.setIdLaboratorioVisavet(sesionServicio.getLaboratorioVisavet().getId());	
-	busqueda.setMuestra(null);
-	busqueda.setIdPlaca(null);
-	busqueda.setNumLote(null);
-	busqueda.setIdLaboratorioCentro(null);
+	
+//	if (busqueda.getIdLaboratorioCentro().equals("")) busqueda.setIdLaboratorioCentro(null);
 	List<BeanPlacaVisavetUCM> listPlacaBean = new ArrayList<BeanPlacaVisavetUCM>();
 	//List<PlacaVisavet> placasList =placaVisavetRepositorio.findByParams(busqueda); 
 	Page<PlacaVisavet> placasPage =placaVisavetRepositorio.findByParams(busqueda, pageable); 
@@ -207,12 +205,13 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		// por cada placa tengo que guardar el lote
 		if (placa.getId()!=null) {
 			Set listaLotes= new HashSet();
+			Integer numeroMuestras=0;
 			for (LoteBeanPlacaVisavet loteB: beanPlacaVisavetUCM.getListaLotes()) {
 				Lote lbbdd = loteRepositorio1.findById(loteB.getId()).get();
 			//	Lote l=LoteBeanPlacaVisavet.beanToModel(loteB);
 				lbbdd.setPlacaVisavet(placa);
 				lbbdd.setEstadoLote(new EstadoLote(loteB.getEstado().getEstado().getCodNum()));
-				
+				numeroMuestras+=lbbdd.getMuestras().size();
 				lbbdd=loteRepositorio.save(lbbdd);
 				listaLotes.add(lbbdd);
 			}
@@ -220,6 +219,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 			if (placaOpt.isPresent()) {
 				placa=placaOpt.get();
 				placa.setLotes(listaLotes);
+				placa.setNumeromuestras(numeroMuestras);
 				placa = placaVisavetRepositorio.save(placa);
 			}
 		}

@@ -320,15 +320,15 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	
 	@Override
-	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda,
+	public Page<PlacaLaboratorioCentroAsignacionesBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda,
 			Pageable pageable) {
 		
-		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();		
+		List<PlacaLaboratorioCentroAsignacionesBean> listaPlacasLaboratorioCentroAsignacionesBean = new ArrayList<PlacaLaboratorioCentroAsignacionesBean>();		
 		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = placaLaboratorioRepositorio.findByParams(criteriosBusqueda, pageable); 		
 		for (PlacaLaboratorio placa : PagePlacasLaboratorioCentro.getContent()) {
-			listaPlacasLaboratorioCentroBean.add(PlacaLaboratorioCentroBean.modelToBean(placa));
+			listaPlacasLaboratorioCentroAsignacionesBean.add(PlacaLaboratorioCentroAsignacionesBean.modelToBean(placa));
 		}		
-		Page<PlacaLaboratorioCentroBean> placasLaboratorioCentro = new PageImpl<>(listaPlacasLaboratorioCentroBean, pageable, PagePlacasLaboratorioCentro.getTotalElements());		
+		Page<PlacaLaboratorioCentroAsignacionesBean> placasLaboratorioCentro = new PageImpl<>(listaPlacasLaboratorioCentroAsignacionesBean, pageable, PagePlacasLaboratorioCentro.getTotalElements());		
 		return placasLaboratorioCentro;
 	}
 	

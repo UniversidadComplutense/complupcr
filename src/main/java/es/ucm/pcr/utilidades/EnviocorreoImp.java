@@ -53,7 +53,6 @@ import org.springframework.mail.SimpleMailMessage;
 //import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import es.ucm.pcr.beans.BeanAdjunto;
@@ -100,6 +99,7 @@ public class EnviocorreoImp implements Enviocorreo {
 
 	// añado otra funcion send pero con lista de adjuntos (el beanAdjunto trae el
 	// fichero jasperPrint y su nombre) y la convocatoria
+	@Override
 	public void send(String to, String subject, String texto, List<BeanAdjunto> listaAdjuntos, String cabecera,
 			String pie, String convocatoria) {
 
@@ -181,21 +181,7 @@ public class EnviocorreoImp implements Enviocorreo {
 
 	}
 
-	@Scheduled(cron = "${cron.expression}")
-	public void scheduleEnvioMailInicio() {
-		List<Usuario> userList = usuarioServicio.buscarUsuarioInhabilitados();
-		for (Usuario user : userList) {
-			SimpleMailMessage simpleMailMessage = constructWelcomeEmail(env.getProperty("app.url"), user);
-			send(user.getEmail(), simpleMailMessage.getSubject(), simpleMailMessage.getText(), null, "",
-					"<p><strong>Este es un correo automático enviado por la aplicación COVID-19.</strong></p>"
-							+ "<p><strong>No responda a este mensaje.</strong></p>",
-					"");
-			user.setHabilitado("E");
-			usuarioServicio.save(user);
-		}
-
-	}
-
+	@Override
 	public SimpleMailMessage constructResetTokenEmail(String contextPath, String token, Usuario user) {
 		String url = contextPath + "/modificarContrasena?id=" + user.getId() + "&token=" + token;
 		String message = "<p>Hola " + user.getNombre()
@@ -204,6 +190,7 @@ public class EnviocorreoImp implements Enviocorreo {
 				message + " <p><a href=\"" + url + "\">Cambio de contraseña<a> </p><p> Un cordial saludo.</p>", user);
 	}
 
+	@Override
 	public SimpleMailMessage constructWelcomeEmail(String contextPath, Usuario user) {
 		String url = contextPath + "/regenerarContrasena";
 		String message = "<p>Bienvenido " + user.getNombre()
@@ -214,6 +201,7 @@ public class EnviocorreoImp implements Enviocorreo {
 				message + " <p><a href=\"" + url + "\">Cambio de contraseña<a> </p><p> Un cordial saludo.</p>", user);
 	}
 
+	@Override
 	public SimpleMailMessage constructEmail(String subject, String body, Usuario user) {
 		SimpleMailMessage email = new SimpleMailMessage();
 		email.setSubject(subject);
@@ -223,6 +211,7 @@ public class EnviocorreoImp implements Enviocorreo {
 		return email;
 	}
 
+	@Override
 	public String getAppUrl(HttpServletRequest request) {
 		return "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 	}

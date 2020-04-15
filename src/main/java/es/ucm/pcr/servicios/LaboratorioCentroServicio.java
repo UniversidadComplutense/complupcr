@@ -84,7 +84,8 @@ public interface LaboratorioCentroServicio {
 	public boolean asignarEquipoPCR(Integer id);
 	
 	public PlacaLaboratorioCentroAsignacionesBean buscarPlacaAsignaciones(Integer id);
-	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda, Pageable pageable); 	
+	//public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda, Pageable pageable); 
+	public Page<PlacaLaboratorioCentroAsignacionesBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda, Pageable pageable);
 	public PlacaLaboratorioCentroBean guardarCogerODevolverPlaca(Integer idPlaca, Integer idUsuario, String accion);	
 	public List<PlacaLaboratorioCentroBean> buscarPlacasAsignadasAJefe(Usuario usuario); 
 	public List<BeanElemento> buscarPlacasBeanElementoAsignadasAJefe(Usuario usuario);

@@ -40,3 +40,4 @@ INSERT INTO estadoPlacaVisavet VALUES
 	,(5,'Enviada')
 	,(6,'Recibida')
 	,(7,'Transpasada');
+	

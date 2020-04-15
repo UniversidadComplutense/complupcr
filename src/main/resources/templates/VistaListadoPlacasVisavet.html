@@ -35,11 +35,11 @@
 				</select>
 				</div>
 				<div class="col-4 form-group">
-				<label class="col-xs-2">Número de Lote:</label>
+				<label class="col-xs-2">Id. Placa:</label>
 						<div class="col-xs-7">
-								<input type="text" class="form-control form-control-sm" id="numLote"
-								th:value="${busqueda.numLote}"
-								th:field="*{numLote}" />
+								<input type="text" class="form-control form-control-sm" id="idPlaca"
+								th:value="${busqueda.idPlaca}"
+								th:field="*{idPlaca}" />
 						</div>
 			    </div>
 			     <div class="col-4 form-group">
@@ -65,13 +65,13 @@
 						a <input type="date" class="form-control" id="fechaCreacionFin"
 								th:field="*{fechaCreacionFin}" th:value="${busqueda.fechaCreacionFin}" />
                    </div>
-                   <div class="col-4 form-group">
+                 <!-- <div class="col-4 form-group">
 			
                    	<label class="col-xs-4">Muestra:</label>
 					<input type="text" class="form-control" id="muestra"
 								th:value="${busqueda.muestra}"
 								th:field="*{muestra}" />
-						</div>
+						</div> -->  
                  </div>  
 
         <div class="row justify-content-end mt-3">
@@ -106,7 +106,7 @@
 				<tbody>	
 			 	<tr th:id="trGroup+${count.index}"  th:each="unResultado,count : ${pagina.getContent()}">
 					<td><span th:text="${unResultado.id}"></span></td>
-					<td><span th:text="${#dates.format(unResultado.fechaCreacion, 'dd-mm-yyyy')}"></span></td>
+					<td><span th:text="${#dates.format(unResultado.fechaCreacion, 'dd/MM/yyyy')}"></span></td>
                     <td> <!-- ${unResultado.listaLotes}">  -->
                     <p th:id="lotes+${unResultado.id}" style="display:none" th:each="lote: ${unResultado.listaLotes}">
                             <input type="text" id="lote+${count.index}" th:value="${lote.id}"/>
@@ -216,10 +216,10 @@
 						     <i class="fa fa-edit" title="Modificar placa" aria-hidden="true" style="font-size: 1.2em;"></i>
 						</a>
 						<i title="Modificar placa" th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;color:grey;"></i>
-						<a  th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_FINALIZADA' or  #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}" data-toggle="modal"  data-target="#modalLaboratorio"   th:attr="data-target='#modalLaboratorio'" th:data-id="${unResultado.id}"  th:onClick="|consultarOcupacionLaboratorio(this.getAttribute('data-id'));|">
+						<a  th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_FINALIZADA' or  #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA' or  #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ENVIADA'}" data-toggle="modal"  data-target="#modalLaboratorio"   th:attr="data-target='#modalLaboratorio'" th:data-id="${unResultado.id}" th:data-laboratorio="${unResultado.idLaboratorioCentro}" th:data-estado="${unResultado.estado.Estado}" th:data-fecha="${unResultado.fechaEnviadaLaboratorio}" th:onClick="|consultarOcupacionLaboratorio(this.getAttribute('data-id'), this.getAttribute('data-laboratorio'), this.getAttribute('data-estado'), this.getAttribute('data-fecha'));|">
                           <i class="fa fa-flask" aria-hidden="true" title="Asignar laboratorio" style="font-size: 1.2em;"></i>
 						</a>
-						<i  title="Asignar laboratorio" th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_FINALIZADA' or  #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}" class="fa fa-flask"  aria-hidden="true" style="font-size: 1.2em;color:grey;"></i>
+						<i  title="Asignar laboratorio" th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_FINALIZADA' or  #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA' or  #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ENVIADA'}" class="fa fa-flask"  aria-hidden="true" style="font-size: 1.2em;color:grey;"></i>
 					  <a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}"  th:data-id="${unResultado.id}" th:data-laboratorio="${unResultado.laboratorioCentro.nombre}" data-toggle="modal"  data-target="#modalConfirmRecibido"   th:attr="data-target='#modalConfirmRecibido'" th:onClick="|cambiarEstadoaEnviada(this.getAttribute('data-id'),this.getAttribute('data-laboratorio'));|">
 					  	<i class="fa fa-share-square" title="Confirmar Enviada" aria-hidden="true" style="font-size: 1.2em;"></i>
 						</a>
@@ -264,7 +264,7 @@
 													</thead>
 													<tbody>
 														<tr>
-															<td><span id="idPlaca"></span></td>					
+															<td><span id="idPlacaConfirmar"></span></td>					
 															<td><span id="laboratorio"></span></td>
 																
 																													
@@ -290,8 +290,8 @@
 		
 <!--  	 fin  Recibido -->
 	<!-- consultar Muestras -->
-<div id="modalConsultarMuestras" class="modal fade modal1 in" role="dialog">
-   <div id="ventanaConfirmRecibido" class="modal-dialog ">
+<div id="modalConsultarMuestras" class="modal fade" role="dialog" aria-labelledby="exampleModalLabel">
+   <div id="ventanaConfirmRecibido" class="modal-dialog modal-xl" role="document">
     
 	<div class="modal-content">
          <div class="modal-header" id="modal-header">
@@ -339,39 +339,45 @@
 		</div>			
 
 <!--  Fin consultar Muestras -->
+
 <div th:id="modalLaboratorio" class="modal fade" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true" >
    <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-         <div class="modal-header" id="modal-header">
-         <button class="close" data-dismiss="modal" type="button">×</button>
-	     <h4 class="modal-title"> <span id="modalTitleNombre" class="info">Asignar Placa a laboratorio</span>
-         </h4>
+         <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Asignar Placa - <b><span id="spanIdPlaca"></span></b>  a laboratorio
+	     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							 <span aria-hidden="true">&times;</span>
+		</button>
+         </h5>
          </div>
+        
          <div class="modal-body">
 		 <form id="laboratorioForm" action="" th:modelAttribute="beanPlacaVisavetUCM" >
 			 <label class="col-xs-2">Laboratorio a asignar:</label>
-			    <select class="form-control form-control-sm" id="laboratorioLab">
+			    <select class="form-control form-control-sm" id="laboratorioLab" onChange="habilitarBotonAsignarLaboratorio();">
 			    <option value="">Seleccione</option>
 				<option th:each="var: ${busqueda.listaLaboratorioCentro}"
 									th:value="${var.id}" th:text="${var.nombre}"
 									th:select="${busqueda.idLaboratorioCentro}">Laboratorio</option>
 				</select>
 				<div id="capaMuestrasMostrar">
+				<div id="capaFechaEnvio" style="display:none;"><label class="col-xs-2">Fecha de Envio: </label><span id="fechaEnvioModal"></span></div>
 				<table class="col-xs-12 table" th:id="tablaLaboratorios" >
 				  <thead><tr><th scope="col">Nombre</th><th scope="col">Nº de equipos</th><th scope="col">Placas a la espera</th>
 				  </tr>
 				  </thead>
+				  <tbody>
 					 <tr id="trLaboratorio">	</tr>
 			     <tr id="trLaboratorio"  th:each="laboratorio, count : ${laboratorios}">
-			      <td><span th:text="${#lists.size(laboratorio.nombre)}"></td>
+			      <td><span th:text="${laboratorio.nombre}"></td>
 			             <td><span th:text="${#lists.size(laboratorio.equipos)}"></td>
 				         <td><span th:text="${#strings.toString(laboratorio.placasVisavetaLaEspera)}"></td>
 				      </tr>  
-				      
+				    </tbody>  
 				</table>
 			  </div>	
 			<div class="modal-footer">
-			<input type="text" id="idPlacaLab" value=""></input>	
+			<input type="hidden" id="idPlacaLab" value=""></input>	
 			<button type="button" id="asignarLaboratorio" class="btn btn-secondary" onClick="asignarLaboratoriodesdeModal();">Asignar Laboratorio</button>
 			<button type="button" id="cerrarConfirmacion" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
 			</div>
