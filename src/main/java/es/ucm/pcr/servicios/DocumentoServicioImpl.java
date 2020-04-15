@@ -115,6 +115,25 @@ public class DocumentoServicioImpl implements DocumentoServicio {
 	}
 	
 	@Override
+	public ElementoDocumentacionBean obtenerDocumentosPlacaLaboratorioConTipo(Integer idPlacaLaboratorio, String tipo) {
+		ElementoDocumentacionBean elDoc = new ElementoDocumentacionBean();
+		PlacaLaboratorio placaLaboratorio = Optional.of(placaLaboratorioRepositorio.findById(idPlacaLaboratorio).get()).orElse(null);		
+		elDoc.setId(placaLaboratorio.getId());
+		// TODO - ESTABLECER DESCRIPCION (Diana: pongo el id de la placa de momento, podemos poner lo que querais)
+		elDoc.setDescripcion("Placa " + placaLaboratorio.getId());
+		elDoc.setTipoElemento(ElementoDocumentacionBean.TIPO_ELEMENTO_PLACA_LABORATORIO);
+		elDoc.setTipo(tipo); //el tipo del doc que guardareemos será del mismo tipo que los doc que estamos buscando
+		
+		DocumentoBusquedaBean docBusquedaBean = new DocumentoBusquedaBean();
+		docBusquedaBean.setIdPlacaLaboratorio(idPlacaLaboratorio);
+		docBusquedaBean.setTipo(tipo); //buscamos los documentos de ese tipo
+		List<DocumentoBean> docsMuestra = findByParams(docBusquedaBean);
+		elDoc.setDocumentos(docsMuestra);
+		
+		return elDoc;
+	}
+	
+	@Override
 	public void guardar(ElementoDocumentacionBean elementoDocumentoBean) {
 		
 		try {

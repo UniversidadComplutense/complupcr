@@ -791,9 +791,10 @@ public class AnalisisControlador {
 				@RequestParam(value = "url", required = true) Integer url) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaCargarResultados");
 
-			ElementoDocumentacionBean elementoDoc = documentoServicio.obtenerDocumentosPlacaLaboratorio(id);
-			//por ser un documento excel de resultados le asociamos el tipo "RES"
-			elementoDoc.setTipo("RES");
+			//buscamos los documentos de la placa que sean de tipo RES (excel de resultados)
+			ElementoDocumentacionBean elementoDoc = documentoServicio.obtenerDocumentosPlacaLaboratorioConTipo(id, "RES");
+			
+			//elementoDoc.setTipo("RES");
 			elementoDoc.setCodiUrl(url);
 			elementoDoc.setUrlVolver("/analisis/listarPlacasAnalista");
 			vista.addObject("elementoDoc", elementoDoc);
@@ -804,8 +805,7 @@ public class AnalisisControlador {
 		@RequestMapping(value = "/guardarResultadosPlacaLaboratorio", method = RequestMethod.POST)
 		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO', 'VOLUNTARIO')")
 		public ModelAndView guardarResultadosPlacaLaboratorio(@Valid @ModelAttribute("elementoDoc") ElementoDocumentacionBean bean,
-				BindingResult result, RedirectAttributes redirectAttributes) throws Exception {
-
+				BindingResult result, RedirectAttributes redirectAttributes) throws Exception {			
 			if (result.hasErrors()) {
 				ModelAndView vista = new ModelAndView("VistaCargarResultados");
 				vista.addObject("elementoDoc", bean);

@@ -21,6 +21,7 @@ public interface DocumentoRepositorio extends PagingAndSortingRepository<Documen
 			+ "and (:#{#params.idLaboratorioVisavet} is null or documento.laboratorioVisavet.id = :#{#params.idLaboratorioVisavet}) "
 			+ "and (:#{#params.idMuestra} is null or documento.muestra.id = :#{#params.idMuestra}) "
 			+ "and (:#{#params.idPlacaLaboratorio} is null or documento.placaLaboratorio.id = :#{#params.idPlacaLaboratorio}) "
-			+ "and (:#{#params.idPlacaVisavet} is null or documento.placaVisavet.id = :#{#params.idPlacaVisavet}) ")
+			+ "and (:#{#params.idPlacaVisavet} is null or documento.placaVisavet.id = :#{#params.idPlacaVisavet})"
+			+ "and (:#{#params.tipo} is null or documento.tipo = :#{#params.tipo}) ")
 	public List<Documento> findByParams(@Param("params") DocumentoBusquedaBean params);
 }

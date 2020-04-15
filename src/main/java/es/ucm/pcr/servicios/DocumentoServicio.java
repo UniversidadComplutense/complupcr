@@ -31,6 +31,15 @@ public interface DocumentoServicio {
 	 */
 	public ElementoDocumentacionBean obtenerDocumentosPlacaLaboratorio(Integer idPlacaLaboratorio);
 	
+	
+	/**
+	 * Elemento y documentos placa laboratorio que son de un tipo
+	 * @param idPlacaLaboratorio
+	 * @param tipo
+	 * @return
+	 */
+	public ElementoDocumentacionBean obtenerDocumentosPlacaLaboratorioConTipo(Integer idPlacaLaboratorio, String tipo);
+	
 	/**
 	 * Busqueda de documentos por criterios
 	 * @param params
