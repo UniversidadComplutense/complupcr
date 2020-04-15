@@ -234,8 +234,8 @@ public class LabCentroControlador {
 		placa.setPlacasVisavetSeleccionadas("");
 		
 		vista.addObject("nueva", true);
-		vista.addObject("editable", placa.esEditable());
-		vista.addObject("rellenable", placa.esRellenable());
+		vista.addObject("editable", laboratorioCentroServicio.esEditable(placa.getId()));
+		vista.addObject("rellenable", true);
 		vista.addObject("placa", placa);		
 		return vista;
 	}
@@ -248,17 +248,18 @@ public class LabCentroControlador {
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		
 		if (!result.hasErrors()) {
-			placa = laboratorioCentroServicio.crearPlaca(placa);
+			placa = laboratorioCentroServicio.rellenarPlaca(placa, Integer.valueOf(placa.getNumeroMuestras()));
 			if (placa != null) {
 				vista.addObject("mensaje", "La placa " + placa.getId() + " se ha creado correctamente.");
+				vista.addObject("rellenable", false);
 			} else {
 				vista.addObject("mensaje", "No ha sido posible crear la placa.");
+				vista.addObject("rellenable", true);
 			}						
 		}
 		
 		vista.addObject("nueva", false);
 		vista.addObject("editable", false);
-		vista.addObject("rellenable", placa.esEditable());
 		vista.addObject("placa", placa);
 		return vista;
 	}
@@ -289,8 +290,8 @@ public class LabCentroControlador {
 		placa.setPlacasVisavetSeleccionadas("");
 		
 		vista.addObject("nueva", false);
-		vista.addObject("rellenable", placa.esRellenable());
-		vista.addObject("editable", placa.esEditable());
+		vista.addObject("rellenable", laboratorioCentroServicio.espacioLibreParaMuestras(placa, 0) > 0);
+		vista.addObject("editable", laboratorioCentroServicio.esEditable(placa.getId()));
 		vista.addObject("placa", placa);
 		return vista;
 	}
