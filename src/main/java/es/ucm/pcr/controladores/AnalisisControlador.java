@@ -481,7 +481,7 @@ public class AnalisisControlador {
 			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
 			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
 			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
-			List<PlacaLaboratorioCentroBean> listaPlacasListasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaListaParaAnalisis, pageable).getContent();
+			List<PlacaLaboratorioCentroAsignacionesBean> listaPlacasListasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaListaParaAnalisis, pageable).getContent();
 			System.out.println("listaPlacasListasParaAnalisis tiene: "+ listaPlacasListasParaAnalisis.size());
 			
 			// Buscamos las placas con estado 'Asignada para análisis' (un jefe ya las ha puesto bajo su responsabilidad)
@@ -491,7 +491,7 @@ public class AnalisisControlador {
 			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
 			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
 			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdJefe(user.getId());
-			List<PlacaLaboratorioCentroBean> listaPlacasAsignadasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaAnalisis, pageable).getContent();
+			List<PlacaLaboratorioCentroAsignacionesBean> listaPlacasAsignadasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaAnalisis, pageable).getContent();
 			System.out.println("listaPlacasAsignadasParaAnalisis tiene: "+ listaPlacasAsignadasParaAnalisis.size());			
 			
 			GuardarCogerYDevolverPlacasBean guardarCogerYDevolverPlacasBean = new GuardarCogerYDevolverPlacasBean();

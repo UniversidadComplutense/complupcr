@@ -80,7 +80,7 @@ public interface LaboratorioVisavetServicio {
 	public PlacaLaboratorioVisavetBean buscarPlaca(Integer id);
 
 	// JAVI
-	public void recepcionarPlaca(Integer id);
+	public boolean recepcionarPlaca(Integer id);
 	
 	// JAVI
 	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio);

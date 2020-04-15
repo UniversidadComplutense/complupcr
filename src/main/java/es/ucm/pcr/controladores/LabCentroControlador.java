@@ -1,7 +1,6 @@
 package es.ucm.pcr.controladores;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -150,9 +149,12 @@ public class LabCentroControlador {
 		ModelAndView vista = new ModelAndView("PlacaVisavetRecepcionar");	
 		
 		if (!result.hasErrors()) {
-			laboratorioVisavetServicio.recepcionarPlaca(placa.getId());
-			vista.addObject("mensaje", "La placa se ha recepcionado correctamente.");
-			vista.addObject("recepcionable", false);
+			if (laboratorioVisavetServicio.recepcionarPlaca(placa.getId())) {
+				vista.addObject("mensaje", "La placa " + placa.getId() + " se ha recepcionado correctamente.");
+				vista.addObject("recepcionable", false);
+			} else {
+				vista.addObject("mensaje", "No ha sido posible recepcionar la placa " +  placa.getId() + ".");
+			}						
 		}
 				
 		vista.addObject("placa", laboratorioVisavetServicio.buscarPlaca(placa.getId()));
@@ -247,7 +249,11 @@ public class LabCentroControlador {
 		
 		if (!result.hasErrors()) {
 			placa = laboratorioCentroServicio.crearPlaca(placa);
-			vista.addObject("mensaje", "La placa " + placa.getId() + " se ha creado correctamente.");			
+			if (placa != null) {
+				vista.addObject("mensaje", "La placa " + placa.getId() + " se ha creado correctamente.");
+			} else {
+				vista.addObject("mensaje", "No ha sido posible crear la placa.");
+			}						
 		}
 		
 		vista.addObject("nueva", false);
@@ -294,8 +300,12 @@ public class LabCentroControlador {
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
 	public ModelAndView finalPCRplacaPOST(@ModelAttribute("placa") PlacaLaboratorioCentroBean placa, RedirectAttributes redirectAttributes) throws Exception {
 		
-		laboratorioCentroServicio.finalizarPCR(placa.getId());		
-		redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " ha finalizado correctamente la prueba PCR.");
+		if (laboratorioCentroServicio.finalizarPCR(placa.getId())){
+			redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " ha finalizado correctamente la prueba PCR.");
+		} else {
+			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible dar por finalizada la prueba PCR en la placa " + placa.getId() + ".");
+		}
+		
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placa.getId(), true));
 		return respuesta;
 	}
@@ -305,8 +315,27 @@ public class LabCentroControlador {
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
 	public ModelAndView asignarEquipoPCRPOST(@ModelAttribute("placa") PlacaLaboratorioCentroBean placa, RedirectAttributes redirectAttributes) throws Exception {
 		
-		laboratorioCentroServicio.asignarEquipoPCR(placa.getId());		
-		redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " está preparada para prueba PCR.");
+		if (laboratorioCentroServicio.asignarEquipoPCR(placa.getId())) {
+			redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " está preparada para la prueba PCR.");
+		} else {
+			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible dar por preparada para PCR la placa " + placa.getId() + ".");
+		}
+		
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placa.getId(), true));
+		return respuesta;
+	}
+
+	
+	@RequestMapping(value="/gestionPlacas/resultados", method=RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
+	public ModelAndView placaListaParaAnalizarPOST(@ModelAttribute("placa") PlacaLaboratorioCentroBean placa, RedirectAttributes redirectAttributes) throws Exception {
+				
+		if (laboratorioCentroServicio.placaListaParaAnalizar(placa.getId())) {
+			redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " está lista para ser analizada.");
+		} else {
+			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible que la placa " + placa.getId() + " pase a estar lista para analizar.\nRevise que tiene documentación adjunta asociada a los resultados PCR.");
+		}
+
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placa.getId(), true));
 		return respuesta;
 	}

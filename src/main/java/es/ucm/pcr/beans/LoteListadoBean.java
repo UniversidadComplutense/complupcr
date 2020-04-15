@@ -13,6 +13,7 @@ public class LoteListadoBean {
 
 	private Integer id;
 	private String numLote;
+	private Integer idLaboratorio;
 	private String descLaboratorio;
 	private String descEstado;
 	private Date fechaEnvio;
@@ -37,6 +38,14 @@ public class LoteListadoBean {
 
 	public void setNumLote(String numLote) {
 		this.numLote = numLote;
+	}
+	
+	public Integer getIdLaboratorio() {
+		return idLaboratorio;
+	}
+
+	public void setIdLaboratorio(Integer idLaboratorio) {
+		this.idLaboratorio = idLaboratorio;
 	}
 
 	public String getDescLaboratorio() {
@@ -113,6 +122,7 @@ public class LoteListadoBean {
 		bean.setDescEstado(lote.getEstadoLote().getDescripcion());
 		if (lote.getLaboratorioVisavet() != null) {
 			bean.setDescLaboratorio(lote.getLaboratorioVisavet().getNombre());
+			bean.setIdLaboratorio(lote.getLaboratorioVisavet().getId());
 		}
 		//añadido por yoli
 	    bean.setCentroBean(CentroBean.modelToBean(lote.getCentro()));
