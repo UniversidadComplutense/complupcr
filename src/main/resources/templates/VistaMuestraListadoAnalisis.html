@@ -154,7 +154,8 @@
 			<table class="table">
 				<thead class="thead-light">	
 	    			<tr>
-	    			    <th scope="col">Cerrar</th>
+	    			    <!-- <th scope="col">Cerrar</th> -->
+	    			    <th scope="col">Id</th>
 	    				<th scope="col">Analistas</th>
 	      				<!-- <th scope="col">Nombre</th>
 						<th scope="col">NHC</th> -->
@@ -166,19 +167,23 @@
 						<th scope="col">Resultado</th>
 						<!-- <th scope="col">Estado</th>	 -->						
 						<!-- <th scope="col">Asignar</th> -->
-						<th scope="col">Acciones</th>
+						<!-- <th scope="col">Acciones</th> -->
 					</tr>
 				</thead>
 				<tbody th:if="${listadoMuestras != null}" th:each="muestra : ${listadoMuestras}">	
 					<!-- data-target="#group-of-rows-1" -->			
 					<tr >
-						<td>
-							<!-- th:checked="${muestra.estado == 'cerrada'}"  -->
+						<!-- 
+						<td>							
 							<input class="form-check-input, justify-content-center"
 									th:disabled="${muestra.esCerrable == false}"
 									type="checkbox" name="idCerrar" th:id="idCerrar"									
 									th:onClick="|AniadirOQuitarElementoAListaDeMuestrasACerrar(this, '${muestra.id}')|">
 							</input>
+						</td>
+						 -->
+						<td>							
+							<span th:text="${muestra.id}"></span>							
 						</td> 
 						<td class="clickable" data-toggle="collapse" th:data-target="${'#analistas'+ muestra.id}" aria-expanded="false" th:aria-controls="${'analistas'+ muestra.id}">
 							<!-- <i class="fa fa-folder"></i> -->
@@ -218,12 +223,13 @@
 					          <i class="fa fa-child" aria-hidden="true"></i>
 					        </a>
 						</td> -->
-						<td>
-							<!-- ACCIONES -->					        
+						<!-- ACCIONES -->
+						<!-- <td>
+												        
 					        <a style="color:black" th:href="@{/analisis/revisar(idMuestra=${muestra.id} )}" data-toggle="tooltip" title="Revisar">					         
 					          <i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
-						</td>
+						</td> -->
 					</tr>				
 					<!-- id="group-of-rows-1" -->	
 					<tr th:id="${'analistas'+ muestra.id}" class="collapse table-warning">
@@ -266,15 +272,15 @@
 			</table>
 		</div>
 		
-		<div class="row justify-content-start mt-3">			
-			<!-- data-toggle="modal" data-target="#modalCerrarMuestras" -->
+		<!-- 
+		<div class="row justify-content-start mt-3">
 			<div class="col-2">
 				<a href="#" class="btn btn-secondary"			
 				th:onclick="|cargarModalCerrarMuestras(); return false|" >
 				Cerrar muestras</a>
 			</div>	
 		</div>
-		
+		 -->
 	</form>
 
 	</div>

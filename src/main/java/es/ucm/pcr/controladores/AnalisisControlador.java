@@ -201,7 +201,7 @@ public class AnalisisControlador {
 			return vista;
 		}
 		
-		//metodos de asignacion de muestras a analistas
+		//metodos de asignacion de muestras a analistas (ahora no se usa porque la asignacion de analistas es por placa)
 		
 		@RequestMapping(value="/asignar", method=RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
