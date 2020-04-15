@@ -97,12 +97,14 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		bean.setFechaResultadoMuestraIni(muestra.getFechaResultado());
 		//bean.setCodNumLote(muestra.getLote() != null ? muestra.getLote().getNumeroLote() : "");
 		bean.setNotificado(muestra.getFechaNotificacion() != null);
-				
+		
 		//bean.setEstadoMuestra(beanResultado.asignarTipoEstadoYCodNum(muestra.getResultado()).getResultadoMuestra().getDescripcion());
+		bean.setEstadoMuestra(muestra.getEstadoMuestra().getDescripcion());
 		
 		if(muestra.getPlacaLaboratorio()!=null) {
 			bean.setIdPlacaLaboratorio(muestra.getPlacaLaboratorio().getId()); //aqui solo se mostrarán muestras que ya esten en una placa de laboratorio
-			bean.setIdJefePlaca(muestra.getPlacaLaboratorio().getUsuario().getId()); //todas las muestras que mostremos en esta vista serán aquellas cuya placa se haya asignado el jefe
+			if(muestra.getPlacaLaboratorio().getUsuario()!=null)
+				bean.setIdJefePlaca(muestra.getPlacaLaboratorio().getUsuario().getId()); //todas las muestras que mostremos en esta vista serán aquellas cuya placa se haya asignado el jefe
 		}
 		
 		Date date = new Date(); // your date
@@ -182,6 +184,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		bean.setNotificado(muestra.getFechaNotificacion() != null);
 				
 		//bean.setEstadoMuestra(beanResultado.asignarTipoEstadoYCodNum(muestra.getResultado()).getResultadoMuestra().getDescripcion());
+		bean.setEstadoMuestra(muestra.getEstadoMuestra().getDescripcion());
 		
 		if(muestra.getPlacaLaboratorio()!=null) {
 			bean.setIdPlacaLaboratorio(muestra.getPlacaLaboratorio().getId()); //aqui solo se mostrarán muestras que ya esten en una placa de laboratorio
