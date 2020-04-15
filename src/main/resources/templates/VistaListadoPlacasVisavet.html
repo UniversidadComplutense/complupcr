@@ -102,7 +102,7 @@
 				</tr>
 				</thead>
 				<tbody>	
-			 	<tr th:id="trGroup+${count.index}"  th:each="unResultado,count : ${pagina.getContent()}">
+			 	<tr th:id="trGroup+${count.index}"  th:each="unResultado,count : ${pagina.getContent()}" class="trGroupLotes">
 					<td><span th:text="${unResultado.id}"></span></td>
 					<td><span th:text="${#dates.format(unResultado.fechaCreacion, 'dd/MM/yyyy')}"></span></td>
                     <td> <!-- ${unResultado.listaLotes}">  -->
@@ -110,7 +110,8 @@
                             <input type="text" id="lote+${count.index}" th:value="${lote.id}"/>
                             </p>
                             <a data-toggle="modal" data-target="#modalConsultarLotes" th:attr="data-target='#modalConsultarLotes'+${unResultado.id}" style="cursor: pointer;" title="Ver lotes">                                                 
-                    <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i><span th:text="${#lists.size(unResultado.listaLotes)}"></span>	
+                    <i class="fa fa-dropbox" aria-hidden="true" style="font-size: 1.2em;"></i><span th:text="${#lists.size(unResultado.listaLotes)}"></span>	
+                     
                        </a>
                        
                            <!--  un modal -->
@@ -210,6 +211,7 @@
 						<span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
 					</td>
 					<td>	
+					
 						<a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}"  th:data-id="${unResultado.id}" onclick="procesarLotesDesdePlacas(this.getAttribute('data-id'))">
 						     <i class="fa fa-edit" title="Modificar placa" aria-hidden="true" style="font-size: 1.2em;"></i>
 						</a>

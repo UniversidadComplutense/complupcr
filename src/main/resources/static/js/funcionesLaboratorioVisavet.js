@@ -248,8 +248,9 @@ function asignarPlaca(){
 	$("#criteriosBusqueda").show();
 	var url = "";
 	//var urlAbs = getAbsolutePath();
-	if ($("#tamano option:selected").val() < $("#totalMuestra").text()){
-		alert ("El tamaño de la placa es menor al número de muestras");
+	if ($("#tamano option:selected").val() < $("#totalMuestras").text()){
+		//alert ("El tamaño de la placa es menor al número de muestras");
+		$("#error").show();
 	}
 	else {
 	url="/laboratorioUni/asignarPlaca?idPlaca="+$("#numPlacaSpan").text();
