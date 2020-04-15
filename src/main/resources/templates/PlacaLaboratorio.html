@@ -153,6 +153,9 @@
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 3}" class="col-3 justify-content-begin mt-3">
 				<button type="button" th:onclick="'window.location.href = \'' + @{/documento/placaLaboratorio?id=} + ${placa.id} + '&url=5' + '\''" th:disabled="${nueva}" class="btn btn-secondary">Asignar resultados PCR</button>			
+			</div>
+			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 3}" class="col-3 justify-content-begin mt-3">
+				<button th:id="btnListaParaAnalizar" type="button" th:onclick="listaParaAnalizar();" th:disabled="${nueva}" class="btn btn-secondary">Lista para analizar</button>			
 			</div>			
 			<div th:if="${nueva}" class="col-2 justify-content-begin mt-3">
 				<button th:id="btnCrearPlaca" th:disabled="${editable == 'false' || placa.numeroMuestras == ''|| placa.placasVisavetSeleccionadas == ''}" type="submit" class="btn btn-secondary">Crear placa</button>
@@ -167,6 +170,11 @@
 	
 	<!-- formuario para botón 'Asignar equipo PCR' -->
 	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/asignarEquipo}" method="post" th:object="${placa}" id="formGuardarAsignarEquipoPCR" role="form">
+		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
+	</form>
+	
+	<!-- formuario para botón 'Lista para analizar' -->
+	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/resultados}" method="post" th:object="${placa}" id="formGuardarListaParaAnalizar" role="form">
 		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
 	</form>
 

@@ -80,9 +80,8 @@ public interface LaboratorioCentroServicio {
 	
 	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable);
 	PlacaLaboratorioCentroBean buscarPlaca (Integer id);
-	PlacaLaboratorioCentroBean guardarPlaca (PlacaLaboratorioCentroBean placaLaboratorioCentroBean);
-	public void finalizarPCR(Integer id);
-	public void asignarEquipoPCR(Integer id);
+	public boolean finalizarPCR(Integer id);
+	public boolean asignarEquipoPCR(Integer id);
 	
 	public PlacaLaboratorioCentroAsignacionesBean buscarPlacaAsignaciones(Integer id);
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda, Pageable pageable); 	
@@ -95,15 +94,10 @@ public interface LaboratorioCentroServicio {
 	//public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
 	public Page<PlacaLaboratorioCentroAsignacionesAnalistaBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
 	public void guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas);
-	
-	
-	
-	
-	
-	
-	public BeanLaboratorioCentro buscarLaboratorioById(Integer id);
 
+	public BeanLaboratorioCentro buscarLaboratorioById(Integer id);
 	public PlacaLaboratorioCentroBean crearPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean);
+	public boolean placaListaParaAnalizar(Integer id);
 
 
 }	

@@ -46,6 +46,10 @@ function asignarEquipoPCR() {
     $("#formGuardarAsignarEquipoPCR").submit();
 }
 
+//La placa está lista para analizar
+function listaParaAnalizar() {
+    $("#formGuardarListaParaAnalizar").submit();
+}
 
 
 
