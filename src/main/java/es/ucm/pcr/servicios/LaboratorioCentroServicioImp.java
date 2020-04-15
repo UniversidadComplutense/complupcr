@@ -57,6 +57,7 @@ import es.ucm.pcr.repositorio.PlacaVisavetPlacaLaboratorioRepositorio;
 import es.ucm.pcr.repositorio.PlacaVisavetRepositorio;
 import es.ucm.pcr.repositorio.UsuarioMuestraRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
+import es.ucm.pcr.utilidades.Utilidades;
 
 @Service
 public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
@@ -683,7 +684,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 																							: "";
 					Optional<Muestra> muestra = muestraRepositorio.findByRefInternaVisavet(cellValueReferencia);
 					if (muestra.isPresent()) {
-						resultados.put(muestra.get().getId(), cellValueResultado);
+						resultados.put(muestra.get().getId(), Utilidades.resultado(cellValueResultado));
 					}
 				}
 

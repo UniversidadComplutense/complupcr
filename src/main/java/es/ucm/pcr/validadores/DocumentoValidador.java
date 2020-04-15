@@ -127,7 +127,7 @@ public class DocumentoValidador implements Validator {
 
 				if (!listaMuestrasExcel.containsAll(listaMuestrasLaboratorio)) {
 					errors.rejectValue("file", "campo.invalid",
-							"Las muestas de la excel no coinciden con las de la placa, revise los datos subidos");
+							"Las muestras de la excel no coinciden con las de la placa, revise los datos subidos");
 				}
 
 			}
