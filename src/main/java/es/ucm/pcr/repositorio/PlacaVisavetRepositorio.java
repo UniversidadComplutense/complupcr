@@ -49,17 +49,17 @@ public interface PlacaVisavetRepositorio extends JpaRepository<PlacaVisavet, Int
 	@Query("SELECT distinct placa FROM PlacaVisavet placa "
 			+ "JOIN placa.laboratorioVisavet laboratorioVisavet "
 			+ "JOIN placa.estadoPlacaVisavet estadoPlacaVisavet "
-			+ "LEFT JOIN placa.lotes lotes "
-			+ "LEFT JOIN placa.muestras muestras "
-			+ "LEFT JOIN placa.placaVisavetPlacaLaboratorios placaVLaboratorio "
+			//+ "LEFT JOIN placa.lotes lotes "
+			//+ "LEFT JOIN placa.muestras muestras "
+		//	+ "JOIN placa.laboratorioCentro laboratorioCentro "
 			+ "WHERE 1=1 and "
 			+ "(:#{#params.idPlaca} is null or placa.id = :#{#params.idPlaca}) and "
 			+ "(:#{#params.codNumEstadoSeleccionado} is null or placa.estadoPlacaVisavet.id = :#{#params.codNumEstadoSeleccionado}) and "
 			+ "(:#{#params.fechaCreacionInicio} is null or placa.fechaCreacion >= :#{#params.fechaCreacionInicio}) and "
 			+ "(:#{#params.fechaCreacionFin} is null or placa.fechaCreacion <= :#{#params.fechaCreacionFin}) and "
-			+ "(:#{#params.numLote} is null or lotes.numeroLote = :#{#params.numLote}) and "
-			+ "(:#{#params.muestra} is null or muestras.etiqueta = :#{#params.muestra}) and "
-		  //  + "(:#{#params.idLaboratorioCentro} is null or placaVLaboratorio.placaLaboratorio.laboratorioCentro.id = :#{#params.idLaboratorioCentro}) and "
+			//+ "(:#{#params.numLote} is null or lotes.numeroLote = :#{#params.numLote}) and "
+			//+ "(:#{#params.muestra} is null or muestras.etiqueta = :#{#params.muestra}) and "
+		    + "(:#{#params.idLaboratorioCentro} is null or placa.laboratorioCentro.id = :#{#params.idLaboratorioCentro}) and "
 			+ "(:#{#params.idLaboratorioVisavet} is null or placa.laboratorioVisavet.id = :#{#params.idLaboratorioVisavet})")
        public Page<PlacaVisavet> findByParams(@Param("params") BusquedaPlacasVisavetBean params,
 			Pageable pageable);	

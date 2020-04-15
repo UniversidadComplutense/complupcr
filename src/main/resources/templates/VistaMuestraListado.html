@@ -156,21 +156,24 @@
 				</div>
 			</div>
 
+			<!-- PAGINACION -->
+			<object th:replace="fragmentos :: paginacion(${paginadorBean})" th:remove="tag"></object>
+			
 			<!-- RESULTADO -->
 			<div class="row justify-content-center mt-3">
 				<table class="table">
 					<thead class="thead-light">
 						<tr>
-							<th class="p-1" scope="col">Nombre</th>
-							<th class="p-1" scope="col">NHC</th>
-							<th class="p-1" scope="col">Etiqueta</th>
+							<th class="p-1" scope="col" width="20%">Nombre</th>
+							<th class="p-1" scope="col" width="10%">NHC</th>
+							<th class="p-1" scope="col" width="10%">Etiqueta</th>
 							<!-- <th class="p-1" scope="col">Ref. interna</th> -->
-							<th class="p-1" scope="col">Fecha envío</th>
-							<th class="p-1" scope="col">Fecha resultado</th>
-							<th class="p-1" scope="col">Resultado</th>
-							<th class="p-1" scope="col">Notificado</th>
-							<th class="p-1" scope="col">Lote</th>
-							<th class="p-1" scope="col">Acciones</th>
+							<th class="p-1" scope="col" width="12%">Fecha envío</th>
+							<th class="p-1" scope="col" width="12%">Fecha resultado</th>
+							<th class="p-1" scope="col" width="10%">Resultado</th>
+							<th class="p-1" scope="col" width="10%">Notificado</th>
+							<th class="p-1" scope="col" width="10%">Lote</th>
+							<th class="p-1" scope="col" width="5%">Acciones</th>
 						</tr>
 					</thead>
 					<tbody>

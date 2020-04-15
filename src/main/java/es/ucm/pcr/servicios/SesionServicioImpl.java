@@ -107,7 +107,7 @@ public class SesionServicioImpl implements SesionServicio {
 //  Recepcion Laboratorio
 		if (this.tieneRol("ADMIN") || this.tieneRol("RECEPCIONLABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Recepción de Lotes", "/laboratorioUni/buscarLotes", null);
+			opcionSecundaria = new MenuBean("Recepción de Lotes", "/laboratorioUni/buscarLotes?estado=3", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Recepción laboratorio", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
@@ -115,7 +115,7 @@ public class SesionServicioImpl implements SesionServicio {
 //	Tecnico laboratorio
 		if (this.tieneRol("ADMIN") || this.tieneRol("TECNICOLABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Asignar lotes a placas", "/laboratorioUni/buscarLotes", null);
+			opcionSecundaria = new MenuBean("Asignar lotes a placas", "/laboratorioUni/buscarLotes?estado=4", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Gestionar placas", "/laboratorioUni/buscarPlacas", null);
 			menuSecundario.add(opcionSecundaria);

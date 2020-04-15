@@ -75,19 +75,22 @@
 			</div>
 		</div>	
 		
+		<!-- PAGINACION -->
+		<object th:replace="fragmentos :: paginacion(${paginadorBean})" th:remove="tag"></object>
+		
 		<!-- RESULTADO -->
 		<div class="row justify-content-center mt-3">
 			<table class="table">
 				<thead class="thead-light">	
 	    			<tr>
-	      				<th class="p-1" scope="col">Código</th>
-						<th class="p-1" scope="col">Laboratorio</th>
-						<th class="p-1" scope="col">Estado</th>
-						<th class="p-1" scope="col">Fecha envío</th>
-						<th class="p-1" scope="col">Capacidad</th>
+	      				<th class="p-1" scope="col" width="15%">Código</th>
+						<th class="p-1" scope="col" width="20%">Laboratorio</th>
+						<th class="p-1" scope="col" width="20%">Estado</th>
+						<th class="p-1" scope="col" width="15%">Fecha envío</th>
+						<th class="p-1" scope="col" width="10%">Capacidad</th>
 						<!-- <th class="p-1" scope="col">Numero muestras</th>-->
-						<th class="p-1" scope="col">Muestras</th>
-						<th class="p-1" scope="col">Acciones</th>
+						<th class="p-1" scope="col" width="10%">Muestras</th>
+						<th class="p-1" scope="col" width="10%">Acciones</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -149,7 +152,7 @@
 											</div>								        
 							      		</div>
 									    <div class="modal-footer">
-									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>							        
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>							        
 										</div>
 							    	</div>
 							  	</div>
@@ -158,15 +161,78 @@
 						</td>
 						<td class="p-1">
 							<!-- ACCIONES -->
+							<!-- Modificar -->
 							<a style="color:black" th:href="@{/centroSalud/lote/modificar(id=${lote.id})}" title="Modificar">
 					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
+					        
+							<!-- Asignar laboratorio -->					        
+					        <a th:if="${lote.fechaEnvio == null}" style="cursor: pointer;" data-toggle="modal" 
+					        			data-target="#modal-asignar-laboratorio" 
+					        			th:attr="data-target='#modal-asignar-laboratorio'+${lote.id}">
+                          		<i class="fa fa-flask" aria-hidden="true" title="Asignar laboratorio" style="font-size: 1.2em;"></i>
+							</a>
+							<a th:if="${lote.fechaEnvio != null}" style="color:grey;cursor: pointer;">
+                          		<i class="fa fa-flask" aria-hidden="true" title="Asignar laboratorio" style="font-size: 1.2em;"></i>
+							</a>
+							
+							<!-- Borrar -->
 					        <a th:if="${#lists.size(lote.muestras) > 0}" style="color:grey;cursor: pointer;" title="Borrar">
 					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>			        
 					        <a th:if="${#lists.size(lote.muestras) == 0}" style="color:black;cursor: pointer;" th:data-href="@{/centroSalud/lote/borrar(id=${lote.id})}" title="Borrar" data-toggle="modal" data-target="#confirm-borrar">
 					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
+							
+							<!-- MODAL ASIGGAR LABORATORIO -->							
+							<div class="modal fade" th:id="modal-asignar-laboratorio+${lote.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+							    	<div class="modal-content">							    	
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">Asignar laboratorio al Lote - <b><span th:text="${lote.numLote}"/></b></h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	<fieldset id="datosLote" class="form-group border p-2 m-1">
+												<legend th:if="${lote.descLaboratorio != null}" class="w-auto font-weight-bold m-0">Cambiar laboratorio asginado</legend>												
+												<legend th:if="${lote.descLaboratorio == null}" class="w-auto font-weight-bold m-0">Lote sin laboratorio asignado</legend>
+												<div class="row">			
+													<div class="col-8 m-0 form-group">
+													
+														
+														<ul style="list-style: none;">
+															<li>
+													 			<input type="radio" name="idLaboratorio" value=""></input>
+													 			<label>Sin laboratorio</label>
+													 		</li>
+													 		<li th:each="var : ${listaLaboratorios}" th:if="${var.id != lote.idLaboratorio}">
+														    	<input type="radio" th:field="*{idLaboratorio}" th:value="${var.id}" />
+														    	<label th:for="${#ids.prev('idLaboratorio')}" th:text="${var.nombre}"></label>														    	
+														  	</li>
+														</ul>
+													</div>				
+												</div>	
+											</fieldset>							        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary asignarLaboratorio" th:data-id="${lote.id}" onclick="asignarLote(this.getAttribute('data-id'))">Asignar laboratorio</button>
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>							        
+										</div>
+										<script src="static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+										<script th:inline="javascript">											
+												$("input[name='idLaboratorio']").click(function () {										        	
+													var radioValue = $("input[name='idLaboratorio']:checked"). val();											        			
+												    $("#idLaboratorioEnviado").val(radioValue);												    
+										        });										        											
+										</script>										
+							    	</div>
+							  	</div>
+							</div>
+							<!-- FIN MODAL ASIGNAR LABORATORIO -->															
+					        
+					        <!-- Enviar -->
 					        <a th:if="${lote.fechaEnvio != null || #lists.size(lote.muestras) == 0}" style="color:grey;cursor: pointer;" title="Enviar">
 					          	<i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>			        
@@ -181,6 +247,13 @@
 				</tbody>
 			</table>
 		</div>
+	</form>
+	
+	
+	<!-- formuario para envio de lote -->
+	<form action="#" th:action="@{/centroSalud/lote/asignarLaboratorio}" method="post" th:object="${beanLote}" id="formGuardar" role="form">
+		<input type="hidden" id="idLote" name="id"/>
+		<input type="hidden" id="idLaboratorioEnviado" name="idLaboratorio"/>
 	</form>
 
 	</div>
@@ -232,7 +305,12 @@
 	    });
     	$('#confirm-borrar').on('show.bs.modal', function(e) {
     	    $(this).find('.btn-borrar').attr('href', $(e.relatedTarget).data('href'));
-    	});
+    	});    
+
+    	function asignarLote(idLote, idLaboratorio) {
+        	$("#idLote").val(idLote);
+        	$("#formGuardar").submit();
+        }	    	
     </script>
 </body>
 </html>

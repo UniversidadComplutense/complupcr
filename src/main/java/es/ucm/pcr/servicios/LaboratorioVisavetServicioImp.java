@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -155,15 +157,20 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	
 	// JAVI para recepcionar una placa Visavet
 	@Override
-	public void recepcionarPlaca(Integer id) {				
+	@Transactional
+	public boolean recepcionarPlaca(Integer id) {				
 		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(id);
 		if (placa.isPresent()) {
 			if (placa.get().getEstadoPlacaVisavet().getId() == Estado.PLACAVISAVET_ENVIADA.getCodNum()) {
 				placa.get().setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_RECIBIDA.getCodNum()));
 				placa.get().setFechaRecepcionLaboratorioCentro(new Date());
 				placaVisavetRepositorio.save(placa.get());
+				
+				// TODO Registrar en LOG placaVisavet recibida
+				return true;
 			}			
 		}
+		return false;
 	}
 
 	// JAVI para saber las placas Visavet combinadas en una placa de laboratorio

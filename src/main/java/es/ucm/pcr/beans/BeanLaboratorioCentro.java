@@ -14,6 +14,7 @@ public class BeanLaboratorioCentro implements Comparable <BeanLaboratorioCentro>
 	private String nombre;
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Set<PlacaLaboratorio> placaLaboratorios = new HashSet<PlacaLaboratorio>(0);
+	//private Set<PlacaLaboratorio> placaLaboratorios = new HashSet<PlacaLaboratorio>(0);
 	private Set<Equipo> equipos = new HashSet<Equipo>(0);
 	private String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA
 	private Integer placasVisavetaLaEspera;
