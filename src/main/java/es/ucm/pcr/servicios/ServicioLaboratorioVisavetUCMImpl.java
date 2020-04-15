@@ -2,8 +2,10 @@ package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -204,13 +206,21 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		placa = placaVisavetRepositorio.save(placa);
 		// por cada placa tengo que guardar el lote
 		if (placa.getId()!=null) {
+			Set listaLotes= new HashSet();
 			for (LoteBeanPlacaVisavet loteB: beanPlacaVisavetUCM.getListaLotes()) {
 				Lote lbbdd = loteRepositorio1.findById(loteB.getId()).get();
 			//	Lote l=LoteBeanPlacaVisavet.beanToModel(loteB);
 				lbbdd.setPlacaVisavet(placa);
 				lbbdd.setEstadoLote(new EstadoLote(loteB.getEstado().getEstado().getCodNum()));
-			
-				loteRepositorio.save(lbbdd);
+				
+				lbbdd=loteRepositorio.save(lbbdd);
+				listaLotes.add(lbbdd);
+			}
+			Optional<PlacaVisavet>  placaOpt=placaVisavetRepositorio.findById(beanPlacaVisavetUCM.getId());
+			if (placaOpt.isPresent()) {
+				placa=placaOpt.get();
+				placa.setLotes(listaLotes);
+				placa = placaVisavetRepositorio.save(placa);
 			}
 		}
 		return BeanPlacaVisavetUCM.modelToBean(placa);
