@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -33,15 +35,22 @@ import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.Muestra;
+import es.ucm.pcr.modelo.orm.Paciente;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.PlacaVisavet;
+import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.modelo.orm.UsuarioMuestra;
 import es.ucm.pcr.repositorio.EstadoPlacaLaboratorioRepositorio;
+import es.ucm.pcr.repositorio.EstadoPlacaVisavetRepositorio;
 import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
 import es.ucm.pcr.repositorio.MuestraRepositorio;
 import es.ucm.pcr.repositorio.PlacaLaboratorioRepositorio;
+import es.ucm.pcr.repositorio.PlacaVisavetPlacaLaboratorioRepositorio;
+import es.ucm.pcr.repositorio.PlacaVisavetRepositorio;
 import es.ucm.pcr.repositorio.UsuarioMuestraRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
 
@@ -53,6 +62,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 	@Autowired
 	PlacaLaboratorioRepositorio placaLaboratorioRepositorio;
+	
+	@Autowired
+	PlacaVisavetRepositorio placaVisavetRepositorio;
 	
 	@Autowired
 	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
@@ -70,10 +82,20 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	UsuarioMuestraRepositorio usuarioMuestraRepositorio;	
 	
 	@Autowired
+	EstadoPlacaVisavetRepositorio estadoPlacaVisavetRepositorio;
+	
+	@Autowired
 	EstadoPlacaLaboratorioRepositorio estadoPlacaLaboratorioRepositorio;
 	
 	@Autowired
+	PlacaVisavetPlacaLaboratorioRepositorio placaVisavetPlacaLaboratorioRepositorio;
+	
+	@Autowired
 	private ServicioLog servicioLog;
+	
+	
+	@Autowired
+	MuestraServicio muestraServicio;
 	
 	public LaboratorioCentro mapeoBeanEntidadLaboratorioCentro(BeanLaboratorioCentro beanLaboratorioCentro) throws Exception{
 		
@@ -160,11 +182,57 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		return placasLaboratorioCentro;
 	}
 
+	
+	//JAVI
+	@Override
+	public PlacaLaboratorioCentroBean crearPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean) {
+		
+		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
+
+		placa.setFechaCreacion(new Date());
+		placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_INICIADA.getCodNum()));
+		placa.setLaboratorioCentro(new LaboratorioCentro(sesionServicio.getUsuario().getIdLaboratorioCentro()));
+
+		placa = placaLaboratorioRepositorio.save(placa);
+		
+		// Transformamos en un Array el String que viene de la vista con los IDs de las placas Visavet seleccionadas
+		String[] listaIDsPlacasVisavetSeleccinadas = placaLaboratorioCentroBean.getPlacasVisavetSeleccionadas().split(":");
+		
+		// Asignamos a la placa de laboratorio las placas Visavet seleccionadas
+		if (listaIDsPlacasVisavetSeleccinadas.length > 0) {
+			
+			Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>();
+			
+			for (String idPlacaVisavet : listaIDsPlacasVisavetSeleccinadas) {
+
+				PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio = new PlacaVisavetPlacaLaboratorio();
+				PlacaLaboratorio placaLaboratorio = placaLaboratorioRepositorio.getOne(placa.getId());
+				PlacaVisavet placaVisavet = placaVisavetRepositorio.getOne(Integer.valueOf(idPlacaVisavet));
+				
+				// Cambiamos el estado de la placa Visavet a traspasada
+				placaVisavet.setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_TRANSPASADA.getCodNum()));
+				placaVisavet = placaVisavetRepositorio.save(placaVisavet);				
+				placaVisavetPlacaLaboratorio.setPlacaLaboratorio(placaLaboratorio);
+				placaVisavetPlacaLaboratorio.setPlacaVisavet(placaVisavet);
+				
+				placaVisavetPlacaLaboratorioRepositorio.save(placaVisavetPlacaLaboratorio);
+				
+				placaVisavetPlacaLaboratorios.add(placaVisavetPlacaLaboratorio);
+			}
+			placa.setPlacaVisavetPlacaLaboratorios(placaVisavetPlacaLaboratorios);
+			placa = placaLaboratorioRepositorio.save(placa);
+		}		
+		return PlacaLaboratorioCentroBean.modelToBean(placa);
+
+	}
+
+	
 	//JAVI
 	@Override
 	public PlacaLaboratorioCentroBean guardarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean) {
-		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);						
-
+		
+		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
+		
 		// Placa nueva
 		if (placaLaboratorioCentroBean.getId() == null) {
 			placa.setFechaCreacion(new Date());
@@ -179,6 +247,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	// JAVI
 	@Override
 	public PlacaLaboratorioCentroBean buscarPlaca(Integer id) {
+		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
 			return PlacaLaboratorioCentroBean.modelToBean(placa.get());
@@ -188,7 +257,8 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 	// JAVI
 	@Override
-	public void finalizarPCR(Integer id) {				
+	public void finalizarPCR(Integer id) {
+		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
 			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()) {
@@ -200,7 +270,8 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	// JAVI
 	@Override
-	public void asignarEquipoPCR(Integer id) {				
+	public void asignarEquipoPCR(Integer id) {
+		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
 			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_INICIADA.getCodNum()) {
@@ -213,6 +284,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		}
 	}
 
+	
 	//Diana- metodos para jefe de servicio (replica de metodos de Javi con mi bean)
 	
 	@Override
@@ -453,13 +525,14 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		Integer idUsuarioLogado = sesionServicio.getUsuario().getId(); 
 		Date fechaActual = new Date();
 		//por cada muestra de la placa
-		for(Muestra m: placa.getMuestras()) {			
+		for(Muestra m: placa.getMuestras()) {
+			String valoracionExcelParaMuestra = "POSITIVO"; //TODO, aquí habría que recoger la valoracion del excel para la muestra, esto es un ejemplo
 			//recuperamos el usuarioMuestra asociado al usuario logado (analista que está valorando las muestras de la placa)
 			Optional<UsuarioMuestra> optusumu = usuarioMuestraRepositorio.findByIdUsuarioAndIdMuestra(idUsuarioLogado, m.getId());
 			if (optusumu.isPresent()) {
 				UsuarioMuestra usumu = optusumu.get();
 				//aqui tendriamos que asociarle la valoracion que viene en el excel para esa muestra 
-				//usumu.setValoracion(valoracion);
+				usumu.setValoracion(valoracionExcelParaMuestra);
 				usumu.setFechaValoracion(fechaActual);
 				UsuarioMuestra usumuGuardado = usuarioMuestraRepositorio.save(usumu);
 			}
@@ -470,9 +543,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			//por cada muestra calculamos si ya se han dado las valoraciones de todos los analistas
 			//en ese caso el resultado sería definitivo y se guardara el resultado en la muestra y se enviará la notificacion 
 			Integer numValoracionesMuestra = this.calculaCuantasValoracionesTieneLaMuestra(m);
+			System.out.println("el numero de valoraciones actuales de la muestra con id: "+ m.getId()+" es: " + numValoracionesMuestra);
 			if(numValoracionesMuestra.equals(numAnalistas)) {
 				//guardamos como resultado definitivo este ultimo resultado que está dando el analista que viene del excel
-				//m.setResultado(valoracion);
+				m.setResultado(valoracionExcelParaMuestra);
 				m.setFechaResultado(fechaActual);				
 				//cambiamos el estado de la muestra a resuelta y la guardamos							
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_RESUELTA.getCodNum()));				
@@ -481,7 +555,13 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				BeanEstado estadoMuestra = new BeanEstado();
 				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
 				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
-				//TODO envio de notificaciones a pacientes si tienen notificacion automatica
+				//Envio de notificacion al pacientes si tiene activada la notificacion automatica
+				//recupero el paciente de la muestra
+				Paciente paciente = m.getPaciente();
+				System.out.println("el paciente con id: " + paciente.getId()+" tiene la notificacion automato a: " + paciente.getNotificarAutomato());
+				if(paciente.getNotificarAutomato().equals("S")) {
+					muestraServicio.actualizarNotificacionMuestra(m.getId(), true); //actualiza fecha de notificación y envia correo
+				}
 				
 			}
 			
