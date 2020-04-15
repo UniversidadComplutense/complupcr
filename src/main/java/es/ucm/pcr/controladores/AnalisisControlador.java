@@ -554,27 +554,15 @@ public class AnalisisControlador {
 		
 		//metodos de asignacion de analistas a placas
 		
-		@RequestMapping(value="/asignarPlaca", method=RequestMethod.GET)
-		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public ModelAndView asignarPlaca(HttpSession session, HttpServletRequest request, @RequestParam("idPlaca") Integer idPlaca) throws Exception {
-			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAPlaca");
-						
-			String mensaje = null;
-			// Comprobamos si hay mensaje enviado desde guardarAsignacion.
-			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
-			if (inputFlashMap != null) {
-				mensaje = (String) inputFlashMap.get("mensaje");
-				System.out.println("mensaje vale: " + mensaje);
-			}
-			vista.addObject("mensaje", mensaje);
-
-			PlacaLaboratorioCentroAsignacionesBean placaLaboratorioCentroAsignacionesBean=laboratorioCentroServicio.buscarPlacaAsignaciones(idPlaca); 
-			
-
-			//para recoger los analistas y voluntarios seleccionados
+		//metodo privado que rellena un bean con los datos de la placa y sus analistas asignados y la listas de posibles nuevos analistas a asignar
+		//para poder mapearlo a la vista
+		private GuardarAsignacionPlacaLaboratorioCentroBean rellenaGuardarAsignacionPlacaLaboratorioCentroBean(Integer idPlaca) {
+			//y permitira recoger los analistas y voluntarios seleccionados
 			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = new GuardarAsignacionPlacaLaboratorioCentroBean();
 			formBeanGuardarAsignacionPlacaLaboratorioCentro.setIdPlaca(idPlaca);
-								
+			
+			PlacaLaboratorioCentroAsignacionesBean placaLaboratorioCentroAsignacionesBean=laboratorioCentroServicio.buscarPlacaAsignaciones(idPlaca);
+			
 			//obtenemos los listados de analistas del laboratorio, voluntarios del laboratorio y voluntarios sin laboratorio
 			
 			//recupero el usuario logado			
@@ -624,36 +612,75 @@ public class AnalisisControlador {
 			//no se puede asignar nuevos analistas a la placa si la placa tiene ya todas sus muestras con resultado definitivo
 			Boolean noSePuedeAsignarNuevosAnalistasAPlaca = laboratorioCentroServicio.tienenResultadoDefinitivoLasMuestrasDeLaPlaca(idPlaca);
 			
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setPlacaLaboratorioCentroAsignacionesBean(placaLaboratorioCentroAsignacionesBean);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setBeanListadoAnalistaLab(beanListadoAnalistaLab);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setBeanListadoAnalistaVol(beanListadoAnalistaVol);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setBeanListadoVoluntariosSinLaboratorioCentro(beanListadoVoluntariosSinLaboratorioCentro);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setNoSePuedeAsignarNuevosAnalistasAPlaca(noSePuedeAsignarNuevosAnalistasAPlaca);
 			
-			vista.addObject("placaLaboratorioCentroAsignacionesBean", placaLaboratorioCentroAsignacionesBean);
+			return formBeanGuardarAsignacionPlacaLaboratorioCentro;
+		}
+		
+		@RequestMapping(value="/asignarPlaca", method=RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public ModelAndView asignarPlaca(HttpSession session, HttpServletRequest request, @RequestParam("idPlaca") Integer idPlaca) throws Exception {
+			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAPlaca");
+						
+			String mensaje = null;
+			// Comprobamos si hay mensaje enviado desde guardarAsignacion.
+			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+			if (inputFlashMap != null) {
+				mensaje = (String) inputFlashMap.get("mensaje");
+				System.out.println("mensaje vale: " + mensaje);
+			}
+			vista.addObject("mensaje", mensaje);
+
+			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(idPlaca);
+						
 			vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
-			vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);			
-			vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
-			vista.addObject("beanListadoVoluntariosSinLaboratorioCentro", beanListadoVoluntariosSinLaboratorioCentro);
-			vista.addObject("noSePuedeAsignarNuevosAnalistasAPlaca", noSePuedeAsignarNuevosAnalistasAPlaca);
+			//vista.addObject("placaLaboratorioCentroAsignacionesBean", placaLaboratorioCentroAsignacionesBean);
+			//vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
+			//vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);			
+			//vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
+			//vista.addObject("beanListadoVoluntariosSinLaboratorioCentro", beanListadoVoluntariosSinLaboratorioCentro);
+			//vista.addObject("noSePuedeAsignarNuevosAnalistasAPlaca", noSePuedeAsignarNuevosAnalistasAPlaca);
 			return vista;
 		}
 		
 		
 		@RequestMapping(value = "/guardarAsignacionPlaca", method = RequestMethod.POST)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public RedirectView guardarAsignacionPlaca(@ModelAttribute("formBeanGuardarAsignacionPlaca") GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca,
-				HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
+		public ModelAndView guardarAsignacionPlaca(@Valid @ModelAttribute("formBeanGuardarAsignacionPlaca") GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca,
+				HttpServletRequest request, HttpSession session, BindingResult result, RedirectAttributes redirectAttributes) {
 			
-			System.out.println("placa id: " + formBeanGuardarAsignacionPlaca.getIdPlaca());
-			System.out.println("analistas de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados().toString());
-			System.out.println("voluntarios de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados().toString());
-			System.out.println("voluntarios sin labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados().toString());
-			
-			//llamamos a metodo de servicio que a partir de formBeanGuardarAsignacionPlaca recupere la placa y le asigne a todas sus muestras los nuevos analistas lab, analistas vol y otros vol
-			//y cambie el estado de las muestras a asignada analista			
-			laboratorioCentroServicio.guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(formBeanGuardarAsignacionPlaca);
-			
-						
-			//vuelvo al formulario de asignacion de la placa
-			String idPlaca = String.valueOf(formBeanGuardarAsignacionPlaca.getIdPlaca());
-			redirectAttributes.addFlashAttribute("mensaje", "Asignaciones de placa guardadas");
-			return new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true);
+			//formBeanGuardarAsignacionPlaca traerá relleno solo los inputs que son las listas de id's seleccionados
+			if (result.hasErrors()) {
+			//if (true) {
+				ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAPlaca");
+				//volvemos a calcular los datos que necesitamos para la vista
+				GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(formBeanGuardarAsignacionPlaca.getIdPlaca());
+				//asignamos lo que hemos cogido del formulario para no perderlo
+				formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasLabSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados());
+				formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasVolSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados());
+				formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsVolSinLabCentroSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados());
+				vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
+				return vista;
+			} else {			
+				System.out.println("placa id: " + formBeanGuardarAsignacionPlaca.getIdPlaca());
+				System.out.println("analistas de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados().toString());
+				System.out.println("voluntarios de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados().toString());
+				System.out.println("voluntarios sin labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados().toString());
+				
+				//llamamos a metodo de servicio que a partir de formBeanGuardarAsignacionPlaca recupere la placa y le asigne a todas sus muestras los nuevos analistas lab, analistas vol y otros vol
+				//y cambie el estado de las muestras a asignada analista			
+				laboratorioCentroServicio.guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(formBeanGuardarAsignacionPlaca);
+				
+							
+				//vuelvo al formulario de asignacion de la placa
+				String idPlaca = String.valueOf(formBeanGuardarAsignacionPlaca.getIdPlaca());
+				redirectAttributes.addFlashAttribute("mensaje", "Asignaciones de placa guardadas");
+				return new ModelAndView(new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true));				
+			}
 		}
 		
 
