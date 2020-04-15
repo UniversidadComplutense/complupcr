@@ -1,3 +1,4 @@
+
 function ocultarCentrosInicial(){
 //	Todos los radio deben tener el mismo name para poder obtener su valor
 	var tipoCentro = document.formularioUsuario.tipoCentroSeleccionado.value;

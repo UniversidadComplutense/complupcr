@@ -93,6 +93,8 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	@Autowired
 	private ServicioLog servicioLog;
 	
+	@Autowired
+	DocumentoServicio documentoServicio;
 	
 	@Autowired
 	MuestraServicio muestraServicio;
@@ -185,6 +187,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	//JAVI
 	@Override
+	@Transactional
 	public PlacaLaboratorioCentroBean crearPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean) {
 		
 		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
@@ -216,31 +219,18 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				placaVisavetPlacaLaboratorio.setPlacaVisavet(placaVisavet);
 				
 				placaVisavetPlacaLaboratorioRepositorio.save(placaVisavetPlacaLaboratorio);
+				// TODO Registrar en LOG placaVisavet traspasada
 				
 				placaVisavetPlacaLaboratorios.add(placaVisavetPlacaLaboratorio);
 			}
 			placa.setPlacaVisavetPlacaLaboratorios(placaVisavetPlacaLaboratorios);
 			placa = placaLaboratorioRepositorio.save(placa);
+			return PlacaLaboratorioCentroBean.modelToBean(placa);
+			
+			// TODO Registrar en LOG placaLaboratorio creada
+			
 		}		
-		return PlacaLaboratorioCentroBean.modelToBean(placa);
-
-	}
-
-	
-	//JAVI
-	@Override
-	public PlacaLaboratorioCentroBean guardarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean) {
-		
-		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
-		
-		// Placa nueva
-		if (placaLaboratorioCentroBean.getId() == null) {
-			placa.setFechaCreacion(new Date());
-			placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_INICIADA.getCodNum()));
-			placa.setLaboratorioCentro(new LaboratorioCentro(sesionServicio.getUsuario().getIdLaboratorioCentro()));
-		}
-		placa = placaLaboratorioRepositorio.save(placa);
-		return PlacaLaboratorioCentroBean.modelToBean(placa);
+		return null;
 
 	}
 	
@@ -257,20 +247,25 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 	// JAVI
 	@Override
-	public void finalizarPCR(Integer id) {
+	@Transactional
+	public boolean finalizarPCR(Integer id) {
 		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
 			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()) {
 				placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_FINALIZADA_PCR.getCodNum()));
 				placaLaboratorioRepositorio.save(placa.get());
+				// TODO Registrar en LOG placaLaboratorio ha finalizado PCR
+				return true;
 			}			
 		}
+		return false;
 	}
 	
 	// JAVI
 	@Override
-	public void asignarEquipoPCR(Integer id) {
+	@Transactional
+	public boolean asignarEquipoPCR(Integer id) {
 		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
@@ -280,8 +275,34 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				
 				placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()));
 				placaLaboratorioRepositorio.save(placa.get());
+				// TODO Registrar en LOG placaLaboratorio preparada para PCR
+				return true;
 			}			
 		}
+		return false;
+	}
+	
+	// JAVI
+	@Override
+	@Transactional
+	public boolean placaListaParaAnalizar(Integer id) {
+		
+		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
+		if (placa.isPresent()) {
+			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_FINALIZADA_PCR.getCodNum()) {
+				ElementoDocumentacionBean documentosPlaca = documentoServicio.obtenerDocumentosPlacaLaboratorio(id);
+				if (documentosPlaca != null && documentosPlaca.getDocumentos() != null && documentosPlaca.getDocumentos().size() >0) {
+					placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum()));
+					placaLaboratorioRepositorio.save(placa.get());
+					// Registramos en el log que las muestras de la placa están listas para ser analizadas
+					servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(id, new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_PENDIENTE_ANALIZAR));
+					
+					// TODO Registrar en LOG placaLaboratorio lista para analizar				
+					return true;
+				}
+			}			
+		}
+		return false;
 	}
 
 	
@@ -299,15 +320,15 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	
 	@Override
-	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda,
+	public Page<PlacaLaboratorioCentroAsignacionesBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda,
 			Pageable pageable) {
 		
-		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();		
+		List<PlacaLaboratorioCentroAsignacionesBean> listaPlacasLaboratorioCentroAsignacionesBean = new ArrayList<PlacaLaboratorioCentroAsignacionesBean>();		
 		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = placaLaboratorioRepositorio.findByParams(criteriosBusqueda, pageable); 		
 		for (PlacaLaboratorio placa : PagePlacasLaboratorioCentro.getContent()) {
-			listaPlacasLaboratorioCentroBean.add(PlacaLaboratorioCentroBean.modelToBean(placa));
+			listaPlacasLaboratorioCentroAsignacionesBean.add(PlacaLaboratorioCentroAsignacionesBean.modelToBean(placa));
 		}		
-		Page<PlacaLaboratorioCentroBean> placasLaboratorioCentro = new PageImpl<>(listaPlacasLaboratorioCentroBean, pageable, PagePlacasLaboratorioCentro.getTotalElements());		
+		Page<PlacaLaboratorioCentroAsignacionesBean> placasLaboratorioCentro = new PageImpl<>(listaPlacasLaboratorioCentroAsignacionesBean, pageable, PagePlacasLaboratorioCentro.getTotalElements());		
 		return placasLaboratorioCentro;
 	}
 	

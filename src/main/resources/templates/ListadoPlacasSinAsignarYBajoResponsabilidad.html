@@ -89,8 +89,8 @@
 													<tbody>
 														<tr th:if="${placa.muestras != null}" th:each="muestra : ${placa.muestras}">
 															<td><span th:text="${muestra.id}"></span></td>
-															<td><span th:text="${muestra.etiqueta}"></span></td>					
-															<td><span th:text="${muestra.refInterna}"></span></td>
+															<td><span th:text="${muestra.etiquetaMuestra}"></span></td>					
+															<td><span th:text="${muestra.refInternaMuestra}"></span></td>
 															<!-- 
 															<td><span th:text="${muestra.idPlacaLaboratorio}"></span></td>															
 															<td><span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span></td>
@@ -98,7 +98,7 @@
 															<td><span th:text="${muestra.estadoMuestra}"></span></td>		
 															<td><span th:text="${muestra.notificado} ? 'Sí' : 'No'"></span></td>	
 															-->	
-															<td><span th:text="${muestra.estado}"></span></td>													
+															<td><span th:text="${muestra.estadoMuestra}"></span></td>													
 														</tr>		
 													</tbody>
 												</table>
@@ -211,8 +211,8 @@
 													<tbody>
 														<tr th:if="${placaAsignada.muestras != null}" th:each="muestra : ${placaAsignada.muestras}">
 															<td><span th:text="${muestra.id}"></span></td>
-															<td><span th:text="${muestra.etiqueta}"></span></td>					
-															<td><span th:text="${muestra.refInterna}"></span></td>
+															<td><span th:text="${muestra.etiquetaMuestra}"></span></td>					
+															<td><span th:text="${muestra.refInternaMuestra}"></span></td>
 															<!-- 
 															<td><span th:text="${muestra.idPlacaLaboratorio}"></span></td>															
 															<td><span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span></td>
@@ -220,7 +220,7 @@
 															<td><span th:text="${muestra.estadoMuestra}"></span></td>		
 															<td><span th:text="${muestra.notificado} ? 'Sí' : 'No'"></span></td>	
 															-->	
-															<td><span th:text="${muestra.estado}"></span></td>													
+															<td><span th:text="${muestra.estadoMuestra}"></span></td>													
 														</tr>		
 													</tbody>
 												</table>
