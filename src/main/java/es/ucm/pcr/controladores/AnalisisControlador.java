@@ -679,7 +679,7 @@ public class AnalisisControlador {
 				vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlaca);
 				return vista;
 			} else {			
-				/* 	System.out.println("placa id: " + formBeanGuardarAsignacionPlaca.getIdPlaca());
+				System.out.println("placa id: " + formBeanGuardarAsignacionPlaca.getIdPlaca());
 				System.out.println("analistas de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados().toString());
 				System.out.println("voluntarios de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados().toString());
 				System.out.println("voluntarios sin labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados().toString());
@@ -688,7 +688,7 @@ public class AnalisisControlador {
 				//y cambie el estado de las muestras a asignada analista			
 				laboratorioCentroServicio.guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(formBeanGuardarAsignacionPlaca);
 				
-				*/			
+							
 				//vuelvo al formulario de asignacion de la placa
 				String idPlaca = String.valueOf(formBeanGuardarAsignacionPlaca.getIdPlaca());
 				redirectAttributes.addFlashAttribute("mensaje", "Asignaciones de placa guardadas");
