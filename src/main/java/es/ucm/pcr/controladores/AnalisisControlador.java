@@ -88,6 +88,9 @@ public class AnalisisControlador {
     private Integer  numAnalistas;
 	
 	@Autowired
+	private DocumentoValidador documentoValidador;
+	
+	@Autowired
 	private SesionServicio sesionServicio;
 	
 	@Autowired
@@ -108,8 +111,7 @@ public class AnalisisControlador {
 		//@Autowired
 		//private ValidadorMuestra validadorMuestra;
 	
-		@Autowired
-		private DocumentoValidador documentoValidador;
+		
 		
 		@InitBinder
 		public void initBinder(WebDataBinder binder) {
@@ -763,12 +765,13 @@ public class AnalisisControlador {
 		
 		@RequestMapping(value = "/guardarResultadosPlacaLaboratorio", method = RequestMethod.POST)
 		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO', 'VOLUNTARIO')")
-		public ModelAndView guardarResultadosPlacaLaboratorio(@Valid @ModelAttribute("beanDocumento") ElementoDocumentacionBean bean,
+		public ModelAndView guardarResultadosPlacaLaboratorio(@Valid @ModelAttribute("elementoDoc") ElementoDocumentacionBean bean,
 				BindingResult result, RedirectAttributes redirectAttributes) throws Exception {
 
 			if (result.hasErrors()) {
 				ModelAndView vista = new ModelAndView("VistaCargarResultados");
 				vista.addObject("elementoDoc", bean);
+				return vista;
 			} else {
 				System.out.println("El nombre de la hoja es: " + bean.getHoja());
 				System.out.println("El nombre de la columna es: " + bean.getColumna());

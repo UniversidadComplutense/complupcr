@@ -94,7 +94,7 @@ public interface LaboratorioCentroServicio {
 	
 	//public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
 	public Page<PlacaLaboratorioCentroAsignacionesAnalistaBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
-	public void guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas);
+	public void guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas)throws Exception;
 	
 	
 	
