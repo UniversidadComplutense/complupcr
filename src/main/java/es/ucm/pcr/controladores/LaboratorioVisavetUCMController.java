@@ -279,7 +279,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 	}
 	@RequestMapping(value = "/laboratorioUni/confirmarEnviadaPlaca", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO')")
-	public ModelAndView confirmarEnviadaPlaca(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,direction =Sort.Direction.DESC) Pageable pageable) throws Exception {
+	public ModelAndView confirmarEnviadaPlaca(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 5000000,direction =Sort.Direction.DESC) Pageable pageable) throws Exception {
 		BeanPlacaVisavetUCM placa= servicioLaboratorioUni.buscarPlacaById(id);
 		//BeanLaboratorioCentro laboratorioBean =laboratorioCentroServicio.buscarLaboratorioById(laboratorio);
 		BeanEstado estado= new BeanEstado();
@@ -297,7 +297,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		// refrescar  datos con ajax
 		@RequestMapping(value = "/laboratorioUni/actualizarLote", method = RequestMethod.POST)
 		@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO')")
-		public String buscarPlacasPost(@RequestParam("id") String id, Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20) Pageable pageable) {
+		public String buscarPlacasPost(@RequestParam("id") String id, Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 50000000) Pageable pageable) {
 			Page<LoteBeanPlacaVisavet> paginaLotes = null;
 			BusquedaLotesBean busquedaLotes=(BusquedaLotesBean) model.getAttribute("busquedaLotes");
 			paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, pageable);
@@ -305,7 +305,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			for (int i = 0; i<10; i++) {
 				//list.add(getBean2(i));
 			}		
-			paginaLotes = new PageImpl<LoteBeanPlacaVisavet>(list, pageable,20);
+			paginaLotes = new PageImpl<LoteBeanPlacaVisavet>(list, pageable,50000000);
 			model.addAttribute("paginaLotes", paginaLotes);
 			
 			return "VistaListadoRecepcionLotes :: #trGroup";
@@ -315,7 +315,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		
 		@RequestMapping(value = "/laboratorioUni/mostrarMuestras", method = RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','RECEPCIONLABORATORIO','TECNICOLABORATORIO')")
-		public String consultarMuestrasLote(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 20,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
+		public String consultarMuestrasLote(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 50000000,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) {
 		// ir al servicio lotes y llamar al metodo que me liste las muestra a partir del id de lote
 		// para probar
 			LoteBeanPlacaVisavet loteBeanPlacaVisavet = servicioLaboratorioUni.buscarLote(id);
@@ -427,7 +427,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		
 		// buscar placas segun los criterios de busqueda 
 		@RequestMapping(value = "/laboratorioUni/buscarPlacas", method = RequestMethod.GET)
-		public ModelAndView buscarPlacasGet(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+		public ModelAndView buscarPlacasGet(Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 500000000) Pageable pageable) throws Exception {
 	     // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
 	    BusquedaPlacasVisavetBean busquedaPlacasVisavetBean;
 	    ModelAndView vista = new ModelAndView("VistaListadoPlacasVisavet");
@@ -464,7 +464,9 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			vista.addObject("paginaLotes", paginaLotes);
 			vista.addObject("busquedaLotes", session.getAttribute("busquedaLotes"));
 		  */
-		    return vista;	
+		 return  this.buscarPlacas(busquedaPlacasVisavetBean, request, session, pageable);
+			
+		   // return vista;	
 		
 		
 		//			
@@ -586,27 +588,32 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				
 					
 				}
-		private Integer calcularPlacasVisavetEspera(BeanLaboratorioCentro laboratorio)	{
+		private Integer calcularPlacasVisavetEspera(BeanLaboratorioCentro laboratorio,@PageableDefault(page = 0, value = 50000000) Pageable pageable)	{
 			Integer suma=0;
-			Set<PlacaLaboratorio> placasLaboratorios= laboratorio.getPlacaLaboratorios();
-			for (PlacaLaboratorio placaLaboratorio:placasLaboratorios) {
-				for (PlacaVisavetPlacaLaboratorio placaRelacion: placaLaboratorio.getPlacaVisavetPlacaLaboratorios()) {
-					if (placaRelacion.getPlacaVisavet().getEstadoPlacaVisavet().getId()== 4 || placaRelacion.getPlacaVisavet().getEstadoPlacaVisavet().getId()==5) 
+			BusquedaPlacasVisavetBean busqueda= new BusquedaPlacasVisavetBean();
+			busqueda.setIdLaboratorioCentro(laboratorio.getId());
+			Page<BeanPlacaVisavetUCM> pagina = servicioLaboratorioUni.buscarPlacas(busqueda, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), ORDENACION_PLACAS));
+			List<BeanPlacaVisavetUCM> placas= pagina.getContent();
+			//Set<PlacaLaboratorio> placasLaboratorios= laboratorio.getPlacaLaboratorios();
+			for (BeanPlacaVisavetUCM placaLaboratorio:placas) {
+					if (placaLaboratorio.getEstado().getEstado().getCodNum()== 4 || placaLaboratorio.getEstado().getEstado().getCodNum()==5) 
 				     suma++;
-				}
+				
 			}
+			
 			return suma;
 		}
 			
 		@RequestMapping(value = "/laboratorioUni/consultarOcupacionLaboratorios", method = RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO')")
-	   public String asignarPlacasGet(@RequestParam("idPlaca") Integer idPlaca, Model model, HttpServletRequest request, HttpSession session) throws Exception {
+	   public String asignarPlacasGet(@RequestParam("idPlaca") Integer idPlaca, Model model, HttpServletRequest request, HttpSession session, @PageableDefault(page = 0, value = 50000000) Pageable pageable) throws Exception {
 		//	
 			List<BeanLaboratorioCentro> laboratorios=laboratorioCentroServicio.listaLaboratoriosCentroOrdenada();
-		    model.addAttribute("laboratorios", laboratorios);
+		    
 		    for (BeanLaboratorioCentro laboratorio: laboratorios) {
-		    	laboratorio.setPlacasVisavetaLaEspera(this.calcularPlacasVisavetEspera(laboratorio));
+		    	laboratorio.setPlacasVisavetaLaEspera(this.calcularPlacasVisavetEspera(laboratorio,pageable));
 		    }
+		    model.addAttribute("laboratorios", laboratorios);
 			return "VistaListadoPlacasVisavet :: #trLaboratorio";
 		}		
 		

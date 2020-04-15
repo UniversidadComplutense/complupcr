@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,10 +43,12 @@ import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
+import es.ucm.pcr.beans.PaginadorBean;
 import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.servicios.LoteServicio;
 import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.SesionServicio;
+import es.ucm.pcr.utilidades.Utilidades;
 import es.ucm.pcr.validadores.MuestraValidador;
 
 @Controller
@@ -122,28 +125,40 @@ public class MuestraControlador {
 	public String buscar(HttpSession session, @ModelAttribute MuestraBusquedaBean beanBusqueda) throws Exception {
 		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
 		session.setAttribute("beanBusquedaMuestras", beanBusqueda);
+		session.setAttribute("paginaActual", 1);
 		return "redirect:/centroSalud/muestra/list";
 	}
 
 	@RequestMapping(value = "/muestra/list", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView buscar(HttpSession session) throws Exception {
+	public ModelAndView buscarPaginado(HttpSession session, @RequestParam("pagina") Optional<Integer> page) throws Exception {
+		
+		Integer currentPage = page.orElse(null);
+		currentPage = currentPage == null ? (session.getAttribute("paginaActual") != null ? (Integer)session.getAttribute("paginaActual") : 1) : page.get();
+		
 		ModelAndView vista = new ModelAndView("VistaMuestraListado");
 
 		MuestraBusquedaBean beanBusqueda = (MuestraBusquedaBean) session.getAttribute("beanBusquedaMuestras");
 		beanBusqueda = beanBusqueda != null ? beanBusqueda : new MuestraBusquedaBean();
 		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
+		session.setAttribute("paginaActual", currentPage);
 
-		buscarMuestras(beanBusqueda, vista);
+		buscarMuestras(beanBusqueda, vista, session);
 		return vista;
 	}
 
-	private void buscarMuestras(MuestraBusquedaBean beanBusqueda, ModelAndView vista) {
+	private void buscarMuestras(MuestraBusquedaBean beanBusqueda, ModelAndView vista, HttpSession session) {
+		Integer currentPage = (Integer)session.getAttribute("paginaActual");
+		
 		Page<MuestraListadoBean> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda,
-				PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
+				PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION, ORDENACION));
 		addListsToView(vista);
+		
 		vista.addObject("beanBusquedaMuestra", beanBusqueda);
 		vista.addObject("listadoMuestras", muestrasPage.getContent());
+		
+		PaginadorBean paginadorBean = new PaginadorBean(muestrasPage.getTotalPages(), currentPage, muestrasPage.getTotalElements(), "/centroSalud/muestra/list");		
+		vista.addObject("paginadorBean", paginadorBean);
 	}
 
 	@RequestMapping(value = "/muestra/nueva", method = RequestMethod.GET)

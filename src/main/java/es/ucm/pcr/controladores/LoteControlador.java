@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,9 +42,11 @@ import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.LoteListadoBean;
+import es.ucm.pcr.beans.PaginadorBean;
 import es.ucm.pcr.servicios.LoteServicio;
 import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
 import es.ucm.pcr.servicios.SesionServicio;
+import es.ucm.pcr.utilidades.Utilidades;
 import es.ucm.pcr.validadores.LoteValidador;
 
 @Controller
@@ -131,27 +134,38 @@ public class LoteControlador {
 	public String buscar(HttpSession session, @ModelAttribute LoteBusquedaBean beanBusqueda) throws Exception {
 		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
 		session.setAttribute("beanBusquedaLotes", beanBusqueda);
+		session.setAttribute("paginaActual", 1);
 		return "redirect:/centroSalud/lote/list";
 	}
 	
 	@RequestMapping(value="/lote/list", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
-	public ModelAndView buscarGet(HttpSession session) throws Exception {
+	public ModelAndView buscarGet(HttpSession session, @RequestParam("pagina") Optional<Integer> page) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLoteListado");
+		
+		Integer currentPage = page.orElse(null);
+		currentPage = currentPage == null ? (session.getAttribute("paginaActual") != null ? (Integer)session.getAttribute("paginaActual") : 1) : page.get();
 		
 		LoteBusquedaBean beanBusqueda = (LoteBusquedaBean)session.getAttribute("beanBusquedaLotes");
 		beanBusqueda = beanBusqueda != null ? beanBusqueda : new LoteBusquedaBean();				
 		beanBusqueda.setIdCentro(sesionServicio.getCentro().getId());
+		session.setAttribute("paginaActual", currentPage);
 		
-		buscarLotes(beanBusqueda, vista);
+		buscarLotes(beanBusqueda, vista, session);
 		return vista;
 	}
 	
-	private void buscarLotes(LoteBusquedaBean beanBusqueda, ModelAndView vista) {
-		Page<LoteListadoBean> lotesPage = loteServicio.findLoteByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION)); 
+	private void buscarLotes(LoteBusquedaBean beanBusqueda, ModelAndView vista, HttpSession session) {
+		Integer currentPage = (Integer)session.getAttribute("paginaActual");
+		
+		Page<LoteListadoBean> lotesPage = loteServicio.findLoteByParam(beanBusqueda, 
+				PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION, ORDENACION)); 
 		addListsToView(vista);
 		vista.addObject("beanBusquedaLote", beanBusqueda);
 		vista.addObject("listadoLotes", lotesPage.getContent());
+		
+		PaginadorBean paginadorBean = new PaginadorBean(lotesPage.getTotalPages(), currentPage, lotesPage.getTotalElements(), "/centroSalud/lote/list");		
+		vista.addObject("paginadorBean", paginadorBean);
 	}
 	
 	@RequestMapping(value="/lote/nuevo", method=RequestMethod.GET)

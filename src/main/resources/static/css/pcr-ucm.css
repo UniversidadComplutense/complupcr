@@ -45,3 +45,14 @@ fieldset legend {
 .custom-file-label::after {
 	content: "Buscar..." !important;
 }
+
+
+.page-link {
+	color: #6c757d !important; 
+} 
+
+.page-item.active .page-link {   
+	color: #fff !important;
+  	background-color: #6c757d !important; 
+  	border-color: #6c757d !important; 
+}

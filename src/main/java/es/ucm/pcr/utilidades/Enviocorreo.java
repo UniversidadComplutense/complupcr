@@ -20,8 +20,6 @@ public interface Enviocorreo {
 
 	public boolean enviarCorreoGenericoConAdjuntos(BeanCorreo beanCorreo) throws Exception;
 
-	public void scheduleEnvioMailInicio();
-
 	public SimpleMailMessage constructResetTokenEmail(String contextPath, String token, Usuario user);
 
 	public SimpleMailMessage constructWelcomeEmail(String contextPath, Usuario user);
