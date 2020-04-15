@@ -12,6 +12,10 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -539,15 +543,16 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	@Override
 	@Transactional
 	//metodo que recibe el ElementoDocumentacionBean (excel con valoraciones) y carga las valoraciones que ha metido el analista en todas las muestras de la placa 
-	public void guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas) {
+	public void guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas)throws Exception {
 		//buscamos todas los registros usuarioMuestra de las muestras de la placa
 		Integer idPlaca = bean.getId(); //aqui solo puede llegar el id de una placa del analista logado que tenga sus muestras sin valorar
 		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);
 		Integer idUsuarioLogado = sesionServicio.getUsuario().getId(); 
 		Date fechaActual = new Date();
-		//por cada muestra de la placa
-		for(Muestra m: placa.getMuestras()) {
-			String valoracionExcelParaMuestra = "POSITIVO"; //TODO, aquí habría que recoger la valoracion del excel para la muestra, esto es un ejemplo
+		// por cada muestra de la placa
+				HashMap<Integer, String> resultados = obtenerResultadosExcel(bean);
+				for (Muestra m : placa.getMuestras()) {
+					String valoracionExcelParaMuestra = resultados.get(m.getId());  //TODO, aquí habría que recoger la valoracion del excel para la muestra, esto es un ejemplo
 			//recuperamos el usuarioMuestra asociado al usuario logado (analista que está valorando las muestras de la placa)
 			Optional<UsuarioMuestra> optusumu = usuarioMuestraRepositorio.findByIdUsuarioAndIdMuestra(idUsuarioLogado, m.getId());
 			if (optusumu.isPresent()) {
@@ -599,6 +604,95 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	//fin Diana- metodos para los analistas de placas
 	
 	
+	private HashMap<Integer, String> obtenerResultadosExcel(ElementoDocumentacionBean elementoDocBean) throws Exception {
+
+		int cols = 0;
+		Integer colResultado = null;
+		String cellValue;
+		String cellValueResultado;
+		String cellValueReferencia;
+		HashMap<Integer, String> resultados = new HashMap<Integer, String>();
+
+		XSSFWorkbook workbook = new XSSFWorkbook(elementoDocBean.getFile().getInputStream());
+		XSSFSheet xssfSheet = workbook.getSheet(elementoDocBean.getHoja());
+		XSSFRow xssfRow;
+		int rows = xssfSheet.getLastRowNum();
+		for (int r = 0; r < rows; r++) {
+			xssfRow = xssfSheet.getRow(r);
+			if (xssfRow == null) {
+				break;
+			} else {
+				cols = xssfRow.getLastCellNum();
+				if (r == 0) {
+					for (int c = 0; c < cols; c++) {
+
+						cellValue = xssfRow.getCell(c) == null ? ""
+								: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
+										? xssfRow.getCell(c).getStringCellValue()
+										: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
+												? "" + xssfRow.getCell(c).getNumericCellValue()
+												: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+														? "" + xssfRow.getCell(c).getBooleanCellValue()
+														: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
+																? "BLANK"
+																: (xssfRow.getCell(c)
+																		.getCellType() == Cell.CELL_TYPE_FORMULA)
+																				? "FORMULA"
+																				: (xssfRow.getCell(c)
+																						.getCellType() == Cell.CELL_TYPE_ERROR)
+																								? "ERROR"
+																								: "";
+						if (cellValue.compareTo(elementoDocBean.getColumna()) == 0) {
+							colResultado = c;
+						}
+					}
+				} else if (r > 0 && colResultado != null) {
+					cellValueResultado = xssfRow.getCell(colResultado) == null ? ""
+							: (xssfRow.getCell(colResultado).getCellType() == Cell.CELL_TYPE_STRING)
+									? xssfRow.getCell(colResultado).getStringCellValue()
+									: (xssfRow.getCell(colResultado).getCellType() == Cell.CELL_TYPE_NUMERIC)
+											? "" + xssfRow.getCell(colResultado).getNumericCellValue()
+											: (xssfRow.getCell(colResultado).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+													? "" + xssfRow.getCell(colResultado).getBooleanCellValue()
+													: (xssfRow.getCell(colResultado)
+															.getCellType() == Cell.CELL_TYPE_BLANK)
+																	? "BLANK"
+																	: (xssfRow.getCell(colResultado)
+																			.getCellType() == Cell.CELL_TYPE_FORMULA)
+																					? "FORMULA"
+																					: (xssfRow.getCell(colResultado)
+																							.getCellType() == Cell.CELL_TYPE_ERROR)
+																									? "ERROR"
+																									: "";
+
+					cellValueReferencia = xssfRow.getCell(0) == null ? ""
+							: (xssfRow.getCell(0).getCellType() == Cell.CELL_TYPE_STRING)
+									? xssfRow.getCell(0).getStringCellValue()
+									: (xssfRow.getCell(0).getCellType() == Cell.CELL_TYPE_NUMERIC)
+											? "" + xssfRow.getCell(0).getNumericCellValue()
+											: (xssfRow.getCell(0).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+													? "" + xssfRow.getCell(0).getBooleanCellValue()
+													: (xssfRow.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK)
+															? "BLANK"
+															: (xssfRow.getCell(0)
+																	.getCellType() == Cell.CELL_TYPE_FORMULA)
+																			? "FORMULA"
+																			: (xssfRow.getCell(0)
+																					.getCellType() == Cell.CELL_TYPE_ERROR)
+																							? "ERROR"
+																							: "";
+					Optional<Muestra> muestra = muestraRepositorio.findByRefInternaVisavet(cellValueReferencia);
+					if (muestra.isPresent()) {
+						resultados.put(muestra.get().getId(), cellValueResultado);
+					}
+				}
+
+			}
+		}
+
+		return resultados;
+	}
+
 	public BeanLaboratorioCentro buscarLaboratorioById(Integer id) {
 		Optional<LaboratorioCentro> laboratorioOp= laboratorioCentroRepositorio.findById(id);
 		
