@@ -3,6 +3,7 @@ package es.ucm.pcr.controladores;
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,6 +37,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
+import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.LoteListadoBean;
@@ -73,12 +75,14 @@ public class LoteControlador {
 	    { ACCION_ENVIAR_LOTE, "Lote enviado correctamente" }, 
 	    { ACCION_BORRAR_LOTE_OK, "Lote borrardo correctamente" },
 	    { ACCION_BORRAR_LOTE_KO, "Se ha producido un error al borrar el lote" },
+	    { ACCION_ASIGNAR_LABORATORIO, "Asignado laboratorio correctamente" }
 		}).collect(Collectors.toMap(d -> (Integer) d[0], d -> (String) d[1]));
 		
 	public static final Integer ACCION_GUARDAR_LOTE = 1;
 	public static final Integer ACCION_ENVIAR_LOTE = 2;
 	public static final Integer ACCION_BORRAR_LOTE_OK = 3;
 	public static final Integer ACCION_BORRAR_LOTE_KO = 4;
+	public static final Integer ACCION_ASIGNAR_LABORATORIO = 5;
 	
 	
 	@InitBinder
@@ -103,6 +107,11 @@ public class LoteControlador {
 	        }
 	    });
 
+	}
+	
+	@ModelAttribute("listaLaboratorios")
+	public List<BeanLaboratorioVisavet> lotes() {
+		return servicioLaboratorioVisavetUCM.findAll();
 	}
 	
 	@RequestMapping(value="/lote", method=RequestMethod.GET)
@@ -247,6 +256,20 @@ public class LoteControlador {
 		// redirige a la lista
 		
 		redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_ENVIAR_LOTE));
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/list", true));
+		return respuesta;
+	}
+	
+	@RequestMapping(value="/lote/asignarLaboratorio", method=RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD')")
+	public ModelAndView asignarLaboratorio(@ModelAttribute("beanLote") LoteCentroBean beanLote, RedirectAttributes redirectAttributes) throws Exception {
+		
+		LoteCentroBean beanLoteE = loteServicio.findById(beanLote.getId());
+		beanLoteE.setIdLaboratorio(beanLote.getIdLaboratorio());
+		loteServicio.guardar(beanLoteE);		
+		// redirige a la lista
+		
+		redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_ASIGNAR_LABORATORIO));
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/list", true));
 		return respuesta;
 	}

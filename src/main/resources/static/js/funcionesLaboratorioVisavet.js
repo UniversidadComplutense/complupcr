@@ -261,7 +261,7 @@ function asignarPlaca(){
         dataType: 'html',
         data:  sBody
 	}).done(function(respuesta) {
-		eliminaFilas();
+	eliminaFilas();
 	
 	    $("#tablaLotes tbody").html(respuesta);
 	   // $("#trGroup").load(url, sBody);
