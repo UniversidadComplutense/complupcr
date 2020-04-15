@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -21,25 +23,34 @@ import org.springframework.stereotype.Service;
 import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
+import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesAnalistaBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.Muestra;
+import es.ucm.pcr.modelo.orm.Paciente;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.PlacaVisavet;
+import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.modelo.orm.UsuarioMuestra;
 import es.ucm.pcr.repositorio.EstadoPlacaLaboratorioRepositorio;
+import es.ucm.pcr.repositorio.EstadoPlacaVisavetRepositorio;
 import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
 import es.ucm.pcr.repositorio.MuestraRepositorio;
 import es.ucm.pcr.repositorio.PlacaLaboratorioRepositorio;
+import es.ucm.pcr.repositorio.PlacaVisavetPlacaLaboratorioRepositorio;
+import es.ucm.pcr.repositorio.PlacaVisavetRepositorio;
 import es.ucm.pcr.repositorio.UsuarioMuestraRepositorio;
 import es.ucm.pcr.repositorio.UsuarioRepositorio;
 
@@ -51,6 +62,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 	@Autowired
 	PlacaLaboratorioRepositorio placaLaboratorioRepositorio;
+	
+	@Autowired
+	PlacaVisavetRepositorio placaVisavetRepositorio;
 	
 	@Autowired
 	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
@@ -68,7 +82,22 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	UsuarioMuestraRepositorio usuarioMuestraRepositorio;	
 	
 	@Autowired
+	EstadoPlacaVisavetRepositorio estadoPlacaVisavetRepositorio;
+	
+	@Autowired
 	EstadoPlacaLaboratorioRepositorio estadoPlacaLaboratorioRepositorio;
+	
+	@Autowired
+	PlacaVisavetPlacaLaboratorioRepositorio placaVisavetPlacaLaboratorioRepositorio;
+	
+	@Autowired
+	private ServicioLog servicioLog;
+	
+	@Autowired
+	DocumentoServicio documentoServicio;
+	
+	@Autowired
+	MuestraServicio muestraServicio;
 	
 	public LaboratorioCentro mapeoBeanEntidadLaboratorioCentro(BeanLaboratorioCentro beanLaboratorioCentro) throws Exception{
 		
@@ -155,25 +184,60 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		return placasLaboratorioCentro;
 	}
 
+	
 	//JAVI
 	@Override
-	public PlacaLaboratorioCentroBean guardarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean) {
-		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);						
+	@Transactional
+	public PlacaLaboratorioCentroBean crearPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean) {
+		
+		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
 
-		// Placa nueva
-		if (placaLaboratorioCentroBean.getId() == null) {
-			placa.setFechaCreacion(new Date());
-			placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_INICIADA.getCodNum()));
-			placa.setLaboratorioCentro(new LaboratorioCentro(sesionServicio.getUsuario().getIdLaboratorioCentro()));
-		}
+		placa.setFechaCreacion(new Date());
+		placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_INICIADA.getCodNum()));
+		placa.setLaboratorioCentro(new LaboratorioCentro(sesionServicio.getUsuario().getIdLaboratorioCentro()));
+
 		placa = placaLaboratorioRepositorio.save(placa);
-		return PlacaLaboratorioCentroBean.modelToBean(placa);
+		
+		// Transformamos en un Array el String que viene de la vista con los IDs de las placas Visavet seleccionadas
+		String[] listaIDsPlacasVisavetSeleccinadas = placaLaboratorioCentroBean.getPlacasVisavetSeleccionadas().split(":");
+		
+		// Asignamos a la placa de laboratorio las placas Visavet seleccionadas
+		if (listaIDsPlacasVisavetSeleccinadas.length > 0) {
+			
+			Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>();
+			
+			for (String idPlacaVisavet : listaIDsPlacasVisavetSeleccinadas) {
+
+				PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio = new PlacaVisavetPlacaLaboratorio();
+				PlacaLaboratorio placaLaboratorio = placaLaboratorioRepositorio.getOne(placa.getId());
+				PlacaVisavet placaVisavet = placaVisavetRepositorio.getOne(Integer.valueOf(idPlacaVisavet));
+				
+				// Cambiamos el estado de la placa Visavet a traspasada
+				placaVisavet.setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_TRANSPASADA.getCodNum()));
+				placaVisavet = placaVisavetRepositorio.save(placaVisavet);				
+				placaVisavetPlacaLaboratorio.setPlacaLaboratorio(placaLaboratorio);
+				placaVisavetPlacaLaboratorio.setPlacaVisavet(placaVisavet);
+				
+				placaVisavetPlacaLaboratorioRepositorio.save(placaVisavetPlacaLaboratorio);
+				// TODO Registrar en LOG placaVisavet traspasada
+				
+				placaVisavetPlacaLaboratorios.add(placaVisavetPlacaLaboratorio);
+			}
+			placa.setPlacaVisavetPlacaLaboratorios(placaVisavetPlacaLaboratorios);
+			placa = placaLaboratorioRepositorio.save(placa);
+			return PlacaLaboratorioCentroBean.modelToBean(placa);
+			
+			// TODO Registrar en LOG placaLaboratorio creada
+			
+		}		
+		return null;
 
 	}
 	
 	// JAVI
 	@Override
 	public PlacaLaboratorioCentroBean buscarPlaca(Integer id) {
+		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
 			return PlacaLaboratorioCentroBean.modelToBean(placa.get());
@@ -183,19 +247,26 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 	// JAVI
 	@Override
-	public void finalizarPCR(Integer id) {				
+	@Transactional
+	public boolean finalizarPCR(Integer id) {
+		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
 			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()) {
 				placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_FINALIZADA_PCR.getCodNum()));
 				placaLaboratorioRepositorio.save(placa.get());
+				// TODO Registrar en LOG placaLaboratorio ha finalizado PCR
+				return true;
 			}			
 		}
+		return false;
 	}
 	
 	// JAVI
 	@Override
-	public void asignarEquipoPCR(Integer id) {				
+	@Transactional
+	public boolean asignarEquipoPCR(Integer id) {
+		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
 			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_INICIADA.getCodNum()) {
@@ -204,10 +275,37 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				
 				placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()));
 				placaLaboratorioRepositorio.save(placa.get());
+				// TODO Registrar en LOG placaLaboratorio preparada para PCR
+				return true;
 			}			
 		}
+		return false;
+	}
+	
+	// JAVI
+	@Override
+	@Transactional
+	public boolean placaListaParaAnalizar(Integer id) {
+		
+		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
+		if (placa.isPresent()) {
+			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_FINALIZADA_PCR.getCodNum()) {
+				ElementoDocumentacionBean documentosPlaca = documentoServicio.obtenerDocumentosPlacaLaboratorio(id);
+				if (documentosPlaca != null && documentosPlaca.getDocumentos() != null && documentosPlaca.getDocumentos().size() >0) {
+					placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum()));
+					placaLaboratorioRepositorio.save(placa.get());
+					// Registramos en el log que las muestras de la placa están listas para ser analizadas
+					servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(id, new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_PENDIENTE_ANALIZAR));
+					
+					// TODO Registrar en LOG placaLaboratorio lista para analizar				
+					return true;
+				}
+			}			
+		}
+		return false;
 	}
 
+	
 	//Diana- metodos para jefe de servicio (replica de metodos de Javi con mi bean)
 	
 	@Override
@@ -235,6 +333,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	}
 	
 	@Override
+	@Transactional
 	public PlacaLaboratorioCentroBean guardarCogerODevolverPlaca(Integer idPlaca, Integer idUsuario, String accion) {
 	//metodo que recibe el idPlaca, y el id de usuario que la quiere coger
 	
@@ -251,6 +350,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			for(Muestra m: placa.getMuestras()) {
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_PENDIENTE_ANALIZAR.getCodNum()));
 				muestraRepositorio.save(m);
+				//guardamos en el log el cambio de estado de la muestra
+				BeanEstado estadoMuestra = new BeanEstado();
+				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
+				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
 			}			
 		}else if(accion.equals("devolver")) {
 			//desasocia la placa del usuario, le cambia el estado de la placa a PLACA_LISTA_PARA_ANALISIS (estado anterior) y ¿Qué hacemos con las muestras?
@@ -263,10 +366,14 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			for(Muestra m: placa.getMuestras()) {
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS.getCodNum()));
 				muestraRepositorio.save(m);
+				//guardamos en el log el cambio de estado de la muestra
+				BeanEstado estadoMuestra = new BeanEstado();
+				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
+				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
 			}	
 		}
-		placa = placaLaboratorioRepositorio.save(placa);			
-		
+		placa = placaLaboratorioRepositorio.save(placa);
+		//TODO guardamos en el log el cambio de estado de la placa (no tenemos tabla de log de placas)
 		
 		return PlacaLaboratorioCentroBean.modelToBean(placa);
 
@@ -307,6 +414,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	//metodo que guarda las nuevas asignaciones de analistas de labCentro, voluntarios de labCentro y voluntarios sin centro a la placa 
 	//se guardan en realidad las asignaciones a las muestras de la placa
 	@Override
+	@Transactional
 	public void guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca) {
 	
 		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(formBeanGuardarAsignacionPlaca.getIdPlaca());
@@ -351,6 +459,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum()));
 				muestra.setNumerodeAnalistasAsignados(numerodeAnalistasAsignadosMuestra);
 				muestraRepositorio.save(muestra);
+				//guardamos en el log el cambio de estado de la muestra
+				BeanEstado estadoMuestra = new BeanEstado();
+				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, muestra.getEstadoMuestra().getId());
+				servicioLog.actualizarEstadoMuestra(muestra.getId(), estadoMuestra);				
 			}
 		}
 		else {
@@ -410,6 +522,80 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		Page<PlacaLaboratorioCentroAsignacionesAnalistaBean> placasLaboratorioCentroAsignacionesAnalista = new PageImpl<>(listaPlacasLaboratorioCentroAsignacionesBean, pageable, PagePlacasLaboratorioCentro.getTotalElements());		
 		return placasLaboratorioCentroAsignacionesAnalista;
 	}
+	
+	
+	private Integer calculaCuantasValoracionesTieneLaMuestra(Muestra m) {
+		//metodo que nos dice cuantas valoraciones han dado los analistas asignados a la muestra
+		//de una muestra recuperamos todos sus analistas asignados y contamos cuantos han puesto una valoracion
+		Integer cont=0;
+		for(UsuarioMuestra um: m.getUsuarioMuestras()) {
+			if(um.getValoracion()!=null) {
+				cont = cont + 1;
+			}
+		}
+		return cont;
+	}
+	
+	@Override
+	@Transactional
+	//metodo que recibe el ElementoDocumentacionBean (excel con valoraciones) y carga las valoraciones que ha metido el analista en todas las muestras de la placa 
+	public void guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas) {
+		//buscamos todas los registros usuarioMuestra de las muestras de la placa
+		Integer idPlaca = bean.getId(); //aqui solo puede llegar el id de una placa del analista logado que tenga sus muestras sin valorar
+		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);
+		Integer idUsuarioLogado = sesionServicio.getUsuario().getId(); 
+		Date fechaActual = new Date();
+		//por cada muestra de la placa
+		for(Muestra m: placa.getMuestras()) {
+			String valoracionExcelParaMuestra = "POSITIVO"; //TODO, aquí habría que recoger la valoracion del excel para la muestra, esto es un ejemplo
+			//recuperamos el usuarioMuestra asociado al usuario logado (analista que está valorando las muestras de la placa)
+			Optional<UsuarioMuestra> optusumu = usuarioMuestraRepositorio.findByIdUsuarioAndIdMuestra(idUsuarioLogado, m.getId());
+			if (optusumu.isPresent()) {
+				UsuarioMuestra usumu = optusumu.get();
+				//aqui tendriamos que asociarle la valoracion que viene en el excel para esa muestra 
+				usumu.setValoracion(valoracionExcelParaMuestra);
+				usumu.setFechaValoracion(fechaActual);
+				UsuarioMuestra usumuGuardado = usuarioMuestraRepositorio.save(usumu);
+			}
+			else {
+				log.error("No se ha encontrado el registro de usuario muestra para asignarle la valoracion del analista");
+			}
+			
+			//por cada muestra calculamos si ya se han dado las valoraciones de todos los analistas
+			//en ese caso el resultado sería definitivo y se guardara el resultado en la muestra y se enviará la notificacion 
+			Integer numValoracionesMuestra = this.calculaCuantasValoracionesTieneLaMuestra(m);
+			System.out.println("el numero de valoraciones actuales de la muestra con id: "+ m.getId()+" es: " + numValoracionesMuestra);
+			if(numValoracionesMuestra.equals(numAnalistas)) {
+				//guardamos como resultado definitivo este ultimo resultado que está dando el analista que viene del excel
+				m.setResultado(valoracionExcelParaMuestra);
+				m.setFechaResultado(fechaActual);				
+				//cambiamos el estado de la muestra a resuelta y la guardamos							
+				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_RESUELTA.getCodNum()));				
+				muestraRepositorio.save(m);
+				//anotamos en el log el cambio de estado de la muestra				
+				BeanEstado estadoMuestra = new BeanEstado();
+				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
+				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
+				//Envio de notificacion al pacientes si tiene activada la notificacion automatica
+				//recupero el paciente de la muestra
+				Paciente paciente = m.getPaciente();
+				System.out.println("el paciente con id: " + paciente.getId()+" tiene la notificacion automato a: " + paciente.getNotificarAutomato());
+				if(paciente.getNotificarAutomato().equals("S")) {
+					muestraServicio.actualizarNotificacionMuestra(m.getId(), true); //actualiza fecha de notificación y envia correo
+				}
+				
+			}
+			
+		}			
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	//fin Diana- metodos para los analistas de placas
 	
 	

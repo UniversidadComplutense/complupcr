@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -154,17 +157,36 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	
 	// JAVI para recepcionar una placa Visavet
 	@Override
-	public void recepcionarPlaca(Integer id) {				
+	@Transactional
+	public boolean recepcionarPlaca(Integer id) {				
 		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(id);
 		if (placa.isPresent()) {
-			if (placa.get().getEstadoPlacaVisavet().getId() == Estado.PLACAVISAVET_ASIGNADA.getCodNum()) {
+			if (placa.get().getEstadoPlacaVisavet().getId() == Estado.PLACAVISAVET_ENVIADA.getCodNum()) {
 				placa.get().setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_RECIBIDA.getCodNum()));
 				placa.get().setFechaRecepcionLaboratorioCentro(new Date());
 				placaVisavetRepositorio.save(placa.get());
+				
+				// TODO Registrar en LOG placaVisavet recibida
+				return true;
 			}			
 		}
+		return false;
 	}
 
+	// JAVI para saber las placas Visavet combinadas en una placa de laboratorio
+	@Override
+	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio) {
+		
+		Set<PlacaVisavet> placas = placaVisavetRepositorio.findByIdPlacaLaboratorio(idPlacaLaboratorio);		
+		List<PlacaLaboratorioVisavetBean> placasVisavet = new ArrayList<PlacaLaboratorioVisavetBean>();
+		for (PlacaVisavet placa : placas) {
+			PlacaLaboratorioVisavetBean bean = new PlacaLaboratorioVisavetBean();
+			bean = PlacaLaboratorioVisavetBean.modelToBean(placa);
+			placasVisavet.add(bean);
+		}		
+		return placasVisavet;
+	}
+	
 	@Override
 	public Optional<LaboratorioVisavet> findByNombre(String nombre) {
 		return laboratorioVisavetRepositorio.findByNombre(nombre);

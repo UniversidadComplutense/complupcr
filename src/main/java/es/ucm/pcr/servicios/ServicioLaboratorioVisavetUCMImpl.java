@@ -2,8 +2,12 @@ package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +28,7 @@ import es.ucm.pcr.beans.MuestraListadoBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
 import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.modelo.orm.EstadoLote;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
@@ -145,32 +150,47 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 			placa.setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_INICIADA.getCodNum()));
 			
 		}
-		/*else {
+		else {
 			Optional<PlacaVisavet> placaBBDDOpt=placaVisavetRepositorio.findById(beanPlacaVisavetUCM.getId());
-	        if (placaBBDDOpt.get()!=null)
-	        	placa.setDocumentos(placaBBDDOpt.getDocumentos());
+	        if (placaBBDDOpt.get()!=null) {
+	        	/*placa.setDocumentos(placaBBDDOpt.getDocumentos());
 	            placa.(placaBBDDOpt.getDocumentos());
-				// Placa nueva
-		}*/
+				*/
+	        		 placa=placaBBDDOpt.get();
+					 placa.setEstadoPlacaVisavet(new EstadoPlacaVisavet(beanPlacaVisavetUCM.getEstado().getEstado().getCodNum()));
+					 if (beanPlacaVisavetUCM.getFechaEnviadaLaboratorio()!= null)placa.setFechaEnviadaLaboratorioCentro(beanPlacaVisavetUCM.getFechaEnviadaLaboratorio());
+				
+	        	// Placa nueva
+	        }
+		}
 		placa.setLaboratorioVisavet(new LaboratorioVisavet(sesionServicio.getUsuario().getIdLaboratorioVisavet()));
 		placa = placaVisavetRepositorio.save(placa);
 		return BeanPlacaVisavetUCM.modelToBean(placa);
 
 	}
 	
-	
+	@Transactional
 	public BeanPlacaVisavetUCM guardarConLote(BeanPlacaVisavetUCM beanPlacaVisavetUCM) {
 		
-		PlacaVisavet placa = BeanPlacaVisavetUCM.beanToModel(beanPlacaVisavetUCM);						
- 
+		//PlacaVisavet placa = BeanPlacaVisavetUCM.beanToModel(beanPlacaVisavetUCM);						
+		PlacaVisavet placa = new PlacaVisavet();
+		placa.setLaboratorioVisavet(new LaboratorioVisavet(sesionServicio.getUsuario().getIdLaboratorioVisavet()));
+		
 		// Placa nueva
 		if (beanPlacaVisavetUCM.getId() == null) {
 			placa.setFechaCreacion(new Date());
 			placa.setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_INICIADA.getCodNum()));
 			
 		}
-		placa.setLaboratorioVisavet(new LaboratorioVisavet(sesionServicio.getUsuario().getIdLaboratorioVisavet()));
-	
+		else {
+			Optional<PlacaVisavet> placaOpt=placaVisavetRepositorio.findById(beanPlacaVisavetUCM.getId());
+			if (placaOpt.isPresent()) {
+				placa=placaOpt.get();
+				 placa.setEstadoPlacaVisavet(new EstadoPlacaVisavet(beanPlacaVisavetUCM.getEstado().getEstado().getCodNum()));
+				
+			}
+			
+		}
 		
 		
 		
@@ -186,10 +206,21 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		placa = placaVisavetRepositorio.save(placa);
 		// por cada placa tengo que guardar el lote
 		if (placa.getId()!=null) {
+			Set listaLotes= new HashSet();
 			for (LoteBeanPlacaVisavet loteB: beanPlacaVisavetUCM.getListaLotes()) {
-				Lote l=LoteBeanPlacaVisavet.beanToModel(loteB);
-				l.setPlacaVisavet(placa);
-				loteRepositorio.save(l);
+				Lote lbbdd = loteRepositorio1.findById(loteB.getId()).get();
+			//	Lote l=LoteBeanPlacaVisavet.beanToModel(loteB);
+				lbbdd.setPlacaVisavet(placa);
+				lbbdd.setEstadoLote(new EstadoLote(loteB.getEstado().getEstado().getCodNum()));
+				
+				lbbdd=loteRepositorio.save(lbbdd);
+				listaLotes.add(lbbdd);
+			}
+			Optional<PlacaVisavet>  placaOpt=placaVisavetRepositorio.findById(beanPlacaVisavetUCM.getId());
+			if (placaOpt.isPresent()) {
+				placa=placaOpt.get();
+				placa.setLotes(listaLotes);
+				placa = placaVisavetRepositorio.save(placa);
 			}
 		}
 		return BeanPlacaVisavetUCM.modelToBean(placa);
@@ -202,6 +233,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 			return 	BeanPlacaVisavetUCM.modelToBean(placa.get());
 		else return null;
 	}
+	@Transactional
 	public BeanPlacaVisavetUCM guardarPlacaConLaboratorio(BeanPlacaVisavetUCM placaVisavet, Integer idLaboratorio) {
 		Optional<PlacaVisavet> placaOp=placaVisavetRepositorio.findById(placaVisavet.getId());
 		Optional<LaboratorioCentro> laboratorioOp= laboratorioCentroRepositorio.findById(idLaboratorio);
@@ -209,8 +241,10 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		if (placaOp.isPresent()) {
 			placa=placaOp.get();
 			placa.setEstadoPlacaVisavet(new EstadoPlacaVisavet(placaVisavet.getEstado().getEstado().getCodNum()));
-				if (laboratorioOp.isPresent())
+				if (laboratorioOp.isPresent()) {
 					placa.setLaboratorioCentro(laboratorioOp.get());
+				    placa.setFechaAsignadaLaboratorioCentro(new Date());
+				}
 		placa=placaVisavetRepositorio.save(placa);
 		}
 	return	BeanPlacaVisavetUCM.modelToBean(placa);

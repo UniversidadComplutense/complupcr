@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -82,6 +83,9 @@ import es.ucm.pcr.validadores.DocumentoValidador;
 @Controller
 @RequestMapping(value = "/analisis")
 public class AnalisisControlador {
+	
+	@Value("${analisis.numAnalistas}")
+    private Integer  numAnalistas;
 	
 	@Autowired
 	private SesionServicio sesionServicio;
@@ -712,14 +716,16 @@ public class AnalisisControlador {
 			//son las que están asignadas al analista para las que ya ha cargado el excel con las valoraciones de las muestras
 		
 			
-			// Buscamos las placas en estado PLACA_ASIGNADA_PARA_ANALISIS cuyas muestras esten asignadas al usuario logado con estado 'MUESTRA_ASIGNADA_ANALISTA'
-			//y que tengan una valoracion por el analista			 
+			// Buscamos las placas en estado PLACA_ASIGNADA_PARA_ANALISIS cuyas muestras esten asignadas al usuario logado
+			// y que tengan una valoracion por el analista
+			// podrán estar en estado 'MUESTRA_ASIGNADA_ANALISTA' si aun queda algun analista por valorar o en estado 'MUESTRA_RESUELTA' si ya ha valorado el ultimo analista						 
 			
 			BusquedaPlacaLaboratorioAnalistaBean criteriosBusquedaPlacaAsignadaParaRevisionYaValorada = new BusquedaPlacaLaboratorioAnalistaBean();			
 			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdEstadoPlaca(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
 			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
 			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdAnalistaMuestras(user.getId());
-			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum());
+			//criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum());
+			//criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_RESUELTA.getCodNum());
 			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setValoracion("X"); //pongo cualquier dato distinto de null
 			List<PlacaLaboratorioCentroAsignacionesAnalistaBean> listaPlacasAsignadasParaRevisionYaRevisadas = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevisionYaValorada, pageable).getContent();
 			System.out.println("listaPlacasAsignadasParaRevisionYaRevisadas tiene: "+ listaPlacasAsignadasParaRevisionYaRevisadas.size());
@@ -764,8 +770,13 @@ public class AnalisisControlador {
 				ModelAndView vista = new ModelAndView("VistaCargarResultados");
 				vista.addObject("elementoDoc", bean);
 			} else {
-				System.out.println("El nombre de la columna es: " + bean.getColumna());				
+				System.out.println("El nombre de la hoja es: " + bean.getHoja());
+				System.out.println("El nombre de la columna es: " + bean.getColumna());
+				//guardamos el documento excel asociandolo a la placa 
 				documentoServicio.guardar(bean);
+				//guardamos las valoraciones de las muestras que ha puesto el analista en el excel y si es el ultimo analista de los numAnalistas globales de la aplicacion
+				//entonces guardamos el resultado definitivo
+				laboratorioCentroServicio.guardarResultadosPlacaLaboratorio(bean, numAnalistas);
 			}
 
 			redirectAttributes.addFlashAttribute("mensaje", "Resultado guardado correctamente");			
