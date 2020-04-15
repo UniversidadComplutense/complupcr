@@ -23,6 +23,7 @@ public class GuardarAsignacionPlacaLaboratorioCentroBean {
 	private List<Integer> listaIdsAnalistasLabSeleccionados;
 	private List<Integer> listaIdsAnalistasVolSeleccionados;	
 	private List<Integer> listaIdsVolSinLabCentroSeleccionados;	
+	private Integer numAnalistasPermitidos;
 
 
 	public GuardarAsignacionPlacaLaboratorioCentroBean() {
@@ -161,6 +162,18 @@ public class GuardarAsignacionPlacaLaboratorioCentroBean {
 
 	public void setListaIdsVolSinLabCentroSeleccionados(List<Integer> listaIdsVolSinLabCentroSeleccionados) {
 		this.listaIdsVolSinLabCentroSeleccionados = listaIdsVolSinLabCentroSeleccionados;
+	}
+
+
+
+	public Integer getNumAnalistasPermitidos() {
+		return numAnalistasPermitidos;
+	}
+
+
+
+	public void setNumAnalistasPermitidos(Integer numAnalistasPermitidos) {
+		this.numAnalistasPermitidos = numAnalistasPermitidos;
 	}
 
 	

@@ -77,6 +77,7 @@ import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.servicios.UsuarioServicio;
+import es.ucm.pcr.validadores.AsignacionPlacaLaboratorioCentroValidador;
 import es.ucm.pcr.validadores.DocumentoValidador;
 
 
@@ -111,6 +112,7 @@ public class AnalisisControlador {
 		@Autowired
 		private DocumentoValidador documentoValidador;
 		
+				
 		@InitBinder
 		public void initBinder(WebDataBinder binder) {
 		    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
@@ -121,6 +123,13 @@ public class AnalisisControlador {
 		public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session)
 				throws Exception {
 			binder.setValidator(documentoValidador);
+		}
+		
+		
+		@InitBinder("formBeanGuardarAsignacionPlaca")
+		public void initBinderAsignacionPlacaLaboratorioCentro(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session)
+				throws Exception {			
+			binder.setValidator(new AsignacionPlacaLaboratorioCentroValidador(laboratorioCentroServicio, session));
 		}
 		
 //		@InitBinder("beanMuestra")
@@ -556,11 +565,9 @@ public class AnalisisControlador {
 		
 		//metodo privado que rellena un bean con los datos de la placa y sus analistas asignados y la listas de posibles nuevos analistas a asignar
 		//para poder mapearlo a la vista
-		private GuardarAsignacionPlacaLaboratorioCentroBean rellenaGuardarAsignacionPlacaLaboratorioCentroBean(Integer idPlaca) {
+		private GuardarAsignacionPlacaLaboratorioCentroBean rellenaGuardarAsignacionPlacaLaboratorioCentroBean(Integer idPlaca, GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro) {
 			//y permitira recoger los analistas y voluntarios seleccionados
-			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = new GuardarAsignacionPlacaLaboratorioCentroBean();
-			formBeanGuardarAsignacionPlacaLaboratorioCentro.setIdPlaca(idPlaca);
-			
+						
 			PlacaLaboratorioCentroAsignacionesBean placaLaboratorioCentroAsignacionesBean=laboratorioCentroServicio.buscarPlacaAsignaciones(idPlaca);
 			
 			//obtenemos los listados de analistas del laboratorio, voluntarios del laboratorio y voluntarios sin laboratorio
@@ -635,7 +642,11 @@ public class AnalisisControlador {
 			}
 			vista.addObject("mensaje", mensaje);
 
-			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(idPlaca);
+			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = new GuardarAsignacionPlacaLaboratorioCentroBean();
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setIdPlaca(idPlaca);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setNumAnalistasPermitidos(numAnalistas);
+			
+			formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(idPlaca, formBeanGuardarAsignacionPlacaLaboratorioCentro);
 						
 			vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
 			//vista.addObject("placaLaboratorioCentroAsignacionesBean", placaLaboratorioCentroAsignacionesBean);
@@ -651,22 +662,22 @@ public class AnalisisControlador {
 		@RequestMapping(value = "/guardarAsignacionPlaca", method = RequestMethod.POST)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView guardarAsignacionPlaca(@Valid @ModelAttribute("formBeanGuardarAsignacionPlaca") GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca,
-				HttpServletRequest request, HttpSession session, BindingResult result, RedirectAttributes redirectAttributes) {
+				BindingResult result, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
 			
 			//formBeanGuardarAsignacionPlaca traerá relleno solo los inputs que son las listas de id's seleccionados
-			if (result.hasErrors()) {
-			//if (true) {
+			if (result.hasErrors()) {	
+				System.out.println("estoy en hasErrors");
 				ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAPlaca");
 				//volvemos a calcular los datos que necesitamos para la vista
-				GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(formBeanGuardarAsignacionPlaca.getIdPlaca());
+				formBeanGuardarAsignacionPlaca = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(formBeanGuardarAsignacionPlaca.getIdPlaca(), formBeanGuardarAsignacionPlaca);
 				//asignamos lo que hemos cogido del formulario para no perderlo
-				formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasLabSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados());
-				formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasVolSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados());
-				formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsVolSinLabCentroSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados());
-				vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
+				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasLabSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados());
+				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasVolSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados());
+				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsVolSinLabCentroSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados());
+				vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlaca);
 				return vista;
 			} else {			
-				System.out.println("placa id: " + formBeanGuardarAsignacionPlaca.getIdPlaca());
+				/* 	System.out.println("placa id: " + formBeanGuardarAsignacionPlaca.getIdPlaca());
 				System.out.println("analistas de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados().toString());
 				System.out.println("voluntarios de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados().toString());
 				System.out.println("voluntarios sin labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados().toString());
@@ -675,7 +686,7 @@ public class AnalisisControlador {
 				//y cambie el estado de las muestras a asignada analista			
 				laboratorioCentroServicio.guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(formBeanGuardarAsignacionPlaca);
 				
-							
+				*/			
 				//vuelvo al formulario de asignacion de la placa
 				String idPlaca = String.valueOf(formBeanGuardarAsignacionPlaca.getIdPlaca());
 				redirectAttributes.addFlashAttribute("mensaje", "Asignaciones de placa guardadas");
