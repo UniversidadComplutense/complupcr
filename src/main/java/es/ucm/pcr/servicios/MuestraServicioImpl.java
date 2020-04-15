@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +26,11 @@ import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
-import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.Paciente;
-import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 import es.ucm.pcr.repositorio.LoteRepositorio;
 import es.ucm.pcr.repositorio.MuestraRepositorio;
 import es.ucm.pcr.repositorio.PacienteRepositorio;
@@ -58,6 +58,7 @@ public class MuestraServicioImpl implements MuestraServicio {
 	private ServicioLog servicioLog;
 	
 	@Override
+	@Transactional
 	public Page<MuestraListadoBean> findMuestraByParam(MuestraBusquedaBean params, Pageable pageable) {
 		List<MuestraListadoBean> listLotesBean = new ArrayList<MuestraListadoBean>();
 		
@@ -73,6 +74,7 @@ public class MuestraServicioImpl implements MuestraServicio {
 	}
 	
 	@Override
+	@Transactional
 	public List<MuestraListadoBean> findMuestraByParam(MuestraBusquedaBean params) {
 		List<MuestraListadoBean> muestrasListBean = new ArrayList<MuestraListadoBean>();
 		
@@ -145,6 +147,7 @@ public class MuestraServicioImpl implements MuestraServicio {
 	}
 	
 	@Override
+	@Transactional
 	public MuestraCentroBean findById(Integer id) {
 		Muestra muestra = findByIdMuestra(id);
 		if (muestra != null) {

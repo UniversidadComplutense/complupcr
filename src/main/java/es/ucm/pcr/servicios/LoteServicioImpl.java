@@ -88,6 +88,7 @@ public class LoteServicioImpl implements LoteServicio {
 	}
 
 	@Override
+	@Transactional
 	public LoteCentroBean guardar(LoteCentroBean loteBean) {
 		Lote lote = null;
 		
@@ -113,6 +114,7 @@ public class LoteServicioImpl implements LoteServicio {
 	}
 
 	@Override
+	@Transactional
 	public void actualizarEstadoLote(LoteCentroBean loteBean, BeanEstado estadoActualizar) {
 		Lote lote = findByIdLote(loteBean.getId());
 		if (lote != null) {
