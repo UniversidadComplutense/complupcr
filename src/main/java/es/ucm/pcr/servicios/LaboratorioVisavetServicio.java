@@ -4,6 +4,7 @@ package es.ucm.pcr.servicios;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,7 +81,10 @@ public interface LaboratorioVisavetServicio {
 
 	// JAVI
 	public void recepcionarPlaca(Integer id);
-
+	
+	// JAVI
+	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio);
+	
 	/**
 	 * Buscar laboratorio visavet por nombre
 	 * 
@@ -88,4 +92,6 @@ public interface LaboratorioVisavetServicio {
 	 * @return Optional<LaboratorioVisavet>
 	 */
 	public Optional<LaboratorioVisavet> findByNombre(String nombre);
+	
+	
 }

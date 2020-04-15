@@ -30,7 +30,7 @@
 		<fieldset id="datos" class="form-group border p-2 m-1">
 			<legend class="w-auto font-weight-bold m-0">Resultados</legend>
 			<div class="row">
-				<div class="col-2 m-0 form-group">
+				<div class="col-3 m-0 form-group">
 					<label>
 						<th:block th:switch="*{tipoElemento}">
 							<!-- TODO - INCLUIR EL RESTO DE LITERALES DEPENDIENTO DEL TIPO PARA EL QUE SEA LA DOCUMENTACION -->
@@ -47,13 +47,22 @@
 					</label>
 				 	<input type="text" disabled class="form-control form-control-sm" th:field="*{descripcion}"  th:value="*{descripcion}" required maxlength="45"/>
 				</div>
-				<div class="col-4 m-0 form-group">
+			</div>
+			</br>
+			<div class="row">
+				<div class="col-3 m-0 form-group">
+					<label>
+						Hoja 															
+					</label>
+				 	<input type="text" class="form-control form-control-sm" th:field="*{hoja}"  th:value="*{hoja}" required maxlength="45"/>
+				</div>
+				<div class="col-3 m-0 form-group">
 					<label>
 						Título columna 															
 					</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="*{columna}"  th:value="*{columna}" required maxlength="45"/>
 				</div>														
-				<div class="col-6 m-0 form-group">
+				<div class="col-4 m-0 form-group">
 					<label>Documento</label>
 					<div class="custom-file">
 					    <input type="file" onchange="validarFichero(this)" required class="custom-file-input form-control-sm" th:field="*{file}"  th:value="*{file}" accept=".pdf, .doc, .docx, .jpg, .jpeg, .png">

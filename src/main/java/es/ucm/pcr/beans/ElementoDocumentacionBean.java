@@ -16,7 +16,8 @@ public class ElementoDocumentacionBean {
 	private Integer tipoElemento;
 	private List<DocumentoBean> documentos;
 	private MultipartFile file;
-	private String columna; //en la carga de resultados del analista (excel) identificamos la columna del analista
+	private String hoja; //en la carga de resultados del analista (excel) identificamos la hoja y la columna del excel del analista
+	private String columna;
 	private String tipo; //el tipo sera "RES" si es un excel de resultados
 	private Integer codiUrl;
 	private String urlVolver;
@@ -63,7 +64,15 @@ public class ElementoDocumentacionBean {
 	public void setFile(MultipartFile file) {
 		this.file = file;
 	}
-	
+		
+	public String getHoja() {
+		return hoja;
+	}
+
+	public void setHoja(String hoja) {
+		this.hoja = hoja;
+	}
+
 	public String getColumna() {
 		return columna;
 	}

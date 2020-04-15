@@ -140,11 +140,10 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			busquedaLotes=(BusquedaLotesBean) session.getAttribute("busquedaLotes");
 		// inicializamos a enviado para filtrar por estos
 		// tengo que obtener los centros de los que puedo recibir muestras
-		//busquedaLotes.setIdCentro(0);
-		
-		
+		//busquedaLotes.setIdCentro(0);	
 	}
 		if (estado!= null) busquedaLotes.setCodNumEstadoSeleccionado(estado);
+
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 		// invocar al servicio que dado id De laboratorio se obtiene la entidad laboratorioUni
 		List<LoteBeanPlacaVisavet> list= new ArrayList();
