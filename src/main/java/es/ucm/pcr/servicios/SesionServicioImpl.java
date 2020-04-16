@@ -194,7 +194,7 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Laboratorios Visavet","/gestor/listaLaboratorioVisavet",null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Usuarios","/gestor/listaUsuarios",null);
+			opcionSecundaria = new MenuBean("Usuarios","/gestor/lista",null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Gestor", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
