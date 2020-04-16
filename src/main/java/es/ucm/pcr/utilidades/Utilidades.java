@@ -9,7 +9,7 @@ public class Utilidades {
 	// 5MB
 	public static Integer MAX_FILE_SIZE = 5242880;
 
-	public static Integer NUMERO_PAGINACION = 5;
+	public static Integer NUMERO_PAGINACION = 10;
 	public static Integer NUMERO_PAGINACION_USUARIO = 5;
 
 	public static String limpiarStringParaOrdenacion(String cadena) {

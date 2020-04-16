@@ -84,6 +84,9 @@
 		</form>
 		<!-- </div> -->
 		
+		<!-- PAGINACION -->
+		<object th:replace="fragmentos :: paginacion(${paginadorBean})" th:remove="tag"></object>
+		
 		<!-- Aqui vienen los resultados -->
 	<!--	<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
 	<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	-->
@@ -93,12 +96,12 @@
 			 <thead class="thead-light">
 				<tr>
 				    
-					<th class="p-1" scope="col">#Placa</th>
-					<th class="p-1" scope="col">F. Creación</th>
-					<th class="p-1" scope="col">#Lotes</th>
-					<th class="p-1" scope="col">Nº Muestras</th>
-				    <th class="p-1" scope="col">Estado</th>
-				    <th class="p-1" scope="col">Acciones</th>
+					<th class="p-1" scope="col" width="20%">#Placa</th>
+					<th class="p-1" scope="col" width="20%">F. Creación</th>
+					<th class="p-1" scope="col" width="20%">#Lotes</th>
+					<th class="p-1" scope="col" width="10%">Nº Muestras</th>
+				    <th class="p-1" scope="col" width="20%">Estado</th>
+				    <th class="p-1" scope="col" width="10%">Acciones</th>
 				</tr>
 				</thead>
 				<tbody>	
