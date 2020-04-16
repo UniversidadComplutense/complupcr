@@ -31,6 +31,8 @@
 			<fieldset id="criteriosBusqueda" style="display:none" class="form-group border p-2">
 		    <legend class="w-auto font-weight-bold m-0" >Asignación de referencias a muestras</legend>
 			 <div class="row col-12 form-group" id="error" style="display:none;"><label class="col-xs-2" style="font-weight:bold;color:red;">El tamaño de la placa es menor al número de muestras</label></div>
+			 <div class="row col-12 form-group" id="capaErrorRef" style="display:none;"><label class="col-xs-2" style="font-weight:bold;color:red;">Alguna Referencia Interna esta vacía</label></div>
+			 
 			  <div class="row">
 				<div class="col-3 form-group">
 				<label class="col-xs-2">Placa número:</label><label class="col-xs-2"><span style="font-weight:bold;" id="numPlacaSpan"/></label>
@@ -114,7 +116,7 @@
 								<span th:text="${unResultado.idPlacaVisavet}"></span>
 								</td>
 								<td width="25%">
-								<input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].id}"/>
+								<input type="hidden" th:id="l+${count.index}" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].id}"/>
 								<span th:text="${unResultado.numLote}"></span>
 								</td>
                                 <td width="25%">
@@ -148,7 +150,7 @@
 									<!-- <input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].referenciaInterna}"/>
 								-->
 								<!-- th:id="${unaMuestra.referenciaInterna}" th:value="${unaMuestra.referenciaInterna}" -->
-								<input th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].referenciaInterna}" ></input>
+								<input  th:id="ref+${unResultado.id}+'_'+${countM.index}" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].referenciaInterna}" ></input>*
 								</td>
 					</tr>
 					</tbody>
