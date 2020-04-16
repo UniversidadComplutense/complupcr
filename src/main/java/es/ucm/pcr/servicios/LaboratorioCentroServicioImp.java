@@ -1,6 +1,7 @@
 package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -181,7 +182,16 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda,
 			Pageable pageable) {
 		
-		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();		
+		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();
+
+		// Si no se ha seleccionado el estado de la placa en la búsqueda, buscamos por los estados: PLACA_INICIADA ó PLACA_PREPARADA_PARA_PCR
+		// ó PLACA_FINALIZADA_PCR ó PLACA_LISTA_PARA_ANALISIS
+		if (criteriosBusqueda.getIdEstadoPlaca() == 0) {
+			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(1,2,3,4));
+		} else {
+			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(criteriosBusqueda.getIdEstadoPlaca()));
+		}
+		
 		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = placaLaboratorioRepositorio.findByParams(criteriosBusqueda, pageable); 		
 		for (PlacaLaboratorio placa : PagePlacasLaboratorioCentro.getContent()) {
 			listaPlacasLaboratorioCentroBean.add(PlacaLaboratorioCentroBean.modelToBean(placa));

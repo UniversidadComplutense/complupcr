@@ -187,7 +187,7 @@ public class LabCentroControlador {
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
 	public ModelAndView buscarPlacasListasParaPcrPOST(HttpSession session, 
 			@ModelAttribute BusquedaPlacaLaboratorioBean criteriosBusqueda, 
-			@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+			@PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
 
 		ModelAndView vista = new ModelAndView("ListadoPlacasLaboratorio");
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getLaboratorioCentro().getId());
