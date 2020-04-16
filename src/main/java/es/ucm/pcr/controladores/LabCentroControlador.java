@@ -131,7 +131,7 @@ public class LabCentroControlador {
 
 	}
 	
-	private void recepcionPlacas(ModelAndView vista, Integer currentPage, HttpSession session) {
+	private void recepcionPlacas(ModelAndView vista, Integer currentPage, HttpSession session) throws Exception {
 		
 		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = (BusquedaRecepcionPlacasVisavetBean) session.getAttribute("beanBusquedaRecepcion");
 		criteriosBusqueda = criteriosBusqueda != null ? criteriosBusqueda : new BusquedaRecepcionPlacasVisavetBean();
@@ -244,7 +244,7 @@ public class LabCentroControlador {
 
 	}
 	
-	private void gestionPlacas(ModelAndView vista, Integer currentPage, HttpSession session) {
+	private void gestionPlacas(ModelAndView vista, Integer currentPage, HttpSession session) throws Exception {
 		BusquedaPlacaLaboratorioBean criteriosBusqueda = (BusquedaPlacaLaboratorioBean) session.getAttribute("beanBusqueda");
 		criteriosBusqueda = criteriosBusqueda != null ? criteriosBusqueda : new BusquedaPlacaLaboratorioBean();		
 

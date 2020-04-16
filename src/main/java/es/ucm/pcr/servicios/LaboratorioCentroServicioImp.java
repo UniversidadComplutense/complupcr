@@ -180,7 +180,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	// JAVI
 	@Override
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda,
-			Pageable pageable) {
+			Pageable pageable) throws Exception {
 		
 		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();
 
@@ -203,7 +203,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	// JAVI
 	@Override
-	public PlacaLaboratorioCentroBean buscarPlaca(Integer id) {
+	public PlacaLaboratorioCentroBean buscarPlaca(Integer id) throws Exception {
 		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
@@ -215,7 +215,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	// JAVI
 	@Override
 	@Transactional
-	public boolean finalizarPCR(Integer id) {
+	public boolean finalizarPCR(Integer id) throws Exception {
 		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
@@ -232,7 +232,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	// JAVI
 	@Override
 	@Transactional
-	public boolean asignarEquipoPCR(Integer id) {
+	public boolean asignarEquipoPCR(Integer id) throws Exception {
 		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
@@ -252,7 +252,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	// JAVI
 	@Override
 	@Transactional
-	public boolean placaListaParaAnalizar(Integer id) {
+	public boolean placaListaParaAnalizar(Integer id) throws Exception {
 		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
@@ -274,14 +274,14 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	// JAVI
 	@Override
-	public boolean esEditable(Integer id) {		
+	public boolean esEditable(Integer id) throws Exception {	
 
 		return id == null;		
 	}
 	
 	// JAVI
 	@Override
-	public Integer espacioLibreParaMuestras(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) {		
+	public Integer espacioLibreParaMuestras(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception {		
 		 
 		Integer espacioLibreParaMuestras = 0;
 		
@@ -310,7 +310,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	// Si la placa es de nueva creación, pasamos por parámetro la capacidad que tendrá la misma, y en caso contrario pasamos un cero.
 	@Override
 	@Transactional
-	public PlacaLaboratorioCentroBean rellenarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) {		
+	public PlacaLaboratorioCentroBean rellenarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception {		
 		
 		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
 
