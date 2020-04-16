@@ -137,7 +137,7 @@ public class CentroSaludServiciosTests {
 			estadoLote.setTipoEstado(TipoEstado.EstadoLote);
 			estadoLote.setEstado(Estado.LOTE_INICIADO);
 			lcb.setEstado(estadoLote);
-			lcb.setCapacidad(1);
+			lcb.setCapacidad(5);
 			lcb.setIdCentro(centro.getId());
 			lcb.setNumeroMuestras(0);
 			lcb.setNumLote("lote1");

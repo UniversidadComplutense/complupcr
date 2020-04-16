@@ -84,6 +84,9 @@
 		</form>
 		<!-- </div> -->
 		
+		<!-- PAGINACION -->
+		<object th:replace="fragmentos :: paginacion(${paginadorBean})" th:remove="tag"></object>
+		
 		<!-- Aqui vienen los resultados -->
 	<!--	<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
 	<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	-->
@@ -93,12 +96,12 @@
 			 <thead class="thead-light">
 				<tr>
 				    
-					<th class="p-1" scope="col">#Placa</th>
-					<th class="p-1" scope="col">F. Creación</th>
-					<th class="p-1" scope="col">#Lotes</th>
-					<th class="p-1" scope="col">Nº Muestras</th>
-				    <th class="p-1" scope="col">Estado</th>
-				    <th class="p-1" scope="col">Acciones</th>
+					<th class="p-1" scope="col" width="20%">#Placa</th>
+					<th class="p-1" scope="col" width="20%">F. Creación</th>
+					<th class="p-1" scope="col" width="20%">#Lotes</th>
+					<th class="p-1" scope="col" width="10%">Nº Muestras</th>
+				    <th class="p-1" scope="col" width="20%">Estado</th>
+				    <th class="p-1" scope="col" width="10%">Acciones</th>
 				</tr>
 				</thead>
 				<tbody>	
@@ -106,8 +109,8 @@
 					<td><span th:text="${unResultado.id}"></span></td>
 					<td><span th:text="${#dates.format(unResultado.fechaCreacion, 'dd/MM/yyyy')}"></span></td>
                     <td> <!-- ${unResultado.listaLotes}">  -->
-                    <p th:id="lotes+${unResultado.id}" style="display:none" th:each="lote: ${unResultado.listaLotes}">
-                            <input type="text" id="lote+${count.index}" th:value="${lote.id}"/>
+                    <p th:id="lotes+${unResultado.id}" th:class="lotes+${unResultado.id}" style="display:none" th:each="lote,count: ${unResultado.listaLotes}">
+                            <input type="text" th:id="lote+${unResultado.id}+'_'+${count.index}" th:value="${lote.id}"/>
                             </p>
                             <a data-toggle="modal" data-target="#modalConsultarLotes" th:attr="data-target='#modalConsultarLotes'+${unResultado.id}" style="cursor: pointer;" title="Ver lotes">                                                 
                     <i class="fa fa-dropbox" aria-hidden="true" style="font-size: 1.2em;"></i><span th:text="${#lists.size(unResultado.listaLotes)}"></span>	
@@ -228,6 +231,9 @@
 						       <i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;"></i>
 						     </a>
 						 <a th:href="@{/laboratorioUni/cargaReferencias(id=${unResultado.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_PLACA_VISAVET_DESDE})}" data-toggle="tooltip" style="color:black" title="Cargar referencias">					         
+					          <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size: 1.2em;"></i>					         
+					         </a>
+					          <a th:href="@{/laboratorioUni/cargaReferencias(id=${unResultado.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_PLACA_VISAVET_DESDE})}" data-toggle="tooltip" style="color:black" title="Cargar referencias">					         
 					          <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size: 1.2em;"></i>					         
 					         </a>
                     </td>		  

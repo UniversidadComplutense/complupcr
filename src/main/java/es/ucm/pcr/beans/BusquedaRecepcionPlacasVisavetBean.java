@@ -1,6 +1,7 @@
 package es.ucm.pcr.beans;
 
 import java.util.Date;
+import java.util.List;
 
 public class BusquedaRecepcionPlacasVisavetBean {
 
@@ -16,8 +17,8 @@ public class BusquedaRecepcionPlacasVisavetBean {
 	private Date fechaRecepcionInicio;
 	private Date fechaRecepcionFin;
 	private Integer idLaboratorioCentro;
+	private List<Integer> estadosBusqueda;
 
-	
 	public Integer getIdPlaca() {
 		return idPlaca;
 	}
@@ -112,6 +113,14 @@ public class BusquedaRecepcionPlacasVisavetBean {
 
 	public void setIdLaboratorioCentro(Integer idLaboratorioCentro) {
 		this.idLaboratorioCentro = idLaboratorioCentro;
+	}
+
+	public List<Integer> getEstadosBusqueda() {
+		return estadosBusqueda;
+	}
+
+	public void setEstadosBusqueda(List<Integer> estadosBusqueda) {
+		this.estadosBusqueda = estadosBusqueda;
 	}
 
 }
