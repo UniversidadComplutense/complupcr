@@ -335,11 +335,12 @@ function asignarLaboratoriodesdeModal(){
 }
 
 function seleccionAccion(accion){
+	
 	$("#accion").val(accion);
-	alert(comprobarReferenciasInternas());
-	/*if (comprobarReferenciasInternas())
+
+	if (comprobarReferenciasInternas())
 	$("#formularioConReferencias").submit();
-	else $("#capaErrorRef").show();*/
+	
 }
 function habilitarBotonProcesar(){
 	var nFilas = $("#tablaResultados tr").length;
@@ -359,22 +360,26 @@ function habilitarBotonProcesar(){
 }
 
 function comprobarReferenciasInternas(){
+var respuesta=true;
 	var nLotes=$("#tablaLotes .trGroupLotes").length;
+
 	for (var i=0;i<nLotes;i++){
+	 
 		var muestra=$("#l"+i).val();
-	
-	var nMuestras=$("#muestra"+muestra+" .border-tableMuestras tbody tr").length;
-	 for (var j=0;j<nMuestras;j++){
-		if (trim($("#ref"+muestra+"_"+j).val())=="") alert ("vacio");
+	    var nMuestras=$("#muestra"+muestra+" .border-tableMuestras tbody tr").length;
+        
+	    for (var j=0;j<nMuestras;j++){
+	    	
+		if ($("#ref"+muestra+"_"+j).val().trim() == "") { 
+			respuesta=false;
+			$("#mensaje"+muestra+"_"+j).show();
+		
+		}
 	
 	 }
-	 return true;
+	
 	}
-/*	$("#tablaLotes tr").each(function () 
-			{ 
-		n++;
-		alert (n);
-		// alert ($(".border-tableMuestras input:text").val());
-		// lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].referenciaInterna 
-});*/
+	
+	 return respuesta;
+
 }
