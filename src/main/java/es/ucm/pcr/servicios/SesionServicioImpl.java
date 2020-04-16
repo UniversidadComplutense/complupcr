@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,15 +129,16 @@ public class SesionServicioImpl implements SesionServicio {
 //  Recepcion Laboratorio
 		if (this.tieneRol("ADMIN") || this.tieneRol("RECEPCIONLABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Recepción de Lotes", "/laboratorioUni/buscarLotes?estado=3", null);
+			opcionSecundaria = new MenuBean("Recepción de Lotes", "/laboratorioUni/buscarLotes?estado=3&rol=R", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Recepción laboratorio", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
+			
 		}
 //	Tecnico laboratorio
 		if (this.tieneRol("ADMIN") || this.tieneRol("TECNICOLABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Asignar lotes a placas", "/laboratorioUni/buscarLotes?estado=4", null);
+			opcionSecundaria = new MenuBean("Asignar lotes a placas", "/laboratorioUni/buscarLotes?estado=4&rol=T", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Gestionar placas", "/laboratorioUni/buscarPlacas", null);
 			menuSecundario.add(opcionSecundaria);

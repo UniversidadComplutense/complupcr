@@ -201,13 +201,23 @@ function procesarLotes() {
 // desde placas
 function procesarLotesDesdePlacas(idPlaca) {
 	var lotesProcesar="";
+		var n=0;
+		//lotesProcesar+=$("#lotes"+idPlaca +" input").val()+":";
 		
-			//lotesProcesar
 			$("#lotes"+idPlaca +" input").each(function () 
 					{ 
-			lotesProcesar+=$("#lotes"+idPlaca +" input").val()+":";
-			
+				n++;
+				
 		});
+		
+	for(i=n-1;i>=0;i--){
+		
+				
+			lotesProcesar+=$("#lote"+idPlaca+"_"+i).val()+":";
+			//	alert ("#lotes"+idPlaca+"_"+i");
+				
+				}		
+			
 	
 	if (lotesProcesar !=""){
 	var url="/laboratorioUni/procesarLotes?lotes="+lotesProcesar;

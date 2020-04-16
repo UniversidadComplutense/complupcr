@@ -101,14 +101,14 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 
 	return busquedaLotes;
 }
-	public ModelAndView buscarLotes(BusquedaLotesBean busquedaLotes, HttpServletRequest request, HttpSession session, Pageable pageable) throws Exception {
+	public ModelAndView buscarLotes(BusquedaLotesBean busquedaLotes, String rolURL, HttpServletRequest request, HttpSession session, Pageable pageable) throws Exception {
 		
 		Page<LoteBeanPlacaVisavet> paginaLotes = null;
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 		 busquedaLotes.setMostrarProcesar(false);
 		
 		for (String rol:sesionServicio.getRoles()){
-			if (rol.equals("ROLE_TECNICOLABORATORIO")|| rol.equals("ROLE_ADMIN")) {
+			if ((rol.equals("ROLE_TECNICOLABORATORIO")|| rol.equals("ROLE_ADMIN")) && rolURL.equals("T")) {
 				 busquedaLotes.setMostrarProcesar(true);
 				 break;
 			}
@@ -116,11 +116,12 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		busquedaLotes.setListaBeanEstado(BeanEstado.estadosLoteLaboratorioVisavet());
 		busquedaLotes.setListaCentros(centroServicio.listaCentrosOrdenada());
 
-		
+		busquedaLotes.setRolURL(rolURL);
 		paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), ORDENACION));
 		//model.addAttribute("paginaLotes", paginaLotes);
 		vista.addObject("paginaLotes", paginaLotes);
 		vista.addObject("busquedaLotes",busquedaLotes);
+		
 		// guardo los criterios de busqueda de lotes
 		session.setAttribute("busquedaLotes", busquedaLotes);
 	    return vista;
@@ -128,7 +129,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 	// presenta la pagina con unos criterios de busqueda iniciales
 	@RequestMapping(value = "/laboratorioUni/buscarLotes", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','RECEPCIONLABORATORIO','TECNICOLABORATORIO')")
-	public ModelAndView buscarLotesGet(@RequestParam("estado") Integer estado, Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 500000000) Pageable pageable) throws Exception {
+	public ModelAndView buscarLotesGet(@RequestParam("estado") Integer estado,@RequestParam(required = false) String  rol,  Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 500000000) Pageable pageable) throws Exception {
          // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
 		BusquedaLotesBean  busquedaLotes= new BusquedaLotesBean();
 		
@@ -142,8 +143,11 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		// tengo que obtener los centros de los que puedo recibir muestras
 		//busquedaLotes.setIdCentro(0);	
 	}
-		if (estado!= null) busquedaLotes.setCodNumEstadoSeleccionado(estado);
-
+		if (estado!= null) { 
+			if (estado==0)busquedaLotes.setCodNumEstadoSeleccionado(null);
+			else
+			busquedaLotes.setCodNumEstadoSeleccionado(estado);
+		}
 		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
 		// invocar al servicio que dado id De laboratorio se obtiene la entidad laboratorioUni
 		List<LoteBeanPlacaVisavet> list= new ArrayList();
@@ -153,7 +157,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		vista.addObject("busquedaLotes", busquedaLotes);
 		vista.addObject("paginaLotes", paginaLotes);
 		//return vista;
-		 return this.buscarLotes(busquedaLotes, request, session, pageable);
+		 return this.buscarLotes(busquedaLotes, rol, request, session, pageable);
 		// mas adelante necesito obtener Centros de un servicioCentros
 		
 		//busquedaLotes.setListaBeanCentro(servicioCentros.buscarCentros());
@@ -192,12 +196,12 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				for (int i=0; i<lista.size();i++) {
 			 	tabla+="<tr id=\"trGroup"+i+"\" >";
 			 	tabla+="<td width=\"1%\">";
-				if (lista.get(i).getEstado().getEstado()== Estado.LOTE_RECIBIDO_CENTRO_ANALISIS) {
+				/*if (lista.get(i)).getEstado().getEstado()== Estado.LOTE_RECIBIDO_CENTRO_ANALISIS) {
 			 	tabla+="<input type=\"checkbox\" id=\"seleccionado"+i+"\" value=\""+lista.get(i).getId()+"\"/></td>";
 				}
 				else {
 					tabla+="<input type=\"checkbox\" disabled id=\"seleccionado"+i+"\" value=\""+lista.get(i).getId()+"\"/></td>";		
-				}
+				}*/
 				tabla+="<td width=\"1%\"><span>"+lista.get(i).getNumLote()+"</span></td>";
 				tabla+="<td width=\"10%\"><span>"+lista.get(i).getCentroProcedencia()+"</span></td>";
 				tabla+="<td width=\"1%\"><span>"+lista.get(i).getFechaEntrada()+"</span></td>";
@@ -223,7 +227,9 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 	        // tengo que mirar como a partir del usuario vemos de que laboratorioUni es y le muestro unicamente sus loooooootes
 		// funciona return  this.buscarLotes(busquedaLotes, request, session, pageable);
 			session.setAttribute("busquedaLotes", busquedaLotes);
-			return "redirect:/laboratorioUni/buscarLotes?estado="+busquedaLotes.getCodNumEstadoSeleccionado();
+			if (busquedaLotes.getCodNumEstadoSeleccionado() ==null) busquedaLotes.setCodNumEstadoSeleccionado(0);
+			if (busquedaLotes.getRolURL() == null) busquedaLotes.setRolURL("R");
+			return "redirect:/laboratorioUni/buscarLotes?estado="+busquedaLotes.getCodNumEstadoSeleccionado()+"&rol="+busquedaLotes.getRolURL();
 		
 		}
 	
@@ -266,7 +272,8 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		//LoteCentroBean lote = loteServicio.guardarLotePlavaVisavet(beanLote,estado);
 		BusquedaLotesBean busqueda=(BusquedaLotesBean) session.getAttribute("busquedaLotes");
 		if (busqueda ==null) busqueda= new BusquedaLotesBean();
-		return  this.buscarLotes(busqueda, request, session, pageable);
+		if (busqueda.getRolURL()==null) busqueda.setRolURL("R");
+		return  this.buscarLotes(busqueda,busqueda.getRolURL(), request, session, pageable);
 				/*	Page<LoteBeanPlacaVisavet> paginaLotes = null;
 					paginaLotes = new PageImpl<LoteBeanPlacaVisavet>(list, pageable,pageable.getPageSize());
 					// fin para probar 
