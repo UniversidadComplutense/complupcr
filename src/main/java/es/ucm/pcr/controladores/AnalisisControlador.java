@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,6 +64,7 @@ import es.ucm.pcr.beans.GuardarCogerYDevolverPlacasBean;
 import es.ucm.pcr.beans.MuestraBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
+import es.ucm.pcr.beans.PaginadorBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesAnalistaBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 //import es.ucm.pcr.beans.BeanMuestraCentro;
@@ -77,6 +79,7 @@ import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.servicios.UsuarioServicio;
+import es.ucm.pcr.utilidades.Utilidades;
 import es.ucm.pcr.validadores.AsignacionPlacaLaboratorioCentroValidador;
 import es.ucm.pcr.validadores.DocumentoValidador;
 
@@ -188,18 +191,38 @@ public class AnalisisControlador {
 		
 		@RequestMapping(value="/list", method=RequestMethod.POST)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public ModelAndView buscarMuestras(HttpSession session, @ModelAttribute BeanBusquedaMuestraAnalisis beanBusqueda) throws Exception {
+		public String buscarMuestras(HttpSession session, @ModelAttribute BeanBusquedaMuestraAnalisis beanBusqueda) throws Exception {
+			session.setAttribute("beanBusqueda", beanBusqueda);
+			session.setAttribute("paginaActual", 1);
+			return "redirect:/analisis/list";
+		}
+		
+		
+		@RequestMapping(value = "/list", method = RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public ModelAndView buscarPaginado(HttpSession session, @RequestParam("pagina") Optional<Integer> page) throws Exception {
+			
+			Integer currentPage = page.orElse(null);
+			currentPage = currentPage == null ? (session.getAttribute("paginaActual") != null ? (Integer)session.getAttribute("paginaActual") : 1) : page.get();
+			
 			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
 			
+			BeanBusquedaMuestraAnalisis beanBusqueda = (BeanBusquedaMuestraAnalisis) session.getAttribute("beanBusqueda");
+			beanBusqueda = beanBusqueda != null ? beanBusqueda : new BeanBusquedaMuestraAnalisis();
 			//solo mostraremos al jefe las muestras de placas que ha cogido bajo su responsabilidad, (que solo podran ser del centro del jefe, ya que solo le hemos dejado coger placas de su centro)
 			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)			
-			Page<BeanListadoMuestraAnalisis> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
-						
+			Page<BeanListadoMuestraAnalisis> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, 
+					PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION, ORDENACION));
+			session.setAttribute("paginaActual", currentPage);						
 			
 			vista.addObject("beanBusquedaMuestra", beanBusqueda);			
 			vista.addObject("listadoMuestras", muestrasPage);
+			
+			PaginadorBean paginadorBean = new PaginadorBean(muestrasPage.getTotalPages(), currentPage, muestrasPage.getTotalElements(), "/analisis/list");		
+			vista.addObject("paginadorBean", paginadorBean);
 			return vista;
 		}
+		
 		
 		//metodos de asignacion de muestras a analistas (ahora no se usa porque la asignacion de analistas es por placa)
 		
@@ -380,7 +403,7 @@ public class AnalisisControlador {
 		
 		@PostMapping("/ejecutarCierreMuestras")
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public ModelAndView ejecutarCierreMuestras(@ModelAttribute("beanBusquedaMuestra") BeanBusquedaMuestraAnalisis beanBusquedaMuestra,			
+		public String ejecutarCierreMuestras(@ModelAttribute("beanBusquedaMuestra") BeanBusquedaMuestraAnalisis beanBusquedaMuestra,			
 				BindingResult result, HttpServletRequest req, Model model, Locale locale, HttpSession session) throws Exception {
 			
 			//metodo que recibe los codnum de muestras en los que se ha marcado el checkbox para cerrar
@@ -456,7 +479,8 @@ public class AnalisisControlador {
 				
 				//return ejecutaBusqueda(findCommand, model); //REVISAAAAR
 				
-				return buscarMuestras(session, beanBusquedaMuestra);
+				//return buscarMuestras(session, beanBusquedaMuestra);
+				return "redirect:/analisis/list";
 			
 			
 		}
