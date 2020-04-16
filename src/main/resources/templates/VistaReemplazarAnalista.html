@@ -1,0 +1,93 @@
+		
+	<form id="formularioReemplazarAsignacion" action="#"
+						th:action="@{/analisis/guardarAsignacionPlaca}" method="post"
+						 role="form" th:object="${formBeanGuardarReemplazoAsignacionPlaca}"> 
+	
+		
+	<!-- REEMPLAZAR POR OTRO ANALISTA O VOLUNTARIO -->
+	<fieldset id="reemplazarAsignacion" class="form-group border p-2">		
+	<div id="ReemplazarAnalistasDePlaca" class="container">
+		<div class="row justify-content-center mt-1, titulo-menu">
+			<h5>ESCOGER OTRO ANALISTA</h5>
+		</div>
+			
+			 <!-- guardo en un hidden el id de la placa -->
+			 <div class="row justify-content-center mt-3">
+		    	<div class="col-lg-12">
+					<input type="hidden" th:field="*{idPlaca}" ></input>					
+			 	</div>
+			 </div>
+			
+			  <div class="row justify-content-center mt-3">		    	
+					<div id="analistasLabReemplazar" class="form-group  col-4">
+						<label>Analistas laboratorio: </label> 
+						<select
+							class="form-control selectpicker" 
+							data-live-search="true" data-actions-box="false"
+							id="analistasLabSeleccionadoReemp" th:field="*{listaIdsAnalistasLabSeleccionados}"
+							title="Todos los analistas laboratorio">
+							<option th:each="var: *{beanListadoAnalistaLab}"
+								th:value="${var.id}" th:text="${var.nom}"></option>
+						</select>
+						<!-- <label class="text-warning" th:if="${#fields.hasErrors('listaIdsAnalistasLabSeleccionados')}" th:errors="*{listaIdsAnalistasLabSeleccionados}"></label>  -->
+					</div>															
+					<div id="analistasVolReemplazar" class="form-group  col-4">
+						<label>Voluntarios laboratorio: </label> 
+						<select
+							class="form-control selectpicker" 
+							data-live-search="true" data-actions-box="false"
+							id="analistasVolSeleccionadoReemp" th:field="*{listaIdsAnalistasVolSeleccionados}"
+							title="Todos los voluntarios laboratorio">
+							<option th:each="var: *{beanListadoAnalistaVol}"
+								th:value="${var.id}" th:text="${var.nom}"></option>
+						</select>
+					</div>
+					<div id="analistasOtrosVolReemplazar" class="form-group  col-4">
+						<label>Otros voluntarios: </label> 
+						<select
+							class="form-control selectpicker" 
+							data-live-search="true" data-actions-box="false"
+							id="analistasVolSinLabCentroSeleccionadoReemp" th:field="*{listaIdsVolSinLabCentroSeleccionados}"
+							title="Todos los otros voluntarios">
+							<option th:each="var: *{beanListadoVoluntariosSinLaboratorioCentro}"
+								th:value="${var.id}" th:text="${var.nom}"></option>
+						</select>
+					</div>
+			
+				</div>
+				 
+				<div  class="row justify-content-center mt-3">
+			 	<div id="mensajeNumAnalistas" class="form-group  col-12">			 		
+			 		<!-- <label class="text-warning" th:if="${#fields.hasErrors('listaIdsAnalistasLabSeleccionados')}" th:errors="*{listaIdsAnalistasLabSeleccionados}"></label>-->			 		
+			 		<input type="hidden" th:field="*{numAnalistasPermitidos}" ></input>			 		
+			 		<label class="alert alert-danger" th:if="${#fields.hasErrors('numAnalistasPermitidos')}" th:errors="*{numAnalistasPermitidos}"></label>
+			 		<input type="text" th:field="*{placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.numTotalAnalistasAsignados}" ></input>				 		
+			 	</div>
+			 	</div>
+			 	
+			 		
+			  </div>
+			 							
+		
+		
+		
+	</fielset>
+		<!-- botones cancelar y guardar asignacion -->
+		<div class="row justify-content-center mt-4">		
+			<div class="col-1">							
+				<a th:href="@{/analisis/cogerPlacas}" class="btn btn-secondary ">Cancelar</a>
+			</div>
+			<div class="col-1">
+				<input th:disabled="${noSePuedeAsignarNuevosAnalistasAPlaca}" type="submit" class="btn btn-primary "
+					value="Guardar asignacion"></input>
+			</div>		
+		</div>
+	
+	
+		
+	</form>	
+	
+	
+	<!-- FIN ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->
+	
+			

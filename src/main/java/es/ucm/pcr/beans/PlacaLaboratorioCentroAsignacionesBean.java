@@ -169,6 +169,8 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 						beanAsigAna.setBeanUsuario(beanUsuAnalista);				
 						beanAsigAna.setFechaAsignacion(usuMuestra.getFechaAsignacion());
 						//beanAsigAna.setValoracion("P"); //la valoración no tiene sentido a nivel de placa (se valoran las muestras no las placas)
+						//el usuario será reemplazable si no ha valorado la muestra
+						beanAsigAna.setEsReemplazable(usuMuestra.getFechaValoracion()==null && usuMuestra.getValoracion()==null);
 						beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);
 					}
 					//si el usuario tiene el rol voluntario y tiene idLaboratorioCentro
@@ -180,6 +182,8 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 						beanAsigVol.setBeanUsuario(beanUsuVol);				
 						beanAsigVol.setFechaAsignacion(usuMuestra.getFechaAsignacion());
 						//beanAsigVol.setValoracion("P"); //la valoración no tiene sentido a nivel de placa (se valoran las muestras no las placas)
+						//el usuario será reemplazable si no ha valorado la muestra
+						beanAsigVol.setEsReemplazable(usuMuestra.getFechaValoracion()==null && usuMuestra.getValoracion()==null);
 						beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
 					}
 					//si el usuario tiene el rol voluntario y no tiene idLaboratorioCentro
@@ -191,6 +195,8 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 						beanAsigVolSinCentro.setBeanUsuario(beanUsuVolSinCentro);				
 						beanAsigVolSinCentro.setFechaAsignacion(usuMuestra.getFechaAsignacion());
 						//beanAsigVol.setValoracion("P"); //la valoración no tiene sentido a nivel de placa (se valoran las muestras no las placas)
+						//el usuario será reemplazable si no ha valorado la muestra
+						beanAsigVolSinCentro.setEsReemplazable(usuMuestra.getFechaValoracion()==null && usuMuestra.getValoracion()==null);
 						beanListaAsignaciones.getListaAnalistasVolSinLabCentro().add(beanAsigVolSinCentro);
 					}
 				}				
@@ -200,6 +206,8 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 			
 		}
 		beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
+		//el total de analistas asignados será la suma de los analistas lab, analistas vol y analistas vol sin centro
+		beanAnalisis.setNumTotalAnalistasAsignados(beanListaAsignaciones.getListaAnalistasLab().size() + beanListaAsignaciones.getListaAnalistasVol().size() + beanListaAsignaciones.getListaAnalistasVolSinLabCentro().size());
 		bean.setBeanAnalisisPlaca(beanAnalisis);	
 
 

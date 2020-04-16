@@ -321,6 +321,50 @@ function EjecutarCierreMuestras() {
 }
 
 
+function cargarModalReemplazarAnalista(idPlaca, idUsuarioAReemplazar){
+	
+	alert("estoy en  cargarModalReemplazarAnalista");
+	alert("el usurio a reemplazar es: "+ idUsuarioAReemplazar);
+	alert("en la placa con id : "+ idPlaca);
+	
+	
+	url = "/analisis/reemplazarAnalista?idUsuarioAReemplazar=" + idUsuarioAReemplazar + "&idPlaca=" + idPlaca;
+				
+		//sBody = $('#formularioGuardarAsignacion').serialize() + "&idUsuarioAReemplazar=" + idUsuarioAReemplazar + "&idPlaca=" + idPlaca;
+		$.ajax({
+			type : 'GET',
+			url : url,
+			//beforeSend : function() {
+				//showSpinner();
+			//},
+			dataType : 'html',
+			//data : sBody,
+			//complete : function() {
+				//hideSpinnerAsistente();
+			//}
+		}).done(function(respuesta) {			
+			//alert("estoy en done");
+			//VentanaModalAvisoSinBoton("idventanaemergente", 640, respuesta);
+			$('#exampleModalScrollableTitle').html("");
+			$('#exampleModalScrollableTitle').html("Reemplazar analista");				
+			$("#modalReemplazarAnalistaBody").html("");			
+			$("#modalReemplazarAnalistaBody").html(respuesta);
+			var $modalReemplazarAnalista = $("#modalReemplazarAnalista");
+			//$('.selectpicker').selectpicker('refresh');
+			//$('.selectpicker').selectpicker();
+			$('#analistasLabSeleccionadoReemp').selectpicker('refresh');
+			$('#analistasVolSeleccionadoReemp').selectpicker('refresh');
+			$('#analistasVolSinLabCentroSeleccionadoReemp').selectpicker('refresh');	
+			$modalReemplazarAnalista.modal('show');
+			
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			//$('#idavisos').html("ERROR: No he podido conectar con el servidor para realizar la acción").css('color', "#f00");
+		});
+	//}
+	
+	return false;
+}
+
 
 
 function loadAnalistas(id) {

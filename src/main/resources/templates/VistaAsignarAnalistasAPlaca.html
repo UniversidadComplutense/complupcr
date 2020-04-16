@@ -65,7 +65,11 @@
 						  </td>
 						  <td th:if="*{#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.beanListaAsignaciones.listaAnalistasLab) > 0}">
 						  	<ul th:each="analistaLab : *{placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.beanListaAsignaciones.listaAnalistasLab}">							
-									<li><span th:text="${analistaLab.beanUsuario.nom}"></span> 
+									<li>										
+										<a style="color:black" href="#" th:onclick="|cargarModalReemplazarAnalista('*{placaLaboratorioCentroAsignacionesBean.id}','${analistaLab.beanUsuario.id}'); return false|" data-toggle="tooltip" title="Reemplazar analista">
+											<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
+										</a>
+										<span th:text="${analistaLab.beanUsuario.nom}"></span> 
 										<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
 										<!-- <span th:text="${analistaLab.valoracion}"></span> --> 
 									</li>
@@ -126,7 +130,32 @@
 		</div>
 	</fieldset>
 		
-	
+	<!-- Modal reemplazar analista-->
+		<div id="modalReemplazarAnalista" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-scrollable" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalScrollableTitle">Modal title</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div id="modalReemplazarAnalistaBody" class="modal-body">
+		        ...CUERPO MODAL
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+		        <!-- <button type="button" class="btn btn-primary">Cerrar muestras</button> -->
+		        <a href="#" class="btn btn-secondary"
+				onclick="return EjecutarCierreMuestras();">
+				Cerrar muestras
+				</a>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- fin Modal para reemplazar un analista por otro y boton de confirmacion o cancelar -->
 	
 		
 	<!-- ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->
@@ -189,9 +218,10 @@
 				 
 				<div  class="row justify-content-center mt-3">
 			 	<div id="mensajeNumAnalistas" class="form-group  col-12">			 		
-			 		<!-- <label class="text-warning" th:if="${#fields.hasErrors('listaIdsAnalistasLabSeleccionados')}" th:errors="*{listaIdsAnalistasLabSeleccionados}"></label>-->
+			 		<!-- <label class="text-warning" th:if="${#fields.hasErrors('listaIdsAnalistasLabSeleccionados')}" th:errors="*{listaIdsAnalistasLabSeleccionados}"></label>-->			 		
 			 		<input type="hidden" th:field="*{numAnalistasPermitidos}" ></input>			 		
-			 		<label class="alert alert-danger" th:if="${#fields.hasErrors('numAnalistasPermitidos')}" th:errors="*{numAnalistasPermitidos}"></label>			 		
+			 		<label class="alert alert-danger" th:if="${#fields.hasErrors('numAnalistasPermitidos')}" th:errors="*{numAnalistasPermitidos}"></label>
+			 		<input type="text" th:field="*{placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.numTotalAnalistasAsignados}" ></input>				 		
 			 	</div>
 			 	</div>
 			 	

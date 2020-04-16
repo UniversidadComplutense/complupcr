@@ -697,6 +697,49 @@ public class AnalisisControlador {
 		}
 		
 
+		//reemplazar analista
+		//metodo que recibe el analista a reemplazar y muestra los posibles analistas para permitir escoger el que lo reemplazara
+		//busca sus datos y los muestra en el modal
+		@RequestMapping(value = "/reemplazarAnalista", method=RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public String reemplazarAnalista(HttpSession session, //HttpServletRequest req,
+				@RequestParam("idUsuarioAReemplazar") Integer idUsuarioAReemplazar,
+				@RequestParam("idPlaca") Integer idPlaca,
+				Model model, Locale locale) {
+			
+			//metodo que recibe los codnum de muestras en los que se ha marcado el checkbox para cerrarlas
+			//busca esos resgistros, y presenta sus datos en una lista
+			System.out.println("Diana- getMapping reemplazarAnalista");				
+			
+			//String idUsuarioAReemplazarStr = req.getParameter("idUsuarioAReemplazar");				
+			System.out.println("el usuario a reemplazar es: " + idUsuarioAReemplazar);
+			//String idPlacaStr = req.getParameter("idPlaca");
+			//Integer idPlaca = Integer.valueOf(idPlacaStr);
+			System.out.println("la placa es: " + idPlaca);
+			
+			
+			
+			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = new GuardarAsignacionPlacaLaboratorioCentroBean();
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setIdPlaca(idPlaca);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setNumAnalistasPermitidos(numAnalistas);
+			
+			formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(idPlaca, formBeanGuardarAsignacionPlacaLaboratorioCentro);
+						
+			model.addAttribute("formBeanGuardarReemplazoAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
+			
+		/*	//ESTOY AKIIIII
+			List<BeanListadoMuestraAnalisis> beanListadoMuestraAnalisis = this.findByClaves(claves);
+			
+			System.out.println("beanListadoMuestraAnalisis tiene: " + beanListadoMuestraAnalisis.size());
+				
+			model.addAttribute("listadoMuestras", beanListadoMuestraAnalisis);
+			return "VistaMuestrasMarcadasParaCerrar";
+		*/	
+			return "VistaReemplazarAnalista";
+			
+		}
+
+		
 		
 		//fin metodos de asignacion de analistas a placas
 
