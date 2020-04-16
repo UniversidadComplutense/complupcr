@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,6 +38,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
@@ -43,6 +48,7 @@ import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.repositorio.LoteRepositorio;
 import es.ucm.pcr.beans.BusquedaLotesBean;
 import es.ucm.pcr.beans.BusquedaPlacasVisavetBean;
+import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteCentroBean;
@@ -53,6 +59,7 @@ import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.beans.BeanPlacaVisavetUCM;
 import es.ucm.pcr.beans.LotePlacaVisavetBean;
 import es.ucm.pcr.servicios.CentroServicio;
+import es.ucm.pcr.servicios.DocumentoServicio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 import es.ucm.pcr.servicios.LoteServicio;
@@ -60,6 +67,7 @@ import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
 import es.ucm.pcr.servicios.ServicioLotes;
 import es.ucm.pcr.servicios.SesionServicio;
+import es.ucm.pcr.validadores.DocumentoValidador;
 
 
 
@@ -83,6 +91,13 @@ public class LaboratorioVisavetUCMController {
     LaboratorioVisavetServicio laboratorioVisavetServicio;
     @Autowired
     MuestraServicio muestraServicio;
+    
+    @Autowired
+	private DocumentoValidador documentoValidador;
+    
+    @Autowired
+	private DocumentoServicio documentoServicio;
+    
 
 	@SuppressWarnings("unused")
 	private final static Logger log = LoggerFactory.getLogger(LaboratorioVisavetUCMController.class);
@@ -92,6 +107,12 @@ public class LaboratorioVisavetUCMController {
 	public void initBinder(WebDataBinder binder) {
 	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
 	    binder.registerCustomEditor(Date.class, editor);
+	}
+	
+	@InitBinder("elementoDoc")
+	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session)
+			throws Exception {
+		binder.setValidator(documentoValidador);
 	}
 
 private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes) throws Exception {
@@ -635,6 +656,56 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		if (busqueda ==null) busqueda=new BusquedaPlacasVisavetBean();
 		    return this.buscarPlacas(busqueda, request, session, pageable);
 		}
+		
+		
+		
+	// subida referencias
+	@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO')")
+	@RequestMapping(value = "/laboratorioUni/cargaReferencias", method = RequestMethod.GET)
+	public ModelAndView cargarResultadosPlacaLaboratorio(HttpSession session,
+			@RequestParam(value = "id", required = true) Integer id,
+			@RequestParam(value = "url", required = true) Integer url) throws Exception {
+		ModelAndView vista = new ModelAndView("VistaCargarReferencias");
+
+		// buscamos los documentos de la placa que sean de tipo RES (excel de
+		// resultados)
+		ElementoDocumentacionBean elementoDoc = documentoServicio.obtenerDocumentosPlacaVisavetConTipo(id,"REF");
+
+		elementoDoc.setCodiUrl(url);
+		elementoDoc.setUrlVolver("/laboratorioUni/buscarPlacas");
+		vista.addObject("elementoDoc", elementoDoc);
+		return vista;
+	}
+
+	@RequestMapping(value = "/laboratorioUni/guardarReferencias", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO')")
+	public ModelAndView guardarResultadosPlacaLaboratorio(
+			@Valid @ModelAttribute("elementoDoc") ElementoDocumentacionBean bean, BindingResult result,
+			RedirectAttributes redirectAttributes) throws Exception {
+		if (result.hasErrors()) {
+			ModelAndView vista = new ModelAndView("VistaCargarReferencias");
+			vista.addObject("elementoDoc", bean);
+			return vista;
+		} else {
+			System.out.println("El nombre de la hoja es: " + bean.getHoja());
+			System.out.println("El nombre de la columna es: " + bean.getColumna());
+			// guardamos el documento excel asociandolo a la placa
+			//documentoServicio.guardar(bean);
+			// guardamos las valoraciones de las muestras que ha puesto el analista en el
+			// excel y si es el ultimo analista de los numAnalistas globales de la
+			// aplicacion
+			// entonces guardamos el resultado definitivo
+//			laboratorioCentroServicio.guardarResultadosPlacaLaboratorio(bean, numAnalistas);
+		}
+
+		redirectAttributes.addFlashAttribute("mensaje", "Resultado guardado correctamente");
+		return new ModelAndView(new RedirectView(
+				"/laboratorioUni/cargaReferencias?id=" + bean.getId() + "&url=" + bean.getCodiUrl(), true));
+	}
+		
+		
+		
+		
 
 }
 
