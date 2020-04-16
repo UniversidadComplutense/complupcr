@@ -13,7 +13,7 @@ test:
     - produccion
   script:
     - echo "Testing PCR-Covid19"
-    - mvn --batch-mode test  
+    - mvn test  
 package:
   stage: package
   tags: 
