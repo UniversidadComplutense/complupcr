@@ -64,14 +64,14 @@ public class UsuarioControlador {
 		
 		// Bean para la busqueda de usuario
 		BeanBusquedaUsuario beanBusquedaUsuario = new BeanBusquedaUsuario();
-		beanBusquedaUsuario.setBusqueda("Introduzca email o primer apellido");
+		beanBusquedaUsuario.setBusqueda("Introduzca email o primer apellido para buscar");
 		vista.addObject("formBeanBusquedaUsuario", beanBusquedaUsuario);
 		
 		return vista;
 	}
 	
 	
-	//	Muestra una listan de usuarios según criterio de busqueda
+	//	Muestra una lista de usuarios según criterio de busqueda
 	@RequestMapping(value="/gestor/listaUsuarios", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView busquedaUsuario(
@@ -84,9 +84,15 @@ public class UsuarioControlador {
 			vista.addObject("mensajeError", mensajeError);
 			session.removeAttribute("mensajeError");
 		}
-		// cargo todos los usuarios de BBDD
+		// cargo todos los usuarios de BBDD por el criterio de busqueda
 		List<BeanUsuarioGestion> listaUsuarios = new ArrayList<BeanUsuarioGestion>();
 		listaUsuarios = usuarioServicio.listaUsuariosOrdenadaLikeEmailApellido1(beanBusquedaUsuario.getBusqueda());
+		if (listaUsuarios.isEmpty())
+		{
+			String mensaje = "No existen resultados para esa búsqueda";
+			vista.addObject("mensajeError", mensaje);
+			session.removeAttribute("mensajeError");
+		}
 		vista.addObject("listaUsuarios", listaUsuarios);
 		
 		return vista;

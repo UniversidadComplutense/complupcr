@@ -1,6 +1,7 @@
 package es.ucm.pcr.controladores;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,15 +20,18 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.ucm.pcr.beans.LogMuestraBusquedaBean;
 import es.ucm.pcr.beans.LogMuestraListadoBean;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteListadoBean;
+import es.ucm.pcr.beans.PaginadorBean;
 import es.ucm.pcr.servicios.LoteServicio;
 import es.ucm.pcr.servicios.ServicioLog;
 import es.ucm.pcr.servicios.SesionServicio;
+import es.ucm.pcr.utilidades.Utilidades;
 import es.ucm.pcr.validadores.LogMuestraValidador;
 
 @Controller
@@ -66,7 +70,7 @@ public class LogMuestraControlador {
 	}
 	
 	@RequestMapping(value="/log", method=RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR', 'AUDITOR')")
 	public ModelAndView buscador(HttpSession session) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaLogMuestraListado");
 	
@@ -77,7 +81,7 @@ public class LogMuestraControlador {
 	}
 	
 	@RequestMapping(value = "/log/list", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR', 'AUDITOR')")
 	public ModelAndView buscar(@Valid @ModelAttribute("beanBusqueda") LogMuestraBusquedaBean beanBusqueda, BindingResult result, HttpSession session) throws Exception {
 		
 		ModelAndView vista = new ModelAndView("VistaLogMuestraListado");
@@ -86,28 +90,38 @@ public class LogMuestraControlador {
 			
 		} else {		
 			session.setAttribute("beanBusqueda", beanBusqueda);
-			buscarMuestras(beanBusqueda, vista);
+			session.setAttribute("paginaActual", 1);
+			buscarMuestras(beanBusqueda, vista, session);
 		}
 		return vista;
 	}
 
 	@RequestMapping(value = "/log/list", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
-	public ModelAndView buscar(HttpSession session) throws Exception {
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR', 'AUDITOR')")
+	public ModelAndView buscar(HttpSession session, @RequestParam("pagina") Optional<Integer> page) throws Exception {
+		Integer currentPage = page.orElse(null);
+		currentPage = currentPage == null ? (session.getAttribute("paginaActual") != null ? (Integer)session.getAttribute("paginaActual") : 1) : page.get();
+		
 		ModelAndView vista = new ModelAndView("VistaLogMuestraListado");
 
 		LogMuestraBusquedaBean beanBusqueda = (LogMuestraBusquedaBean) session.getAttribute("beanBusqueda");
 		beanBusqueda = beanBusqueda != null ? beanBusqueda : new LogMuestraBusquedaBean();
+		session.setAttribute("paginaActual", currentPage);
 
-		buscarMuestras(beanBusqueda, vista);
+		buscarMuestras(beanBusqueda, vista, session);
 		return vista;
 	}
 
-	private void buscarMuestras(LogMuestraBusquedaBean beanBusqueda, ModelAndView vista) {
+	private void buscarMuestras(LogMuestraBusquedaBean beanBusqueda, ModelAndView vista, HttpSession session) {
+		Integer currentPage = (Integer)session.getAttribute("paginaActual");
+		
 		Page<LogMuestraListadoBean> muestrasPage = servicioLog.findLogMuestraByParam(beanBusqueda,
-				PageRequest.of(0, Integer.MAX_VALUE, ORDENACION));
+				PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION, ORDENACION));
 		vista.addObject("beanBusqueda", beanBusqueda);
 		vista.addObject("listadoLogMuestras", muestrasPage.getContent());
+		
+		PaginadorBean paginadorBean = new PaginadorBean(muestrasPage.getTotalPages(), currentPage, muestrasPage.getTotalElements(), "/gestor/log/list");		
+		vista.addObject("paginadorBean", paginadorBean);
 	}
 	
 }

@@ -9,6 +9,7 @@ public class DocumentoBusquedaBean {
 	private Integer idMuestra;
 	private Integer idPlacaLaboratorio;
 	private Integer idPlacaVisavet;
+	private String tipo;
 
 	public DocumentoBusquedaBean() {
 	}
@@ -68,5 +69,15 @@ public class DocumentoBusquedaBean {
 	public void setIdPlacaVisavet(Integer idPlacaVisavet) {
 		this.idPlacaVisavet = idPlacaVisavet;
 	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+	
+	
 
 }

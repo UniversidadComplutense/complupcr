@@ -51,18 +51,21 @@
 			</div>
 		</div>	
 		
+		<!-- PAGINACION -->
+		<object th:replace="fragmentos :: paginacion(${paginadorBean})" th:remove="tag"></object>
+		
 		<!-- RESULTADO -->
 		<div class="row justify-content-center mt-3">
 			<table class="table">
 				<thead class="thead-light">	
 	    			<tr>
-	    				<th scope="col">Etiqueta muestra</th>
-	    				<th scope="col">Centro salud</th>
-	      				<th scope="col">Paciente</th>
-	      				<th scope="col">NHC</th>	      				
-						<th scope="col">Estado</th>
-						<th scope="col">Autor</th>	
-						<th scope="col">Fecha</th>										
+	    				<th scope="col" width="14%">Etiqueta muestra</th>
+	    				<th scope="col" width="20%">Centro salud</th>
+	      				<th scope="col" width="20%">Paciente</th>
+	      				<th scope="col" width="8%">NHC</th>	      				
+						<th scope="col" width="12%">Estado</th>
+						<th scope="col" width="10%">Autor</th>	
+						<th scope="col" width="16%">Fecha</th>										
 					</tr>
 				</thead>
 				<tbody>
