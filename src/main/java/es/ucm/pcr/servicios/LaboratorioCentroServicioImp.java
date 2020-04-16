@@ -299,13 +299,15 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		
 		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
 
+		placa.setLaboratorioCentro(new LaboratorioCentro(sesionServicio.getUsuario().getIdLaboratorioCentro()));
+		
 		// Es una placa nueva
 		if (capacidadNuevaPlaca != 0) {
 			placa.setFechaCreacion(new Date());
-			placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_INICIADA.getCodNum()));
-			placa.setLaboratorioCentro(new LaboratorioCentro(sesionServicio.getUsuario().getIdLaboratorioCentro()));
+			placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_INICIADA.getCodNum()));			
 			placa = placaLaboratorioRepositorio.save(placa);
-		}		
+		}
+		
 		
 		Integer espacioLibreParaMuestras = this.espacioLibreParaMuestras(placaLaboratorioCentroBean, capacidadNuevaPlaca);
 		Integer sumaMuestrasPlacasVisavetSeleccionadas = 0;
