@@ -93,10 +93,10 @@ public class GestorCrudServiciosTests {
 			rol.setNombre("VOLUNTARIO");
 			rolServicio.save(rol);
 
-			rol = new Rol();
-			rol.setNombre("PRUEBAPARABORRAR");
-			rolServicio.save(rol);
-			rolServicio.deleteById(rol.getId());
+//			rol = new Rol();
+//			rol.setNombre("PRUEBAPARABORRAR");
+//			rolServicio.save(rol);
+//			rolServicio.deleteById(rol.getId());
 
 			List<BeanRol> listaRoles = rolServicio.generarListaRoles();
 			assertEquals(listaRoles.size(), 10, "Debería haber 10 roles y no es así.");
@@ -133,15 +133,15 @@ public class GestorCrudServiciosTests {
 			centro.setDireccion("Dirección demo");
 			centroServicio.save(centro);
 
-			centro = new Centro();
-			centro.setCodCentro("BORRAR");
-			centro.setNombre("Centro para borrar");
-			centro.setTelefono("111111111");
-			centro.setEmail("borrar@ucm.es");
-			centro.setDireccion("Hay que borrarlo");
-			centro = centroServicio.save(centro);
-
-			centroServicio.deleteById(centro.getId());
+//			centro = new Centro();
+//			centro.setCodCentro("BORRAR");
+//			centro.setNombre("Centro para borrar");
+//			centro.setTelefono("111111111");
+//			centro.setEmail("borrar@ucm.es");
+//			centro.setDireccion("Hay que borrarlo");
+//			centro = centroServicio.save(centro);
+//
+//			centroServicio.deleteById(centro.getId());
 
 			List<BeanCentro> listaCentros = centroServicio.listaCentrosOrdenada();
 			assertEquals(listaCentros.size(), 3, "Debería haber 3 centros de salud y no es así.");
@@ -167,12 +167,12 @@ public class GestorCrudServiciosTests {
 			labVisa.setCapacidad(50);
 			laboratorioVisavetServicio.save(labVisa);
 
-			labVisa = new LaboratorioVisavet();
-			labVisa.setNombre("Borrar");
-			labVisa.setCapacidad(20);
-			labVisa = laboratorioVisavetServicio.save(labVisa);
-
-			laboratorioVisavetServicio.deleteById(labVisa.getId());
+//			labVisa = new LaboratorioVisavet();
+//			labVisa.setNombre("Borrar");
+//			labVisa.setCapacidad(20);
+//			labVisa = laboratorioVisavetServicio.save(labVisa);
+//
+//			laboratorioVisavetServicio.deleteById(labVisa.getId());
 
 			List<BeanLaboratorioVisavet> listaLabsVisavet = laboratorioVisavetServicio
 					.listaLaboratoriosVisavetOrdenada();
@@ -197,11 +197,11 @@ public class GestorCrudServiciosTests {
 			labCentro.setNombre("Biología PCR");
 			laboratorioCentroServicio.save(labCentro);
 
-			labCentro = new LaboratorioCentro();
-			labCentro.setNombre("Borrar");
-			labCentro = laboratorioCentroServicio.save(labCentro);
-
-			laboratorioCentroServicio.deleteById(labCentro.getId());
+//			labCentro = new LaboratorioCentro();
+//			labCentro.setNombre("Borrar");
+//			labCentro = laboratorioCentroServicio.save(labCentro);
+//
+//			laboratorioCentroServicio.deleteById(labCentro.getId());
 
 			List<BeanLaboratorioVisavet> listaLabsVisavet = laboratorioVisavetServicio
 					.listaLaboratoriosVisavetOrdenada();

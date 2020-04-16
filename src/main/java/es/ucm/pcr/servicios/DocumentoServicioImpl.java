@@ -98,6 +98,25 @@ public class DocumentoServicioImpl implements DocumentoServicio {
 	}
 	
 	@Override
+	public ElementoDocumentacionBean obtenerDocumentosPlacaVisavetConTipo(Integer idPlacaVisavet, String tipo) {
+		ElementoDocumentacionBean elDoc = new ElementoDocumentacionBean();
+		PlacaVisavet placaVisavet = Optional.of(placaVisavetRepositorio.findById(idPlacaVisavet).get()).orElse(null);
+		elDoc.setId(placaVisavet.getId());
+		// TODO - ESTABLECER DESCRIPCION (pongo el id de la placa de momento, podemos poner lo que querais)
+		elDoc.setDescripcion("Placa "+placaVisavet.getId());
+		elDoc.setTipoElemento(ElementoDocumentacionBean.TIPO_ELEMENTO_PLACA_VISAVET);
+		elDoc.setTipo(tipo); //el tipo del doc que guardareemos será del mismo tipo que los doc que estamos buscando
+		
+		DocumentoBusquedaBean docBusquedaBean = new DocumentoBusquedaBean();
+		docBusquedaBean.setIdPlacaVisavet(idPlacaVisavet);
+		docBusquedaBean.setTipo(tipo); //buscamos los documentos de ese tipo
+		List<DocumentoBean> docsMuestra = findByParams(docBusquedaBean);
+		elDoc.setDocumentos(docsMuestra);
+		
+		return elDoc;
+	}
+	
+	@Override
 	public ElementoDocumentacionBean obtenerDocumentosPlacaLaboratorio(Integer idPlacaLaboratorio) {
 		ElementoDocumentacionBean elDoc = new ElementoDocumentacionBean();
 		PlacaLaboratorio placaLaboratorio = Optional.of(placaLaboratorioRepositorio.findById(idPlacaLaboratorio).get()).orElse(null);		

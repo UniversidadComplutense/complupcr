@@ -25,6 +25,14 @@ public interface DocumentoServicio {
 	public ElementoDocumentacionBean obtenerDocumentosPlacaVisavet(Integer idPlacaVisavet);
 	
 	/**
+	 * Elemento y documentos placa laboratorio que son de un tipo
+	 * @param idPlacaLaboratorio
+	 * @param tipo
+	 * @return
+	 */
+	public ElementoDocumentacionBean obtenerDocumentosPlacaVisavetConTipo(Integer idPlacaLaboratorio, String tipo);
+	
+	/**
 	 * Elemento y documentos placa laboratorio
 	 * @param idPlacaLaboratorio
 	 * @return
