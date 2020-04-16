@@ -365,18 +365,20 @@
 									th:value="${var.id}" th:text="${var.nombre}"
 									th:select="${busqueda.idLaboratorioCentro}">Laboratorio</option>
 				</select>
+				<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
 				<div id="capaMuestrasMostrar">
 				<div id="capaFechaEnvio" style="display:none;"><label class="col-xs-2">Fecha de Envio: </label><span id="fechaEnvioModal"></span></div>
+				
 				<table class="col-xs-12 table" th:id="tablaLaboratorios" >
-				  <thead><tr><th scope="col">Nombre</th><th scope="col">Nº de equipos</th><th scope="col">Placas a la espera</th>
-				  </tr>
+				  <thead class="thead-light"><th  scope="col">Nombre</th><th  scope="col">Nº de equipos</th><th  scope="col">Placas a la espera</th>
+				 
 				  </thead>
 				  <tbody>
 					 <tr id="trLaboratorio">	</tr>
-			     <tr id="trLaboratorio"  th:each="laboratorio, count : ${laboratorios}">
-			      <td><span th:text="${laboratorio.nombre}"></td>
-			             <td><span th:text="${#lists.size(laboratorio.equipos)}"></td>
-				         <td><span th:text="${#strings.toString(laboratorio.placasVisavetaLaEspera)}"></td>
+			     <tr id="trLaboratorio"  th:each="laboratorio, count : ${laboratorios}" >
+			      <td th:class="${#lists.size(laboratorio.equipos)<laboratorio.placasVisavetaLaEspera}? 'filaRed': 'filaVerde'"><span th:text="${laboratorio.nombre}"></td>
+			             <td th:class="${#lists.size(laboratorio.equipos)<laboratorio.placasVisavetaLaEspera}? 'filaRed': 'filaVerde'"><span th:text="${#lists.size(laboratorio.equipos)}"></td>
+				         <td th:class="${#lists.size(laboratorio.equipos)<laboratorio.placasVisavetaLaEspera}? 'filaRed': 'filaVerde'"><span th:text="${#strings.toString(laboratorio.placasVisavetaLaEspera)}"></td>
 				      </tr>  
 				    </tbody>  
 				</table>
