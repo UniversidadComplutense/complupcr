@@ -56,3 +56,36 @@ fieldset legend {
   	background-color: #6c757d !important; 
   	border-color: #6c757d !important; 
 }
+.border-table{
+	background: #eee;
+	border-top: solid 2px #fd7e14;
+	width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+	
+}
+.border-tableMuestras{
+	
+	border-top: solid 2px #fd7e14;
+	border-left: solid 1px #fd7e14;
+	border-bottom: solid 1px #fd7e14;
+	border-right: solid 1px #fd7e14;
+	width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+	
+}
+.border-tableMuestras thead{
+	background: #eee;
+}
+.tablaMuestrasPlacas{
+	border:0px;
+}
+.tableLotes tr, .tableLotes th {
+   
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+.trGroupLotes:hover{
+	background: #F4F4F4;
+}

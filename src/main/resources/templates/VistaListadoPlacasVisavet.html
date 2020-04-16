@@ -74,37 +74,35 @@
 						</div> -->  
                  </div>  
 
-        <div class="row justify-content-end mt-3">
-			<div class="col-2">
-			 <button type="submit"  class="btn btn-secondary">Buscar</button>
-			
-			<!--  <button type="button" th:onClick="|buscarResultados('lote','DESC','2','20'); return false|"  class="btn btn-secondary">Buscar</button>-->
+      
+		</fieldset>
+		   <div class="row justify-content-end mt-2">
+			<div class="col-1">
+				 <button type="submit"  class="btn btn-secondary">Buscar</button>
 			</div>
 		</div>	
-		</fieldset>
-		
 		</form>
 		<!-- </div> -->
 		
 		<!-- Aqui vienen los resultados -->
-		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
-<!--	<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	-->
+	<!--	<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
+	<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	-->
 		<div id="capaResultados" 
-			class="row formPnl1"  th:unless="${(pagina == null)}">
+			class="row justify-content-center mt-3"  th:unless="${(pagina == null)}">
 		 	<table class="col-xs-12 table" th:id="tablaResultados" >
 			 <thead class="thead-light">
 				<tr>
 				    
-					<th scope="col">#Placa</th>
-					<th scope="col">F. Creación</th>
-					<th scope="col">#Lotes</th>
-					<th scope="col">Nº Muestras</th>
-				    <th scope="col">Estado</th>
-				    <th scope="col">Acciones</th>
+					<th class="p-1" scope="col">#Placa</th>
+					<th class="p-1" scope="col">F. Creación</th>
+					<th class="p-1" scope="col">#Lotes</th>
+					<th class="p-1" scope="col">Nº Muestras</th>
+				    <th class="p-1" scope="col">Estado</th>
+				    <th class="p-1" scope="col">Acciones</th>
 				</tr>
 				</thead>
 				<tbody>	
-			 	<tr th:id="trGroup+${count.index}"  th:each="unResultado,count : ${pagina.getContent()}">
+			 	<tr th:id="trGroup+${count.index}"  th:each="unResultado,count : ${pagina.getContent()}" class="trGroupLotes">
 					<td><span th:text="${unResultado.id}"></span></td>
 					<td><span th:text="${#dates.format(unResultado.fechaCreacion, 'dd/MM/yyyy')}"></span></td>
                     <td> <!-- ${unResultado.listaLotes}">  -->
@@ -112,7 +110,8 @@
                             <input type="text" id="lote+${count.index}" th:value="${lote.id}"/>
                             </p>
                             <a data-toggle="modal" data-target="#modalConsultarLotes" th:attr="data-target='#modalConsultarLotes'+${unResultado.id}" style="cursor: pointer;" title="Ver lotes">                                                 
-                    <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i><span th:text="${#lists.size(unResultado.listaLotes)}"></span>	
+                    <i class="fa fa-dropbox" aria-hidden="true" style="font-size: 1.2em;"></i><span th:text="${#lists.size(unResultado.listaLotes)}"></span>	
+                     
                        </a>
                        
                            <!--  un modal -->
@@ -212,6 +211,7 @@
 						<span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
 					</td>
 					<td>	
+					
 						<a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}"  th:data-id="${unResultado.id}" onclick="procesarLotesDesdePlacas(this.getAttribute('data-id'))">
 						     <i class="fa fa-edit" title="Modificar placa" aria-hidden="true" style="font-size: 1.2em;"></i>
 						</a>
@@ -224,7 +224,9 @@
 					  	<i class="fa fa-share-square" title="Confirmar Enviada" aria-hidden="true" style="font-size: 1.2em;"></i>
 						</a>
 						<i th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}"  class="fa fa-share-square" title="Confirmar Enviada" aria-hidden="true"  style="font-size: 1.2em;color:grey;"></i>
-						
+						 <a style="color:black;cursor: pointer;" th:href="@{/documento/placaVisavet(id=${unResultado.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_PLACA_VISAVET_DESDE})}" title="Documentos">
+						       <i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;"></i>
+						     </a>
                     </td>		  
 					</tr>	
 				</tbody>		

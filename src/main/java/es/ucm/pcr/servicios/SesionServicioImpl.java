@@ -1,15 +1,18 @@
 package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.MenuBean;
@@ -32,6 +35,9 @@ public class SesionServicioImpl implements SesionServicio {
 	
 	@Autowired
 	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
+	
+	@Autowired
+	Environment environment;
 
 	@Override
 	public Usuario getUsuario() {
@@ -39,8 +45,15 @@ public class SesionServicioImpl implements SesionServicio {
 		if (authentication == null) {
 			return null;
 		}
-		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
-		return ud.getUsuario();
+		List<String> perfilesEjecucionActivos = Arrays.asList(environment.getActiveProfiles());
+		if (perfilesEjecucionActivos.contains("test")) {
+			UserDetails ud = (UserDetails) authentication.getPrincipal();
+			Usuario usu = usuarioServicio.findByEmail(ud.getUsername());
+			return usu;
+		} else {
+			PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
+			return ud.getUsuario();
+		}
 	}
 
 	@Override
@@ -78,8 +91,16 @@ public class SesionServicioImpl implements SesionServicio {
 	@Transactional
 	public Centro getCentro() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
-		return ud.getUsuario().getCentro();
+		List<String> perfilesEjecucionActivos = Arrays.asList(environment.getActiveProfiles());
+		if (perfilesEjecucionActivos.contains("test")) {
+			UserDetails ud = (UserDetails) authentication.getPrincipal();
+			Usuario usu = usuarioServicio.findByEmail(ud.getUsername());
+			return usu.getCentro();
+		} else {
+			PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
+			return ud.getUsuario().getCentro();
+		}
+		
 	}
 
 	@Override
@@ -156,6 +177,14 @@ public class SesionServicioImpl implements SesionServicio {
 			opcionPrincipal = new MenuBean("Analista", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
+//		AUDITOR
+			if (this.tieneRol("ADMIN") || this.tieneRol("AUDITOR")) {
+				menuSecundario = new ArrayList<MenuBean>();
+				opcionSecundaria = new MenuBean("Consulta log muestras","/gestor/log",null);
+				menuSecundario.add(opcionSecundaria);
+				opcionPrincipal = new MenuBean("Auditor", "", menuSecundario);
+				menuPrincipal.add(opcionPrincipal);
+			}
 //	GESTOR
 		if (this.tieneRol("ADMIN") || this.tieneRol("GESTOR")) {
 			menuSecundario = new ArrayList<MenuBean>();
@@ -166,8 +195,6 @@ public class SesionServicioImpl implements SesionServicio {
 			opcionSecundaria = new MenuBean("Laboratorios Visavet","/gestor/listaLaboratorioVisavet",null);
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Usuarios","/gestor/listaUsuarios",null);
-			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Consulta log muestras","/gestor/log",null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Gestor", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);

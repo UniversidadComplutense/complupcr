@@ -114,7 +114,7 @@
 				</thead>
 				
 						
-			 	<tr id="trGroup+${count.index}"  th:each="unResultado,count : ${paginaLotes.getContent()}">
+			 	<tr id="trGroup+${count.index}"  th:each="unResultado,count : ${paginaLotes.getContent()}" class="trGroupLotes">
 					
 				    <td>
 						<input th:if="${busquedaLotes.mostrarProcesar}" type="checkbox" name="seleccionado" th:disabled="${#strings.toString(unResultado.estado.Estado) != 'LOTE_RECIBIDO_CENTRO_ANALISIS'}" th:id="seleccionado+${count.index}" th:value="${unResultado.id}" onClick="habilitarBotonProcesar();"/>

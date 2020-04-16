@@ -98,4 +98,6 @@ public interface MuestraRepositorio extends PagingAndSortingRepository<Muestra, 
 	
 	Optional<Muestra> findById(Integer id);
 	
+	Optional<Muestra> findByRefInternaVisavet(String refInternaVisavet);
+	
 }

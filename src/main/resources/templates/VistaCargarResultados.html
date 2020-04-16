@@ -55,19 +55,21 @@
 						Hoja 															
 					</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="*{hoja}"  th:value="*{hoja}" required maxlength="45"/>
+				 	<label class="alert alert-danger" th:if="${#fields.hasErrors('hoja')}" th:errors="*{hoja}"></label>
 				</div>
 				<div class="col-3 m-0 form-group">
 					<label>
 						Título columna 															
 					</label>
 				 	<input type="text" class="form-control form-control-sm" th:field="*{columna}"  th:value="*{columna}" required maxlength="45"/>
+				 	<label class="alert alert-danger" th:if="${#fields.hasErrors('columna')}" th:errors="*{columna}"></label>
 				</div>														
 				<div class="col-4 m-0 form-group">
 					<label>Documento</label>
 					<div class="custom-file">
 					    <input type="file" onchange="validarFichero(this)" required class="custom-file-input form-control-sm" th:field="*{file}"  th:value="*{file}" accept=".pdf, .doc, .docx, .jpg, .jpeg, .png">
 					    <label class="custom-file-label" for="file">Seleccionar fichero</label>
-					    <label class="text-warning" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></label>
+					    <label class="alert alert-danger" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></label>
 					    <label id="labelError" class="text-warning d-none"></label>
 					</div>
 				</div>					
@@ -111,9 +113,9 @@
 							<a style="color:black;cursor: pointer;" th:href="@{/documento/descargar(id=${doc.id})}" title="Descargar">
 					          	<i class="fa fa-download" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
-					        <a style="color:black;cursor: pointer;" th:href="@{/documento/borrar(idDoc=${doc.id}, id=*{id}, tipoElemento=*{tipoElemento}, url=*{codiUrl})}" title="Borrar">
+					        <!-- <a style="color:black;cursor: pointer;" th:href="@{/documento/borrar(idDoc=${doc.id}, id=*{id}, tipoElemento=*{tipoElemento}, url=*{codiUrl})}" title="Borrar">
 					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
-					        </a>					        
+					        </a> -->					        
 						</td>						
 					</tr>		
 				</tbody>
