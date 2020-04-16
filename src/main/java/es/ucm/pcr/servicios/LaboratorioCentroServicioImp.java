@@ -307,23 +307,13 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	}
 	
 	// JAVI
-	// Si la placa es de nueva creación, pasamos por parámetro la capacidad que tendrá la misma, y en caso contrario pasamos un cero.
+	// Si la placa es de nueva creación, pasamos por parámetro la capacidad que tendrá la misma, y si no es nueva pasamos un cero.
 	@Override
 	@Transactional
-	public PlacaLaboratorioCentroBean rellenarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception {		
+	public boolean esRellenable(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception {		
 		
 		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
 
-		placa.setLaboratorioCentro(new LaboratorioCentro(sesionServicio.getUsuario().getIdLaboratorioCentro()));
-		
-		// Es una placa nueva
-		if (capacidadNuevaPlaca != 0) {
-			placa.setFechaCreacion(new Date());
-			placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_INICIADA.getCodNum()));			
-			placa = placaLaboratorioRepositorio.save(placa);
-		}
-		
-		
 		Integer espacioLibreParaMuestras = this.espacioLibreParaMuestras(placaLaboratorioCentroBean, capacidadNuevaPlaca);
 		Integer sumaMuestrasPlacasVisavetSeleccionadas = 0;
 		
@@ -342,10 +332,33 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 					}
 				}
 			}
-		}
+		}		
+		return espacioLibreParaMuestras >= sumaMuestrasPlacasVisavetSeleccionadas;		
+	}
+	
+	// JAVI
+	// Si la placa es de nueva creación, pasamos por parámetro la capacidad que tendrá la misma, y si no es nueva pasamos un cero.
+	@Override
+	@Transactional
+	public PlacaLaboratorioCentroBean rellenarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception {		
+		
+		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
+
+		placa.setLaboratorioCentro(new LaboratorioCentro(sesionServicio.getUsuario().getIdLaboratorioCentro()));
+		
+		// Es una placa nueva
+		if (capacidadNuevaPlaca != 0) {
+			placa.setFechaCreacion(new Date());
+			placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_INICIADA.getCodNum()));			
+			placa = placaLaboratorioRepositorio.save(placa);
+		}		
 		
 		// Asignamos las placas Visavet si hay espacio en la placa de laboratorio
-		if (espacioLibreParaMuestras >= sumaMuestrasPlacasVisavetSeleccionadas) {
+		if (this.esRellenable(placaLaboratorioCentroBean, capacidadNuevaPlaca)) {
+			
+			// Transformamos el String que viene de la vista, en un Array de Strings con los IDs de las placas Visavet seleccionadas
+			String[] listaIDsPlacasVisavetSeleccinadas = placaLaboratorioCentroBean.getPlacasVisavetSeleccionadas().split(":");
+			
 			if (listaIDsPlacasVisavetSeleccinadas.length > 0) {
 				
 				Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>();
