@@ -1,6 +1,5 @@
 package es.ucm.pcr.controladores;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -9,6 +8,10 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,12 +24,14 @@ import org.springframework.web.servlet.view.RedirectView;
 import es.ucm.pcr.beans.BeanBusquedaUsuario;
 import es.ucm.pcr.beans.BeanRol;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
+import es.ucm.pcr.beans.PaginadorBean;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.servicios.CentroServicio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 import es.ucm.pcr.servicios.RolServicio;
 import es.ucm.pcr.servicios.UsuarioServicio;
+import es.ucm.pcr.utilidades.Utilidades;
 
 @Controller
 public class UsuarioControlador {
@@ -46,11 +51,26 @@ public class UsuarioControlador {
 	@Autowired
 	CentroServicio centroServicio;
 	
+	public static final Sort ORDENACION = Sort.by(Direction.ASC, "apellido1", "apellido2", "nombre");
+	
+	@RequestMapping(value = "/gestor/lista", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
+	public ModelAndView buscador(HttpSession session) throws Exception {
+		ModelAndView vista = new ModelAndView("VistaGestionUsuario");
+
+		BeanBusquedaUsuario beanBusquedaUsuario = new BeanBusquedaUsuario();
+		vista.addObject("formBeanBusquedaUsuario", beanBusquedaUsuario);
+		return vista;
+	}
+	
 	//	Muestra una lista ordenada ap1, ap2,nombre con los usuarios
 	// Punto de entrada a la gestión de usuarios
 	@RequestMapping(value="/gestor/listaUsuarios", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
-	public ModelAndView GestionUsuario(HttpSession session) throws Exception {
+	public ModelAndView GestionUsuario(HttpSession session, @RequestParam("pagina") Optional<Integer> page) throws Exception {
+		Integer currentPage = page.orElse(null);
+		currentPage = currentPage == null ? (session.getAttribute("paginaActual") != null ? (Integer)session.getAttribute("paginaActual") : 1) : page.get();
+		
 		ModelAndView vista = new ModelAndView("VistaGestionUsuario");
 		String mensajeError = (String) session.getAttribute("mensajeError");
 		if (mensajeError != null) {
@@ -58,14 +78,18 @@ public class UsuarioControlador {
 			session.removeAttribute("mensajeError");
 		}
 		// cargo todos los usuarios de BBDD
-		List<BeanUsuarioGestion> listaUsuarios = new ArrayList<BeanUsuarioGestion>();
-		listaUsuarios = usuarioServicio.listaUsuariosOrdenada();
-		vista.addObject("listaUsuarios", listaUsuarios);
+		
+		BeanBusquedaUsuario beanBusqueda = (BeanBusquedaUsuario) session.getAttribute("formBeanBusquedaUsuario");
+		beanBusqueda = beanBusqueda != null ? beanBusqueda : new BeanBusquedaUsuario();
+		
+		Page<BeanUsuarioGestion> usuariosPage = usuarioServicio.findUsuarioByParam(beanBusqueda, PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION_USUARIO, ORDENACION));
+		vista.addObject("listaUsuarios", usuariosPage.getContent());
+		PaginadorBean paginadorBean = new PaginadorBean(usuariosPage.getTotalPages(), currentPage, usuariosPage.getTotalElements(), "/gestor/listaUsuarios");		
+		vista.addObject("paginadorBean", paginadorBean);
+		session.setAttribute("paginaActual", currentPage);
 		
 		// Bean para la busqueda de usuario
-		BeanBusquedaUsuario beanBusquedaUsuario = new BeanBusquedaUsuario();
-		beanBusquedaUsuario.setBusqueda("Introduzca email o primer apellido para buscar");
-		vista.addObject("formBeanBusquedaUsuario", beanBusquedaUsuario);
+		vista.addObject("formBeanBusquedaUsuario", beanBusqueda);
 		
 		return vista;
 	}
@@ -85,15 +109,16 @@ public class UsuarioControlador {
 			session.removeAttribute("mensajeError");
 		}
 		// cargo todos los usuarios de BBDD por el criterio de busqueda
-		List<BeanUsuarioGestion> listaUsuarios = new ArrayList<BeanUsuarioGestion>();
-		listaUsuarios = usuarioServicio.listaUsuariosOrdenadaLikeEmailApellido1(beanBusquedaUsuario.getBusqueda());
-		if (listaUsuarios.isEmpty())
-		{
-			String mensaje = "No existen resultados para esa búsqueda";
-			vista.addObject("mensajeError", mensaje);
-			session.removeAttribute("mensajeError");
-		}
-		vista.addObject("listaUsuarios", listaUsuarios);
+		
+		session.setAttribute("formBeanBusquedaUsuario", beanBusquedaUsuario);
+		
+		Integer currentPage = 1;
+		Page<BeanUsuarioGestion> usuariosPage = usuarioServicio.findUsuarioByParam(beanBusquedaUsuario, PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION_USUARIO, ORDENACION));
+		session.setAttribute("paginaActual", currentPage);
+		
+		vista.addObject("listaUsuarios", usuariosPage.getContent());
+		PaginadorBean paginadorBean = new PaginadorBean(usuariosPage.getTotalPages(), currentPage, usuariosPage.getTotalElements(), "/gestor/listaUsuarios");		
+		vista.addObject("paginadorBean", paginadorBean);
 		
 		return vista;
 	}

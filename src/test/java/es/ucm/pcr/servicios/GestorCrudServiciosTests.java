@@ -14,6 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.ActiveProfiles;
 
 import es.ucm.pcr.beans.BeanCentro;
@@ -25,6 +29,7 @@ import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
+import es.ucm.pcr.utilidades.Utilidades;
 
 @ActiveProfiles(profiles = "test")
 @SpringBootTest
@@ -277,8 +282,8 @@ public class GestorCrudServiciosTests {
 			Optional<LaboratorioVisavet> labUsug1 = usuarioServicio.getLaboratorioVisavet(usug1);
 			assertEquals("Visavet",labUsug1.get().getNombre(),"El usuario admin1 debería estar asignado al laboratorio visavet \"Visavet\" y no es asi");
 
-			List<BeanUsuarioGestion> listaUsus = usuarioServicio.listaUsuariosOrdenada();
-			assertEquals(2, listaUsus.size(),"Debería haber 2 usuario y hay " + listaUsus.size());
+			Page<BeanUsuarioGestion> listaUsus = usuarioServicio.listaUsuariosOrdenada(PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Direction.ASC, "apellido1", "apellido2", "nombre")));
+			assertEquals(2, listaUsus.getContent().size(),"Debería haber 2 usuario y hay " + listaUsus.getContent().size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Falló la prueba de inicialización básica de Usuarios.");

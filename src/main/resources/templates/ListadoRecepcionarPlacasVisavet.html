@@ -57,12 +57,14 @@
 		
 		
 		<!-- ACCIONES -->
-		<div class="row justify-content-center mt-3">		
-			<div class="col-2 justify-content-end mt-3">
+		<div class="row justify-content-end mt-2">		
+			<div class="col-1">
 				<button type="submit" class="btn btn-secondary">Buscar</button>
 			</div>
 		</div>	
 		
+		<!-- PAGINACION -->
+		<object th:replace="fragmentos :: paginacion(${paginadorBean})" th:remove="tag"></object>
 
 		<!-- RESULTADO -->
 		<div class="row justify-content-center mt-3">

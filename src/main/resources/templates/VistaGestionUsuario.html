@@ -29,29 +29,69 @@
 				<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
+				
+		<!-- CRITERIOS BUSQUEDA USUARIO -->
+		<fieldset id="datosBusqueda" class="form-group border p-2 m-1">
+			<legend class="w-auto font-weight-bold m-0">Datos usuario</legend>
+			<div class="row">
+				<div class="col-3 m-0 form-group">
+					<label >Nombre</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{nombre}"  th:value="*{nombre}" maxlength="100"/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></label>
+				</div>
+				
+				<div class="col-3 m-0 form-group">
+					<label >Primer apellido</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{apellido1}"  th:value="*{apellido1}" maxlength="100"/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('apellido1')}" th:errors="*{apellido1}"></label>
+				</div>	
+				<div class="col-3 m-0 form-group">
+					<label >Segundo apellido</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{apellido2}"  th:value="*{apellido2}" maxlength="100"/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('apellido2')}" th:errors="*{apellido2}"></label>
+				</div>			
+			</div>	
+			<div class="row">
+				<div class="col-3 m-0 form-group">
+					<label >Email</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{email}"  th:value="*{email}" maxlength="100"/>
+				 	<label class="text-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></label>
+				</div>					
+			</div>			
+		</fieldset>
+		
+		<!-- 
 		<div class="row justify-content-middle m-2">
-			<div class="col-2">
-				<a th:href="@{/gestor/altaUsuario}" class="btn btn-secondary eBtn">Nuevo usuario</a>
-			</div>
-<!--  			<div class="col-3">
-				<label class="text_formulario">Introduzca email o primer apellido</label>			
- 			</div>  -->
+			
 			<div class="offset-3 col-5">
 				<input type="text" class="form-control", th:field="${formBeanBusquedaUsuario.busqueda}"
 					th:value="${formBeanBusquedaUsuario.busqueda}" id="BUSQUEDA" onFocus="vaciar(this)"/>
 			</div>
-			<div class="col-2">
-				<button type="submit" class="btn btn-secondary eBtn">Busqueda</button>
+			
+		</div> -->
+		
+		<div class="row justify-content-end mt-2">
+			<div class="col-1">
+				<a th:href="@{/gestor/altaUsuario}" class="btn btn-secondary eBtn">Nuevo</a>
+			</div>
+			<div class="col-1">
+				<button type="submit" class="btn btn-secondary eBtn">Buscar</button>
 			</div>
 		</div>
+		
+		
+		<!-- PAGINACION -->
+		<object th:replace="fragmentos :: paginacion(${paginadorBean})" th:remove="tag"></object>
+		
 		<div class="row justify-content-center mt-3">
 			<table class="table">
 				<thead class="thead-light">
 					<tr>
-						<th class="p-1" scope="col">Nombre</th>
-						<th class="p-1" scope="col">Primer apellido</th>
-						<th class="p-1" scope="col">Segundo apellido</th>
-						<th class="p-1" scope="col">Acciones</th>
+						<th class="p-1" scope="col" width="25%">Nombre</th>
+						<th class="p-1" scope="col" width="25%">Primer apellido</th>
+						<th class="p-1" scope="col" width="25%">Segundo apellido</th>
+						<th class="p-1" scope="col" width="20%">Email</th>
+						<th class="p-1" scope="col" width="5%">Acciones</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -59,6 +99,7 @@
 						<td class="p-1" th:text="${users.nombre}"></td>
 						<td class="p-1" th:text="${users.apellido1}"></td>
 						<td class="p-1" th:text="${users.apellido2}"></td>
+						<td class="p-1" th:text="${users.email}"></td>
 						<td class="p-1"><a style="color: black"
 							th:href="@{/gestor/editarUsuario(idUsuario=${users.id})}"
 							title="Editar"> <i class="fa fa-edit" aria-hidden="true"
