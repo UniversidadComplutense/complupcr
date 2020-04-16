@@ -27,8 +27,11 @@ import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraListadoBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
+import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.modelo.orm.EstadoLote;
+import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
@@ -59,6 +62,8 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	
 	@Autowired
 	SesionServicio sesionServicio;
+	@Autowired
+	private ServicioLog servicioLog;
 	@Autowired
 	private LoteRepositorio loteRepositorio;
 	public Page<LoteBeanPlacaVisavet> buscarLotes(BusquedaLotesBean busquedaLotes, Pageable pageable){
@@ -138,7 +143,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		
 		return paginasPlacas;
 	}
-	
+	@Transactional
 	public BeanPlacaVisavetUCM guardar(BeanPlacaVisavetUCM beanPlacaVisavetUCM) {
 	
 		PlacaVisavet placa = BeanPlacaVisavetUCM.beanToModel(beanPlacaVisavetUCM);						
@@ -157,12 +162,21 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	        		 placa=placaBBDDOpt.get();
 					 placa.setEstadoPlacaVisavet(new EstadoPlacaVisavet(beanPlacaVisavetUCM.getEstado().getEstado().getCodNum()));
 					 if (beanPlacaVisavetUCM.getFechaEnviadaLaboratorio()!= null)placa.setFechaEnviadaLaboratorioCentro(beanPlacaVisavetUCM.getFechaEnviadaLaboratorio());
-				
+				    
 	        	// Placa nueva
 	        }
 		}
 		placa.setLaboratorioVisavet(new LaboratorioVisavet(sesionServicio.getUsuario().getIdLaboratorioVisavet()));
 		placa = placaVisavetRepositorio.save(placa);
+		// si el estado de la placa es FINALIZADA grabamos en el log
+		if (placa.getEstadoPlacaVisavet().getId() == Estado.PLACAVISAVET_FINALIZADA.getCodNum()) {
+			
+			//guardo en el log
+			BeanEstado estado=new BeanEstado();
+		    estado.setEstado(Estado.MUESTRA_ASIGNADA_LOTE);
+		    estado.setTipoEstado(TipoEstado.EstadoMuestra);
+			servicioLog.actualizarEstadoMuestraPorPlacaVisavet(placa.getId(), estado);
+		}
 		return BeanPlacaVisavetUCM.modelToBean(placa);
 
 	}

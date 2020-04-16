@@ -373,7 +373,7 @@ var respuesta=true;
 		if ($("#ref"+muestra+"_"+j).val().trim() == "") { 
 			respuesta=false;
 			$("#mensaje"+muestra+"_"+j).show();
-		
+		    $("#muestra"+muestra).show();
 		}
 	
 	 }
