@@ -14,6 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.ActiveProfiles;
 
 import es.ucm.pcr.beans.BeanCentro;
@@ -25,6 +29,7 @@ import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
+import es.ucm.pcr.utilidades.Utilidades;
 
 @ActiveProfiles(profiles = "test")
 @SpringBootTest
@@ -49,60 +54,9 @@ public class GestorCrudServiciosTests {
 	@Autowired
 	UsuarioServicio usuarioServicio;
 
+	
 	@Test
-	@Order(2)
-	public void inicializacionBasicaRoles() throws Exception {
-		try {
-			// Los estado de lote, placa, muestra, placalaboratorio y placa visavet se
-			// precargan desde src/test/resources/data.sql
-
-			// Damos de alta los roles
-			Rol rol = new Rol();
-			rol.setNombre("ADMIN");
-			rolServicio.save(rol);
-			rol = new Rol();
-			rol.setNombre("GESTOR");
-			rolServicio.save(rol);
-			rol = new Rol();
-			rol.setNombre("CENTROSALUD");
-			rolServicio.save(rol);
-			rol = new Rol();
-			rol.setNombre("RECEPCIONLABORATORIO");
-			rolServicio.save(rol);
-			rol = new Rol();
-			rol.setNombre("TECNICOLABORATORIO");
-			rolServicio.save(rol);
-			rol = new Rol();
-			rol.setNombre("RESPONSANBLEPCR");
-			rolServicio.save(rol);
-			rol = new Rol();
-			rol.setNombre("JEFESERVICIO");
-			rolServicio.save(rol);
-			rol = new Rol();
-			rol.setNombre("ANALISTALABORATORIO");
-			rolServicio.save(rol);
-			rol = new Rol();
-			rol.setNombre("AUDITOR");
-			rolServicio.save(rol);
-			rol = new Rol();
-			rol.setNombre("VOLUNTARIO");
-			rolServicio.save(rol);
-
-			rol = new Rol();
-			rol.setNombre("PRUEBAPARABORRAR");
-			rolServicio.save(rol);
-			rolServicio.deleteById(rol.getId());
-
-			List<BeanRol> listaRoles = rolServicio.generarListaRoles();
-			assertEquals(listaRoles.size(), 10, "Debería haber 10 roles y no es así.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Falló la prueba de inicialización básica de roles.");
-		}
-	}
-
-	@Test
-	@Order(3)
+	@Order(1)
 	public void inicializacionBasicaCentrosSalud() throws Exception {
 		try {
 			// Damos de alta centros
@@ -127,19 +81,10 @@ public class GestorCrudServiciosTests {
 			centro.setEmail("centroDemo@ucm.es");
 			centro.setDireccion("Dirección demo");
 			centroServicio.save(centro);
-
-			centro = new Centro();
-			centro.setCodCentro("BORRAR");
-			centro.setNombre("Centro para borrar");
-			centro.setTelefono("111111111");
-			centro.setEmail("borrar@ucm.es");
-			centro.setDireccion("Hay que borrarlo");
-			centro = centroServicio.save(centro);
-
-			centroServicio.deleteById(centro.getId());
-
-			List<BeanCentro> listaCentros = centroServicio.listaCentrosOrdenada();
-			assertEquals(listaCentros.size(), 3, "Debería haber 3 centros de salud y no es así.");
+			
+			Optional<Centro> oCentroPru = centroServicio.findByCodCentro("DEMO");
+			assertEquals("centroDemo@ucm.es", oCentroPru.get().getEmail());
+			
 		} catch (
 
 		Exception e) {
@@ -149,7 +94,7 @@ public class GestorCrudServiciosTests {
 	}
 
 	@Test
-	@Order(4)
+	@Order(2)
 	public void inicializacionBasicaLaboratoriosVisavet() throws Exception {
 		try {
 			// Damos de alta laboratorios Visavet
@@ -162,16 +107,9 @@ public class GestorCrudServiciosTests {
 			labVisa.setCapacidad(50);
 			laboratorioVisavetServicio.save(labVisa);
 
-			labVisa = new LaboratorioVisavet();
-			labVisa.setNombre("Borrar");
-			labVisa.setCapacidad(20);
-			labVisa = laboratorioVisavetServicio.save(labVisa);
+			Optional<LaboratorioVisavet> opLab = laboratorioVisavetServicio.findByNombre("Visavet");
+			assertEquals(100, opLab.get().getCapacidad());
 
-			laboratorioVisavetServicio.deleteById(labVisa.getId());
-
-			List<BeanLaboratorioVisavet> listaLabsVisavet = laboratorioVisavetServicio
-					.listaLaboratoriosVisavetOrdenada();
-			assertEquals(listaLabsVisavet.size(), 2, "Debería haber 2 laboratorios visavet y no es así.");
 		} catch (
 
 		Exception e) {
@@ -181,7 +119,7 @@ public class GestorCrudServiciosTests {
 	}
 
 	@Test
-	@Order(5)
+	@Order(3)
 	public void inicializacionBasicaLaboratoriosCentro() throws Exception {
 		try {
 			// Damos de alta laboratorios Visavet
@@ -192,15 +130,6 @@ public class GestorCrudServiciosTests {
 			labCentro.setNombre("Biología PCR");
 			laboratorioCentroServicio.save(labCentro);
 
-			labCentro = new LaboratorioCentro();
-			labCentro.setNombre("Borrar");
-			labCentro = laboratorioCentroServicio.save(labCentro);
-
-			laboratorioCentroServicio.deleteById(labCentro.getId());
-
-			List<BeanLaboratorioVisavet> listaLabsVisavet = laboratorioVisavetServicio
-					.listaLaboratoriosVisavetOrdenada();
-			assertEquals(listaLabsVisavet.size(), 2, "Debería haber 2 laboratorios centro y no es así.");
 		} catch (
 
 		Exception e) {
@@ -210,7 +139,7 @@ public class GestorCrudServiciosTests {
 	}
 
 	@Test
-	@Order(6)
+	@Order(4)
 	public void inicializacionBasicaUsuarios() throws Exception {
 		try {
 			// Damos de alta usuario admin de centro de salud BOT con rol ADMIN
@@ -277,8 +206,6 @@ public class GestorCrudServiciosTests {
 			Optional<LaboratorioVisavet> labUsug1 = usuarioServicio.getLaboratorioVisavet(usug1);
 			assertEquals("Visavet",labUsug1.get().getNombre(),"El usuario admin1 debería estar asignado al laboratorio visavet \"Visavet\" y no es asi");
 
-			List<BeanUsuarioGestion> listaUsus = usuarioServicio.listaUsuariosOrdenada();
-			assertEquals(2, listaUsus.size(),"Debería haber 2 usuario y hay " + listaUsus.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Falló la prueba de inicialización básica de Usuarios.");

@@ -13,10 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import es.ucm.pcr.beans.BeanBusquedaUsuario;
 import es.ucm.pcr.beans.BeanRolUsuario;
 import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.beans.BeanUsuario;
@@ -272,18 +276,20 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		return usuario;
 	}
 	
-	public List<BeanUsuarioGestion> listaUsuariosOrdenada() throws Exception {
+	public Page<BeanUsuarioGestion> listaUsuariosOrdenada(Pageable pageable) throws Exception {
 		
 		List<BeanUsuarioGestion> listaUsuarios = new ArrayList<BeanUsuarioGestion>();
-		for (Usuario usuario: usuarioRepositorio.findAll())
+		Page<Usuario> usuariosPage = usuarioRepositorio.findAll(pageable);
+		for (Usuario usuario: usuariosPage.getContent())
 		{
 			BeanUsuarioGestion beanUsuarioGestion = new BeanUsuarioGestion();
 			beanUsuarioGestion = mapeoEntidadBeanUsuario (usuario);
 			listaUsuarios.add(beanUsuarioGestion);
 		}
 		//	Ordeno por ap1, ap2, nombre
-		Collections.sort(listaUsuarios);
-		return listaUsuarios;
+		//Collections.sort(listaUsuarios);
+		Page<BeanUsuarioGestion> listaUsuariosPage = new PageImpl<>(listaUsuarios, pageable, usuariosPage.getTotalElements());
+		return listaUsuariosPage;
 
 	}
 	
@@ -397,5 +403,23 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		Collections.sort(listaUsuarios);
 		return listaUsuarios;
 
+	}
+	
+	@Override
+	@Transactional
+	public Page<BeanUsuarioGestion> findUsuarioByParam(BeanBusquedaUsuario params, Pageable pageable) throws Exception {
+		List<BeanUsuarioGestion> listaUsuarios = new ArrayList<BeanUsuarioGestion>();
+		
+		Page<Usuario> usuariosPage = usuarioRepositorio.findByParams(params, pageable); 
+		
+		for (Usuario usuario : usuariosPage.getContent()) {
+			BeanUsuarioGestion beanUsuarioGestion = new BeanUsuarioGestion();
+			beanUsuarioGestion = mapeoEntidadBeanUsuario (usuario);
+			listaUsuarios.add(beanUsuarioGestion);
+		}
+		
+		Page<BeanUsuarioGestion> usuariosBeanPage = new PageImpl<>(listaUsuarios, pageable, usuariosPage.getTotalElements());
+		
+		return usuariosBeanPage;
 	}
 }

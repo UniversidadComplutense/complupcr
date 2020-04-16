@@ -89,3 +89,9 @@ fieldset legend {
 .trGroupLotes:hover{
 	background: #F4F4F4;
 }
+.filaRed{
+	background:#FF8F89;
+}
+.filaVerde{
+	background:#A0FFD7;
+}

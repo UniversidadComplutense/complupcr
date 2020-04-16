@@ -1,6 +1,7 @@
 package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,6 +42,7 @@ import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
+import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.Paciente;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
@@ -178,9 +180,18 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	// JAVI
 	@Override
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda,
-			Pageable pageable) {
+			Pageable pageable) throws Exception {
 		
-		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();		
+		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();
+
+		// Si no se ha seleccionado el estado de la placa en la búsqueda, buscamos por los estados: PLACA_INICIADA ó PLACA_PREPARADA_PARA_PCR
+		// ó PLACA_FINALIZADA_PCR ó PLACA_LISTA_PARA_ANALISIS
+		if (criteriosBusqueda.getIdEstadoPlaca() == 0) {
+			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(1,2,3,4));
+		} else {
+			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(criteriosBusqueda.getIdEstadoPlaca()));
+		}
+		
 		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = placaLaboratorioRepositorio.findByParams(criteriosBusqueda, pageable); 		
 		for (PlacaLaboratorio placa : PagePlacasLaboratorioCentro.getContent()) {
 			listaPlacasLaboratorioCentroBean.add(PlacaLaboratorioCentroBean.modelToBean(placa));
@@ -190,58 +201,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	}
 
 	
-	//JAVI
-	@Override
-	@Transactional
-	public PlacaLaboratorioCentroBean crearPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean) {
-		
-		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
-
-		placa.setFechaCreacion(new Date());
-		placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_INICIADA.getCodNum()));
-		placa.setLaboratorioCentro(new LaboratorioCentro(sesionServicio.getUsuario().getIdLaboratorioCentro()));
-
-		placa = placaLaboratorioRepositorio.save(placa);
-		
-		// Transformamos en un Array el String que viene de la vista con los IDs de las placas Visavet seleccionadas
-		String[] listaIDsPlacasVisavetSeleccinadas = placaLaboratorioCentroBean.getPlacasVisavetSeleccionadas().split(":");
-		
-		// Asignamos a la placa de laboratorio las placas Visavet seleccionadas
-		if (listaIDsPlacasVisavetSeleccinadas.length > 0) {
-			
-			Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>();
-			
-			for (String idPlacaVisavet : listaIDsPlacasVisavetSeleccinadas) {
-
-				PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio = new PlacaVisavetPlacaLaboratorio();
-				PlacaLaboratorio placaLaboratorio = placaLaboratorioRepositorio.getOne(placa.getId());
-				PlacaVisavet placaVisavet = placaVisavetRepositorio.getOne(Integer.valueOf(idPlacaVisavet));
-				
-				// Cambiamos el estado de la placa Visavet a traspasada
-				placaVisavet.setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_TRANSPASADA.getCodNum()));
-				placaVisavet = placaVisavetRepositorio.save(placaVisavet);				
-				placaVisavetPlacaLaboratorio.setPlacaLaboratorio(placaLaboratorio);
-				placaVisavetPlacaLaboratorio.setPlacaVisavet(placaVisavet);
-				
-				placaVisavetPlacaLaboratorioRepositorio.save(placaVisavetPlacaLaboratorio);
-				// TODO Registrar en LOG placaVisavet traspasada
-				
-				placaVisavetPlacaLaboratorios.add(placaVisavetPlacaLaboratorio);
-			}
-			placa.setPlacaVisavetPlacaLaboratorios(placaVisavetPlacaLaboratorios);
-			placa = placaLaboratorioRepositorio.save(placa);
-			return PlacaLaboratorioCentroBean.modelToBean(placa);
-			
-			// TODO Registrar en LOG placaLaboratorio creada
-			
-		}		
-		return null;
-
-	}
-	
 	// JAVI
 	@Override
-	public PlacaLaboratorioCentroBean buscarPlaca(Integer id) {
+	public PlacaLaboratorioCentroBean buscarPlaca(Integer id) throws Exception {
 		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
@@ -253,7 +215,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	// JAVI
 	@Override
 	@Transactional
-	public boolean finalizarPCR(Integer id) {
+	public boolean finalizarPCR(Integer id) throws Exception {
 		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
@@ -270,7 +232,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	// JAVI
 	@Override
 	@Transactional
-	public boolean asignarEquipoPCR(Integer id) {
+	public boolean asignarEquipoPCR(Integer id) throws Exception {
 		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
@@ -290,7 +252,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	// JAVI
 	@Override
 	@Transactional
-	public boolean placaListaParaAnalizar(Integer id) {
+	public boolean placaListaParaAnalizar(Integer id) throws Exception {
 		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
 		if (placa.isPresent()) {
@@ -299,8 +261,8 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				if (documentosPlaca != null && documentosPlaca.getDocumentos() != null && documentosPlaca.getDocumentos().size() >0) {
 					placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum()));
 					placaLaboratorioRepositorio.save(placa.get());
-					// Registramos en el log que las muestras de la placa están listas para ser analizadas
-					servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(id, new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_PENDIENTE_ANALIZAR));
+					// No registramos en el log que las muestras de la placa están listas para ser analizadas porque lo hace Diana
+					// servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(id, new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_PENDIENTE_ANALIZAR));
 					
 					// TODO Registrar en LOG placaLaboratorio lista para analizar				
 					return true;
@@ -309,7 +271,128 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		}
 		return false;
 	}
+	
+	// JAVI
+	@Override
+	public boolean esEditable(Integer id) throws Exception {	
 
+		return id == null;		
+	}
+	
+	// JAVI
+	@Override
+	public Integer espacioLibreParaMuestras(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception {		
+		 
+		Integer espacioLibreParaMuestras = 0;
+		
+		if (placaLaboratorioCentroBean.getId() != null) {
+			Optional<PlacaLaboratorio> placaLaboratorio = placaLaboratorioRepositorio.findById(placaLaboratorioCentroBean.getId());
+			if (placaLaboratorio.isPresent()) {	
+				Integer numeroMuestrasPlaca = 0;
+				// Inicialmente el espacio libre de la placa coincide con su capacidad 
+				espacioLibreParaMuestras = Integer.valueOf(placaLaboratorio.get().getNumeromuestras());
+				Set<PlacaVisavetPlacaLaboratorio> placasVisavetPlacasLaboratorio = placaLaboratorio.get().getPlacaVisavetPlacaLaboratorios();
+				for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placasVisavetPlacasLaboratorio) {
+					for (Lote lote : placaVisavetPlacaLaboratorio.getPlacaVisavet().getLotes()) {
+						numeroMuestrasPlaca += lote.getMuestras().size();
+					}
+				}
+				return espacioLibreParaMuestras - numeroMuestrasPlaca;	
+			}
+			return espacioLibreParaMuestras;
+		} else {
+			// Si la placa es nueva
+			return capacidadNuevaPlaca;
+		}	
+	}
+	
+	// JAVI
+	// Si la placa es de nueva creación, pasamos por parámetro la capacidad que tendrá la misma, y si no es nueva pasamos un cero.
+	@Override
+	@Transactional
+	public boolean esRellenable(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception {		
+		
+		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
+
+		Integer espacioLibreParaMuestras = this.espacioLibreParaMuestras(placaLaboratorioCentroBean, capacidadNuevaPlaca);
+		Integer sumaMuestrasPlacasVisavetSeleccionadas = 0;
+		
+		// Transformamos el String que viene de la vista, en un Array de Strings con los IDs de las placas Visavet seleccionadas
+		String[] listaIDsPlacasVisavetSeleccinadas = placaLaboratorioCentroBean.getPlacasVisavetSeleccionadas().split(":");
+		
+		// Calculamos el número de muestras de la placa(s) Visavet que se pretenden agregar a la placa de laboratorio
+		if (listaIDsPlacasVisavetSeleccinadas.length > 0) {			
+						
+			for (String idPlacaVisavet : listaIDsPlacasVisavetSeleccinadas) {
+			
+				Set<PlacaVisavetPlacaLaboratorio> placasVisavetPlacasLaboratorio = placa.getPlacaVisavetPlacaLaboratorios();
+				for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placasVisavetPlacasLaboratorio) {
+					for (Lote lote : placaVisavetPlacaLaboratorio.getPlacaVisavet().getLotes()) {
+						sumaMuestrasPlacasVisavetSeleccionadas += lote.getMuestras().size();
+					}
+				}
+			}
+		}		
+		return espacioLibreParaMuestras >= sumaMuestrasPlacasVisavetSeleccionadas;		
+	}
+	
+	// JAVI
+	// Si la placa es de nueva creación, pasamos por parámetro la capacidad que tendrá la misma, y si no es nueva pasamos un cero.
+	@Override
+	@Transactional
+	public PlacaLaboratorioCentroBean rellenarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception {		
+		
+		PlacaLaboratorio placa = PlacaLaboratorioCentroBean.beanToModel(placaLaboratorioCentroBean);
+
+		placa.setLaboratorioCentro(new LaboratorioCentro(sesionServicio.getUsuario().getIdLaboratorioCentro()));
+		
+		// Es una placa nueva
+		if (capacidadNuevaPlaca != 0) {
+			placa.setFechaCreacion(new Date());
+			placa.setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_INICIADA.getCodNum()));			
+			placa = placaLaboratorioRepositorio.save(placa);
+		}		
+		
+		// Asignamos las placas Visavet si hay espacio en la placa de laboratorio
+		if (this.esRellenable(placaLaboratorioCentroBean, capacidadNuevaPlaca)) {
+			
+			// Transformamos el String que viene de la vista, en un Array de Strings con los IDs de las placas Visavet seleccionadas
+			String[] listaIDsPlacasVisavetSeleccinadas = placaLaboratorioCentroBean.getPlacasVisavetSeleccionadas().split(":");
+			
+			if (listaIDsPlacasVisavetSeleccinadas.length > 0) {
+				
+				Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>();
+				for (String idPlacaVisavet : listaIDsPlacasVisavetSeleccinadas) {
+
+					PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio = new PlacaVisavetPlacaLaboratorio();
+					PlacaLaboratorio placaLaboratorio = placaLaboratorioRepositorio.getOne(placa.getId());
+					PlacaVisavet placaVisavet = placaVisavetRepositorio.getOne(Integer.valueOf(idPlacaVisavet));								
+					
+					// Cambiamos el estado de la placa Visavet a traspasada
+					placaVisavet.setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_TRANSPASADA.getCodNum()));
+					placaVisavet = placaVisavetRepositorio.save(placaVisavet);				
+					placaVisavetPlacaLaboratorio.setPlacaLaboratorio(placaLaboratorio);
+					placaVisavetPlacaLaboratorio.setPlacaVisavet(placaVisavet);				
+					placaVisavetPlacaLaboratorioRepositorio.save(placaVisavetPlacaLaboratorio);
+					
+					// Registramos en el log que las muestras de la placa se han traspasado a un placa de laboratorio conservando su estado MUESTRA_ENVIADA_CENTRO_ANALISIS
+					servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(placa.getId(), new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS));
+					
+					// TODO Registrar en LOG placaVisavet traspasada
+					
+					placaVisavetPlacaLaboratorios.add(placaVisavetPlacaLaboratorio);
+				}
+				placa.setPlacaVisavetPlacaLaboratorios(placaVisavetPlacaLaboratorios);
+				placa = placaLaboratorioRepositorio.save(placa);
+				return PlacaLaboratorioCentroBean.modelToBean(placa);
+				
+				// TODO Registrar en LOG placaLaboratorio creada
+				
+			}
+		}	
+		return null;		
+	}
+	
 	
 	//Diana- metodos para jefe de servicio (replica de metodos de Javi con mi bean)
 	

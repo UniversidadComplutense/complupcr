@@ -2,6 +2,7 @@ package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,10 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,10 +21,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.beans.BeanPlacaVisavetUCM;
 import es.ucm.pcr.beans.BusquedaLotesBean;
 import es.ucm.pcr.beans.BusquedaPlacasVisavetBean;
+import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteListadoBean;
@@ -27,20 +34,28 @@ import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraListadoBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
+import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.modelo.orm.EstadoLote;
+import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Lote;
+import es.ucm.pcr.modelo.orm.Muestra;
+import es.ucm.pcr.modelo.orm.Paciente;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.PlacaVisavet;
+import es.ucm.pcr.modelo.orm.UsuarioMuestra;
 import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
 import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
 import es.ucm.pcr.repositorio.LoteRepositorio;
+import es.ucm.pcr.repositorio.MuestraRepositorio;
 import es.ucm.pcr.repositorio.PlacaLaboratorioRepositorio;
 import es.ucm.pcr.repositorio.PlacaVisavetRepositorio;
+import es.ucm.pcr.utilidades.Utilidades;
 @Service
 public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVisavetUCM{
 	
@@ -59,6 +74,12 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	
 	@Autowired
 	SesionServicio sesionServicio;
+	
+	@Autowired
+	MuestraRepositorio muestraRepositorio;
+	
+	@Autowired
+	private ServicioLog servicioLog;
 	@Autowired
 	private LoteRepositorio loteRepositorio;
 	public Page<LoteBeanPlacaVisavet> buscarLotes(BusquedaLotesBean busquedaLotes, Pageable pageable){
@@ -138,7 +159,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		
 		return paginasPlacas;
 	}
-	
+	@Transactional
 	public BeanPlacaVisavetUCM guardar(BeanPlacaVisavetUCM beanPlacaVisavetUCM) {
 	
 		PlacaVisavet placa = BeanPlacaVisavetUCM.beanToModel(beanPlacaVisavetUCM);						
@@ -157,12 +178,21 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	        		 placa=placaBBDDOpt.get();
 					 placa.setEstadoPlacaVisavet(new EstadoPlacaVisavet(beanPlacaVisavetUCM.getEstado().getEstado().getCodNum()));
 					 if (beanPlacaVisavetUCM.getFechaEnviadaLaboratorio()!= null)placa.setFechaEnviadaLaboratorioCentro(beanPlacaVisavetUCM.getFechaEnviadaLaboratorio());
-				
+				    
 	        	// Placa nueva
 	        }
 		}
 		placa.setLaboratorioVisavet(new LaboratorioVisavet(sesionServicio.getUsuario().getIdLaboratorioVisavet()));
 		placa = placaVisavetRepositorio.save(placa);
+		// si el estado de la placa es FINALIZADA grabamos en el log
+		if (placa.getEstadoPlacaVisavet().getId() == Estado.PLACAVISAVET_FINALIZADA.getCodNum()) {
+			
+			//guardo en el log
+			BeanEstado estado=new BeanEstado();
+		    estado.setEstado(Estado.MUESTRA_ASIGNADA_LOTE);
+		    estado.setTipoEstado(TipoEstado.EstadoMuestra);
+			servicioLog.actualizarEstadoMuestraPorPlacaVisavet(placa.getId(), estado);
+		}
 		return BeanPlacaVisavetUCM.modelToBean(placa);
 
 	}
@@ -279,6 +309,120 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		}
 		
 		return laboratoriosBean;
+	}
+	
+	
+	
+	
+	
+	
+	@Override
+	@Transactional
+	public void guardarReferenciasMuestraPlaca(ElementoDocumentacionBean bean) throws Exception {
+		Integer idPlaca = bean.getId();
+		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(idPlaca);
+		if (placa.isPresent()) {
+			HashMap<String, String> resultados = obtenerReferenciasExcel(bean);
+			for (Muestra m : placa.get().getMuestras()) {
+				String referenciaMuestra = resultados.get(m.getEtiqueta());
+				m.setRefInternaVisavet(referenciaMuestra);
+				muestraRepositorio.save(m);
+
+			}
+		}
+
+	}
+
+
+	private HashMap<String, String> obtenerReferenciasExcel(ElementoDocumentacionBean bean) throws Exception {
+		int cols = 0;
+		Integer colMuestra = null;
+		Integer colReferencia = null;
+		String cellValue;
+		String cellValueMuestra;
+		String cellValueReferencia;
+		HashMap<String, String> resultados = new HashMap<String, String>();
+
+		XSSFWorkbook workbook = new XSSFWorkbook(bean.getFile().getInputStream());
+		XSSFSheet xssfSheet = workbook.getSheet(bean.getHoja());
+		XSSFRow xssfRow;
+		int rows = xssfSheet.getLastRowNum();
+		for (int r = 0; r < rows; r++) {
+			xssfRow = xssfSheet.getRow(r);
+			if (xssfRow == null) {
+				break;
+			} else {
+				cols = xssfRow.getLastCellNum();
+				if (r == 0) {
+					for (int c = 0; c < cols; c++) {
+
+						cellValue = xssfRow.getCell(c) == null ? ""
+								: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
+										? xssfRow.getCell(c).getStringCellValue()
+										: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
+												? "" + xssfRow.getCell(c).getNumericCellValue()
+												: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+														? "" + xssfRow.getCell(c).getBooleanCellValue()
+														: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
+																? "BLANK"
+																: (xssfRow.getCell(c)
+																		.getCellType() == Cell.CELL_TYPE_FORMULA)
+																				? "FORMULA"
+																				: (xssfRow.getCell(c)
+																						.getCellType() == Cell.CELL_TYPE_ERROR)
+																								? "ERROR"
+																								: "";
+						if (r == 0 && cellValue.compareTo(bean.getColumna()) == 0) {
+							colMuestra = c;
+						}
+						if (r == 0 && cellValue.compareTo(bean.getColumnaRef()) == 0) {
+							colReferencia = c;
+						}
+					}
+				} else if (r > 0 && colMuestra != null && colReferencia != null) {
+					cellValueMuestra = xssfRow.getCell(colMuestra) == null ? ""
+							: (xssfRow.getCell(colMuestra).getCellType() == Cell.CELL_TYPE_STRING)
+									? xssfRow.getCell(colMuestra).getStringCellValue()
+									: (xssfRow.getCell(colMuestra).getCellType() == Cell.CELL_TYPE_NUMERIC)
+											? "" + xssfRow.getCell(colMuestra).getNumericCellValue()
+											: (xssfRow.getCell(colMuestra).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+													? "" + xssfRow.getCell(colMuestra).getBooleanCellValue()
+													: (xssfRow.getCell(colMuestra)
+															.getCellType() == Cell.CELL_TYPE_BLANK)
+																	? "BLANK"
+																	: (xssfRow.getCell(colMuestra)
+																			.getCellType() == Cell.CELL_TYPE_FORMULA)
+																					? "FORMULA"
+																					: (xssfRow.getCell(colMuestra)
+																							.getCellType() == Cell.CELL_TYPE_ERROR)
+																									? "ERROR"
+																									: "";
+
+					cellValueReferencia = xssfRow.getCell(colReferencia) == null ? ""
+							: (xssfRow.getCell(colReferencia).getCellType() == Cell.CELL_TYPE_STRING)
+									? xssfRow.getCell(colReferencia).getStringCellValue()
+									: (xssfRow.getCell(colReferencia).getCellType() == Cell.CELL_TYPE_NUMERIC)
+											? "" + xssfRow.getCell(colReferencia).getNumericCellValue()
+											: (xssfRow.getCell(colReferencia).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+													? "" + xssfRow.getCell(colReferencia).getBooleanCellValue()
+													: (xssfRow.getCell(colReferencia).getCellType() == Cell.CELL_TYPE_BLANK)
+															? "BLANK"
+															: (xssfRow.getCell(colReferencia)
+																	.getCellType() == Cell.CELL_TYPE_FORMULA)
+																			? "FORMULA"
+																			: (xssfRow.getCell(colReferencia)
+																					.getCellType() == Cell.CELL_TYPE_ERROR)
+																							? "ERROR"
+																							: "";
+					
+						resultados.put(cellValueMuestra, cellValueReferencia);
+					
+				}
+
+			}
+		}
+
+		return resultados;
 	}
 	
 	

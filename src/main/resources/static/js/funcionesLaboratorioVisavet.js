@@ -138,7 +138,8 @@ function confirmarPlacaEnviada(){
 	var url = "";
 	//var urlAbs = getAbsolutePath();
 	
-	var id=$("#idPlaca").html();
+	var id=$("#idConfirmar").val();
+	
 	url =  '/laboratorioUni/confirmarEnviadaPlaca?id='+id;
 	window.location=url;
 }
@@ -200,13 +201,23 @@ function procesarLotes() {
 // desde placas
 function procesarLotesDesdePlacas(idPlaca) {
 	var lotesProcesar="";
+		var n=0;
+		//lotesProcesar+=$("#lotes"+idPlaca +" input").val()+":";
 		
-			//lotesProcesar
 			$("#lotes"+idPlaca +" input").each(function () 
 					{ 
-			lotesProcesar+=$("#lotes"+idPlaca +" input").val()+":";
-			
+				n++;
+				
 		});
+		
+	for(i=n-1;i>=0;i--){
+		
+				
+			lotesProcesar+=$("#lote"+idPlaca+"_"+i).val()+":";
+			//	alert ("#lotes"+idPlaca+"_"+i");
+				
+				}		
+			
 	
 	if (lotesProcesar !=""){
 	var url="/laboratorioUni/procesarLotes?lotes="+lotesProcesar;
@@ -324,8 +335,12 @@ function asignarLaboratoriodesdeModal(){
 }
 
 function seleccionAccion(accion){
+	
 	$("#accion").val(accion);
+
+	if (comprobarReferenciasInternas())
 	$("#formularioConReferencias").submit();
+	
 }
 function habilitarBotonProcesar(){
 	var nFilas = $("#tablaResultados tr").length;
@@ -342,4 +357,29 @@ function habilitarBotonProcesar(){
 	}
 	if (lotesProcesar)
 	$("#procesarBoton").attr("disabled", false);
+}
+
+function comprobarReferenciasInternas(){
+var respuesta=true;
+	var nLotes=$("#tablaLotes .trGroupLotes").length;
+
+	for (var i=0;i<nLotes;i++){
+	 
+		var muestra=$("#l"+i).val();
+	    var nMuestras=$("#muestra"+muestra+" .border-tableMuestras tbody tr").length;
+        
+	    for (var j=0;j<nMuestras;j++){
+	    	
+		if ($("#ref"+muestra+"_"+j).val().trim() == "") { 
+			respuesta=false;
+			$("#mensaje"+muestra+"_"+j).show();
+		    $("#muestra"+muestra).show();
+		}
+	
+	 }
+	
+	}
+	
+	 return respuesta;
+
 }

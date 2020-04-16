@@ -109,8 +109,8 @@
 </div>
 
 <!-- PAGINACION -->
-<div class="justify-content-start" th:if="${paginadorBean != null}" th:fragment="paginacion(paginadorBean)">	
-	<nav aria-label="Pagination" th:if="${paginadorBean.numeroPaginas gt 0}">	
+<div class="justify-content-start" th:fragment="paginacion(paginadorBean)">	
+	<nav aria-label="Pagination" th:if="${paginadorBean != null && paginadorBean.numeroPaginas gt 0}">	
 	    <ul class="pagination justify-content-center font-weight-bold">
 	        <li class="page-item" th:classappend="${paginadorBean.paginaActual eq 1} ? 'disabled'">
 	            <a class="page-link"
@@ -135,7 +135,8 @@
 	        </li>
 	    </ul>	    
 	</nav>
-	<span style="color: #6c757d !important"><b>Número de resultados <span th:text="${paginadorBean.totalElementos}"></span></b></span>
+	<span th:if="${paginadorBean != null}" style="color: #6c757d !important"><b>Número de resultados <span th:text="${paginadorBean.totalElementos}"></span></b></span>
+	<span th:if="${paginadorBean == null}" style="color: #6c757d !important"><b>Número de resultados 0</b></span>
 </div>
 
 
