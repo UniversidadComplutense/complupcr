@@ -60,6 +60,7 @@ public class MuestraListadoBean extends MuestraBusquedaBean {
 		MuestraListadoBean bean = new MuestraListadoBean();
 		bean.setId(muestra.getId());
 		bean.setNombrePaciente(nombreCompletoPaciente(muestra.getPaciente()));
+		bean.setEmailPaciente(muestra.getPaciente().getEmail());
 		bean.setNhcPaciente(paciente.getNhc());
 		bean.setEtiquetaMuestra(muestra.getEtiqueta());
 		bean.setRefInternaMuestra(muestra.getRefInternaVisavet());
