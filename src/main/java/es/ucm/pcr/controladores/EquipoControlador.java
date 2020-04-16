@@ -78,7 +78,7 @@ public class EquipoControlador {
 	@RequestMapping(value="/gestor/altaEquipo", method=RequestMethod.POST)	
 	@PreAuthorize("hasAnyRole('ADMIN','GESTOR')")
 	public ModelAndView grabarAltaEquipo ( @ModelAttribute("formBeanEquipo") BeanEquipo beanEquipo, HttpSession session) throws Exception {
-
+		System.out.println("Lab ucm seleccionado: " + beanEquipo.getLabUcmSeleccionado() + "  " + beanEquipo.getAccion());
 		String mensaje = null;
 		// Damos de alta nuevo equipo
 		if (beanEquipo.getAccion().equals("A"))
@@ -123,6 +123,11 @@ public class EquipoControlador {
 		beanEquipo.setAccion("M");
 		
 		vista.addObject("formBeanEquipo", beanEquipo);
+		
+		// añadimos los laboratorios Centro
+		Map<Integer,String> mapaLaboratoriosCentro = laboratorioCentroServicio.mapaLaboratoriosCentro(laboratorioCentroServicio.listaLaboratoriosCentroOrdenada());
+		vista.addObject("mapaLaboratoriosCentro", mapaLaboratoriosCentro);
+
 	
 		return vista;
 	}	

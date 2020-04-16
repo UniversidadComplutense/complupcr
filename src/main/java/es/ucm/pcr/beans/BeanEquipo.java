@@ -10,14 +10,16 @@ public class BeanEquipo implements Comparable<BeanEquipo> {
 	private String nombre;
 	private Integer  capacidad;
 	private String accion; // A: ALTA, M: MODIFICAR, L: EN LA LISTA
-	private Integer LabUcmSeleccionado;
+	private Integer labUcmSeleccionado;
 	
 
-	
+
 	public BeanEquipo() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
+
 
 	public BeanEquipo(Integer id, LaboratorioCentro laboratorioCentro, String nombre, Integer capacidad, String accion,
 			Integer labUcmSeleccionado) {
@@ -27,63 +29,91 @@ public class BeanEquipo implements Comparable<BeanEquipo> {
 		this.nombre = nombre;
 		this.capacidad = capacidad;
 		this.accion = accion;
-		LabUcmSeleccionado = labUcmSeleccionado;
+		this.labUcmSeleccionado = labUcmSeleccionado;
 	}
+
+
 
 	public Integer getId() {
 		return id;
 	}
 
+
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+
 
 	public LaboratorioCentro getLaboratorioCentro() {
 		return laboratorioCentro;
 	}
 
+
+
 	public void setLaboratorioCentro(LaboratorioCentro laboratorioCentro) {
 		this.laboratorioCentro = laboratorioCentro;
 	}
+
+
 
 	public String getNombre() {
 		return nombre;
 	}
 
+
+
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+
+
 
 	public Integer getCapacidad() {
 		return capacidad;
 	}
 
+
+
 	public void setCapacidad(Integer capacidad) {
 		this.capacidad = capacidad;
 	}
+
+
 
 	public String getAccion() {
 		return accion;
 	}
 
+
+
 	public void setAccion(String accion) {
 		this.accion = accion;
 	}
 
+
+
 	public Integer getLabUcmSeleccionado() {
-		return LabUcmSeleccionado;
+		return labUcmSeleccionado;
 	}
 
+
+
 	public void setLabUcmSeleccionado(Integer labUcmSeleccionado) {
-		LabUcmSeleccionado = labUcmSeleccionado;
-	}	
-	
+		this.labUcmSeleccionado = labUcmSeleccionado;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "BeanEquipo [id=" + id + ", laboratorioCentro=" + laboratorioCentro + ", nombre=" + nombre
-				+ ", capacidad=" + capacidad + ", accion=" + accion + ", LabUcmSeleccionado=" + LabUcmSeleccionado
+				+ ", capacidad=" + capacidad + ", accion=" + accion + ", labUcmSeleccionado=" + labUcmSeleccionado
 				+ "]";
 	}
+
+
 
 	@Override
     public int compareTo(BeanEquipo o) {
