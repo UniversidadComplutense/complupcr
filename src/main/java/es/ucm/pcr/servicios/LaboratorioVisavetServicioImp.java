@@ -102,7 +102,7 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	// JAVI para buscar placas Visavet e incorporarlas a 'BusquedaPlacasVisavetBean'
 	@Override
 	public Page<PlacaLaboratorioVisavetBean> buscarPlacas(BusquedaRecepcionPlacasVisavetBean criteriosBusqueda,
-			Pageable pageable) {
+			Pageable pageable) throws Exception {
 		
 		List<PlacaLaboratorioVisavetBean> listaPlacasVisavetBean = new ArrayList<PlacaLaboratorioVisavetBean>();
 		
@@ -154,7 +154,7 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	
 	// JAVI para buscar una placa Visavet e incorporarla a 'BusquedaPlacasVisavetBean'
 	@Override
-	public PlacaLaboratorioVisavetBean buscarPlaca(Integer id) {
+	public PlacaLaboratorioVisavetBean buscarPlaca(Integer id) throws Exception {
 		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(id);
 		if (placa.isPresent()) {
 			return PlacaLaboratorioVisavetBean.modelToBean(placa.get());
@@ -166,7 +166,7 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	// JAVI para recepcionar una placa Visavet
 	@Override
 	@Transactional
-	public boolean recepcionarPlaca(Integer id) {				
+	public boolean recepcionarPlaca(Integer id) throws Exception {				
 		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(id);
 		if (placa.isPresent()) {
 			if (placa.get().getEstadoPlacaVisavet().getId() == Estado.PLACAVISAVET_ENVIADA.getCodNum()) {
@@ -183,7 +183,7 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 
 	// JAVI para saber las placas Visavet combinadas en una placa de laboratorio
 	@Override
-	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio) {
+	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio) throws Exception {
 		
 		Set<PlacaVisavet> placas = placaVisavetRepositorio.findByIdPlacaLaboratorio(idPlacaLaboratorio);		
 		List<PlacaLaboratorioVisavetBean> placasVisavet = new ArrayList<PlacaLaboratorioVisavetBean>();

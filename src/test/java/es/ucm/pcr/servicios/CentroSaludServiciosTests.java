@@ -55,7 +55,7 @@ public class CentroSaludServiciosTests {
 	UsuarioServicio usuarioServicio;
 	
 	@Test
-	@Order(10)
+	@Order(1)
 	@WithUserDetails("centrosalud@ucm.es")
 	public void altaMuestras() {
 		try {
@@ -69,14 +69,7 @@ public class CentroSaludServiciosTests {
 
 			// Damos de alta el usuario del centro asociado
 			Optional<Rol> orolUsu = rolServicio.findByNombre("CENTROSALUD");
-			Rol rolUsu = null;
-			if (orolUsu.isEmpty()) {
-				rolUsu = new Rol();
-				rolUsu.setNombre("CENTROSALUD");
-				rolUsu = rolServicio.save(rolUsu);
-			} else {
-				rolUsu = orolUsu.get();
-			}
+			Rol rolUsu = orolUsu.get();
 			
 			Usuario usuario = new Usuario();
 			usuario.setNombre("Centro");
