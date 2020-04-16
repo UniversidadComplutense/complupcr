@@ -149,6 +149,9 @@
 			</div>
 		</div>	
 		
+		<!-- PAGINACION -->
+		<object th:replace="fragmentos :: paginacion(${paginadorBean})" th:remove="tag"></object>
+		
 		<!-- RESULTADO -->
 		<div class="row justify-content-center mt-3">
 			<table class="table">
