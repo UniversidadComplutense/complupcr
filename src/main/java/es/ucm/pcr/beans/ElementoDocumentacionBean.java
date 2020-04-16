@@ -18,6 +18,7 @@ public class ElementoDocumentacionBean {
 	private MultipartFile file;
 	private String hoja; //en la carga de resultados del analista (excel) identificamos la hoja y la columna del excel del analista
 	private String columna;
+	private String columnaRef;
 	private String tipo; //el tipo sera "RES" si es un excel de resultados
 	private Integer codiUrl;
 	private String urlVolver;
@@ -81,6 +82,20 @@ public class ElementoDocumentacionBean {
 		this.columna = columna;
 	}
 	
+	/**
+	 * @return the columnaRef
+	 */
+	public String getColumnaRef() {
+		return columnaRef;
+	}
+
+	/**
+	 * @param columnaRef the columnaRef to set
+	 */
+	public void setColumnaRef(String columnaRef) {
+		this.columnaRef = columnaRef;
+	}
+
 	public String getTipo() {
 		return tipo;
 	}

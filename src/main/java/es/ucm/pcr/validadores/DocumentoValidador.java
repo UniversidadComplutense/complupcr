@@ -18,7 +18,9 @@ import org.springframework.validation.Validator;
 import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.PlacaVisavet;
 import es.ucm.pcr.repositorio.PlacaLaboratorioRepositorio;
+import es.ucm.pcr.repositorio.PlacaVisavetRepositorio;
 import es.ucm.pcr.utilidades.Utilidades;
 
 @Component
@@ -26,6 +28,9 @@ public class DocumentoValidador implements Validator {
 
 	@Autowired
 	PlacaLaboratorioRepositorio placaLaboratorioRepositorio;
+
+	@Autowired
+	PlacaVisavetRepositorio placaVisavetRepositorio;
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -40,6 +45,9 @@ public class DocumentoValidador implements Validator {
 		validateTamanioFichero(elementoDocBean, errors);
 		if (elementoDocBean.getTipo().compareTo("RES") == 0) {
 			validarExcelResutadosAnalista(elementoDocBean, errors);
+		}
+		if (elementoDocBean.getTipo().compareTo("REF") == 0) {
+			validarExcelReferenciasLaboratorio(elementoDocBean, errors);
 		}
 	}
 
@@ -116,16 +124,104 @@ public class DocumentoValidador implements Validator {
 				}
 
 				// Validar muestras placa
-				Optional<PlacaLaboratorio> placaLaboratorio= placaLaboratorioRepositorio
+				Optional<PlacaLaboratorio> placaLaboratorio = placaLaboratorioRepositorio
 						.findById(elementoDocBean.getId());
-
-			
-				Set<Muestra> muestras =  placaLaboratorio.get().getMuestras();
-				for (Muestra muestra : muestras) {
-					listaMuestrasLaboratorio.add(muestra.getRefInternaVisavet());
+				if (placaLaboratorio.isPresent()) {
+					Set<Muestra> muestras = placaLaboratorio.get().getMuestras();
+					for (Muestra muestra : muestras) {
+						listaMuestrasLaboratorio.add(muestra.getRefInternaVisavet());
+					}
+				}
+				if (!listaMuestrasExcel.containsAll(listaMuestrasLaboratorio)) {
+					errors.rejectValue("file", "campo.invalid",
+							"Las muestras de la excel no coinciden con las de la placa, revise los datos subidos");
 				}
 
-				if (!listaMuestrasExcel.containsAll(listaMuestrasLaboratorio)) {
+			}
+		} catch (IOException e) {
+			errors.rejectValue("file", "campo.invalid", "El fichero de resultado no es un fichero valido");
+
+		}
+
+	}
+
+	/**
+	 * Valida que la excel de resultados es valida
+	 * 
+	 * @param elementoDocBean
+	 * @param errors
+	 */
+	private void validarExcelReferenciasLaboratorio(ElementoDocumentacionBean elementoDocBean, Errors errors) {
+
+		try {
+			XSSFWorkbook workbook = new XSSFWorkbook(elementoDocBean.getFile().getInputStream());
+			XSSFSheet xssfSheet = workbook.getSheet(elementoDocBean.getHoja());
+			if (xssfSheet == null) {
+				errors.rejectValue("hoja", "campo.invalid", "No existe la hoja indicada en el libro subido");
+			} else {
+				XSSFRow xssfRow;
+				int rows = xssfSheet.getLastRowNum();
+				int cols = 0;
+				Integer colMuestra = null;
+				Integer colReferencia = null;
+				String cellValue;
+				List<String> listaMuestrasExcel = new ArrayList<String>();
+				List<String> listaMuestrasVisavet = new ArrayList<String>();
+				for (int r = 0; r < rows; r++) {
+					xssfRow = xssfSheet.getRow(r);
+					if (xssfRow == null) {
+						break;
+					} else {
+						cols = xssfRow.getLastCellNum();
+						for (int c = 0; c < cols; c++) {
+
+							cellValue = xssfRow.getCell(c) == null ? ""
+									: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
+											? xssfRow.getCell(c).getStringCellValue()
+											: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
+													? "" + xssfRow.getCell(c).getNumericCellValue()
+													: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+															? "" + xssfRow.getCell(c).getBooleanCellValue()
+															: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
+																	? "BLANK"
+																	: (xssfRow.getCell(c)
+																			.getCellType() == Cell.CELL_TYPE_FORMULA)
+																					? "FORMULA"
+																					: (xssfRow.getCell(c)
+																							.getCellType() == Cell.CELL_TYPE_ERROR)
+																									? "ERROR"
+																									: "";
+							if (r == 0 && cellValue.compareTo(elementoDocBean.getColumna()) == 0) {
+								colMuestra = c;
+							}
+							if (r == 0 && cellValue.compareTo(elementoDocBean.getColumnaRef()) == 0) {
+								colReferencia = c;
+							}
+							if (colMuestra != null && r > 0 && c == colMuestra) {
+								listaMuestrasExcel.add(cellValue);
+							}
+						}
+						// Validar nombre coluna
+						if (r == 1 && colMuestra == null) {
+							errors.rejectValue("columna", "campo.invalid", "No existe la columna indicada");
+						}
+						if (r == 1 && colReferencia == null) {
+							errors.rejectValue("columnaRef", "campo.invalid", "No existe la columna indicada");
+						}
+
+					}
+				}
+
+				// Validar muestras placa
+				Optional<PlacaVisavet> placaVisavet = placaVisavetRepositorio.findById(elementoDocBean.getId());
+
+				if (placaVisavet.isPresent()) {
+					Set<Muestra> muestras = placaVisavet.get().getMuestras();
+					for (Muestra muestra : muestras) {
+						listaMuestrasVisavet.add(muestra.getEtiqueta());
+					}
+				}
+				if (!listaMuestrasExcel.containsAll(listaMuestrasVisavet)) {
 					errors.rejectValue("file", "campo.invalid",
 							"Las muestras de la excel no coinciden con las de la placa, revise los datos subidos");
 				}
