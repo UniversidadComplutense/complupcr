@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import es.ucm.pcr.beans.BeanBusquedaUsuario;
 import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BeanUsuarioGestion;
 import es.ucm.pcr.modelo.orm.Centro;
@@ -59,7 +63,7 @@ public interface UsuarioServicio {
 	 * @param 
 	 * @return List<BeanUsuarioGestion>
 	 */
-	public List<BeanUsuarioGestion> listaUsuariosOrdenada() throws Exception;
+	public Page<BeanUsuarioGestion> listaUsuariosOrdenada(Pageable pageable) throws Exception;
 	
 	/**
 	 * Crea un token unico para que el usuario restablezca la contraseña.
@@ -158,5 +162,13 @@ public interface UsuarioServicio {
 	 * @return List<BeanUsuarioGestion>
 	 */
 	public List<BeanUsuarioGestion> listaUsuariosOrdenadaLikeEmailApellido1(String busqueda) throws Exception;
+	
+	/**
+	 * Lista paginada de usuarios
+	 * @param params criterios de busqueda
+	 * @param pageable paginacion
+	 * @return Page<BeanUsuarioGestion>
+	 */
+	public Page<BeanUsuarioGestion> findUsuarioByParam(BeanBusquedaUsuario params, Pageable pageable) throws Exception;
 	
 }

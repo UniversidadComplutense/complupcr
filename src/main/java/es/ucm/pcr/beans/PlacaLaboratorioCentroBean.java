@@ -108,28 +108,6 @@ public class PlacaLaboratorioCentroBean {
 		this.placasVisavetSeleccionadas = placasVisavetSeleccionadas;
 	}
 	
-	
-	
-	public boolean esEditable() {
-		return (this.getId() == null);		
-	}
-	
-	
-	public boolean esRellenable() {
-		
-		if (this.getBeanEstado() != null && this.getBeanEstado().getEstado().getCodNum() == Estado.PLACA_INICIADA.getCodNum()) {
-			Integer capacidadPlacaLaboratorio = Integer.valueOf(this.getNumeroMuestras());
-
-			for (PlacaLaboratorioVisavetBean placaVisavet : this.getPlacasVisavet()) {
-				if (placaVisavet.getNumeroMuestras()!= null && !placaVisavet.getNumeroMuestras().isEmpty()){
-					capacidadPlacaLaboratorio =  capacidadPlacaLaboratorio - Integer.valueOf(placaVisavet.getNumeroMuestras());
-				}
-			}		
-			return capacidadPlacaLaboratorio >= 20;	
-		} 
-		return false;		
-	}
-	
 
 	public static PlacaLaboratorioCentroBean modelToBean(PlacaLaboratorio placaLaboratorio) {
 
@@ -148,21 +126,7 @@ public class PlacaLaboratorioCentroBean {
 		laboratorioCentroBean.setId(String.valueOf((placaLaboratorio.getLaboratorioCentro().getId())));
 		laboratorioCentroBean.setNombre(placaLaboratorio.getLaboratorioCentro().getNombre());
 		bean.setLaboratorioCentro(laboratorioCentroBean);
-	/*	
-		List<MuestraListadoPlacasLaboratorioBean> listadoMuestras = new ArrayList<MuestraListadoPlacasLaboratorioBean>();
-		Set<Muestra> muestras = placaLaboratorio.getMuestras();
-		for (Muestra muestra : muestras) {
-			MuestraListadoPlacasLaboratorioBean muestraBean = new MuestraListadoPlacasLaboratorioBean();
-			muestraBean.setId(muestra.getId());
-			if(muestra.getPlacaVisavet()!=null) //Diana- añado esta condicion para que no falle porque en los datos de prueba tenemos casi todas las muestras sin placaVisavet
-				muestraBean.setIdPlacaVisavet(muestra.getPlacaVisavet().getId());
-			muestraBean.setEstado(muestra.getEstadoMuestra().getDescripcion());
-			muestraBean.setEtiqueta(muestra.getEtiqueta());
-			muestraBean.setRefInterna(muestra.getRefInternaVisavet());
-			listadoMuestras.add(muestraBean);
-		}
-		bean.setMuestras(listadoMuestras);
-	*/
+
 		
 		List<PlacaLaboratorioVisavetBean> listadoPlacasVisavet = new ArrayList<PlacaLaboratorioVisavetBean>();
 		

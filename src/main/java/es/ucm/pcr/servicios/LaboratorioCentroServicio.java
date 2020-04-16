@@ -97,8 +97,11 @@ public interface LaboratorioCentroServicio {
 	public void guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas)throws Exception ;
 
 	public BeanLaboratorioCentro buscarLaboratorioById(Integer id);
-	public PlacaLaboratorioCentroBean crearPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean);
 	public boolean placaListaParaAnalizar(Integer id);
+	public boolean esEditable(Integer id);
+	public Integer espacioLibreParaMuestras(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca);
+	public PlacaLaboratorioCentroBean rellenarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca);
+
 
 
 }	

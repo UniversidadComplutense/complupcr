@@ -2,7 +2,7 @@ package es.ucm.pcr.controladores;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -13,7 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -34,11 +37,13 @@ import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
+import es.ucm.pcr.beans.PaginadorBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 import es.ucm.pcr.servicios.SesionServicio;
+import es.ucm.pcr.utilidades.Utilidades;
 import es.ucm.pcr.validadores.LaboratorioCentroValidador;
 
 @Controller
@@ -61,6 +66,8 @@ public class LabCentroControlador {
 	@Autowired
 	private LaboratorioCentroValidador laboratorioCentroValidador;
 	
+	public static final Sort ORDENACION = Sort.by(Direction.ASC, "fechaCreacion");
+	public static final Sort ORDENACION_RECEPCION = Sort.by(Direction.ASC, "fechaRecepcionLaboratorioCentro");
 	
 	private void agregarEstadosBusquedaPlacaLaboratorio (ModelAndView vista) {
 		
@@ -87,40 +94,79 @@ public class LabCentroControlador {
 		binder.setValidator(laboratorioCentroValidador);
 	}
 	
-	
-	@RequestMapping(value = "/recepcionPlacas", method = RequestMethod.GET)
+	@RequestMapping(value = "/recepcionPlacas/list", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
-	public ModelAndView buscarPlacasVisavetGET(HttpSession session, @PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
+	public ModelAndView buscarPlacasVisavetGETList(HttpSession session, @RequestParam("pagina") Optional<Integer> page) throws Exception {
 
-		ModelAndView vista = new ModelAndView("ListadoRecepcionarPlacasVisavet");
-
-		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = new BusquedaRecepcionPlacasVisavetBean();
-
+		Integer currentPage = 1;
+		session.setAttribute("paginaActual", currentPage);
+		
+		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = new BusquedaRecepcionPlacasVisavetBean();		
 		// Inicializamos búsqueda con estado 'PLACAVISAVET_ENVIADA' y laboratorio al que pertenece el usuario
 		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACAVISAVET_ENVIADA.getCodNum());
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getLaboratorioCentro().getId());
+		session.setAttribute("beanBusquedaRecepcion", criteriosBusqueda);
+		
+		ModelAndView vista = new ModelAndView("ListadoRecepcionarPlacasVisavet");
 
-		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
+		recepcionPlacas(vista, currentPage, session);
+		
+		return vista;
+
+	}
+	
+	@RequestMapping(value = "/recepcionPlacas", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
+	public ModelAndView buscarPlacasVisavetGET(HttpSession session, @RequestParam("pagina") Optional<Integer> page) throws Exception {
+
+		Integer currentPage = page.orElse(null);
+		currentPage = currentPage == null ? (session.getAttribute("paginaActual") != null ? (Integer)session.getAttribute("paginaActual") : 1) : page.get();
+		session.setAttribute("paginaActual", currentPage);
+		
+		ModelAndView vista = new ModelAndView("ListadoRecepcionarPlacasVisavet");
+
+		recepcionPlacas(vista, currentPage, session);
+		
+		return vista;
+
+	}
+	
+	private void recepcionPlacas(ModelAndView vista, Integer currentPage, HttpSession session) {
+		
+		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = (BusquedaRecepcionPlacasVisavetBean) session.getAttribute("beanBusquedaRecepcion");
+		criteriosBusqueda = criteriosBusqueda != null ? criteriosBusqueda : new BusquedaRecepcionPlacasVisavetBean();
+		session.setAttribute("beanBusquedaRecepcion", criteriosBusqueda);
+
+		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, 
+				PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION, ORDENACION_RECEPCION));
 		this.agregarEstadosBusquedaPlacaVisavet(vista);
 		vista.addObject("busquedaPlacaVisavetBean", criteriosBusqueda);
 		vista.addObject("listaPlacas", listaPlacas.getContent());
-		return vista;
-
+		
+		PaginadorBean paginadorBean = new PaginadorBean(listaPlacas.getTotalPages(), currentPage, listaPlacas.getTotalElements(), "/laboratorioCentro/recepcionPlacas");		
+		vista.addObject("paginadorBean", paginadorBean);
+		
 	}
 
 	
 	@RequestMapping(value = "/recepcionPlacas", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
-	public ModelAndView buscarPlacasVisavetPOST(HttpSession session, @ModelAttribute BusquedaRecepcionPlacasVisavetBean criteriosBusqueda,
-			@PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
+	public ModelAndView buscarPlacasVisavetPOST(HttpSession session, @ModelAttribute BusquedaRecepcionPlacasVisavetBean criteriosBusqueda) throws Exception {
 
 		ModelAndView vista = new ModelAndView("ListadoRecepcionarPlacasVisavet");
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getLaboratorioCentro().getId());
 		
-		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
+		session.setAttribute("beanBusquedaRecepcion", criteriosBusqueda);
+		
+		Integer currentPage = 1;		
+		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, 
+				PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION, ORDENACION_RECEPCION));
 		this.agregarEstadosBusquedaPlacaVisavet(vista);
 		vista.addObject("busquedaPlacaVisavetBean", criteriosBusqueda);
 		vista.addObject("listaPlacas", listaPlacas.getContent());
+		
+		PaginadorBean paginadorBean = new PaginadorBean(listaPlacas.getTotalPages(), currentPage, listaPlacas.getTotalElements(), "/laboratorioCentro/recepcionPlacas");		
+		vista.addObject("paginadorBean", paginadorBean);
 		return vista;
 	}
 	
@@ -160,34 +206,63 @@ public class LabCentroControlador {
 		vista.addObject("placa", laboratorioVisavetServicio.buscarPlaca(placa.getId()));
 		return vista;
 	}
-		
 	
-	@RequestMapping(value = "/gestionPlacas", method = RequestMethod.GET)
+	@RequestMapping(value = "/gestionPlacas/list", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
-	public ModelAndView buscarPlacasListasParaPcrGET(HttpSession session, @PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
+	public ModelAndView buscarPlacasListasParaPcrGETList(HttpSession session, @RequestParam("pagina") Optional<Integer> page) throws Exception {
 
-		ModelAndView vista = new ModelAndView("ListadoPlacasLaboratorio");
-
-		BusquedaPlacaLaboratorioBean criteriosBusqueda = new BusquedaPlacaLaboratorioBean();
+		Integer currentPage = 1;
+		session.setAttribute("paginaActual", currentPage);
 		
+		BusquedaPlacaLaboratorioBean criteriosBusqueda = new BusquedaPlacaLaboratorioBean();
 		// Inicializamos búsqueda con estado 'PLACA_INICIADA' y laboratorio al que pertenece el usuario
 		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACA_INICIADA.getCodNum());
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getLaboratorioCentro().getId());
+		session.setAttribute("beanBusqueda", criteriosBusqueda);
+		
+		ModelAndView vista = new ModelAndView("ListadoPlacasLaboratorio");
 
-		Page<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, pageable);
+		gestionPlacas(vista, currentPage, session);
+		
+		return vista;
+
+	}	
+	
+	@RequestMapping(value = "/gestionPlacas", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
+	public ModelAndView buscarPlacasListasParaPcrGET(HttpSession session, @RequestParam("pagina") Optional<Integer> page) throws Exception {
+
+		Integer currentPage = page.orElse(null);
+		currentPage = currentPage == null ? (session.getAttribute("paginaActual") != null ? (Integer)session.getAttribute("paginaActual") : 1) : page.get();
+		session.setAttribute("paginaActual", currentPage);
+		
+		ModelAndView vista = new ModelAndView("ListadoPlacasLaboratorio");
+
+		gestionPlacas(vista, currentPage, session);
+		
+		return vista;
+
+	}
+	
+	private void gestionPlacas(ModelAndView vista, Integer currentPage, HttpSession session) {
+		BusquedaPlacaLaboratorioBean criteriosBusqueda = (BusquedaPlacaLaboratorioBean) session.getAttribute("beanBusqueda");
+		criteriosBusqueda = criteriosBusqueda != null ? criteriosBusqueda : new BusquedaPlacaLaboratorioBean();		
+
+		Page<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, 
+				PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION, ORDENACION));
 		this.agregarEstadosBusquedaPlacaLaboratorio(vista);
 		vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
 		vista.addObject("listaPlacas", listaPlacas.getContent());
-		return vista;
-
+		
+		PaginadorBean paginadorBean = new PaginadorBean(listaPlacas.getTotalPages(), currentPage, listaPlacas.getTotalElements(), "/laboratorioCentro/gestionPlacas");		
+		vista.addObject("paginadorBean", paginadorBean);
 	}
 
 	
 	@RequestMapping(value = "/gestionPlacas", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
 	public ModelAndView buscarPlacasListasParaPcrPOST(HttpSession session, 
-			@ModelAttribute BusquedaPlacaLaboratorioBean criteriosBusqueda, 
-			@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+			@ModelAttribute BusquedaPlacaLaboratorioBean criteriosBusqueda) throws Exception {
 
 		ModelAndView vista = new ModelAndView("ListadoPlacasLaboratorio");
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getLaboratorioCentro().getId());
@@ -196,10 +271,17 @@ public class LabCentroControlador {
 			criteriosBusqueda.setNumeroMuestras(null);
 		}
 		
-		Page<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, pageable);
+		session.setAttribute("beanBusqueda", criteriosBusqueda);
+		
+		Integer currentPage = 1;
+		Page<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, 
+				PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION, ORDENACION));
 		this.agregarEstadosBusquedaPlacaLaboratorio(vista);
 		vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
 		vista.addObject("listaPlacas", listaPlacas.getContent());
+				
+		PaginadorBean paginadorBean = new PaginadorBean(listaPlacas.getTotalPages(), currentPage, listaPlacas.getTotalElements(), "/laboratorioCentro/gestionPlacas");		
+		vista.addObject("paginadorBean", paginadorBean);
 		return vista;
 	}
 
@@ -234,8 +316,8 @@ public class LabCentroControlador {
 		placa.setPlacasVisavetSeleccionadas("");
 		
 		vista.addObject("nueva", true);
-		vista.addObject("editable", placa.esEditable());
-		vista.addObject("rellenable", placa.esRellenable());
+		vista.addObject("editable", laboratorioCentroServicio.esEditable(placa.getId()));
+		vista.addObject("rellenable", true);
 		vista.addObject("placa", placa);		
 		return vista;
 	}
@@ -248,17 +330,18 @@ public class LabCentroControlador {
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		
 		if (!result.hasErrors()) {
-			placa = laboratorioCentroServicio.crearPlaca(placa);
+			placa = laboratorioCentroServicio.rellenarPlaca(placa, Integer.valueOf(placa.getNumeroMuestras()));
 			if (placa != null) {
 				vista.addObject("mensaje", "La placa " + placa.getId() + " se ha creado correctamente.");
+				vista.addObject("rellenable", false);
 			} else {
 				vista.addObject("mensaje", "No ha sido posible crear la placa.");
+				vista.addObject("rellenable", true);
 			}						
 		}
 		
 		vista.addObject("nueva", false);
 		vista.addObject("editable", false);
-		vista.addObject("rellenable", placa.esEditable());
 		vista.addObject("placa", placa);
 		return vista;
 	}
@@ -266,31 +349,24 @@ public class LabCentroControlador {
 	
 	@RequestMapping(value = "/gestionPlacas/modificar", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
-	public ModelAndView modificarPlaca(HttpSession session, @RequestParam(value = "id", required = true) Integer id, 
+	public ModelAndView modificarPlacaGET(HttpSession session, @RequestParam(value = "id", required = true) Integer id, 
 										@PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
 		
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		PlacaLaboratorioCentroBean placa = laboratorioCentroServicio.buscarPlaca(id);
-		
-		// Recuperamos las placas Visavet que ya se han combinado en la placa de laboratorio
-		List<PlacaLaboratorioVisavetBean> placasCombinadas = laboratorioVisavetServicio.buscarPlacasPorIdPlacaLaboratorio(placa.getId());
-		placa.setPlacasVisavet(placasCombinadas);
-				
+
 		// Recuperamos las placas VISAVET que se pueden combinar (recepcionadas).
 		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = new BusquedaRecepcionPlacasVisavetBean();
 		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACAVISAVET_RECIBIDA.getCodNum());
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getLaboratorioCentro().getId());
-		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
-		
-		// Al modificar una placa, en la lista de placas para combinar incluimos las placas ya combinadas anteriormente
-		placasCombinadas.addAll(listaPlacas.getContent());
-		placa.setPlacasVisavetParaCombinar(placasCombinadas);
+		Page<PlacaLaboratorioVisavetBean> placasParaCombinar = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
+		placa.setPlacasVisavetParaCombinar(placasParaCombinar.getContent());
 		
 		placa.setPlacasVisavetSeleccionadas("");
 		
 		vista.addObject("nueva", false);
-		vista.addObject("rellenable", placa.esRellenable());
-		vista.addObject("editable", placa.esEditable());
+		vista.addObject("rellenable", laboratorioCentroServicio.espacioLibreParaMuestras(placa, 0) > 0);
+		vista.addObject("editable", laboratorioCentroServicio.esEditable(placa.getId()));
 		vista.addObject("placa", placa);
 		return vista;
 	}
@@ -337,6 +413,24 @@ public class LabCentroControlador {
 		}
 
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placa.getId(), true));
+		return respuesta;
+	}
+	
+	@RequestMapping(value="/gestionPlacas/rellenar", method=RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
+	public ModelAndView rellenarPlacaPOST(@ModelAttribute("placa") PlacaLaboratorioCentroBean placa, RedirectAttributes redirectAttributes) throws Exception {
+				
+		PlacaLaboratorioCentroBean placaParaRellenar = laboratorioCentroServicio.buscarPlaca(placa.getId());
+		placaParaRellenar.setPlacasVisavetSeleccionadas(placa.getPlacasVisavetSeleccionadas());
+		
+		placaParaRellenar = laboratorioCentroServicio.rellenarPlaca(placaParaRellenar, 0);
+		if (placaParaRellenar != null) {
+			redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " se ha rellenado correctamente.");
+		} else {
+			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible rellenar la placa " + placa.getId() + ".");
+		}
+
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placaParaRellenar.getId(), true));
 		return respuesta;
 	}
 	
