@@ -75,15 +75,15 @@ public interface LaboratorioVisavetServicio {
 	
 	// JAVI
 	public Page<PlacaLaboratorioVisavetBean> buscarPlacas(BusquedaRecepcionPlacasVisavetBean criteriosBusqueda,
-			Pageable pageable);
+			Pageable pageable) throws Exception;
 	// JAVI
-	public PlacaLaboratorioVisavetBean buscarPlaca(Integer id);
+	public PlacaLaboratorioVisavetBean buscarPlaca(Integer id) throws Exception;
 
 	// JAVI
-	public boolean recepcionarPlaca(Integer id);
+	public boolean recepcionarPlaca(Integer id) throws Exception;
 	
 	// JAVI
-	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio);
+	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio) throws Exception;
 	
 	/**
 	 * Buscar laboratorio visavet por nombre
