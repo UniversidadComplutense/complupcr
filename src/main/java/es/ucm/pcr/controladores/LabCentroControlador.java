@@ -234,8 +234,8 @@ public class LabCentroControlador {
 		placa.setPlacasVisavetSeleccionadas("");
 		
 		vista.addObject("nueva", true);
-		vista.addObject("editable", placa.esEditable());
-		vista.addObject("rellenable", placa.esRellenable());
+		vista.addObject("editable", laboratorioCentroServicio.esEditable(placa.getId()));
+		vista.addObject("rellenable", true);
 		vista.addObject("placa", placa);		
 		return vista;
 	}
@@ -248,17 +248,18 @@ public class LabCentroControlador {
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		
 		if (!result.hasErrors()) {
-			placa = laboratorioCentroServicio.crearPlaca(placa);
+			placa = laboratorioCentroServicio.rellenarPlaca(placa, Integer.valueOf(placa.getNumeroMuestras()));
 			if (placa != null) {
 				vista.addObject("mensaje", "La placa " + placa.getId() + " se ha creado correctamente.");
+				vista.addObject("rellenable", false);
 			} else {
 				vista.addObject("mensaje", "No ha sido posible crear la placa.");
+				vista.addObject("rellenable", true);
 			}						
 		}
 		
 		vista.addObject("nueva", false);
 		vista.addObject("editable", false);
-		vista.addObject("rellenable", placa.esEditable());
 		vista.addObject("placa", placa);
 		return vista;
 	}
@@ -266,31 +267,24 @@ public class LabCentroControlador {
 	
 	@RequestMapping(value = "/gestionPlacas/modificar", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
-	public ModelAndView modificarPlaca(HttpSession session, @RequestParam(value = "id", required = true) Integer id, 
+	public ModelAndView modificarPlacaGET(HttpSession session, @RequestParam(value = "id", required = true) Integer id, 
 										@PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
 		
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		PlacaLaboratorioCentroBean placa = laboratorioCentroServicio.buscarPlaca(id);
-		
-		// Recuperamos las placas Visavet que ya se han combinado en la placa de laboratorio
-		List<PlacaLaboratorioVisavetBean> placasCombinadas = laboratorioVisavetServicio.buscarPlacasPorIdPlacaLaboratorio(placa.getId());
-		placa.setPlacasVisavet(placasCombinadas);
-				
+
 		// Recuperamos las placas VISAVET que se pueden combinar (recepcionadas).
 		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = new BusquedaRecepcionPlacasVisavetBean();
 		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACAVISAVET_RECIBIDA.getCodNum());
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getLaboratorioCentro().getId());
-		Page<PlacaLaboratorioVisavetBean> listaPlacas = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
-		
-		// Al modificar una placa, en la lista de placas para combinar incluimos las placas ya combinadas anteriormente
-		placasCombinadas.addAll(listaPlacas.getContent());
-		placa.setPlacasVisavetParaCombinar(placasCombinadas);
+		Page<PlacaLaboratorioVisavetBean> placasParaCombinar = laboratorioVisavetServicio.buscarPlacas(criteriosBusqueda, pageable);
+		placa.setPlacasVisavetParaCombinar(placasParaCombinar.getContent());
 		
 		placa.setPlacasVisavetSeleccionadas("");
 		
 		vista.addObject("nueva", false);
-		vista.addObject("rellenable", placa.esRellenable());
-		vista.addObject("editable", placa.esEditable());
+		vista.addObject("rellenable", laboratorioCentroServicio.espacioLibreParaMuestras(placa, 0) > 0);
+		vista.addObject("editable", laboratorioCentroServicio.esEditable(placa.getId()));
 		vista.addObject("placa", placa);
 		return vista;
 	}
@@ -337,6 +331,24 @@ public class LabCentroControlador {
 		}
 
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placa.getId(), true));
+		return respuesta;
+	}
+	
+	@RequestMapping(value="/gestionPlacas/rellenar", method=RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
+	public ModelAndView rellenarPlacaPOST(@ModelAttribute("placa") PlacaLaboratorioCentroBean placa, RedirectAttributes redirectAttributes) throws Exception {
+				
+		PlacaLaboratorioCentroBean placaParaRellenar = laboratorioCentroServicio.buscarPlaca(placa.getId());
+		placaParaRellenar.setPlacasVisavetSeleccionadas(placa.getPlacasVisavetSeleccionadas());
+		
+		placaParaRellenar = laboratorioCentroServicio.rellenarPlaca(placaParaRellenar, 0);
+		if (placaParaRellenar != null) {
+			redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " se ha rellenado correctamente.");
+		} else {
+			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible rellenar la placa " + placa.getId() + ".");
+		}
+
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placaParaRellenar.getId(), true));
 		return respuesta;
 	}
 	

@@ -48,12 +48,11 @@
 			</div>					
 		</fieldset>
 		
-		<div th:if="${nueva || rellenable || true}">
+		<!-- PLACAS VISAVET EN LA PLACA DE LABORATORIO -->
+		<div th:if="${true}">
 		<fieldset id="placasVisavet" class="form-group border p-2">
-			<legend class="w-auto">Placas VISAVET</legend>
-			<!-- PLACAS VISAVET PARA COMBINAR -->
-			<div class="row justify-content-center mt-6">
-				<input th:id="placasSeleccionadas" type="hidden" th:value="${placa.placasVisavetSeleccionadas}" th:field="${placa.placasVisavetSeleccionadas}" />
+			<legend class="w-auto">Placas VISAVET combinadas en la placa</legend>
+			<div class="row justify-content-center mt-6">				
 				<div class="col-12 form-group">
 				<table id="tablaPlacasVisavet" class="table">
 					<thead class="thead-light">	
@@ -65,10 +64,10 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:if="${placa.placasVisavetParaCombinar != null}" th:each="placaVisavet, count : ${placa.placasVisavetParaCombinar}">
+						<tr th:if="${placa.placasVisavet != null}" th:each="placaVisavet, count : ${placa.placasVisavet}">				
 							<td>
-								<input th:id="chkPlaca+${count.index}" class="form-check-input, justify-content-center" type="checkbox" th:checked="${placaVisavet.beanEstado.estado.codNum == 7}" th:value="${placaVisavet.id}" onchange="anotarPlacasSeleccionadas();"/>
-							</td>				
+								<input class="form-check-input, justify-content-center" type="checkbox" th:checked="${placaVisavet.beanEstado.estado.codNum == 7}" disabled/>
+							</td>
 							<td><span th:text="${placaVisavet.id}"></span></td>									
 							<td><span th:text="${placaVisavet.numeroMuestras}"></span></td>
 							<td>
@@ -89,7 +88,7 @@
 									<div class="modal-dialog modal-xl" role="document">
 								    	<div class="modal-content">
 								      		<div class="modal-header">
-								        		<h5 class="modal-title" id="exampleModalLabel">La placa - <b><span th:text="${placaVisavet.id}"/></b> contiene <span th:text="${#lists.size(placaVisavet.muestras)}"/> muestras</h5>
+								        		<h5 class="modal-title" id="exampleModalLabel">La placa - <b><span th:text="${placaVisavet.id}"/></b> contiene <span th:text="${#lists.size(placaVisavet.muestras)}"/> muestra(s)</h5>
 								        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								          			<span aria-hidden="true">&times;</span>
 								        		</button>
@@ -128,8 +127,96 @@
 						</tr>		
 					</tbody>
 				</table>
-				<div class="row justify-content-center mt-3" th:if="${placa.placasVisavetParaCombinar  == null}">
-					<span>En este momento no hay disponibles placas Visavet para rellenar la placa de laboratorio.</span>
+				<div class="row justify-content-center mt-3" th:if="${placa.placasVisavet  == null || #lists.size(placa.placasVisavet) == 0}">
+					<span>No se han incorporado placas Visavet a la placa.</span>
+				</div>
+			</div>
+			</div>								
+		</fieldset>
+		</div>
+		
+		<!-- PLACAS VISAVET PARA COMBINAR -->
+		<div th:if="${nueva || rellenable || true}">
+		<fieldset id="placasVisavetParaCombinar" class="form-group border p-2">
+			<legend class="w-auto">Placas VISAVET disponibles para combinar</legend>			
+			<div class="row justify-content-center mt-6">
+				<input th:id="placasSeleccionadas" type="hidden" th:value="${placa.placasVisavetSeleccionadas}" th:field="${placa.placasVisavetSeleccionadas}" />
+				<div class="col-12 form-group">
+				<table id="tablaPlacasVisavetParaCombinar" class="table">
+					<thead class="thead-light">	
+		    			<tr>
+		      				<th scope="col"><input class="form-check-input, justify-content-center" type="checkbox" value="" id="" disabled></th>
+		      				<th scope="col">Código</th>
+							<th scope="col">Capacidad</th>
+							<th scope="col">Muestras</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:if="${placa.placasVisavetParaCombinar != null}" th:each="placaVisavetParaCombinar, contador : ${placa.placasVisavetParaCombinar}">
+							<td>
+								<input th:id="chkPlacaVisavet+${contador.index}" class="form-check-input, justify-content-center" type="checkbox" th:value="${placaVisavetParaCombinar.id}" onchange="anotarPlacasSeleccionadas();"/>
+							</td>				
+							<td><span th:text="${placaVisavetParaCombinar.id}"></span></td>									
+							<td><span th:text="${placaVisavetParaCombinar.numeroMuestras}"></span></td>
+							<td>
+								<div th:if="${#lists.size(placaVisavetParaCombinar.muestras) == 0}">
+									<a style="cursor: pointer;color:grey">
+										<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+									</a>
+								</div>
+								
+								<div th:if="${#lists.size(placaVisavetParaCombinar.muestras) > 0}">								
+									<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${placaVisavetParaCombinar.id}" style="cursor: pointer;" title="Ver muestras">
+										<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+									</a>
+									<span th:text="${#lists.size(placaVisavetParaCombinar.muestras)}"></span>								
+								</div>
+								<!-- MODAL MUESTRAS -->							
+								<div class="modal fade" th:id="modal-warning+${placaVisavetParaCombinar.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+									<div class="modal-dialog modal-xl" role="document">
+								    	<div class="modal-content">
+								      		<div class="modal-header">
+								        		<h5 class="modal-title" id="exampleModalLabel">La placa - <b><span th:text="${placaVisavetParaCombinar.id}"/></b> contiene <span th:text="${#lists.size(placaVisavetParaCombinar.muestras)}"/> muestra(s)</h5>
+								        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								          			<span aria-hidden="true">&times;</span>
+								        		</button>
+								      		</div>
+								      		<div class="modal-body">							        
+									        	<!-- Muestras de la placa -->
+									          	<div id="tablaMuestras" class="tableFixHead">
+													<table>
+														<thead class="thead-light">	
+										    				<tr>
+											      				<th>Etiqueta</th>
+																<th>Ref. Interna</th>
+																<th>Placa Visavet</th>
+																<th>Estado</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr th:if="${placaVisavetParaCombinar.muestras != null}" th:each="muestra : ${placaVisavetParaCombinar.muestras}">
+																<td><span th:text="${muestra.etiqueta}"></span></td>					
+																<td><span th:text="${muestra.refInterna}"></span></td>
+																<td><span th:text="${muestra.idPlacaVisavet}"></span></td>		
+																<td><span th:text="${muestra.estado}"></span></td>															
+															</tr>		
+														</tbody>
+													</table>
+												</div>								        
+								      		</div>
+										    <div class="modal-footer">
+										    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>							        
+											</div>
+								    	</div>
+								  	</div>
+								</div>
+								<!-- FIN MODAL MUESTRAS -->	
+							</td>						
+						</tr>		
+					</tbody>
+				</table>
+				<div class="row justify-content-center mt-3" th:if="${placa.placasVisavetParaCombinar  == null || #lists.size(placa.placasVisavetParaCombinar) == 0}">
+					<span>No hay placas Visavet disponibles para rellenar la placa de laboratorio.</span>
 				</div>
 			</div>
 			</div>								
@@ -143,7 +230,7 @@
 				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas} + '\''" class="btn btn-secondary">Volver</button>				
 			</div>
 			<div th:if="${!nueva && rellenable}" class="col-2 justify-content-begin mt-3">
-				<button th:id="btnRellenarPlaca" type="button" th:disabled="disabled" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas/rellenar} + '\''" class="btn btn-secondary">Rellenar</button>			
+				<button th:id="btnRellenarPlaca" type="button" th:disabled="disabled" th:onclick="rellenarPlaca();" class="btn btn-secondary">Rellenar</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 1}" class="col-3 justify-content-begin mt-3">
 				<button th:id="btnFinalizarPCR" type="button" th:onclick="asignarEquipoPCR();" th:disabled="${nueva}" class="btn btn-secondary">Asignar equipo PCR</button>			
@@ -176,6 +263,12 @@
 	<!-- formuario para botón 'Lista para analizar' -->
 	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/resultados}" method="post" th:object="${placa}" id="formGuardarListaParaAnalizar" role="form">
 		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
+	</form>
+	
+	<!-- formuario para botón 'Rellenar' -->
+	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/rellenar}" method="post" th:object="${placa}" id="formGuardarRellenarPlaca" role="form">
+		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
+		<input th:id="placasSeleccionadasParaRellenar" type="hidden" th:value="${placa.placasVisavetSeleccionadas}" th:field="${placa.placasVisavetSeleccionadas}" />
 	</form>
 
 	</div>
