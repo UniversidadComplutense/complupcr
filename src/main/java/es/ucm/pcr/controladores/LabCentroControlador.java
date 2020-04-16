@@ -329,7 +329,7 @@ public class LabCentroControlador {
 
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		
-		if (!result.hasErrors()) {
+		if (!result.hasErrors() && laboratorioCentroServicio.esRellenable(placa, Integer.valueOf(placa.getNumeroMuestras()))){
 			placa = laboratorioCentroServicio.rellenarPlaca(placa, Integer.valueOf(placa.getNumeroMuestras()));
 			if (placa != null) {
 				vista.addObject("mensaje", "La placa " + placa.getId() + " se ha creado correctamente.");
@@ -337,7 +337,9 @@ public class LabCentroControlador {
 			} else {
 				vista.addObject("mensaje", "No ha sido posible crear la placa.");
 				vista.addObject("rellenable", true);
-			}						
+			}
+		} else {
+			vista.addObject("mensaje", "Las placas Visavet seleccionadas superan la capacidad de la nueva placa.");
 		}
 		
 		vista.addObject("nueva", false);
@@ -423,17 +425,20 @@ public class LabCentroControlador {
 		PlacaLaboratorioCentroBean placaParaRellenar = laboratorioCentroServicio.buscarPlaca(placa.getId());
 		placaParaRellenar.setPlacasVisavetSeleccionadas(placa.getPlacasVisavetSeleccionadas());
 		
-		placaParaRellenar = laboratorioCentroServicio.rellenarPlaca(placaParaRellenar, 0);
-		if (placaParaRellenar != null) {
-			redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " se ha rellenado correctamente.");
+		if (laboratorioCentroServicio.esRellenable(placa, 0)) {
+			placaParaRellenar = laboratorioCentroServicio.rellenarPlaca(placaParaRellenar, 0);
+			if (placaParaRellenar != null) {
+				redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " se ha rellenado correctamente.");
+			} else {
+				redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible rellenar la placa " + placa.getId() + ".");
+			}
 		} else {
-			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible rellenar la placa " + placa.getId() + ".");
+			redirectAttributes.addFlashAttribute("mensaje", "Las placas Visavet seleccionadas superan la capacidad de la placa " + placa.getId() + ".");
 		}
 
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placaParaRellenar.getId(), true));
 		return respuesta;
 	}
-	
 	
 
 }
