@@ -1,6 +1,7 @@
 package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -181,7 +182,16 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda,
 			Pageable pageable) {
 		
-		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();		
+		List<PlacaLaboratorioCentroBean> listaPlacasLaboratorioCentroBean = new ArrayList<PlacaLaboratorioCentroBean>();
+
+		// Si no se ha seleccionado el estado de la placa en la búsqueda, buscamos por los estados: PLACA_INICIADA ó PLACA_PREPARADA_PARA_PCR
+		// ó PLACA_FINALIZADA_PCR ó PLACA_LISTA_PARA_ANALISIS
+		if (criteriosBusqueda.getIdEstadoPlaca() == 0) {
+			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(1,2,3,4));
+		} else {
+			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(criteriosBusqueda.getIdEstadoPlaca()));
+		}
+		
 		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = placaLaboratorioRepositorio.findByParams(criteriosBusqueda, pageable); 		
 		for (PlacaLaboratorio placa : PagePlacasLaboratorioCentro.getContent()) {
 			listaPlacasLaboratorioCentroBean.add(PlacaLaboratorioCentroBean.modelToBean(placa));
@@ -251,8 +261,8 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				if (documentosPlaca != null && documentosPlaca.getDocumentos() != null && documentosPlaca.getDocumentos().size() >0) {
 					placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum()));
 					placaLaboratorioRepositorio.save(placa.get());
-					// Registramos en el log que las muestras de la placa están listas para ser analizadas
-					servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(id, new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_PENDIENTE_ANALIZAR));
+					// No registramos en el log que las muestras de la placa están listas para ser analizadas porque lo hace Diana
+					// servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(id, new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_PENDIENTE_ANALIZAR));
 					
 					// TODO Registrar en LOG placaLaboratorio lista para analizar				
 					return true;
@@ -351,6 +361,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 					placaVisavetPlacaLaboratorio.setPlacaLaboratorio(placaLaboratorio);
 					placaVisavetPlacaLaboratorio.setPlacaVisavet(placaVisavet);				
 					placaVisavetPlacaLaboratorioRepositorio.save(placaVisavetPlacaLaboratorio);
+					
+					// Registramos en el log que las muestras de la placa se han traspasado a un placa de laboratorio conservando su estado MUESTRA_ENVIADA_CENTRO_ANALISIS
+					servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(placa.getId(), new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS));
 					
 					// TODO Registrar en LOG placaVisavet traspasada
 					
