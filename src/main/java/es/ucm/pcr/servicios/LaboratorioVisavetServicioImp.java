@@ -1,6 +1,7 @@
 package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -133,6 +134,13 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 					}
 				}
 			}	
+		}
+		
+		// Si no se ha seleccionado el estado de la placa en la búsqueda, buscamos por los estados PLACAVISAVET_ENVIADA ó PLACAVISAVET_RECIBIDA
+		if (criteriosBusqueda.getIdEstadoPlaca() == 0) {
+			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(5,6));
+		} else {
+			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(criteriosBusqueda.getIdEstadoPlaca()));
 		}
 		
 		Page<PlacaVisavet> PagePlacasVisavet = placaVisavetRepositorio.findByParams(criteriosBusqueda, pageable); 		

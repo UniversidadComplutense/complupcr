@@ -23,6 +23,7 @@ private String urlPaginada="/laboratorioUni/buscarLotesGet";
 private String orden;
 private String sentidoOrden;
 private Boolean mostrarProcesar;
+private String rolURL;
 
 public String getIdLaboratorio() {
 	return idLaboratorio;
@@ -113,4 +114,11 @@ public void setMostrarProcesar(Boolean mostrarProcesar) {
 public String getCriterioNumLote() {
 	return StringUtils.isBlank(numLote) ? null : "%" + numLote + "%";
 }
+public String getRolURL() {
+	return rolURL;
+}
+public void setRolURL(String rolURL) {
+	this.rolURL = rolURL;
+}
+
 }
