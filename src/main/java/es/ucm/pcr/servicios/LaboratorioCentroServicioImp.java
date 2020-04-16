@@ -261,8 +261,8 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				if (documentosPlaca != null && documentosPlaca.getDocumentos() != null && documentosPlaca.getDocumentos().size() >0) {
 					placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum()));
 					placaLaboratorioRepositorio.save(placa.get());
-					// Registramos en el log que las muestras de la placa están listas para ser analizadas
-					servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(id, new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_PENDIENTE_ANALIZAR));
+					// No registramos en el log que las muestras de la placa están listas para ser analizadas porque lo hace Diana
+					// servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(id, new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_PENDIENTE_ANALIZAR));
 					
 					// TODO Registrar en LOG placaLaboratorio lista para analizar				
 					return true;
@@ -361,6 +361,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 					placaVisavetPlacaLaboratorio.setPlacaLaboratorio(placaLaboratorio);
 					placaVisavetPlacaLaboratorio.setPlacaVisavet(placaVisavet);				
 					placaVisavetPlacaLaboratorioRepositorio.save(placaVisavetPlacaLaboratorio);
+					
+					// Registramos en el log que las muestras de la placa se han traspasado a un placa de laboratorio conservando su estado MUESTRA_ENVIADA_CENTRO_ANALISIS
+					servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(placa.getId(), new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS));
 					
 					// TODO Registrar en LOG placaVisavet traspasada
 					
