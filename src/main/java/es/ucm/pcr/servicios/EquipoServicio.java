@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import es.ucm.pcr.beans.BeanEquipo;
 import es.ucm.pcr.modelo.orm.Equipo;
+import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 
 public interface EquipoServicio {
 	
@@ -64,6 +65,14 @@ public interface EquipoServicio {
 	 * @return Optional<Equipo>
 	 */
 	public Optional<Equipo> findById(Integer idEquipo) throws Exception;
+		
+	/**
+	 * Buscar Equipo por laboratorioCentro
+	 * 
+	 * @param LaboratorioCentro laboratorioCentro
+	 * @return Optional<Equipo>
+	 */
+	public List<Equipo> findByLaboratorioCentro(LaboratorioCentro laboratorioCentro) throws Exception;
 	
 
 

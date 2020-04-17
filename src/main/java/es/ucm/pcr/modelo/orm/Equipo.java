@@ -29,6 +29,10 @@ public class Equipo implements java.io.Serializable {
 
 	public Equipo() {
 	}
+	
+	public Equipo(Integer id) {
+		this.id = id;
+	}
 
 	public Equipo(String nombre, Integer capacidad) {
 		this.nombre = nombre;

@@ -81,7 +81,7 @@ public interface LaboratorioCentroServicio {
 	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable) throws Exception;
 	PlacaLaboratorioCentroBean buscarPlaca (Integer id) throws Exception;
 	public boolean finalizarPCR(Integer id) throws Exception;
-	public boolean asignarEquipoPCR(Integer id) throws Exception;
+	public boolean asignarEquipoPCR(Integer idPlaca, Integer idEquipo) throws Exception;
 	
 	public PlacaLaboratorioCentroAsignacionesBean buscarPlacaAsignaciones(Integer id);
 	//public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda, Pageable pageable); 
