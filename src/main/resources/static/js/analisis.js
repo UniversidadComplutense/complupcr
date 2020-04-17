@@ -323,9 +323,9 @@ function EjecutarCierreMuestras() {
 
 function cargarModalReemplazarAnalista(idPlaca, idUsuarioAReemplazar){
 	
-	alert("estoy en  cargarModalReemplazarAnalista");
-	alert("el usurio a reemplazar es: "+ idUsuarioAReemplazar);
-	alert("en la placa con id : "+ idPlaca);
+	//alert("estoy en  cargarModalReemplazarAnalista");
+	//alert("el usurio a reemplazar es: "+ idUsuarioAReemplazar);
+	//alert("en la placa con id : "+ idPlaca);
 	
 	
 	url = "/analisis/reemplazarAnalista?idUsuarioAReemplazar=" + idUsuarioAReemplazar + "&idPlaca=" + idPlaca;
@@ -368,7 +368,7 @@ function cargarModalReemplazarAnalista(idPlaca, idUsuarioAReemplazar){
 
 function EjecutarReemplazoAnalista(){
 	
-	alert("estoy en  EjecutarReemplazoAnalista");
+	//alert("estoy en  EjecutarReemplazoAnalista");
 	//alert("el usurio a reemplazar es: "+ idUsuarioAReemplazar);
 	//alert("en la placa con id : "+ idPlaca);
 	
@@ -379,17 +379,17 @@ function EjecutarReemplazoAnalista(){
 	var analistasVolSeleccionadoReemp = $('#analistasVolSeleccionadoReemp').val();
 	var analistasVolSinLabCentroSeleccionadoReemp = $('#analistasVolSinLabCentroSeleccionadoReemp').val();
 	
-	alert("analistasLabSeleccionadoReemp: " +analistasLabSeleccionadoReemp);
-	alert("analistasVolSeleccionadoReemp: " + analistasVolSeleccionadoReemp);
-	alert("analistasVolSinLabCentroSeleccionadoReemp: " + analistasVolSinLabCentroSeleccionadoReemp);
+	//alert("analistasLabSeleccionadoReemp: " +analistasLabSeleccionadoReemp);
+	//alert("analistasVolSeleccionadoReemp: " + analistasVolSeleccionadoReemp);
+	//alert("analistasVolSinLabCentroSeleccionadoReemp: " + analistasVolSinLabCentroSeleccionadoReemp);
 	
-	alert("tamaño analistasLabSeleccionadoReemp: " + analistasLabSeleccionadoReemp.length);
-	alert("tamaño analistasVolSeleccionadoReemp: " + analistasVolSeleccionadoReemp.length);
-	alert("tamaño analistasVolSinLabCentroSeleccionadoReemp: " + analistasVolSinLabCentroSeleccionadoReemp.length);
+	//alert("tamaño analistasLabSeleccionadoReemp: " + analistasLabSeleccionadoReemp.length);
+	//alert("tamaño analistasVolSeleccionadoReemp: " + analistasVolSeleccionadoReemp.length);
+	//alert("tamaño analistasVolSinLabCentroSeleccionadoReemp: " + analistasVolSinLabCentroSeleccionadoReemp.length);
 		
 	
 	if (analistasLabSeleccionadoReemp.length + analistasVolSeleccionadoReemp.length + analistasVolSinLabCentroSeleccionadoReemp.length != 1) {
-		alert("solo se puede escoger un analista!!");
+		//alert("solo se puede escoger un analista!!");
 		$('#labelErrorAnalistasPermitidos').html("Debe escoger un solo analista");
 		$('#mensajeErrorAnalistas').show();
 		//$('#divEstudiosError').show();
@@ -409,7 +409,7 @@ function EjecutarReemplazoAnalista(){
 			idUsuarioAPoner = analistasVolSinLabCentroSeleccionadoReemp;
 		}
 	
-		alert("el usuario a poner tiene el id: " + idUsuarioAPoner);
+		//alert("el usuario a poner tiene el id: " + idUsuarioAPoner);
 		
 		url = "/analisis/guardaReemplazarAnalista";
 					

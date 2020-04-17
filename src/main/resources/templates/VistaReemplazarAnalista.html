@@ -15,7 +15,7 @@
 			 <div class="row justify-content-center mt-3">
 		    	<div class="col-lg-12">
 					<input id="idPlaca" type="hidden" th:field="*{idPlaca}" ></input>
-					<input id="idUsuarioAReemplazar" type="text" th:value="${idUsuarioAReemplazar}"></input>					
+					<input id="idUsuarioAReemplazar" type="hidden" th:value="${idUsuarioAReemplazar}"></input>					
 			 	</div>
 			 </div>
 			
@@ -74,7 +74,7 @@
 		
 	</fielset>		
 	
-		<!-- botones cancelar y guardar asignacion -->
+		<!-- botones cancelar y guardar asignacion -->		
 		<div class="row justify-content-center mt-4">		
 			<!-- <div class="col-1">							
 				<a th:href="@{/analisis/cogerPlacas}" class="btn btn-secondary ">Cancelar</a>
@@ -83,9 +83,13 @@
 				<input th:disabled="${noSePuedeAsignarNuevosAnalistasAPlaca}" type="submit" class="btn btn-primary "
 					value="Guardar asignacion"></input>
 			</div> -->
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>	
-			<!-- <input  type="submit" class="btn btn-primary "	value="Guardar"></input> -->	
-			<input type="button" class="btn btn-secondary" onclick="EjecutarReemplazoAnalista()" value="Guardar" />
+			<div class="col-1-left">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			</div>			
+			<div class="col-1-right">	
+				<!-- <input  type="submit" class="btn btn-primary "	value="Guardar"></input> -->	
+				<input type="button" class="btn btn-secondary" onclick="EjecutarReemplazoAnalista()" value="Guardar" />
+			</div>
 		</div>
 	
 	
