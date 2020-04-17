@@ -278,7 +278,8 @@ function asignarPlaca(){
 	$("#criteriosBusqueda").show();
 	var url = "";
 	//var urlAbs = getAbsolutePath();
-	if ($("#tamano option:selected").val() < $("#totalMuestras").text()){
+	if (parseInt($("#tamano option:selected").val()) < parseInt($("#totalMuestras").text())){
+	
 		//alert ("El tamaño de la placa es menor al número de muestras");
 		$("#error").show();
 	}
