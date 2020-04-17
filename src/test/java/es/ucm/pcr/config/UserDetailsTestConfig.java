@@ -29,12 +29,19 @@ public class UserDetailsTestConfig {
         PcrUserDetails ucsUserDetails = new PcrUserDetails(usuario, setAuth);
         
         usuario = new Usuario();
-        usuario.setEmail("visavet@ucm.es");
+        usuario.setEmail("recepcionvisavet@ucm.es");
+        usuario.setPassword("PWD");
+        setAuth = new HashSet<GrantedAuthority>();
+        setAuth.add(new SimpleGrantedAuthority("ROLE_RECEPCIONLABORATORIO"));
+        PcrUserDetails urviUserDetails = new PcrUserDetails(usuario, setAuth);
+        
+        usuario = new Usuario();
+        usuario.setEmail("tecnicovisavet@ucm.es");
         usuario.setPassword("PWD");
         setAuth = new HashSet<GrantedAuthority>();
         setAuth.add(new SimpleGrantedAuthority("ROLE_TECNICOLABORATORIO"));
-        PcrUserDetails uviUserDetails = new PcrUserDetails(usuario, setAuth);
+        PcrUserDetails utviUserDetails = new PcrUserDetails(usuario, setAuth);
         
-        return new InMemoryUserDetailsManager(Arrays.asList(ucsUserDetails, uviUserDetails));
+        return new InMemoryUserDetailsManager(Arrays.asList(ucsUserDetails, urviUserDetails, utviUserDetails));
     }
 }

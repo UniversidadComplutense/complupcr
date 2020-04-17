@@ -34,7 +34,7 @@ import es.ucm.pcr.modelo.orm.Usuario;
 @ActiveProfiles(profiles = "test")
 @SpringBootTest(classes = UserDetailsTestConfig.class)
 @TestMethodOrder(OrderAnnotation.class)
-public class CentroSaludServiciosTests {
+public class CicloMuestrasServiciosTests {
 
 	@Autowired
 	CentroServicio centroServicio;
@@ -57,7 +57,7 @@ public class CentroSaludServiciosTests {
 	@Test
 	@Order(1)
 	@WithUserDetails("centrosalud@ucm.es")
-	public void altaMuestras() {
+	public void centroSalud() {
 		try {
 			// Damos de alta centro de salud
 			Centro centro = new Centro();
@@ -185,7 +185,31 @@ public class CentroSaludServiciosTests {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			fail("Falló la prueba de alta de muestras");
+			fail("Falló la prueba para centro de salud");
+		}
+	}
+	
+	@Test
+	@Order(2)
+	@WithUserDetails("recepcionvisavet@ucm.es")
+	public void recepcionVisavet() {
+		try {
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Falló la prueba para recepción Visavet");
+		}
+	}
+
+	@Test
+	@Order(3)
+	@WithUserDetails("tecnicovisavet@ucm.es")
+	public void tecnicoVisavet() {
+		try {
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Falló la prueba para técnico Visavet");
 		}
 	}
 
