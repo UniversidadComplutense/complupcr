@@ -26,6 +26,8 @@ package:
   only:
     - integracion
     - produccion
+  dependencies:
+    - test
   artifacts:
     paths:
       - target/covid19.jar
