@@ -74,6 +74,7 @@ produccion1:
     - ssh ades@$SERVIDOR_PROD_COVID19_1 'sudo mv /opt/covid19/covid19.jar /opt/covid19/covid19.old.jar'
     - ssh ades@$SERVIDOR_PROD_COVID19_1 'sudo cp /home/ades/covid19.jar /opt/covid19/'
     - ssh ades@$SERVIDOR_PROD_COVID19_1 'sudo systemctl restart covid19'
+  when: manual
 produccion2:
   stage: produccion
   tags:
@@ -89,6 +90,7 @@ produccion2:
     - ssh ades@$SERVIDOR_PROD_COVID19_2 'sudo mv /opt/covid19/covid19.jar /opt/covid19/covid19.old.jar'
     - ssh ades@$SERVIDOR_PROD_COVID19_2 'sudo cp /home/ades/covid19.jar /opt/covid19/'
     - ssh ades@$SERVIDOR_PROD_COVID19_2 'sudo systemctl restart covid19'
+  when: manual
 logProduccion1:
   stage: logproduccion
   tags:
