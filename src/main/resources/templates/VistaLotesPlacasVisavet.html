@@ -17,16 +17,18 @@
    <!--  <div class="row justify-content-left mt-3">
     	
 	
-   <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">	-->	   
+   <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">	-->	  
+   
+        
    <form action="#" th:action="@{/laboratorioUni/buscarLotes}"
 			id="formularioPrueba" method="post" th:object="${lotePlacaVisavetBean}"
 			class="form-horizontal">
-        <div class="row justify-content-end mt-3">
-			<div class="col-2">
+		  <div class="row justify-content-end mt-2">
+			<div>
 			<!-- th:disabled="${botonAltaNoMostrar}" -->
 				<button type="button"  th:disabled="${botonAltaNoMostrar}" th:onClick="|altaNuevaPlaca(); return false|"  class="btn btn-secondary">Nueva placa</button>
 			</div>
-		</div>	   
+		</div>	  
 
 			<fieldset id="criteriosBusqueda" style="display:none" class="form-group border p-2">
 		    <legend class="w-auto font-weight-bold m-0" >Asignación de referencias a muestras</legend>
@@ -35,10 +37,10 @@
 			 
 			  <div class="row">
 				<div class="col-3 form-group">
-				<label class="col-xs-2">Placa número:</label><label class="col-xs-2"><span style="font-weight:bold;" id="numPlacaSpan"/></label>
+				<label class="col-xs-2">Placa número:&nbsp;</label><label class="col-xs-2"><span style="font-weight:bold;" id="numPlacaSpan"/></label>
 				</div>
-				<div class="col-6 form-group">
-				<label class="col-xs-2">Tamaño:</label>
+				<div class="col-2 form-group">
+				<label class="col-xs-2">Tamaño: </label>
 				
 						<label class="col-xs-2">
 							 <select class="form-control form-control-sm" id="tamano" th:field="*{placa.tamano}">
@@ -70,19 +72,19 @@
 				</tbody>
 				</table>	
 			 
-			   </div>-->
+			   </div>
 			    <div class="row form-group">
 			    <div class="col-9 form-group justify-content-end mt-3">
 			   
 			   </div>
 			    </div>
-			   
+			   -->
 			   
 
 		</fieldset>
 		
 		</form>
-		<div class="row"><label class="col-xs-2">Nº Total de muestras:  </label><span th:text="${lotePlacaVisavetBean.totalMuestras}" id="totalMuestras"></span></div>
+		<div class="row"><label class="col-xs-2">Nº Total de muestras:  </label>&nbsp;<span th:text="${lotePlacaVisavetBean.totalMuestras}" id="totalMuestras" style="font-weight:bold;"></span></div>
 				
 		 <form action="#" th:action="@{/laboratorioUni/buscarPlacasProcesar}" id="formularioConReferencias" method="post" th:object="${lotePlacaVisavetBean}" th:modelAttribute="${lotePlacaVisavetBean}"
 			class="form-horizontal">
