@@ -148,9 +148,9 @@ public class SesionServicioImpl implements SesionServicio {
 //		Responsable PCR
 		if (this.tieneRol("ADMIN") || this.tieneRol("RESPONSABLEPCR")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Recepción placas", "/laboratorioCentro/recepcionPlacas/list", null);
+			opcionSecundaria = new MenuBean("Recepción de placas con muestras a analizar", "/laboratorioCentro/recepcionPlacas/list", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Gestión de placas", "/laboratorioCentro/gestionPlacas/list", null);
+			opcionSecundaria = new MenuBean("Gestión de placas PCR", "/laboratorioCentro/gestionPlacas/list", null);
 			menuSecundario.add(opcionSecundaria);			
 			opcionPrincipal = new MenuBean("Responsable PCR", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
