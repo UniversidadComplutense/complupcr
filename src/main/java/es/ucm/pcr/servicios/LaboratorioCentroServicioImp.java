@@ -26,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanElemento;
+import es.ucm.pcr.beans.BeanEquipo;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
@@ -38,6 +39,7 @@ import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesAnalistaBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
+import es.ucm.pcr.modelo.orm.Equipo;
 import es.ucm.pcr.modelo.orm.EstadoMuestra;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
@@ -50,6 +52,7 @@ import es.ucm.pcr.modelo.orm.PlacaVisavet;
 import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.modelo.orm.UsuarioMuestra;
+import es.ucm.pcr.repositorio.EquipoRepositorio;
 import es.ucm.pcr.repositorio.EstadoPlacaLaboratorioRepositorio;
 import es.ucm.pcr.repositorio.EstadoPlacaVisavetRepositorio;
 import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
@@ -105,6 +108,12 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	@Autowired
 	MuestraServicio muestraServicio;
+	
+	@Autowired
+	EquipoRepositorio equipoRepositorio;
+	
+	@Autowired
+	EquipoServicio equipoServicio;
 	
 	public LaboratorioCentro mapeoBeanEntidadLaboratorioCentro(BeanLaboratorioCentro beanLaboratorioCentro) throws Exception{
 		
@@ -793,5 +802,13 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		else return null;
 	}
 	
-	
+	public List<BeanEquipo> listaEquiposLaboratorioCentro(LaboratorioCentro laboratorioCentro) throws Exception{
+		List<BeanEquipo> listaEquipos = new ArrayList<BeanEquipo>();
+		
+		for (Equipo equipo: equipoRepositorio.findByLaboratorioCentro(laboratorioCentro))
+		{
+			listaEquipos.add(equipoServicio.mapeoEntidadBeanEquipo(equipo));
+		}
+		return listaEquipos;
+	}
 }

@@ -55,7 +55,7 @@ public class LaboratorioCentroControlador {
 		// le indicamos la acción a relizar: A alta de un rol
 		beanLaboratorioCentro.setAccion("A");
 		vista.addObject("formBeanLaboratorioCentro", beanLaboratorioCentro);
-
+		
 		return vista;
 	}
 	
@@ -98,6 +98,9 @@ public class LaboratorioCentroControlador {
 			// le indicamos la acción a relizar: M modificación de un laboratorioCentro
 			beanLaboratorioCentro.setAccion("M");
 			
+			// Añdimos  los equipos asociados al centro
+			vista.addObject("listaEquipos", laboratorioCentroServicio.listaEquiposLaboratorioCentro(laboratorioCentro.get()));
+
 			vista.addObject("formBeanLaboratorioCentro", beanLaboratorioCentro);
 		
 			return vista;
