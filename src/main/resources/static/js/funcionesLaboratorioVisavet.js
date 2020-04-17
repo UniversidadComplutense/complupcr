@@ -63,18 +63,37 @@ function loadTabla(i) {
 		$("#trGroup").html(respuesta);
 	});
 	}
+/*
 function habilitarBotonProcesar(){
 	// si hay resultados que aparezca el botón procesarBoton
+	// recupero la sesion
+if (window.sessionStorage) {
+
+		  sessionStorage.setItem("nombre", "Gonzalo");
+
+		  var procesarLotes = sessionStorage.getItem("procesarLotes");
+		 
+		  sessionStorage.removeItem("nombre");
+		}
+		else
+		 {
+		  throw new Error('Tu Browser no soporta sessionStorage!');
+		}
+
+	
 	var nFilas = $("#tablaResultadosLotes tr").length;
 	if (nFilas>0) {
 		$('#procesarBoton').show();
 		for (var i=0; i<nFilas;i++){
 		if (!$('#seleccionado'+i).is(':disabled')) {
+			
+			 procesarLotes+=$(seleccionado).val()+":";
+			
 			$('#procesarBoton').removeAttr("disabled");
 		}
 		}
 		}
-}
+} */
 function buscarResultados(orden,sentidoOrden,numPagina,sizePagina){
 	var url = "";
 	//var urlAbs = getAbsolutePath();
