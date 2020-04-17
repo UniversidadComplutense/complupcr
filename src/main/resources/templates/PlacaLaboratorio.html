@@ -35,7 +35,7 @@
 				 		<option value="96">96</option>
 				 	</select>
 				</div>
-				<div class="col-4 form-group">
+				<div th:if="${placa.id} != null" class="col-4 form-group">
 					<label>Equipo PCR</label>
 				 	<select class="form-control form-control-sm" th:field="${placa.idEquipo}"  th:value="${placa.idEquipo}" th:disabled="${true}">
 				 		<option value="0">No especificado</option>
@@ -265,7 +265,12 @@
 		<div class="modal-dialog modal-lg" role="document">
 	    	<div class="modal-content">
 	      		<div class="modal-header">
-	        		<h5 class="modal-title" id="exampleModalLabel"><b>Asignar equipo PCR</b> a la placa <span th:text="${placa.id} + ' que contiene ' + ${#lists.size(placa.muestras)} + ' muestras.'"/></b></h5>
+	        		<div th:if="${placa.muestras != null && #lists.size(placa.muestras) > 0}">	
+	        			<h5 class="modal-title" id="exampleModalLabel"><b>Asignar equipo PCR</b> a la placa <span th:text="${placa.id} + ' que contiene ' + ${#lists.size(placa.muestras)} + ' muestra(s).'"/></b></h5>
+	        		</div>
+	        		<div th:if="${placa.muestras == null || #lists.size(placa.muestras) == 0}">	
+	        			<h5 class="modal-title" id="exampleModalLabel"><b>Asignar equipo PCR</b> a la placa <span th:text="${placa.id} + ' que no contiene muestras.'"/></b></h5>
+	        		</div>
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          			<span aria-hidden="true">&times;</span>
 	        		</button>
