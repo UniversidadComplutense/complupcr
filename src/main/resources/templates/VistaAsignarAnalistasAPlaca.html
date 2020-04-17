@@ -5,7 +5,7 @@
 <title>PCR-COVID19 - MUESTRAS</title>
 <object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
 </head>
-<body>
+<body id="idcuerpo">
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	
@@ -65,7 +65,15 @@
 						  </td>
 						  <td th:if="*{#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.beanListaAsignaciones.listaAnalistasLab) > 0}">
 						  	<ul th:each="analistaLab : *{placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.beanListaAsignaciones.listaAnalistasLab}">							
-									<li><span th:text="${analistaLab.beanUsuario.nom}"></span> 
+									<li style="list-style-type:none">		
+										<a th:if="${analistaLab.esReemplazable}" style="color:black" href="#" 
+										th:onclick="|cargarModalReemplazarAnalista('*{placaLaboratorioCentroAsignacionesBean.id}','${analistaLab.beanUsuario.id}'); return false|" data-toggle="tooltip" title="Reemplazar analista">
+											<i class="fa fa-exchange" aria-hidden="true" style="font-size: 1.2em;"></i>											
+										</a>
+										<a th:unless="${analistaLab.esReemplazable}" style="cursor: pointer;color:grey">
+											<i class="fa fa-exchange" aria-hidden="true" style="font-size: 1.2em;"></i>											
+										</a>
+										<span th:text="${analistaLab.beanUsuario.nom}"></span> 
 										<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
 										<!-- <span th:text="${analistaLab.valoracion}"></span> --> 
 									</li>
@@ -76,7 +84,15 @@
 						  </td>
 						  <td th:if="*{#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.beanListaAsignaciones.listaAnalistasVol) > 0}">
 						  	<ul th:each="voluntarioLab : *{placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.beanListaAsignaciones.listaAnalistasVol}">							
-									<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span> 
+									<li style="list-style-type:none">
+										<a th:if="${voluntarioLab.esReemplazable}" style="color:black" href="#" 
+										th:onclick="|cargarModalReemplazarAnalista('*{placaLaboratorioCentroAsignacionesBean.id}','${voluntarioLab.beanUsuario.id}'); return false|" data-toggle="tooltip" title="Reemplazar voluntario">
+											<i class="fa fa-exchange" aria-hidden="true" style="font-size: 1.2em;"></i>
+										</a>
+										<a th:unless="${voluntarioLab.esReemplazable}" style="cursor: pointer;color:grey">
+											<i class="fa fa-exchange" aria-hidden="true" style="font-size: 1.2em;"></i>											
+										</a>
+										<span th:text="${voluntarioLab.beanUsuario.nom}"></span> 
 										<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
 										<!-- <span th:text="${voluntarioLab.valoracion}"></span> --> 
 									</li>
@@ -87,7 +103,15 @@
 						  </td>
 						  <td th:if="*{#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.beanListaAsignaciones.listaAnalistasVolSinLabCentro) > 0}">
 						  	<ul th:each="voluntarioSinLabCentro : *{placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.beanListaAsignaciones.listaAnalistasVolSinLabCentro}">							
-									<li><span th:text="${voluntarioSinLabCentro.beanUsuario.nom}"></span> 
+									<li style="list-style-type:none">
+										<a th:if="${voluntarioSinLabCentro.esReemplazable}" style="color:black" href="#" 
+										th:onclick="|cargarModalReemplazarAnalista('*{placaLaboratorioCentroAsignacionesBean.id}','${voluntarioSinLabCentro.beanUsuario.id}'); return false|" data-toggle="tooltip" title="Reemplazar otro voluntario">
+											<i class="fa fa-exchange" aria-hidden="true" style="font-size: 1.2em;"></i>											
+										</a>
+										<a th:unless="${voluntarioSinLabCentro.esReemplazable}" style="cursor: pointer;color:grey">
+											<i class="fa fa-exchange" aria-hidden="true" style="font-size: 1.2em;"></i>											
+										</a>
+										<span th:text="${voluntarioSinLabCentro.beanUsuario.nom}"></span> 
 										<!-- <span th:text="${voluntarioSinLabCentro.fechaAsignacion}"></span>;  -->
 										<!-- <span th:text="${voluntarioSinLabCentro.valoracion}"></span> --> 
 									</li>
@@ -130,8 +154,10 @@
 	
 		
 	<!-- ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->
-	<fieldset id="nuevasAsignaciones" class="form-group border p-2">		
-	<div id="AsignarAnalistasAPlaca" class="container">
+	<!-- solo se podran asignar mas analistas si no tenemos ya el total de analistas -->
+	<fieldset th:if="*{placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.numTotalAnalistasAsignados < numAnalistasPermitidos}" id="nuevasAsignaciones" class="form-group border p-2">
+				
+	<div  id="AsignarAnalistasAPlaca" class="container">
 		<div class="row justify-content-center mt-1, titulo-menu">
 			<h5>ASIGNAR NUEVOS ANALISTAS</h5>
 		</div>
@@ -189,9 +215,10 @@
 				 
 				<div  class="row justify-content-center mt-3">
 			 	<div id="mensajeNumAnalistas" class="form-group  col-12">			 		
-			 		<!-- <label class="text-warning" th:if="${#fields.hasErrors('listaIdsAnalistasLabSeleccionados')}" th:errors="*{listaIdsAnalistasLabSeleccionados}"></label>-->
+			 		<!-- <label class="text-warning" th:if="${#fields.hasErrors('listaIdsAnalistasLabSeleccionados')}" th:errors="*{listaIdsAnalistasLabSeleccionados}"></label>-->			 		
 			 		<input type="hidden" th:field="*{numAnalistasPermitidos}" ></input>			 		
-			 		<label class="alert alert-danger" th:if="${#fields.hasErrors('numAnalistasPermitidos')}" th:errors="*{numAnalistasPermitidos}"></label>			 		
+			 		<label class="alert alert-danger" th:if="${#fields.hasErrors('numAnalistasPermitidos')}" th:errors="*{numAnalistasPermitidos}"></label>
+			 		<input type="hidden" th:field="*{placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.numTotalAnalistasAsignados}" ></input>				 		
 			 	</div>
 			 	</div>
 			 	
@@ -202,12 +229,13 @@
 		</div>
 		
 	</fielset>
-		<!-- botones cancelar y guardar asignacion -->
+		<!-- botones volver y guardar asignacion -->
 		<div class="row justify-content-center mt-4">		
 			<div class="col-1">							
-				<a th:href="@{/analisis/cogerPlacas}" class="btn btn-secondary ">Cancelar</a>
+				<a th:href="@{/analisis/cogerPlacas}" class="btn btn-secondary ">Volver</a>
 			</div>
-			<div class="col-1">
+			<!-- solo aparecerá el boton guardar asignacion si tenemos el fieldeset de asignar mas analistas (misma condicion que el fieldset)-->
+			<div class="col-1" th:if="${formBeanGuardarAsignacionPlaca.placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.numTotalAnalistasAsignados < formBeanGuardarAsignacionPlaca.numAnalistasPermitidos}">
 				<input th:disabled="${noSePuedeAsignarNuevosAnalistasAPlaca}" type="submit" class="btn btn-primary "
 					value="Guardar asignacion"></input>
 			</div>		
@@ -229,7 +257,33 @@
 	<!-- FIN ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->	
 		
 		
-
+<!-- Modal reemplazar analista-->
+		<div id="modalReemplazarAnalista" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalScrollableTitle">Modal title</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div id="modalReemplazarAnalistaBody" class="modal-body">
+		        ...CUERPO MODAL
+		      </div>
+		      <!-- 
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>		       
+		        <a href="#" class="btn btn-secondary"
+				onclick="return EjecutarCierreMuestras();">
+				Cerrar muestras
+				</a>				
+		      </div>
+		       -->
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- fin Modal para reemplazar un analista por otro y boton de confirmacion o cancelar -->
 	
 	
 	</div>

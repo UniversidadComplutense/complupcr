@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.ucm.pcr.beans.BeanElemento;
+import es.ucm.pcr.beans.BeanEquipo;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
@@ -81,7 +82,7 @@ public interface LaboratorioCentroServicio {
 	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable) throws Exception;
 	PlacaLaboratorioCentroBean buscarPlaca (Integer id) throws Exception;
 	public boolean finalizarPCR(Integer id) throws Exception;
-	public boolean asignarEquipoPCR(Integer id) throws Exception;
+	public boolean asignarEquipoPCR(Integer idPlaca, Integer idEquipo) throws Exception;
 	
 	public PlacaLaboratorioCentroAsignacionesBean buscarPlacaAsignaciones(Integer id);
 	//public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda, Pageable pageable); 
@@ -90,6 +91,7 @@ public interface LaboratorioCentroServicio {
 	public List<PlacaLaboratorioCentroBean> buscarPlacasAsignadasAJefe(Usuario usuario); 
 	public List<BeanElemento> buscarPlacasBeanElementoAsignadasAJefe(Usuario usuario);
 	public void guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca);
+	public void guardarReemplazoAnalistaDePlacaYmuestras(Integer idPlaca, Integer idUsuarioAQuitar, Integer idUsuarioAPoner);
 	public Boolean tienenResultadoDefinitivoLasMuestrasDeLaPlaca(Integer idPlaca);
 	
 	//public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
@@ -103,6 +105,6 @@ public interface LaboratorioCentroServicio {
 	public PlacaLaboratorioCentroBean rellenarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception;
 	public boolean esRellenable(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception;
 
-
+    public List<BeanEquipo> listaEquiposLaboratorioCentro(LaboratorioCentro laboratorioCentro) throws Exception;
 
 }	

@@ -20,6 +20,18 @@ function anotarPlacasSeleccionadas() {
 	revisarEstadoBotonRellenarPlaca();
 }
 
+function anotarEquipoSeleccionado() {
+	
+	var idEquipo = $('#selectAsignarEquipo').val();
+	$('#idEquipoSeleccionado').val(idEquipo);
+}
+
+function cancelarAsignacionEquipoPCR() {
+	
+	$('#selectAsignarEquipo').val(0);
+	$('#idEquipoSeleccionado').val(0);
+}
+
 function revisarEstadoBotonCrearPlaca(){
 	
 	if ($('#placasSeleccionadas').val() != "" && $('#capacidadPlacaLab').val() != ""){

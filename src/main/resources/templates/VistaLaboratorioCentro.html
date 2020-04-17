@@ -27,6 +27,34 @@
 					th:field="${formBeanLaboratorioCentro.nombre}"
 					th:value="${formBeanLaboratorioCentro.nombre}" required="required" />
 			</div>
+			
+			<!-- Lista de equipos asociados al laboratorio ucm -->
+			<!-- Lista de laboratorios existentes -->
+			<div class="row justify-content-center mt-3" th:if="${listaEquipos != null}">
+				<table class="table">
+					<thead class="thead-light">
+						<tr>
+							<th class="p-1" scope="col">Equipos asociados</th>
+							<th class="p-1" scope="col">Capacidad</th>
+							<th class="p-1" scope="col">Editar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="equipo:${listaEquipos}">
+							<td class="p-1" th:text="${equipo.nombre}"  >  </td>
+							<td class="p-1" th:text="${equipo.capacidad}" > </td>
+							<td class="p-1">
+								<a style="color: black"
+								th:href="@{/gestor/editarEquipo(idEquipo=${equipo.id})}"
+								title="Editar"> 
+								<i class="fa fa-edit" aria-hidden="true"style="font-size: 1.2em;"></i>
+								</a> 
+							</td>					
+ 						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- Fin lista equipos asociados a laboratorio ucm -->
 
 			<!--  Los campos id y acción van ocultos en la pantalla 
 			-->

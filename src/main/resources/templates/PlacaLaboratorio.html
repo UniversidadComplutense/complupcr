@@ -34,7 +34,16 @@
 				 		<option value="20">20</option>
 				 		<option value="96">96</option>
 				 	</select>
-				</div>				
+				</div>
+				<div th:if="${placa.id} != null" class="col-4 form-group">
+					<label>Equipo PCR</label>
+				 	<select class="form-control form-control-sm" th:field="${placa.idEquipo}"  th:value="${placa.idEquipo}" th:disabled="${true}">
+				 		<option value="0">No especificado</option>
+				 		<option th:each="equipo: ${equiposPCR}"
+									th:value="${equipo.id}" th:text="${equipo.nombre}"
+									th:select="${placa.idEquipo}">Equipo</option>				 		
+				 	</select>
+				</div>			
 			</div>
 			<div class="row" th:if="${placa.id} != null">
 				<div class="col-4 form-group">
@@ -136,7 +145,7 @@
 		</div>
 		
 		<!-- PLACAS VISAVET PARA COMBINAR -->
-		<div th:if="${nueva || rellenable || true}">
+		<div th:if="${nueva || (rellenable && placa.beanEstado.estado.codNum == 1)}">
 		<fieldset id="placasVisavetParaCombinar" class="form-group border p-2">
 			<legend class="w-auto">Placas VISAVET disponibles para combinar</legend>			
 			<div class="row justify-content-center mt-6">
@@ -229,11 +238,11 @@
 			<div class="col-2 justify-content-begin mt-3">
 				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/gestionPlacas} + '\''" class="btn btn-secondary">Volver</button>				
 			</div>
-			<div th:if="${!nueva && rellenable}" class="col-2 justify-content-begin mt-3">
+			<div th:if="${!nueva && rellenable && placa.beanEstado.estado.codNum == 1}" class="col-2 justify-content-begin mt-3">
 				<button th:id="btnRellenarPlaca" type="button" th:disabled="disabled" th:onclick="rellenarPlaca();" class="btn btn-secondary">Rellenar</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 1}" class="col-3 justify-content-begin mt-3">
-				<button th:id="btnFinalizarPCR" type="button" th:onclick="asignarEquipoPCR();" th:disabled="${nueva}" class="btn btn-secondary">Asignar equipo PCR</button>			
+				<button th:id="btnFinalizarPCR" data-toggle="modal" data-target="#modal-asignarEquipo" type="button" th:disabled="${nueva}" class="btn btn-secondary">Asignar equipo PCR</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 2}" class="col-3 justify-content-begin mt-3">
 				<button th:id="btnFinalizarPCR" type="button" th:onclick="finalizarPCR();" th:disabled="${nueva}" class="btn btn-secondary">Dar por finalizado PCR</button>			
@@ -250,6 +259,46 @@
 		</div>					
 	</form>
 	
+	
+	<!-- MODAL ASIGNAR EQUIPO PCR -->							
+	<div class="modal fade" th:id="modal-asignarEquipo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+		<div class="modal-dialog modal-lg" role="document">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+	        		<div th:if="${placa.muestras != null && #lists.size(placa.muestras) > 0}">	
+	        			<h5 class="modal-title" id="exampleModalLabel"><b>Asignar equipo PCR</b> a la placa <span th:text="${placa.id} + ' que contiene ' + ${#lists.size(placa.muestras)} + ' muestra(s).'"/></b></h5>
+	        		</div>
+	        		<div th:if="${placa.muestras == null || #lists.size(placa.muestras) == 0}">	
+	        			<h5 class="modal-title" id="exampleModalLabel"><b>Asignar equipo PCR</b> a la placa <span th:text="${placa.id} + ' que no contiene muestras.'"/></b></h5>
+	        		</div>
+	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          			<span aria-hidden="true">&times;</span>
+	        		</button>
+	      		</div>
+	      		<div class="modal-body">	      										        
+		          	<div class="col-10 form-group">
+		          		<h6><b>Puede seleccionar el equipo en el que se efectuará la prueba PCR de la placa, o bien dejarlo sin especificar.</b></h6>	          		
+						<label>Equipo PCR</label>
+					 	<select id="selectAsignarEquipo" class="form-control form-control-sm" th:field="${placa.idEquipo}"  th:value="${placa.idEquipo}" onchange="anotarEquipoSeleccionado();">
+					 		<option value="0">No especificado</option>
+					 		<option th:each="equipo: ${equiposPCR}"
+										th:value="${equipo.id}" th:text="${equipo.nombre} + ' con capacidad para ' + ${equipo.capacidad} + ' muestras.'"
+										th:select="${placa.idEquipo}">Equipo</option>				 		
+					 	</select>
+					 	
+					</div>								        
+	      		</div>
+			    <div class="modal-footer">
+			    	<button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="cancelarAsignacionEquipoPCR();">Cancelar</button>
+			    	<button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="asignarEquipoPCR();">Placa preparada para PCR</button>						        
+				</div>
+	    	</div>
+	  	</div>
+	</div>
+	<!-- FIN ASIGNAR EQUIPO PCR -->	
+	
+	
+	
 	<!-- formuario para botón 'Dar por finalizado PCR' -->
 	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/finalPCR}" method="post" th:object="${placa}" id="formGuardarFinalizadoPCR" role="form">
 		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
@@ -258,6 +307,7 @@
 	<!-- formuario para botón 'Asignar equipo PCR' -->
 	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/asignarEquipo}" method="post" th:object="${placa}" id="formGuardarAsignarEquipoPCR" role="form">
 		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
+		<input th:id="idEquipoSeleccionado" type="hidden" th:field="${placa.idEquipo}"  th:value="${placa.idEquipo}" />
 	</form>
 	
 	<!-- formuario para botón 'Lista para analizar' -->

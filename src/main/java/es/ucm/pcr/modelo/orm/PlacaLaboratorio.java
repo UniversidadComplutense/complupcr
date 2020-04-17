@@ -39,6 +39,7 @@ public class PlacaLaboratorio implements java.io.Serializable {
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Usuario usuario; //un jefe coge la placa para asignar sus muestras a los analistas
 	private Set<Muestra> muestras = new HashSet<Muestra>(0);
+	private Equipo equipo;
 	
 
 	public PlacaLaboratorio() {
@@ -89,6 +90,16 @@ public class PlacaLaboratorio implements java.io.Serializable {
 		this.estadoPlacaLaboratorio = estadoPlacaLaboratorio;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "idEquipo", nullable = true)
+	public Equipo getEquipo() {
+		return this.equipo;
+	}
+
+	public void setEquipo(Equipo equipo) {
+		this.equipo = equipo;
+	}
+	
 	@ManyToOne
 	@JoinColumn(name = "idLaboratorioCentro", nullable = false)
 	public LaboratorioCentro getLaboratorioCentro() {

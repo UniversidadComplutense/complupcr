@@ -381,9 +381,11 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			for (int i=0; i<idsLotes.length;i++) {
 				// cuando ya este el servicio BeanLote lote=servicioLotes.obtenerLote(idsLotes[i]);
 				// para probar
+				if (idsLotes[i] !="") {
 				LoteBeanPlacaVisavet lotePlaca = loteServicio.findByIdByPlacas(Integer.parseInt(idsLotes[i]));
 				numeroMuestras+=lotePlaca.getListaMuestras().size();
 				listaLotes.add(lotePlaca);
+				}
 		        //lotePlacaVisavetBean.setTotalMuestras(getBean(i).getListaMuestras().size()+lotePlacaVisavetBean.getTotalMuestras());
 			} 
 			lotePlacaVisavetBean.setTotalMuestras(numeroMuestras);
