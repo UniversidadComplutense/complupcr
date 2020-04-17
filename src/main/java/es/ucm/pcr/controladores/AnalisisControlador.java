@@ -134,6 +134,12 @@ public class AnalisisControlador {
 			binder.setValidator(new AsignacionPlacaLaboratorioCentroValidador(laboratorioCentroServicio, session));
 		}
 		
+//		@InitBinder("formBeanGuardarReemplazoAsignacionPlaca")
+//		public void initBinderReemplazoAnalistaPlacaLaboratorioCentro(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session)
+//				throws Exception {			
+//			binder.setValidator(new AsignacionPlacaLaboratorioCentroValidador(laboratorioCentroServicio, session));
+//		}
+		
 //		@InitBinder("beanMuestra")
 //		public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session) throws Exception {  
 //			binder.setValidator(validadorMuestra);
@@ -726,6 +732,7 @@ public class AnalisisControlador {
 			formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(idPlaca, formBeanGuardarAsignacionPlacaLaboratorioCentro);
 						
 			model.addAttribute("formBeanGuardarReemplazoAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
+			model.addAttribute("idUsuarioAReemplazar", idUsuarioAReemplazar);
 			
 		/*	//ESTOY AKIIIII
 			List<BeanListadoMuestraAnalisis> beanListadoMuestraAnalisis = this.findByClaves(claves);
@@ -739,7 +746,42 @@ public class AnalisisControlador {
 			
 		}
 
-		
+		@RequestMapping(value = "/guardaReemplazarAnalista", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public ModelAndView guardaReemplazarAnalista(HttpServletRequest req,
+				 HttpSession session, RedirectAttributes redirectAttributes) {
+			System.out.println("estoy en guardaReemplazarAnalista");
+			//formBeanGuardarAsignacionPlaca traerá relleno solo los inputs que son las listas de id's seleccionados
+//			if (result.hasErrors()) {	
+//				System.out.println("estoy en hasErrors");
+//				ModelAndView vista = new ModelAndView("VistaReemplazarAnalista");
+//				//volvemos a calcular los datos que necesitamos para la vista
+//				formBeanGuardarAsignacionPlaca = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(formBeanGuardarAsignacionPlaca.getIdPlaca(), formBeanGuardarAsignacionPlaca);
+//				//asignamos lo que hemos cogido del formulario para no perderlo
+//				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasLabSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados());
+//				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasVolSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados());
+//				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsVolSinLabCentroSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados());
+//				vista.addObject("formBeanGuardarReemplazoAsignacionPlaca", formBeanGuardarAsignacionPlaca);
+//				return vista;
+//			} else {
+				String idUsuarioAQuitar = req.getParameter("idUsuarioAQuitar");
+				String idUsuarioAPoner = req.getParameter("idUsuarioAPoner");
+				String idPlaca = req.getParameter("idPlaca");
+				System.out.println("placa id: " + idPlaca);
+				System.out.println("idUsuarioAQuitar: " + idUsuarioAQuitar);
+				System.out.println("idUsuarioAPoner: " + idUsuarioAPoner);
+				
+				
+				//llamamos a metodo de servicio que a partir de formBeanGuardarAsignacionPlaca recupere la placa y le asigne a todas sus muestras los nuevos analistas lab, analistas vol y otros vol
+				//y cambie el estado de las muestras a asignada analista			
+			//	laboratorioCentroServicio.guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(formBeanGuardarAsignacionPlaca);
+				
+							
+				//vuelvo al formulario de asignacion de la placa				
+				redirectAttributes.addFlashAttribute("mensaje", "Asignaciones de placa guardadas");
+				return new ModelAndView(new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true));				
+			}
+		//}
 		
 		//fin metodos de asignacion de analistas a placas
 
