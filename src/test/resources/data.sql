@@ -40,7 +40,20 @@ INSERT INTO estadoPlacaVisavet VALUES
 	,(5,'Enviada')
 	,(6,'Recibida')
 	,(7,'Transpasada');
-	
+--
+-- Dumping data for table `rol`
+--	
+INSERT INTO rol VALUES 
+	(1,'ADMIN')
+	,(2,'GESTOR')
+	,(3,'CENTROSALUD')
+	,(4,'RECEPCIONLABORATORIO')
+	,(5,'TECNICOLABORATORIO')
+	,(6,'RESPONSABLEPCR')
+	,(7,'JEFESERVICIO')
+	,(8,'ANALISTALABORATORIO')
+	,(13,'AUDITOR')
+	,(14,'VOLUNTARIO');
 ---
 --- Creamos tablas para Quartz
 ---

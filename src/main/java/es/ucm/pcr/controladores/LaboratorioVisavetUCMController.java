@@ -381,9 +381,11 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			for (int i=0; i<idsLotes.length;i++) {
 				// cuando ya este el servicio BeanLote lote=servicioLotes.obtenerLote(idsLotes[i]);
 				// para probar
+				if (idsLotes[i] !="") {
 				LoteBeanPlacaVisavet lotePlaca = loteServicio.findByIdByPlacas(Integer.parseInt(idsLotes[i]));
 				numeroMuestras+=lotePlaca.getListaMuestras().size();
 				listaLotes.add(lotePlaca);
+				}
 		        //lotePlacaVisavetBean.setTotalMuestras(getBean(i).getListaMuestras().size()+lotePlacaVisavetBean.getTotalMuestras());
 			} 
 			lotePlacaVisavetBean.setTotalMuestras(numeroMuestras);
@@ -708,12 +710,12 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				System.out.println("El nombre de la hoja es: " + bean.getHoja());
 				System.out.println("El nombre de la columna es: " + bean.getColumna());
 				// guardamos el documento excel asociandolo a la placa
-				//documentoServicio.guardar(bean);
+				documentoServicio.guardar(bean);
 				// guardamos las valoraciones de las muestras que ha puesto el analista en el
 				// excel y si es el ultimo analista de los numAnalistas globales de la
 				// aplicacion
 				// entonces guardamos el resultado definitivo
-//				laboratorioCentroServicio.guardarResultadosPlacaLaboratorio(bean, numAnalistas);
+				servicioLaboratorioUni.guardarReferenciasMuestraPlaca(bean);
 			}
 
 			redirectAttributes.addFlashAttribute("mensaje", "Resultado guardado correctamente");

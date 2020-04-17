@@ -63,18 +63,37 @@ function loadTabla(i) {
 		$("#trGroup").html(respuesta);
 	});
 	}
+/*
 function habilitarBotonProcesar(){
 	// si hay resultados que aparezca el botón procesarBoton
+	// recupero la sesion
+if (window.sessionStorage) {
+
+		  sessionStorage.setItem("nombre", "Gonzalo");
+
+		  var procesarLotes = sessionStorage.getItem("procesarLotes");
+		 
+		  sessionStorage.removeItem("nombre");
+		}
+		else
+		 {
+		  throw new Error('Tu Browser no soporta sessionStorage!');
+		}
+
+	
 	var nFilas = $("#tablaResultadosLotes tr").length;
 	if (nFilas>0) {
 		$('#procesarBoton').show();
 		for (var i=0; i<nFilas;i++){
 		if (!$('#seleccionado'+i).is(':disabled')) {
+			
+			 procesarLotes+=$(seleccionado).val()+":";
+			
 			$('#procesarBoton').removeAttr("disabled");
 		}
 		}
 		}
-}
+} */
 function buscarResultados(orden,sentidoOrden,numPagina,sizePagina){
 	var url = "";
 	//var urlAbs = getAbsolutePath();
@@ -259,7 +278,8 @@ function asignarPlaca(){
 	$("#criteriosBusqueda").show();
 	var url = "";
 	//var urlAbs = getAbsolutePath();
-	if ($("#tamano option:selected").val() < $("#totalMuestras").text()){
+	if (parseInt($("#tamano option:selected").val()) < parseInt($("#totalMuestras").text())){
+	
 		//alert ("El tamaño de la placa es menor al número de muestras");
 		$("#error").show();
 	}
@@ -373,7 +393,7 @@ var respuesta=true;
 		if ($("#ref"+muestra+"_"+j).val().trim() == "") { 
 			respuesta=false;
 			$("#mensaje"+muestra+"_"+j).show();
-		
+		    $("#muestra"+muestra).show();
 		}
 	
 	 }

@@ -62,7 +62,10 @@
 						<label class="col-xs-2">Fecha de Creación:</label>
 						 		<input type="date" class="form-control" id="fechaCreacionInicio"
 								th:field="*{fechaCreacionInicio}" th:value="${busqueda.fechaCreacionInicio}" />
-						a <input type="date" class="form-control" id="fechaCreacionFin"
+				</div>
+					<div class="col-4 form-group">
+			<label class="col-xs-2">
+						a </label><input type="date" class="form-control" id="fechaCreacionFin"
 								th:field="*{fechaCreacionFin}" th:value="${busqueda.fechaCreacionFin}" />
                    </div>
                  <!-- <div class="col-4 form-group">
@@ -142,7 +145,7 @@
 													<tbody>
 														<tr th:if="${unResultado.listaLotes != null}" th:each="lote,count : ${unResultado.listaLotes}">
 															<td>
-															<input type="text" id="lote+${count.index}" th:value="${lote.id}"/>
+															<input type="hidden" id="lote+${count.index}" th:value="${lote.id}"/>
 															<span th:text="${lote.numLote}"></span></td>					
 															<td><span th:text="${#lists.size(lote.listaMuestras)}"></span></td>
 																													
@@ -163,7 +166,7 @@
 					</td>
                      <td> 
 <a data-toggle="modal" data-target="#modalConsultarMuestras" th:attr="data-target='#modalConsultarMuestras'+${unResultado.id}" style="cursor: pointer;" title="Ver muestras">                                                 
-                    <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i><span th:text="${#lists.size(unResultado.listaMuestras)}"></span>	
+                    <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>&nbsp;<span th:text="${#lists.size(unResultado.listaMuestras)}"></span>	
                        </a>
                        
                            <!--  un modal -->
@@ -213,7 +216,7 @@
                      <td>
 						<span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
 					</td>
-					<td>	
+					<td nowrap="nowrap">	
 					
 						<a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}"  th:data-id="${unResultado.id}" onclick="procesarLotesDesdePlacas(this.getAttribute('data-id'))">
 						     <i class="fa fa-edit" title="Modificar placa" aria-hidden="true" style="font-size: 1.2em;"></i>
@@ -229,13 +232,11 @@
 						<i th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA'}"  class="fa fa-share-square" title="Confirmar Enviada" aria-hidden="true"  style="font-size: 1.2em;color:grey;"></i>
 						 <a style="color:black;cursor: pointer;" th:href="@{/documento/placaVisavet(id=${unResultado.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_PLACA_VISAVET_DESDE})}" title="Documentos">
 						       <i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;"></i>
-						     </a>
-						 <a th:href="@{/laboratorioUni/cargaReferencias(id=${unResultado.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_PLACA_VISAVET_DESDE})}" data-toggle="tooltip" style="color:black" title="Cargar referencias">					         
+						 </a>
+						 <a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" th:href="@{/laboratorioUni/cargaReferencias(id=${unResultado.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_PLACA_VISAVET_DESDE})}" data-toggle="tooltip" style="color:black" title="Cargar referencias">					         
 					          <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size: 1.2em;"></i>					         
 					         </a>
-					          <a th:href="@{/laboratorioUni/cargaReferencias(id=${unResultado.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_PLACA_VISAVET_DESDE})}" data-toggle="tooltip" style="color:black" title="Cargar referencias">					         
-					          <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size: 1.2em;"></i>					         
-					         </a>
+					       <i class="fa fa-file-excel-o" th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" aria-hidden="true" style="font-size: 1.2em;color:grey;"></i>	    
                     </td>		  
 					</tr>	
 				</tbody>		
@@ -371,18 +372,20 @@
 									th:value="${var.id}" th:text="${var.nombre}"
 									th:select="${busqueda.idLaboratorioCentro}">Laboratorio</option>
 				</select>
+				<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
 				<div id="capaMuestrasMostrar">
 				<div id="capaFechaEnvio" style="display:none;"><label class="col-xs-2">Fecha de Envio: </label><span id="fechaEnvioModal"></span></div>
+				
 				<table class="col-xs-12 table" th:id="tablaLaboratorios" >
-				  <thead><tr><th scope="col">Nombre</th><th scope="col">Nº de equipos</th><th scope="col">Placas a la espera</th>
-				  </tr>
+				  <thead class="thead-light"><th  scope="col">Nombre</th><th  scope="col">Nº de equipos</th><th  scope="col">Placas a la espera</th>
+				 
 				  </thead>
 				  <tbody>
 					 <tr id="trLaboratorio">	</tr>
-			     <tr id="trLaboratorio"  th:each="laboratorio, count : ${laboratorios}">
-			      <td><span th:text="${laboratorio.nombre}"></td>
-			             <td><span th:text="${#lists.size(laboratorio.equipos)}"></td>
-				         <td><span th:text="${#strings.toString(laboratorio.placasVisavetaLaEspera)}"></td>
+			     <tr id="trLaboratorio"  th:each="laboratorio, count : ${laboratorios}" >
+			      <td th:class="${#lists.size(laboratorio.equipos)<laboratorio.placasVisavetaLaEspera}? 'filaRed': 'filaVerde'"><span th:text="${laboratorio.nombre}"></td>
+			             <td th:class="${#lists.size(laboratorio.equipos)<laboratorio.placasVisavetaLaEspera}? 'filaRed': 'filaVerde'"><span th:text="${#lists.size(laboratorio.equipos)}"></td>
+				         <td th:class="${#lists.size(laboratorio.equipos)<laboratorio.placasVisavetaLaEspera}? 'filaRed': 'filaVerde'"><span th:text="${#strings.toString(laboratorio.placasVisavetaLaEspera)}"></td>
 				      </tr>  
 				    </tbody>  
 				</table>
