@@ -61,6 +61,7 @@ public class PctWebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and().authorizeRequests().antMatchers("/**").authenticated()
 			.and().authorizeRequests().antMatchers("/centroSalud/**").hasAnyRole("ADMIN","CENTROSALUD")
 			.and().authorizeRequests().antMatchers("/gestor/**").hasAnyRole("ADMIN","GESTOR")
+			.and().authorizeRequests().antMatchers("/gestor/log/**").hasAnyRole("ADMIN","GESTOR","AUDITOR")
 			.and().formLogin().loginPage("/acceso").usernameParameter("email")
 				.passwordParameter("password").failureUrl("/acceso?error")				
 				.permitAll().and().logout()

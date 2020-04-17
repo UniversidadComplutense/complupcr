@@ -3,17 +3,19 @@
 
 function anotarPlacasSeleccionadas() {
 
-	var numPlacasVisavet = $('#tablaPlacasVisavet tr').length;
+	var numPlacasVisavet = $('#tablaPlacasVisavetParaCombinar tr').length;
+	
 	var placasElegidas = '';
 	if (numPlacasVisavet > 0) {	 
 		for (var i=0; i<numPlacasVisavet;i++){
-			var checkSeleccionado='#chkPlaca'+i;
+			var checkSeleccionado='#chkPlacaVisavet'+i;
 			if ($(checkSeleccionado).is(':checked')) {		
 				placasElegidas += $(checkSeleccionado).val() + ":";
 			}
 		}
 	}
 	$('#placasSeleccionadas').val(placasElegidas);
+	$('#placasSeleccionadasParaRellenar').val(placasElegidas);
 	revisarEstadoBotonCrearPlaca();
 	revisarEstadoBotonRellenarPlaca();
 }
@@ -41,14 +43,19 @@ function finalizarPCR() {
     $("#formGuardarFinalizadoPCR").submit();
 }
 
-//Asignar equipo PCR a una placa
+// Asignar equipo PCR a una placa
 function asignarEquipoPCR() {
     $("#formGuardarAsignarEquipoPCR").submit();
 }
 
-//La placa está lista para analizar
+// La placa está lista para analizar
 function listaParaAnalizar() {
     $("#formGuardarListaParaAnalizar").submit();
+}
+
+// Rellenar una placa con más placas Visavet
+function rellenarPlaca() {
+    $("#formGuardarRellenarPlaca").submit();
 }
 
 

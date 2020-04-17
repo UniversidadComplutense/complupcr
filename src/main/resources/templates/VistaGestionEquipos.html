@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - GESTION EQUIPOS</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+
+	<div class="container">
+		<div class="alert alert-secondary m-1 mt-2" role="alert"
+			id="alertInfo">
+			<label>Gestión de equipos</label>
+		</div>
+		<div th:if="${mensajeError !=null}"
+			class="alert alert-danger alert-dismissible fade show m-1 mt-2"
+			role="alert">
+			<label th:text="${mensajeError}"></label>
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="row justify-content-middle m-2">
+			<div class="col-2">
+				<a th:href="@{/gestor/altaEquipo}" class="btn btn-secondary eBtn">Nuevo
+					Equipo</a>
+			</div>
+		</div>
+
+		<!-- Lista de equipos existentes -->
+
+		<div class="row justify-content-center mt-3">
+			<table class="table">
+				<thead class="thead-light">
+					<tr>
+						<th class="p-1" scope="col">Nombre</th>
+						<th class="p-1" scope="col">Capacidad</th>
+						<th class="p-1" scope="col">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="equipo :${listaEquipos}">
+						<td class="p-1" th:text="${equipo.nombre}"></td>
+						<td class="p-1" th:text="${equipo.capacidad}"></td>
+						<td class="p-1"><a style="color: black"
+							th:href="@{/gestor/editarEquipo(idEquipo=${equipo.id})}"
+							title="Editar"> <i class="fa fa-edit" aria-hidden="true"
+								style="font-size: 1.2em;"></i>
+						</a> <a style="color: black"
+							th:data-href="@{/gestor/borrarEquipo(idEquipo=${equipo.id})}"
+							title="Borrar" data-toggle="modal" data-target="#confirm-borrar">
+								<i class="fa fa-eraser" aria-hidden="true"
+								style="font-size: 1.2em;"></i>
+						</a>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- Modal confirmación borrado -->
+	<div class="modal fade" id="confirm-borrar" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmación</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>¿Está seguro de que quiere borrar este elemento?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancelar</button>
+					<a class="btn btn-danger btn-borrar">Borrar</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Fin modal -->
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+	<script src="static/js/gestor.js" th:src="@{/js/gestor.js}"></script>
+</body>
+</html>

@@ -2,7 +2,9 @@ stages:
   - test
   - package
   - integracion
-  - log
+  - logintegracion
+  - produccion
+  - logproduccion
 test:
   stage: test
   tags:
@@ -22,6 +24,8 @@ package:
   only:
     - integracion
     - produccion
+  dependencies:
+    - test
   artifacts:
     paths:
       - target/covid19.jar
@@ -44,7 +48,7 @@ integracion1:
     - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo cp /home/ades/covid19.jar /opt/covid19/'
     - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo systemctl restart covid19'
 logIntegracion1:
-  stage: log
+  stage: logintegracion
   tags:
     - ssh
   only:
@@ -53,5 +57,61 @@ logIntegracion1:
     - integracion1
   script:
     - echo 'Visualizando log servidor integración 1'
-    - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo tail -n 300 /opt/covid19/logs/covid19.log'
+    - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo tail -n 500 /opt/covid19/logs/covid19.log'
   when: manual 
+produccion1:
+  stage: produccion
+  tags:
+    - ssh
+  only:
+    - produccion
+  dependencies:
+    - package
+  script:
+    - echo 'Desplegando covid19 en servidor de produccion 1'
+    - scp target/covid19.jar ades@$SERVIDOR_PROD_COVID19_1:/home/ades
+    - ssh ades@$SERVIDOR_PROD_COVID19_1 'sudo rm -f /opt/covid19/covid19.old.jar'
+    - ssh ades@$SERVIDOR_PROD_COVID19_1 'sudo mv /opt/covid19/covid19.jar /opt/covid19/covid19.old.jar'
+    - ssh ades@$SERVIDOR_PROD_COVID19_1 'sudo cp /home/ades/covid19.jar /opt/covid19/'
+    - ssh ades@$SERVIDOR_PROD_COVID19_1 'sudo systemctl restart covid19'
+  when: manual
+produccion2:
+  stage: produccion
+  tags:
+    - ssh
+  only:
+    - produccion
+  dependencies:
+    - package
+  script:
+    - echo 'Desplegando covid19 en servidor de produccion 2'
+    - scp target/covid19.jar ades@$SERVIDOR_PROD_COVID19_2:/home/ades
+    - ssh ades@$SERVIDOR_PROD_COVID19_2 'sudo rm -f /opt/covid19/covid19.old.jar'
+    - ssh ades@$SERVIDOR_PROD_COVID19_2 'sudo mv /opt/covid19/covid19.jar /opt/covid19/covid19.old.jar'
+    - ssh ades@$SERVIDOR_PROD_COVID19_2 'sudo cp /home/ades/covid19.jar /opt/covid19/'
+    - ssh ades@$SERVIDOR_PROD_COVID19_2 'sudo systemctl restart covid19'
+  when: manual
+logProduccion1:
+  stage: logproduccion
+  tags:
+    - ssh
+  only:
+    - produccion
+  dependencies:
+    - produccion1
+  script:
+    - echo 'Visualizando log servidor produccion 1'
+    - ssh ades@$SERVIDOR_PROD_COVID19_1 'sudo tail -n 500 /opt/covid19/logs/covid19.log'
+  when: manual   
+logProduccion2:
+  stage: logproduccion
+  tags:
+    - ssh
+  only:
+    - produccion
+  dependencies:
+    - produccion2
+  script:
+    - echo 'Visualizando log servidor produccion 2'
+    - ssh ades@$SERVIDOR_PROD_COVID19_2 'sudo tail -n 500 /opt/covid19/logs/covid19.log'
+  when: manual   

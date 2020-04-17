@@ -63,24 +63,28 @@
 			
 						<label class="col-xs-2">Fecha de Entrada:</label>
 						 		<input type="date" class="form-control" id="fechaInicioEntrada"
-								th:field="*{fechaInicioEntrada}" th:value="${busquedaLotes.fechaInicioEntrada}" />a
+								th:field="*{fechaInicioEntrada}" th:value="${busquedaLotes.fechaInicioEntrada}" />
+							 </div>
+							<div class="col-4 form-group">	
+							<label class="col-xs-2"> a </label>
 								<input type="date" class="form-control" id="fechaFinEntrada"
 								th:field="*{fechaFinEntrada}" th:value="${busquedaLotes.fechaFinEntrada}" />
 						
                    </div>
-                   <div class="col-4 form-group">
+                  <!--   <div class="col-4 form-group">
 			
                    	<label class="col-xs-4">Muestra:</label>
 					<input type="text" class="form-control" id="muestra"
 								th:value="${busquedaLotes.muestra}"
 								th:field="*{muestra}" />
-						</div>
+						</div> -->
                  </div>  
 
 		</fieldset>
 		
         <div class="row justify-content-end mt-2">
 			<div class="col-1">
+			<input type="hidden" th:field="*{rolURL}"/>
 			 <button type="submit"  class="btn btn-secondary">Buscar</button>
 			
 			<!--  <button type="button" th:onClick="|buscarResultados('lote','DESC','2','20'); return false|"  class="btn btn-secondary">Buscar</button>-->
@@ -114,7 +118,7 @@
 				</thead>
 				
 						
-			 	<tr id="trGroup+${count.index}"  th:each="unResultado,count : ${paginaLotes.getContent()}">
+			 	<tr id="trGroup+${count.index}"  th:each="unResultado,count : ${paginaLotes.getContent()}" class="trGroupLotes">
 					
 				    <td>
 						<input th:if="${busquedaLotes.mostrarProcesar}" type="checkbox" name="seleccionado" th:disabled="${#strings.toString(unResultado.estado.Estado) != 'LOTE_RECIBIDO_CENTRO_ANALISIS'}" th:id="seleccionado+${count.index}" th:value="${unResultado.id}" onClick="habilitarBotonProcesar();"/>

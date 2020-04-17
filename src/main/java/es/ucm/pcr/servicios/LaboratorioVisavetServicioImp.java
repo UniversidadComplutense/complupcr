@@ -1,6 +1,7 @@
 package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -101,7 +102,7 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	// JAVI para buscar placas Visavet e incorporarlas a 'BusquedaPlacasVisavetBean'
 	@Override
 	public Page<PlacaLaboratorioVisavetBean> buscarPlacas(BusquedaRecepcionPlacasVisavetBean criteriosBusqueda,
-			Pageable pageable) {
+			Pageable pageable) throws Exception {
 		
 		List<PlacaLaboratorioVisavetBean> listaPlacasVisavetBean = new ArrayList<PlacaLaboratorioVisavetBean>();
 		
@@ -135,6 +136,13 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 			}	
 		}
 		
+		// Si no se ha seleccionado el estado de la placa en la búsqueda, buscamos por los estados PLACAVISAVET_ENVIADA ó PLACAVISAVET_RECIBIDA
+		if (criteriosBusqueda.getIdEstadoPlaca() == 0) {
+			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(5,6));
+		} else {
+			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(criteriosBusqueda.getIdEstadoPlaca()));
+		}
+		
 		Page<PlacaVisavet> PagePlacasVisavet = placaVisavetRepositorio.findByParams(criteriosBusqueda, pageable); 		
 		for (PlacaVisavet placa : PagePlacasVisavet.getContent()) {
 			listaPlacasVisavetBean.add(PlacaLaboratorioVisavetBean.modelToBean(placa));
@@ -146,7 +154,7 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	
 	// JAVI para buscar una placa Visavet e incorporarla a 'BusquedaPlacasVisavetBean'
 	@Override
-	public PlacaLaboratorioVisavetBean buscarPlaca(Integer id) {
+	public PlacaLaboratorioVisavetBean buscarPlaca(Integer id) throws Exception {
 		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(id);
 		if (placa.isPresent()) {
 			return PlacaLaboratorioVisavetBean.modelToBean(placa.get());
@@ -158,7 +166,7 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	// JAVI para recepcionar una placa Visavet
 	@Override
 	@Transactional
-	public boolean recepcionarPlaca(Integer id) {				
+	public boolean recepcionarPlaca(Integer id) throws Exception {				
 		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(id);
 		if (placa.isPresent()) {
 			if (placa.get().getEstadoPlacaVisavet().getId() == Estado.PLACAVISAVET_ENVIADA.getCodNum()) {
@@ -175,7 +183,7 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 
 	// JAVI para saber las placas Visavet combinadas en una placa de laboratorio
 	@Override
-	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio) {
+	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio) throws Exception {
 		
 		Set<PlacaVisavet> placas = placaVisavetRepositorio.findByIdPlacaLaboratorio(idPlacaLaboratorio);		
 		List<PlacaLaboratorioVisavetBean> placasVisavet = new ArrayList<PlacaLaboratorioVisavetBean>();

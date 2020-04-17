@@ -109,19 +109,37 @@
 </div>
 
 <!-- PAGINACION -->
-<div class="justify-content-start" th:if="${paginadorBean != null}" th:fragment="paginacion(paginadorBean)">	
-	<nav aria-label="Pagination" th:if="${paginadorBean.numeroPaginas gt 0}">	
-	    <ul class="pagination justify-content-center font-weight-bold">
+<div class="justify-content-start" th:fragment="paginacion(paginadorBean)">	
+	<nav aria-label="Pagination" th:if="${paginadorBean != null && paginadorBean.numeroPaginas gt 0}">	
+		<!-- 
+			Se configura la paginacion para mostrar un numero impar de paginas, para modificar el numero de paginas a mostrar basta con modificar el valor de maxPage, siempre divisible entre 2
+			maxPage define el numero de paginas + 1 que se van a mostrar, siempre debe ser divisible entre 2
+				ej: para tener 11 paginas se indica un maxPage de 10
+			paddingPage: define el numero de paginas que se dejan a los lados de la pagina central
+				ej: con un maxPage de 10 tendremos 5 paginas a izquierda y derecha de la pagina central		
+		 -->
+		<ul 
+			th:with="maxPage=10,paddingPage=${maxPage}/2,
+					 pgActual=${paginadorBean.paginaActual},numPg=${paginadorBean.numeroPaginas},
+					 beginIndex=${numPg gt (maxPage+1) ? (((pgActual - paddingPage) lt 1) ? 1 : ((pgActual - paddingPage) + maxPage gt numPg ? numPg - maxPage : (pgActual - paddingPage))) : 1},
+	    	         endIndex=${((beginIndex + maxPage) gt numPg) ? numPg : beginIndex + maxPage }"	    	   
+	    	class="pagination justify-content-center font-weight-bold">
+	        <li class="page-item" th:classappend="${paginadorBean.paginaActual eq 1} ? 'disabled'">
+	            <a class="page-link"
+	               th:href="@{${paginadorBean.urlPaginacion}(pagina=1)}"
+	               aria-label="Previous" title="Primero" data-toggle="tooltip">
+	                <span aria-hidden="true">&laquo;</span>
+	            </a>	            
+	        </li>	        
 	        <li class="page-item" th:classappend="${paginadorBean.paginaActual eq 1} ? 'disabled'">
 	            <a class="page-link"
 	               th:href="@{${paginadorBean.urlPaginacion}(pagina=${paginadorBean.paginaActual - 1})}"
 	               aria-label="Previous" title="Anterior" data-toggle="tooltip">
-	                <span aria-hidden="true">&laquo;</span>
+	                <span aria-hidden="true">&lt;</span>
 	            </a>
-	        </li>
-	        
+	        </li>	        	       
 	        <li class="page-item" th:classappend="${i eq paginadorBean.paginaActual} ? 'active'"
-	            th:each="i : ${#numbers.sequence( 1, paginadorBean.numeroPaginas, 1)}">
+	            th:each="i : ${#numbers.sequence(beginIndex, endIndex)}">
 	            <a class="page-link" th:href="@{${paginadorBean.urlPaginacion}(pagina=${i})}" th:text="${i}"
 	               th:title="${'Página '+ i}" data-toggle="tooltip"></a>
 	        </li>
@@ -130,16 +148,25 @@
 	            <a class="page-link"
 	               th:href="@{${paginadorBean.urlPaginacion}(pagina=${paginadorBean.paginaActual + 1})}"
 	               aria-label="Next" title="Siguiente" data-toggle="tooltip">
+	                <span aria-hidden="true">&gt;</span>
+	            </a>	            
+	        </li>
+	        <li class="page-item" th:classappend="${paginadorBean.paginaActual eq paginadorBean.numeroPaginas} ? 'disabled'">
+	            <a class="page-link"
+	               th:href="@{${paginadorBean.urlPaginacion}(pagina=${paginadorBean.numeroPaginas})}"
+	               aria-label="Next" title="Último" data-toggle="tooltip">
 	                <span aria-hidden="true">&raquo;</span>
 	            </a>
 	        </li>
 	    </ul>	    
 	</nav>
-	<span style="color: #6c757d !important"><b>Número de resultados <span th:text="${paginadorBean.totalElementos}"></span></b></span>
+	<span th:if="${paginadorBean != null}" style="color: #6c757d !important"><b>Número de resultados <span th:text="${paginadorBean.totalElementos}"></span></b></span>
+	<span th:if="${paginadorBean == null}" style="color: #6c757d !important"><b>Número de resultados 0</b></span>
 </div>
 
 
 <!--/* PAGINADOR  */-->
+<!-- 
 <div
 	th:fragment="paginador(urlPaginada, pagina, orden,sentidoOrden,fila)"
 	class="table-pagination">
@@ -183,7 +210,7 @@
 			th:href="@{${urlPaginada}(page=${pagina.totalPages-1},size=${pagina.size},   orden=${orden}, sentidoOrden=${sentidoOrden},filaTratada='0')}">&gt;&gt;</a>
 		</li>
 	</ul> 
-</div>
+</div> -->
 
 !--/* SCRIPTS - SIEMPRE FINAL DE PÁGINA */-->
 <div th:fragment="scripts" id="scripts">

@@ -11,6 +11,7 @@ import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.beans.BeanPlacaVisavetUCM;
 import es.ucm.pcr.beans.BusquedaLotesBean;
 import es.ucm.pcr.beans.BusquedaPlacasVisavetBean;
+import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
@@ -29,4 +30,6 @@ public interface ServicioLaboratorioVisavetUCM {
 	 * @return
 	 */
 	public List<BeanLaboratorioVisavet> findAll();
+	
+	public void guardarReferenciasMuestraPlaca(ElementoDocumentacionBean bean)throws Exception ;
 }

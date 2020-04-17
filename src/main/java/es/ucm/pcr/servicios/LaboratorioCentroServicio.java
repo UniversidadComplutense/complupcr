@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.ucm.pcr.beans.BeanElemento;
+import es.ucm.pcr.beans.BeanEquipo;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
@@ -78,10 +79,10 @@ public interface LaboratorioCentroServicio {
 	 */
 	public Optional <LaboratorioCentro> findById(Integer idLaboratorioCentro) throws Exception;
 	
-	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable);
-	PlacaLaboratorioCentroBean buscarPlaca (Integer id);
-	public boolean finalizarPCR(Integer id);
-	public boolean asignarEquipoPCR(Integer id);
+	Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda, Pageable pageable) throws Exception;
+	PlacaLaboratorioCentroBean buscarPlaca (Integer id) throws Exception;
+	public boolean finalizarPCR(Integer id) throws Exception;
+	public boolean asignarEquipoPCR(Integer id) throws Exception;
 	
 	public PlacaLaboratorioCentroAsignacionesBean buscarPlacaAsignaciones(Integer id);
 	//public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioJefeBean criteriosBusqueda, Pageable pageable); 
@@ -98,8 +99,12 @@ public interface LaboratorioCentroServicio {
 	public void guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas)throws Exception ;
 
 	public BeanLaboratorioCentro buscarLaboratorioById(Integer id);
-	public PlacaLaboratorioCentroBean crearPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean);
-	public boolean placaListaParaAnalizar(Integer id);
+	public boolean placaListaParaAnalizar(Integer id) throws Exception;
+	public boolean esEditable(Integer id) throws Exception;
+	public Integer espacioLibreParaMuestras(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception;
+	public PlacaLaboratorioCentroBean rellenarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception;
+	public boolean esRellenable(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception;
 
+    public List<BeanEquipo> listaEquiposLaboratorioCentro(LaboratorioCentro laboratorioCentro) throws Exception;
 
 }	

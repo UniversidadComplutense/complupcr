@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import es.ucm.pcr.beans.BeanEquipo;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
@@ -55,7 +56,7 @@ public class LaboratorioCentroControlador {
 		// le indicamos la acción a relizar: A alta de un rol
 		beanLaboratorioCentro.setAccion("A");
 		vista.addObject("formBeanLaboratorioCentro", beanLaboratorioCentro);
-
+		
 		return vista;
 	}
 	
@@ -99,6 +100,17 @@ public class LaboratorioCentroControlador {
 			beanLaboratorioCentro.setAccion("M");
 			
 			vista.addObject("formBeanLaboratorioCentro", beanLaboratorioCentro);
+			
+			// Añdimos  los equipos asociados al centro
+			List<BeanEquipo> listaEquipos = laboratorioCentroServicio.listaEquiposLaboratorioCentro(laboratorioCentro.get());
+			if (listaEquipos.isEmpty())
+			{
+				vista.addObject("listaEquipos", null);
+			}
+			else 
+			{
+				vista.addObject("listaEquipos", listaEquipos);
+			}
 		
 			return vista;
 		}	

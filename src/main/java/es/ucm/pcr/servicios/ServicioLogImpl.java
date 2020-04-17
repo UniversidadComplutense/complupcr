@@ -80,8 +80,11 @@ public class ServicioLogImpl implements ServicioLog {
 		Optional<PlacaVisavet> placaVisavetOp = placaVisavetRepositorio.findById(idPlacaVisavet);
 		if (placaVisavetOp.isPresent()) {
 			PlacaVisavet placaVisavet = placaVisavetOp.get();
-			for (Muestra muestra : placaVisavet.getMuestras()) {
+			for (Lote lote : placaVisavet.getLotes()) {
+				for (Muestra muestra : lote.getMuestras()) {
+					muestra.setPlacaVisavet(placaVisavet);
 				actualizarEstadoMuestra(muestra, estado);
+				}
 			}
 		}
 	}
