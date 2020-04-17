@@ -10,6 +10,7 @@ public class BeanAnalisis {
 	private String resultadoAnalisis; //Valoración final de la muestra (N,P,R,A)
 	private Date fechaResultadoAnalisis;
 	private BeanListaAsignaciones beanListaAsignaciones; //lista de asignaciones que tiene la muestra; el jefe de servicio asigna analistas a las muestras para que las valoren
+	private Integer numTotalAnalistasAsignados;
 	
 	private BeanAsignacion asignacionUsuarioLogado; //datos de valoración que ha puesto el usuario logado a la muestra
 	
@@ -50,7 +51,16 @@ public class BeanAnalisis {
 		this.beanListaAsignaciones = beanListaAsignaciones;
 	}
 
-	
+
+	public Integer getNumTotalAnalistasAsignados() {
+		return numTotalAnalistasAsignados;
+	}
+
+
+	public void setNumTotalAnalistasAsignados(Integer numTotalAnalistasAsignados) {
+		this.numTotalAnalistasAsignados = numTotalAnalistasAsignados;
+	}
+
 
 	public BeanAsignacion getAsignacionUsuarioLogado() {
 		return asignacionUsuarioLogado;

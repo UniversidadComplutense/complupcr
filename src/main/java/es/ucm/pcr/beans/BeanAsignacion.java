@@ -10,6 +10,8 @@ public class BeanAsignacion {
 	private Date fechaAsignacion; //fecha de asignacion del usuario a la muestra
 	private String valoracion; //Valoración final de la muestra (N,P,R,A)
 	private Date fechaValoracion; //fecha valoracion
+	//una asignacion será reemplazable si el usuario no ha valorado aun la muestra (podremos reemplazar el analista por otro)
+	private Boolean esReemplazable = true; //podremos reemplazar al analista por otro si aun no hay valoración ni fecha de valoración (por defecto son reemplazables)
 	
 	
 	public BeanAsignacion() {
@@ -57,6 +59,16 @@ public class BeanAsignacion {
 
 	public void setFechaValoracion(Date fechaValoracion) {
 		this.fechaValoracion = fechaValoracion;
+	}
+
+	
+	public Boolean getEsReemplazable() {
+		return esReemplazable;
+	}
+
+
+	public void setEsReemplazable(Boolean esReemplazable) {
+		this.esReemplazable = esReemplazable;
 	}
 
 

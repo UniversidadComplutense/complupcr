@@ -26,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.BeanElemento;
+import es.ucm.pcr.beans.BeanEquipo;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
@@ -51,6 +52,7 @@ import es.ucm.pcr.modelo.orm.PlacaVisavet;
 import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.modelo.orm.UsuarioMuestra;
+import es.ucm.pcr.repositorio.EquipoRepositorio;
 import es.ucm.pcr.repositorio.EstadoPlacaLaboratorioRepositorio;
 import es.ucm.pcr.repositorio.EstadoPlacaVisavetRepositorio;
 import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
@@ -106,6 +108,12 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	@Autowired
 	MuestraServicio muestraServicio;
+	
+	@Autowired
+	EquipoRepositorio equipoRepositorio;
+	
+	@Autowired
+	EquipoServicio equipoServicio;
 	
 	public LaboratorioCentro mapeoBeanEntidadLaboratorioCentro(BeanLaboratorioCentro beanLaboratorioCentro) throws Exception{
 		
@@ -564,6 +572,44 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 	}
 	
+	//metodo que reemplaza la asignacion de un analista por otro (siempre que no tenga valoracion en sus muestras) 
+	//se reemplazan en realidad las asignaciones a las muestras de la placa
+	@Override
+	@Transactional
+	public void guardarReemplazoAnalistaDePlacaYmuestras(Integer idPlaca, Integer idUsuarioAQuitar, Integer idUsuarioAPoner) {
+	
+		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);
+		
+		//si exiten usuario a quitar y usuario a poner 
+		if(idUsuarioAQuitar!=null && idUsuarioAPoner!=null) {
+			
+			Date fechaAsignacion = new Date();
+			
+			//recorremos todas las muestras de esa placa, y para cada muestra reemplazamos su analista			
+			for(Muestra muestra: placa.getMuestras()) {
+				//por el usuario muestra del usuario a quitar
+				Optional<UsuarioMuestra> usuMuOpt = usuarioMuestraRepositorio.findByIdUsuarioAndIdMuestra(idUsuarioAQuitar, muestra.getId());
+				if(usuMuOpt.isPresent()) {
+					//al usuarioMuestra le ponemos el usuarioAPoner, cambiamos fecha de asignacion y guardamos
+					UsuarioMuestra usuMu = usuMuOpt.get();
+					if(usuMu.getValoracion()==null && usuMu.getFechaValoracion()==null) {
+						Usuario usuAPoner = usuarioRepositorio.getOne(idUsuarioAPoner);
+						usuMu.setUsuario(usuAPoner);
+						usuMu.setFechaAsignacion(fechaAsignacion);
+						usuarioMuestraRepositorio.save(usuMu);
+						log.info("Se ha reemplazado el usuario: " + idUsuarioAQuitar +  " por el usuario: " +idUsuarioAPoner+  " como analista de la muestra: " + muestra.getId());
+					}
+					else {
+						log.error("El usuario: " + idUsuarioAQuitar + " tiene valoracion en la muestra con id: " + muestra.getId()+", NO podemos reemplazarlo");
+					}					
+				}
+				else {
+					log.error("No existe el usuario: " + idUsuarioAQuitar + " como analista de la muestra: " + muestra.getId()+", NO podemos reemplazarlo");
+				}
+			}
+		}
+	}
+	
 	//metodo que nos dice si una muestra está resuelta o no
 	private Boolean muestraResuelta(Muestra m) {
 		Boolean resuelta = false;		
@@ -795,5 +841,13 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		else return null;
 	}
 	
-	
+	public List<BeanEquipo> listaEquiposLaboratorioCentro(LaboratorioCentro laboratorioCentro) throws Exception{
+		List<BeanEquipo> listaEquipos = new ArrayList<BeanEquipo>();
+		
+		for (Equipo equipo: equipoRepositorio.findByLaboratorioCentro(laboratorioCentro))
+		{
+			listaEquipos.add(equipoServicio.mapeoEntidadBeanEquipo(equipo));
+		}
+		return listaEquipos;
+	}
 }

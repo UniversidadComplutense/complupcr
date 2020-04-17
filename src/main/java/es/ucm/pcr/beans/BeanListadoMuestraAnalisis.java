@@ -127,6 +127,8 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanAsigAna.setFechaAsignacion(usuMu.getFechaAsignacion());
 					beanAsigAna.setValoracion(usuMu.getValoracion());
 					beanAsigAna.setFechaValoracion(usuMu.getFechaValoracion());
+					//el usuario será reemplazable si no ha valorado la muestra
+					beanAsigAna.setEsReemplazable(usuMu.getFechaValoracion()==null && usuMu.getValoracion()==null);
 					beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);					
 				}
 				//si el usuario tiene el rol voluntario y tiene idLaboratorioCentro
@@ -138,6 +140,8 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanAsigVol.setFechaAsignacion(usuMu.getFechaAsignacion());					
 					beanAsigVol.setValoracion(usuMu.getValoracion());
 					beanAsigVol.setFechaValoracion(usuMu.getFechaValoracion());
+					//el usuario será reemplazable si no ha valorado la muestra
+					beanAsigVol.setEsReemplazable(usuMu.getFechaValoracion()==null && usuMu.getValoracion()==null);
 					beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
 				}				
 				//si el usuario tiene el rol voluntario y no tiene idLaboratorioCentro
@@ -149,13 +153,17 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanAsigVolSinCentro.setBeanUsuario(beanUsuVolSinCentro);
 					beanAsigVolSinCentro.setFechaAsignacion(usuMu.getFechaAsignacion());					
 					beanAsigVolSinCentro.setValoracion(usuMu.getValoracion());
-					beanAsigVolSinCentro.setFechaValoracion(usuMu.getFechaValoracion());					
+					beanAsigVolSinCentro.setFechaValoracion(usuMu.getFechaValoracion());
+					//el usuario será reemplazable si no ha valorado la muestra
+					beanAsigVolSinCentro.setEsReemplazable(usuMu.getFechaValoracion()==null && usuMu.getValoracion()==null);
 					beanListaAsignaciones.getListaAnalistasVolSinLabCentro().add(beanAsigVolSinCentro);
 				}
 				
 			}
 		}
 		beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
+		//el total de analistas asignados será la suma de los analistas lab, analistas vol y analistas vol sin centro
+		beanAnalisis.setNumTotalAnalistasAsignados(beanListaAsignaciones.getListaAnalistasLab().size() + beanListaAsignaciones.getListaAnalistasVol().size() + beanListaAsignaciones.getListaAnalistasVolSinLabCentro().size());
 		bean.setBeanAnalisis(beanAnalisis);
 		BeanResultado beanResultado = new BeanResultado();
 		bean.setResultado(beanResultado.asignarTipoEstadoYCodNum(muestra.getResultado()).getResultadoMuestra().getDescripcion());
@@ -215,6 +223,8 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 				beanAsignacionUsuarioLogado.setBeanUsuario(beanUsuLogado);
 				beanAsignacionUsuarioLogado.setFechaAsignacion(usuMu.getFechaAsignacion());
 				beanAsignacionUsuarioLogado.setValoracion(usuMu.getValoracion());
+				//el usuario será reemplazable si no ha valorado la muestra
+				beanAsignacionUsuarioLogado.setEsReemplazable(usuMu.getFechaValoracion()==null && usuMu.getValoracion()==null);
 				beanAsignacionUsuarioLogado.setFechaValoracion(usuMu.getFechaValoracion());
 			}			
 			
@@ -229,6 +239,8 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanAsigAna.setFechaAsignacion(usuMu.getFechaAsignacion());
 					beanAsigAna.setValoracion(usuMu.getValoracion());
 					beanAsigAna.setFechaValoracion(usuMu.getFechaValoracion());
+					//el usuario será reemplazable si no ha valorado la muestra
+					beanAsigAna.setEsReemplazable(usuMu.getFechaValoracion()==null && usuMu.getValoracion()==null);
 					beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);					
 				}
 				//si el usuario tiene el rol voluntario y tiene idLaboratorioCentro
@@ -240,6 +252,8 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanAsigVol.setFechaAsignacion(usuMu.getFechaAsignacion());					
 					beanAsigVol.setValoracion(usuMu.getValoracion());
 					beanAsigVol.setFechaValoracion(usuMu.getFechaValoracion());
+					//el usuario será reemplazable si no ha valorado la muestra
+					beanAsigVol.setEsReemplazable(usuMu.getFechaValoracion()==null && usuMu.getValoracion()==null);
 					beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
 				}				
 				//si el usuario tiene el rol voluntario y no tiene idLaboratorioCentro
@@ -251,7 +265,9 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 					beanAsigVolSinCentro.setBeanUsuario(beanUsuVolSinCentro);
 					beanAsigVolSinCentro.setFechaAsignacion(usuMu.getFechaAsignacion());					
 					beanAsigVolSinCentro.setValoracion(usuMu.getValoracion());
-					beanAsigVolSinCentro.setFechaValoracion(usuMu.getFechaValoracion());					
+					beanAsigVolSinCentro.setFechaValoracion(usuMu.getFechaValoracion());
+					//el usuario será reemplazable si no ha valorado la muestra
+					beanAsigVolSinCentro.setEsReemplazable(usuMu.getFechaValoracion()==null && usuMu.getValoracion()==null);
 					beanListaAsignaciones.getListaAnalistasVolSinLabCentro().add(beanAsigVolSinCentro);
 				}
 				
@@ -259,6 +275,8 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		}
 		beanAnalisis.setAsignacionUsuarioLogado(beanAsignacionUsuarioLogado);
 		beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
+		//el total de analistas asignados será la suma de los analistas lab, analistas vol y analistas vol sin centro
+		beanAnalisis.setNumTotalAnalistasAsignados(beanListaAsignaciones.getListaAnalistasLab().size() + beanListaAsignaciones.getListaAnalistasVol().size() + beanListaAsignaciones.getListaAnalistasVolSinLabCentro().size());
 		System.out.println("beanAnalisis vale: " + beanAnalisis.toString());
 		bean.setBeanAnalisis(beanAnalisis);
 		BeanResultado beanResultado = new BeanResultado();

@@ -73,7 +73,7 @@ public class AsignacionPlacaLaboratorioCentroValidador implements Validator {
 		Integer totalAnalistasAsignadosYAnalistasPorAsignar = numTotalAnalistasAsignados + numTotalAnalistasNuevosPorAsignar;
 		System.out.println("el TotalAnalistasAsignadosYAnalistasPorAsignar es: "+ totalAnalistasAsignadosYAnalistasPorAsignar);
 		if(!totalAnalistasAsignadosYAnalistasPorAsignar.equals(numAnalistasPermitidos)) {
-			errors.rejectValue("numAnalistasPermitidos", "field.numAnalistasPermitidos.invalid", "El numero total de analistas asignados y analistas por asignar debe ser " + numAnalistasPermitidos);
+			errors.rejectValue("numAnalistasPermitidos", "field.numAnalistasPermitidos.invalid", "El numero total de analistas debe ser " + numAnalistasPermitidos);
 		
 			//errors.rejectValue("idPlaca", "campo.invalid", "MAAAAALL");
 			//errors.rejectValue("idPlaca", "field.idPlaca.invalid", "El numero total de analistas asignados y analistas por asignar debe ser " + numAnalistasPermitidos);		

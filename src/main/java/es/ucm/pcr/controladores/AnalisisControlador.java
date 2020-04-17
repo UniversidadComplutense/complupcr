@@ -137,6 +137,12 @@ public class AnalisisControlador {
 			binder.setValidator(new AsignacionPlacaLaboratorioCentroValidador(laboratorioCentroServicio, session));
 		}
 		
+//		@InitBinder("formBeanGuardarReemplazoAsignacionPlaca")
+//		public void initBinderReemplazoAnalistaPlacaLaboratorioCentro(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session)
+//				throws Exception {			
+//			binder.setValidator(new AsignacionPlacaLaboratorioCentroValidador(laboratorioCentroServicio, session));
+//		}
+		
 //		@InitBinder("beanMuestra")
 //		public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session) throws Exception {  
 //			binder.setValidator(validadorMuestra);
@@ -658,7 +664,8 @@ public class AnalisisControlador {
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView asignarPlaca(HttpSession session, HttpServletRequest request, @RequestParam("idPlaca") Integer idPlaca) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAPlaca");
-						
+				
+			System.out.println("estoy en asignarPlaca");
 			String mensaje = null;
 			// Comprobamos si hay mensaje enviado desde guardarAsignacion.
 			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
@@ -721,6 +728,82 @@ public class AnalisisControlador {
 		}
 		
 
+		//reemplazar analista
+		//metodo que recibe el analista a reemplazar y muestra los posibles analistas para permitir escoger el que lo reemplazara
+		//busca sus datos y los muestra en el modal
+		@RequestMapping(value = "/reemplazarAnalista", method=RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public String reemplazarAnalista(HttpSession session, //HttpServletRequest req,
+				@RequestParam("idUsuarioAReemplazar") Integer idUsuarioAReemplazar,
+				@RequestParam("idPlaca") Integer idPlaca,
+				Model model, Locale locale) {
+			
+			//metodo que recibe los codnum de muestras en los que se ha marcado el checkbox para cerrarlas
+			//busca esos resgistros, y presenta sus datos en una lista
+			System.out.println("Diana- getMapping reemplazarAnalista");				
+			
+			//String idUsuarioAReemplazarStr = req.getParameter("idUsuarioAReemplazar");				
+			System.out.println("el usuario a reemplazar es: " + idUsuarioAReemplazar);
+			//String idPlacaStr = req.getParameter("idPlaca");
+			//Integer idPlaca = Integer.valueOf(idPlacaStr);
+			System.out.println("la placa es: " + idPlaca);
+			
+			
+			
+			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = new GuardarAsignacionPlacaLaboratorioCentroBean();
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setIdPlaca(idPlaca);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setNumAnalistasPermitidos(numAnalistas);
+			
+			formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(idPlaca, formBeanGuardarAsignacionPlacaLaboratorioCentro);
+						
+			model.addAttribute("formBeanGuardarReemplazoAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
+			model.addAttribute("idUsuarioAReemplazar", idUsuarioAReemplazar);
+			
+		/*	//ESTOY AKIIIII
+			List<BeanListadoMuestraAnalisis> beanListadoMuestraAnalisis = this.findByClaves(claves);
+			
+			System.out.println("beanListadoMuestraAnalisis tiene: " + beanListadoMuestraAnalisis.size());
+				
+			model.addAttribute("listadoMuestras", beanListadoMuestraAnalisis);
+			return "VistaMuestrasMarcadasParaCerrar";
+		*/	
+			return "VistaReemplazarAnalista";
+			
+		}
+
+		@RequestMapping(value = "/guardaReemplazarAnalista", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public ModelAndView guardaReemplazarAnalista(@ModelAttribute("formBeanGuardarReemplazoAsignacionPlaca") GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca,
+				BindingResult result, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
+			System.out.println("estoy en guardaReemplazarAnalista");
+			//formBeanGuardarAsignacionPlaca traerá relleno solo los inputs que son las listas de id's seleccionados
+//			if (result.hasErrors()) {	
+//				System.out.println("estoy en hasErrors");
+//				ModelAndView vista = new ModelAndView("VistaReemplazarAnalista");
+//				//volvemos a calcular los datos que necesitamos para la vista
+//				formBeanGuardarAsignacionPlaca = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(formBeanGuardarAsignacionPlaca.getIdPlaca(), formBeanGuardarAsignacionPlaca);
+//				//asignamos lo que hemos cogido del formulario para no perderlo
+//				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasLabSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados());
+//				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasVolSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados());
+//				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsVolSinLabCentroSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados());
+//				vista.addObject("formBeanGuardarReemplazoAsignacionPlaca", formBeanGuardarAsignacionPlaca);
+//				return vista;
+//			} else {
+				Integer idUsuarioAQuitar = Integer.valueOf(request.getParameter("idUsuarioAQuitar"));
+				Integer idUsuarioAPoner = Integer.valueOf(request.getParameter("idUsuarioAPoner"));
+				Integer idPlaca = Integer.valueOf(request.getParameter("idPlaca"));
+				System.out.println("placa id: " + idPlaca);
+				System.out.println("idUsuarioAQuitar: " + idUsuarioAQuitar);
+				System.out.println("idUsuarioAPoner: " + idUsuarioAPoner);
+				
+				//llamamos a metodo de servicio que recupere la placa y reemplaza un analista por otro en sus muestras
+				laboratorioCentroServicio.guardarReemplazoAnalistaDePlacaYmuestras(idPlaca, idUsuarioAQuitar, idUsuarioAPoner);
+							
+				//vuelvo al formulario de asignacion de la placa				
+				redirectAttributes.addFlashAttribute("mensaje", "Reeplazo de analista realizado correctamente");
+				return new ModelAndView(new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true));				
+			}
+		//}
 		
 		//fin metodos de asignacion de analistas a placas
 
