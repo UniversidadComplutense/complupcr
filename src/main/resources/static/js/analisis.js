@@ -390,12 +390,13 @@ function EjecutarReemplazoAnalista(){
 	
 	if (analistasLabSeleccionadoReemp.length + analistasVolSeleccionadoReemp.length + analistasVolSinLabCentroSeleccionadoReemp.length != 1) {
 		alert("solo se puede escoger un analista!!");
-		$('#labelErrorAnalistasPermitidos').html("solo se puede escoger un analista");
-		$('#labelErrorAnalistasPermitidos').show();
+		$('#labelErrorAnalistasPermitidos').html("Debe escoger un solo analista");
+		$('#mensajeErrorAnalistas').show();
 		//$('#divEstudiosError').show();
 	}
-	else{		
-		$('#labelErrorAnalistasPermitidos').hide();
+	else{
+		$('#labelErrorAnalistasPermitidos').html("");
+		$('#mensajeErrorAnalistas').hide();
 		
 		var idUsuarioAPoner;
 		if(analistasLabSeleccionadoReemp.length == 1){
@@ -427,6 +428,10 @@ function EjecutarReemplazoAnalista(){
 			}).done(function(respuesta) {
 				$("#modalReemplazarAnalista").modal('hide');
 				//alert("estoy en done");				
+				$('#idcuerpo').html(respuesta);	
+				$('#analistasLabSeleccionado').selectpicker('refresh');
+				$('#analistasVolSeleccionado').selectpicker('refresh');
+				$('#analistasVolSinLabCentroSeleccionado').selectpicker('refresh');
 				
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 				//$('#idavisos').html("ERROR: No he podido conectar con el servidor para realizar la acción").css('color', "#f00");

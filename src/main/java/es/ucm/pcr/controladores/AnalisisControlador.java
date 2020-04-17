@@ -640,7 +640,8 @@ public class AnalisisControlador {
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView asignarPlaca(HttpSession session, HttpServletRequest request, @RequestParam("idPlaca") Integer idPlaca) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAPlaca");
-						
+				
+			System.out.println("estoy en asignarPlaca");
 			String mensaje = null;
 			// Comprobamos si hay mensaje enviado desde guardarAsignacion.
 			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
@@ -748,8 +749,8 @@ public class AnalisisControlador {
 
 		@RequestMapping(value = "/guardaReemplazarAnalista", method = RequestMethod.POST)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public ModelAndView guardaReemplazarAnalista(HttpServletRequest req,
-				 HttpSession session, RedirectAttributes redirectAttributes) {
+		public ModelAndView guardaReemplazarAnalista(@ModelAttribute("formBeanGuardarReemplazoAsignacionPlaca") GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca,
+				BindingResult result, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
 			System.out.println("estoy en guardaReemplazarAnalista");
 			//formBeanGuardarAsignacionPlaca traerá relleno solo los inputs que son las listas de id's seleccionados
 //			if (result.hasErrors()) {	
@@ -764,21 +765,18 @@ public class AnalisisControlador {
 //				vista.addObject("formBeanGuardarReemplazoAsignacionPlaca", formBeanGuardarAsignacionPlaca);
 //				return vista;
 //			} else {
-				String idUsuarioAQuitar = req.getParameter("idUsuarioAQuitar");
-				String idUsuarioAPoner = req.getParameter("idUsuarioAPoner");
-				String idPlaca = req.getParameter("idPlaca");
+				Integer idUsuarioAQuitar = Integer.valueOf(request.getParameter("idUsuarioAQuitar"));
+				Integer idUsuarioAPoner = Integer.valueOf(request.getParameter("idUsuarioAPoner"));
+				Integer idPlaca = Integer.valueOf(request.getParameter("idPlaca"));
 				System.out.println("placa id: " + idPlaca);
 				System.out.println("idUsuarioAQuitar: " + idUsuarioAQuitar);
 				System.out.println("idUsuarioAPoner: " + idUsuarioAPoner);
 				
-				
-				//llamamos a metodo de servicio que a partir de formBeanGuardarAsignacionPlaca recupere la placa y le asigne a todas sus muestras los nuevos analistas lab, analistas vol y otros vol
-				//y cambie el estado de las muestras a asignada analista			
-			//	laboratorioCentroServicio.guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(formBeanGuardarAsignacionPlaca);
-				
+				//llamamos a metodo de servicio que recupere la placa y reemplaza un analista por otro en sus muestras
+				laboratorioCentroServicio.guardarReemplazoAnalistaDePlacaYmuestras(idPlaca, idUsuarioAQuitar, idUsuarioAPoner);
 							
 				//vuelvo al formulario de asignacion de la placa				
-				redirectAttributes.addFlashAttribute("mensaje", "Asignaciones de placa guardadas");
+				redirectAttributes.addFlashAttribute("mensaje", "Reeplazo de analista realizado correctamente");
 				return new ModelAndView(new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true));				
 			}
 		//}

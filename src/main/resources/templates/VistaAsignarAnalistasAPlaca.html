@@ -5,7 +5,7 @@
 <title>PCR-COVID19 - MUESTRAS</title>
 <object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
 </head>
-<body>
+<body id="idcuerpo">
 
 	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
 	
@@ -80,7 +80,11 @@
 						  </td>
 						  <td th:if="*{#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.beanListaAsignaciones.listaAnalistasVol) > 0}">
 						  	<ul th:each="voluntarioLab : *{placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.beanListaAsignaciones.listaAnalistasVol}">							
-									<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span> 
+									<li>
+										<a style="color:black" href="#" th:onclick="|cargarModalReemplazarAnalista('*{placaLaboratorioCentroAsignacionesBean.id}','${voluntarioLab.beanUsuario.id}'); return false|" data-toggle="tooltip" title="Reemplazar analista">
+											<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
+										</a>
+										<span th:text="${voluntarioLab.beanUsuario.nom}"></span> 
 										<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
 										<!-- <span th:text="${voluntarioLab.valoracion}"></span> --> 
 									</li>
@@ -91,7 +95,11 @@
 						  </td>
 						  <td th:if="*{#lists.size(placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.beanListaAsignaciones.listaAnalistasVolSinLabCentro) > 0}">
 						  	<ul th:each="voluntarioSinLabCentro : *{placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.beanListaAsignaciones.listaAnalistasVolSinLabCentro}">							
-									<li><span th:text="${voluntarioSinLabCentro.beanUsuario.nom}"></span> 
+									<li>
+										<a style="color:black" href="#" th:onclick="|cargarModalReemplazarAnalista('*{placaLaboratorioCentroAsignacionesBean.id}','${voluntarioSinLabCentro.beanUsuario.id}'); return false|" data-toggle="tooltip" title="Reemplazar analista">
+											<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
+										</a>
+										<span th:text="${voluntarioSinLabCentro.beanUsuario.nom}"></span> 
 										<!-- <span th:text="${voluntarioSinLabCentro.fechaAsignacion}"></span>;  -->
 										<!-- <span th:text="${voluntarioSinLabCentro.valoracion}"></span> --> 
 									</li>
@@ -134,8 +142,10 @@
 	
 		
 	<!-- ASIGNACION NUEVOS ANALISTAS Y VOLUNTARIOS -->
-	<fieldset id="nuevasAsignaciones" class="form-group border p-2">		
-	<div id="AsignarAnalistasAPlaca" class="container">
+	<!-- solo se podran asignar mas analistas si no tenemos ya el total de analistas -->
+	<fieldset th:if="*{placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.numTotalAnalistasAsignados < numAnalistasPermitidos}" id="nuevasAsignaciones" class="form-group border p-2">
+				
+	<div  id="AsignarAnalistasAPlaca" class="container">
 		<div class="row justify-content-center mt-1, titulo-menu">
 			<h5>ASIGNAR NUEVOS ANALISTAS</h5>
 		</div>
