@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.ucm.pcr.beans.BeanElemento;
+import es.ucm.pcr.beans.BeanEquipo;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
@@ -103,6 +104,6 @@ public interface LaboratorioCentroServicio {
 	public PlacaLaboratorioCentroBean rellenarPlaca(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception;
 	public boolean esRellenable(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception;
 
-
+    public List<BeanEquipo> listaEquiposLaboratorioCentro(LaboratorioCentro laboratorioCentro) throws Exception;
 
 }	

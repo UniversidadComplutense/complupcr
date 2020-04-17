@@ -195,7 +195,9 @@ public class SesionServicioImpl implements SesionServicio {
 			opcionSecundaria = new MenuBean("Laboratorios Centros UCM","/gestor/listaLaboratorioCentro",null);
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Laboratorios Visavet","/gestor/listaLaboratorioVisavet",null);
-			menuSecundario.add(opcionSecundaria);
+			menuSecundario.add(opcionSecundaria);			
+			opcionSecundaria = new MenuBean("Equipos PCR","/gestor/listaEquipos",null);
+			menuSecundario.add(opcionSecundaria);			
 			opcionSecundaria = new MenuBean("Usuarios","/gestor/lista",null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Gestor", "", menuSecundario);
