@@ -1,12 +1,10 @@
 stages:
   - test
   - package
-  - integracion1
-  - logintegracion1
-  - produccion1
-  - produccion2
-  - logproduccion1
-  - logproduccion2
+  - integracion
+  - logintegracion
+  - produccion
+  - logproduccion
 test:
   stage: test
   tags:
@@ -35,7 +33,7 @@ package:
     - echo "Construyendo proyecto covid19"
     - mvn -Dmaven.test.skip=true package -U 
 integracion1:
-  stage: integracion1
+  stage: integracion
   tags:
     - ssh
   only:
@@ -50,7 +48,7 @@ integracion1:
     - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo cp /home/ades/covid19.jar /opt/covid19/'
     - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo systemctl restart covid19'
 logIntegracion1:
-  stage: logintegracion1
+  stage: logintegracion
   tags:
     - ssh
   only:
@@ -62,7 +60,7 @@ logIntegracion1:
     - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo tail -n 500 /opt/covid19/logs/covid19.log'
   when: manual 
 produccion1:
-  stage: produccion1
+  stage: produccion
   tags:
     - ssh
   only:
@@ -77,7 +75,7 @@ produccion1:
     - ssh ades@$SERVIDOR_PROD_COVID19_1 'sudo cp /home/ades/covid19.jar /opt/covid19/'
     - ssh ades@$SERVIDOR_PROD_COVID19_1 'sudo systemctl restart covid19'
 produccion2:
-  stage: produccion2
+  stage: produccion
   tags:
     - ssh
   only:
@@ -92,7 +90,7 @@ produccion2:
     - ssh ades@$SERVIDOR_PROD_COVID19_2 'sudo cp /home/ades/covid19.jar /opt/covid19/'
     - ssh ades@$SERVIDOR_PROD_COVID19_2 'sudo systemctl restart covid19'
 logProduccion1:
-  stage: logproduccion1
+  stage: logproduccion
   tags:
     - ssh
   only:
@@ -104,7 +102,7 @@ logProduccion1:
     - ssh ades@$SERVIDOR_PROD_COVID19_1 'sudo tail -n 500 /opt/covid19/logs/covid19.log'
   when: manual   
 logProduccion2:
-  stage: logproduccion2
+  stage: logproduccion
   tags:
     - ssh
   only:
