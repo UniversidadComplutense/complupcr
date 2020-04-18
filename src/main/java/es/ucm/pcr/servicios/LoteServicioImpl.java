@@ -47,6 +47,7 @@ public class LoteServicioImpl implements LoteServicio {
 	private ServicioLog servicioLog;
 	
 	@Override
+	@Transactional
 	public Page<LoteListadoBean> findLoteByParam(LoteBusquedaBean params, Pageable pageable) {
 		List<LoteListadoBean> listLotesBean = new ArrayList<LoteListadoBean>();
 		
@@ -181,6 +182,7 @@ public class LoteServicioImpl implements LoteServicio {
 	
 	// yoli
 	@Override
+	@Transactional
 	public LoteBeanPlacaVisavet findByIdByPlacas(Integer id) {
 		Lote lote = findByIdLote(id);
 		if (lote != null) {

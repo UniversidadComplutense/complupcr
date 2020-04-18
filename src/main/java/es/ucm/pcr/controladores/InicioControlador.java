@@ -1,6 +1,5 @@
 package es.ucm.pcr.controladores;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import es.ucm.pcr.config.security.PcrUserDetails;
 import es.ucm.pcr.config.security.PcrUserDetailsService;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.servicios.UsuarioServicio;
@@ -126,9 +124,9 @@ public class InicioControlador {
 	@RequestMapping(value = "/modificarContrasena", method = RequestMethod.POST)
 	public String modificarContrasenaPost(HttpServletRequest request, @RequestParam("newPassword") String matchPassword,
 			HttpSession session) {
-		PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
+		User user = (User) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
-		usuarioServicio.cambiarContrasena(pcrUserDetails.getUser().getUsuario().getEmail(), matchPassword);
+		usuarioServicio.cambiarContrasena(user.getUsername(), matchPassword);
 		session.invalidate();
 		return "redirect:/acceso";
 	}
