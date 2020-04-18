@@ -247,6 +247,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 
 	}
 	
+	@Transactional
 	public BeanPlacaVisavetUCM buscarPlacaById(Integer id) {
 		Optional<PlacaVisavet> placa=placaVisavetRepositorio.findById(id);
 		if (placa.isPresent()) 
