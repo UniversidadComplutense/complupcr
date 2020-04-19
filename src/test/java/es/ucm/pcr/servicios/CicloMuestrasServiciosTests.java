@@ -59,13 +59,7 @@ public class CicloMuestrasServiciosTests {
 	@WithUserDetails("centrosalud@ucm.es")
 	public void centroSalud() {
 		try {
-			// Damos de alta centro de salud
-			Centro centro = new Centro();
-			centro.setCodCentro("TEST1");
-			centro.setNombre("Centro de test1");
-			centro.setTelefono("123456789");
-			centro.setDireccion("Dirección test1");
-			centro = centroServicio.save(centro);
+			Centro centro = centroServicio.findByCodCentro("TEST1").get();
 
 			// Damos de alta el usuario del centro asociado
 			Optional<Rol> orolUsu = rolServicio.findByNombre("CENTROSALUD");
