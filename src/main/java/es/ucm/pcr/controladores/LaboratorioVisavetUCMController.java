@@ -467,7 +467,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		
 	    if (session.getAttribute("busquedaPlacasVisavetBean") == null) { 
 	    	busquedaPlacasVisavetBean = new BusquedaPlacasVisavetBean();
-	    	busquedaPlacasVisavetBean.setIdLaboratorioCentro(0);
+	    	busquedaPlacasVisavetBean.setIdLaboratorioCentro(null);
 			busquedaPlacasVisavetBean=this.rellenarBusquedaPlacas(busquedaPlacasVisavetBean);
 			
 	    }

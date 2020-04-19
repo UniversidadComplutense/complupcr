@@ -130,7 +130,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		return null;
 	}
 	
-
+	@Transactional
 	public Page<BeanPlacaVisavetUCM> buscarPlacas(BusquedaPlacasVisavetBean busqueda, Pageable pageable){
 		
 	busqueda.setIdLaboratorioVisavet(sesionServicio.getLaboratorioVisavet().getId());	
