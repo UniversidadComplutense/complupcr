@@ -54,6 +54,25 @@ INSERT INTO rol VALUES
 	,(8,'ANALISTALABORATORIO')
 	,(13,'AUDITOR')
 	,(14,'VOLUNTARIO');
+	
+--
+-- Dumping data for table `centro`
+--
+INSERT INTO centro (id, nombre, codCentro, telefono, email, direccion) VALUES 
+	(1,'Centro de salud test1','TEST1','123456789','centroSaludTest1@salud.es','Dirección test1');
+	
+--
+-- Dumping data for table `laboratorioVisavet`
+--
+INSERT INTO laboratorioVisavet (id, nombre, ocupacion) VALUES 
+	(1,'DemoVisavet1',100);
+
+--
+-- Dumping data for table `laboratorioCentro`
+--
+INSERT INTO laboratorioCentro (id, nombre) VALUES 
+	(1,'DemoCentro1');
+
 ---
 --- Creamos tablas para Quartz
 ---

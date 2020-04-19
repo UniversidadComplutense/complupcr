@@ -25,7 +25,7 @@ import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
-import es.ucm.pcr.config.UserDetailsTestConfig;
+import es.ucm.pcr.config.security.UserDetailsTestConfig;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Rol;
