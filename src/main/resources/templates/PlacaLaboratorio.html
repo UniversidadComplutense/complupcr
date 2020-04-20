@@ -245,7 +245,7 @@
 				<button th:id="btnAsignarEquipo" data-toggle="modal" data-target="#modal-asignarEquipo" type="button" th:disabled="${placa.placasVisavet == null || #lists.size(placa.placasVisavet)==0}" class="btn btn-secondary">Asignar equipo PCR</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 2}" class="col-3 justify-content-begin mt-3">
-				<button th:id="btnFinalizarPCR" type="button" th:onclick="finalizarPCR();" th:disabled="${nueva}" class="btn btn-secondary">Dar por finalizado PCR</button>			
+				<button th:id="btnFinalizarPCR" data-toggle="modal" data-target="#modal-confirmarFinalizadoPCR" type="button" th:disabled="${nueva}" class="btn btn-secondary">Dar por finalizado PCR</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 3}" class="col-3 justify-content-begin mt-3">
 				<button type="button" th:onclick="'window.location.href = \'' + @{/documento/placaLaboratorio?id=} + ${placa.id} + '&url=5' + '\''" th:disabled="${nueva}" class="btn btn-secondary">Asignar resultados PCR</button>			
@@ -285,12 +285,12 @@
 										th:value="${equipo.id}" th:text="${equipo.nombre} + ' con capacidad para ' + ${equipo.capacidad} + ' muestras.'"
 										th:select="${placa.idEquipo}">Equipo</option>				 		
 					 	</select>
-					 	
+					 	<div><h6><b>¿Confirma que la placa está preparada para la realización del PCR?</b></h6></div>
 					</div>								        
 	      		</div>
-			    <div class="modal-footer">
+			    <div class="modal-footer">			    	
 			    	<button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="cancelarAsignacionEquipoPCR();">Cancelar</button>
-			    	<button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="asignarEquipoPCR();">Placa preparada para PCR</button>						        
+			    	<button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="asignarEquipoPCR();">Confirmar</button>						        
 				</div>
 	    	</div>
 	  	</div>
@@ -299,33 +299,59 @@
 	
 	
 	<!-- MODAL CONFIRMAR PLACA LISTA PARA ANALIZAR -->							
-		<div class="modal fade" th:id="modal-confirmarListaParaAnalizar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-			<div class="modal-dialog modal-md" role="document">
-		    	<div class="modal-content">
-		      		<div class="modal-header">
-		        		<div>	
-		        			<h5 class="modal-title" id="exampleModalLabel"><b><span th:text="'Placa ' + ${placa.id}"></span></b></h5>
-		        		</div>
-		        		<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-		          			<span aria-hidden="true">&times;</span>
-		        		</button>
-		      		</div>
-		      		<div class="modal-body">	      										        
-			          	<div class="col-12 form-group">
-			          		<h6>¿Confirma que la placa pase a estar lista para analizar?</h6>	          		
-						</div>								        
-		      		</div>
-				    <div class="modal-footer">
-				    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-				    	<button type="button" class="btn btn-secondary" data-dismiss="modal" th:onclick="listaParaAnalizar();">Confirmar</button>						        
-					</div>
-		    	</div>
-		  	</div>
-		</div>
-		<!-- FIN MODAL CONFIRMAR PLACA LISTA PARA ANALIZAR -->
+	<div class="modal fade" th:id="modal-confirmarListaParaAnalizar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+		<div class="modal-dialog modal-md" role="document">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+	        		<div>	
+	        			<h5 class="modal-title" id="exampleModalLabel"><b><span th:text="'Placa ' + ${placa.id}"></span></b></h5>
+	        		</div>
+	        		<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+	          			<span aria-hidden="true">&times;</span>
+	        		</button>
+	      		</div>
+	      		<div class="modal-body">	      										        
+		          	<div class="col-12 form-group">
+		          		<h6>¿Confirma que la placa pase a estar lista para analizar?</h6>	          		
+					</div>								        
+	      		</div>
+			    <div class="modal-footer">
+			    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			    	<button type="button" class="btn btn-secondary" data-dismiss="modal" th:onclick="listaParaAnalizar();">Confirmar</button>						        
+				</div>
+	    	</div>
+	  	</div>
+	</div>
+	<!-- FIN MODAL CONFIRMAR PLACA LISTA PARA ANALIZAR -->
 	
 	
+	<!-- MODAL CONFIRMAR FINALIZADO PCR -->							
+	<div class="modal fade" th:id="modal-confirmarFinalizadoPCR" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+		<div class="modal-dialog modal-md" role="document">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+	        		<div>	
+	        			<h5 class="modal-title" id="exampleModalLabel"><b><span th:text="'Placa ' + ${placa.id}"></span></b></h5>
+	        		</div>
+	        		<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+	          			<span aria-hidden="true">&times;</span>
+	        		</button>
+	      		</div>
+	      		<div class="modal-body">	      										        
+		          	<div class="col-12 form-group">
+		          		<h6>¿Confirma que la placa ha finalizado el PCR?</h6>	          		
+					</div>								        
+	      		</div>
+			    <div class="modal-footer">
+			    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			    	<button type="button" class="btn btn-secondary" data-dismiss="modal" th:onclick="finalizarPCR();">Confirmar</button>						        
+				</div>
+	    	</div>
+	  	</div>
+	</div>
+	<!-- FIN MODAL CONFIRMAR FINALIZADO PCR -->
 	
+		
 	<!-- formuario para botón 'Dar por finalizado PCR' -->
 	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas/finalPCR}" method="post" th:object="${placa}" id="formGuardarFinalizadoPCR" role="form">
 		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
