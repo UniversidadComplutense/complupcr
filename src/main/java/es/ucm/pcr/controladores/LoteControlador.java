@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
 import es.ucm.pcr.beans.BeanEstado;
@@ -157,6 +156,12 @@ public class LoteControlador {
 	
 	private void buscarLotes(LoteBusquedaBean beanBusqueda, ModelAndView vista, HttpSession session) {
 		Integer currentPage = (Integer)session.getAttribute("paginaActual");
+	
+		//Sara
+		beanBusqueda.setFechaEnvioFin(
+			Utilidades.fechafinBuscador(beanBusqueda.getFechaEnvioFin( )));
+        
+		
 		
 		Page<LoteListadoBean> lotesPage = loteServicio.findLoteByParam(beanBusqueda, 
 				PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION, ORDENACION)); 

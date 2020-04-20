@@ -209,11 +209,11 @@
 						<td>
 							<span th:text="${muestra.idPlacaLaboratorio}"></span>							
 						</td>
+						<td>						
+							<span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span>
+						</td>						
 						<td>
-							<span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/mm/yyyy')}"></span>
-						</td>
-						<td>
-							<span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/mm/yyyy')}"></span>
+							<span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/MM/yyyy')}"></span>
 						</td>
 						<td>
 							<span th:text="${muestra.resultado}"></span>

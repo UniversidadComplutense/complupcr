@@ -183,7 +183,10 @@
 				<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
 		<div class="row">
 		<button type="button" id="grabar" th:disabled="${!botonAltaNoMostrar}"  th:onClick="|seleccionAccion('grabar'); return false|"  class="btn btn-secondary">Grabar</button>&nbsp;
-		<button type="button"  th:disabled="${!botonAltaNoMostrar}" id="grabaryFinalizar" th:onClick="|seleccionAccion('grabaryFinalizar'); return false|"  class="btn btn-secondary">Grabar y Finalizar</button>
+		<button type="button"  th:disabled="${!botonAltaNoMostrar}" id="grabaryFinalizar" th:onClick="|seleccionAccion('grabaryFinalizar'); return false|"  class="btn btn-secondary">Grabar y Finalizar</button>&nbsp;
+		
+		<button type="button" id="volver" th:data-url="${urlVolver}" th:onClick="|redirigir(this.getAttribute('data-url')); return false|"  class="btn btn-secondary">Volver</button>&nbsp;
+	
 		</div>	
 		 <!--  capa de resultados -->
 		</form>

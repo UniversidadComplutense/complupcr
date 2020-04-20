@@ -2,6 +2,7 @@ package es.ucm.pcr.validadores;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -16,9 +17,11 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import es.ucm.pcr.beans.ElementoDocumentacionBean;
+import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.PlacaVisavet;
+import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.repositorio.PlacaLaboratorioRepositorio;
 import es.ucm.pcr.repositorio.PlacaVisavetRepositorio;
 import es.ucm.pcr.utilidades.Utilidades;
@@ -127,7 +130,26 @@ public class DocumentoValidador implements Validator {
 				Optional<PlacaLaboratorio> placaLaboratorio = placaLaboratorioRepositorio
 						.findById(elementoDocBean.getId());
 				if (placaLaboratorio.isPresent()) {
-					Set<Muestra> muestras = placaLaboratorio.get().getMuestras();
+					//Set<Muestra> muestras = placaLaboratorio.get().getMuestras(); //modificado Diana- Las muestras se obtienen a traves de la placa visavet y el lote
+					
+					//obtencion de las muestras de la placa a través de sus placas visavet y los lotes
+					Set<Muestra> muestras = new HashSet<Muestra>(); 	
+					Set<PlacaVisavet> placasVisavetDeLaPlacaLaboratorio = new HashSet<PlacaVisavet>();		
+					for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placaLaboratorio.get().getPlacaVisavetPlacaLaboratorios()) {
+						placasVisavetDeLaPlacaLaboratorio.add(placaVisavetPlacaLaboratorio.getPlacaVisavet());
+					}		
+					for (PlacaVisavet placaVisavet: placasVisavetDeLaPlacaLaboratorio) {			
+						// Recuperamos las muestras de la placa Visavet desde el lote
+						Set<Muestra> muestrasVisavet = new HashSet<Muestra>();
+						Set<Lote> lotes = placaVisavet.getLotes();
+						for (Lote lote : lotes) {
+							muestrasVisavet.addAll(lote.getMuestras());
+							muestras.addAll(muestrasVisavet);
+						}
+					}
+					//fin obtencion cjto de muestras					
+					
+					
 					for (Muestra muestra : muestras) {
 						listaMuestrasLaboratorio.add(muestra.getRefInternaVisavet());
 					}
@@ -216,7 +238,21 @@ public class DocumentoValidador implements Validator {
 				Optional<PlacaVisavet> placaVisavet = placaVisavetRepositorio.findById(elementoDocBean.getId());
 
 				if (placaVisavet.isPresent()) {
-					Set<Muestra> muestras = placaVisavet.get().getMuestras();
+					//Set<Muestra> muestras = placaVisavet.get().getMuestras(); //modificado Diana- Las muestras se obtienen a traves de los lotes de la placa visavet
+					
+					//obtencion de las muestras de la placa visavet a través de lotes
+					Set<Muestra> muestras = new HashSet<Muestra>(); 
+								
+					// Recuperamos las muestras de la placa Visavet desde el lote
+					Set<Muestra> muestrasVisavet = new HashSet<Muestra>();
+					Set<Lote> lotes = placaVisavet.get().getLotes();
+					for (Lote lote : lotes) {
+						muestrasVisavet.addAll(lote.getMuestras());
+						muestras.addAll(muestrasVisavet);
+					}					
+					//fin obtencion cjto de muestras					
+										
+					
 					for (Muestra muestra : muestras) {
 						listaMuestrasVisavet.add(muestra.getEtiqueta());
 					}

@@ -207,7 +207,11 @@ public class AnalisisControlador {
 			BeanBusquedaMuestraAnalisis beanBusqueda = (BeanBusquedaMuestraAnalisis) session.getAttribute("beanBusqueda");
 			beanBusqueda = beanBusqueda != null ? beanBusqueda : new BeanBusquedaMuestraAnalisis();
 			//solo mostraremos al jefe las muestras de placas que ha cogido bajo su responsabilidad, (que solo podran ser del centro del jefe, ya que solo le hemos dejado coger placas de su centro)
-			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)			
+			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)	
+			beanBusqueda.setFechaEnvioMuestraFin(
+					Utilidades.fechafinBuscador(beanBusqueda.getFechaEnvioMuestraFin()));
+			beanBusqueda.setFechaResultadoMuestraFin(
+					Utilidades.fechafinBuscador(beanBusqueda.getFechaResultadoMuestraFin()));
 			Page<BeanListadoMuestraAnalisis> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, 
 					PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION, ORDENACION));
 			session.setAttribute("paginaActual", currentPage);						
@@ -791,7 +795,7 @@ public class AnalisisControlador {
 				laboratorioCentroServicio.guardarReemplazoAnalistaDePlacaYmuestras(idPlaca, idUsuarioAQuitar, idUsuarioAPoner);
 							
 				//vuelvo al formulario de asignacion de la placa				
-				redirectAttributes.addFlashAttribute("mensaje", "Reeplazo de analista realizado correctamente");
+				redirectAttributes.addFlashAttribute("mensaje", "Reemplazo de analista realizado correctamente");
 				return new ModelAndView(new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true));				
 			}
 		//}

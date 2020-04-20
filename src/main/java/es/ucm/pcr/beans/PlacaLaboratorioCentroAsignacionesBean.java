@@ -2,13 +2,17 @@ package es.ucm.pcr.beans;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.PlacaVisavet;
+import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.modelo.orm.UsuarioMuestra;
@@ -135,13 +139,43 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 		laboratorioCentroBean.setNombre(placaLaboratorio.getLaboratorioCentro().getNombre());
 		bean.setLaboratorioCentro(laboratorioCentroBean);
 		
-		List<BeanListadoMuestraAnalisis> listadoMuestras = new ArrayList<BeanListadoMuestraAnalisis>();
+		
+		/*Muestras: antes recuperaba las muestras de la placa de laboratorio, ahora salen a traves de la placa visavet y de los lotes
 		Set<Muestra> muestras = placaLaboratorio.getMuestras();
 		for (Muestra muestra : muestras) {
 			BeanListadoMuestraAnalisis muestraBeanAnalisis = BeanListadoMuestraAnalisis.modelToBean(muestra);			
 			listadoMuestras.add(muestraBeanAnalisis);
 		}
 		bean.setMuestras(listadoMuestras);
+		*/
+		
+		Set<Muestra> cjtoMuestrasPlacaLaboratorio = new HashSet<Muestra>(); //ahora no salen directamente de la placa de laboratorio
+		
+		Set<PlacaVisavet> placasVisavetDeLaPlacaLaboratorio = new HashSet<PlacaVisavet>();
+		
+		for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placaLaboratorio.getPlacaVisavetPlacaLaboratorios()) {
+			placasVisavetDeLaPlacaLaboratorio.add(placaVisavetPlacaLaboratorio.getPlacaVisavet());
+		}
+		
+		for (PlacaVisavet placaVisavet: placasVisavetDeLaPlacaLaboratorio) {			
+			// Recuperamos las muestras de la placa Visavet desde el lote
+			Set<Muestra> muestrasVisavet = new HashSet<Muestra>();
+			Set<Lote> lotes = placaVisavet.getLotes();
+			for (Lote lote : lotes) {
+				muestrasVisavet.addAll(lote.getMuestras());
+				cjtoMuestrasPlacaLaboratorio.addAll(muestrasVisavet);
+			}
+		}
+		//fin recuperar muestras
+		
+		List<BeanListadoMuestraAnalisis> listadoMuestras = new ArrayList<BeanListadoMuestraAnalisis>();
+		for (Muestra muestra : cjtoMuestrasPlacaLaboratorio) {
+			BeanListadoMuestraAnalisis muestraBeanAnalisis = BeanListadoMuestraAnalisis.modelToBean(muestra);			
+			listadoMuestras.add(muestraBeanAnalisis);
+		}
+		bean.setMuestras(listadoMuestras);
+		
+				
 
 		List<DocumentoBean> documentos = new ArrayList<DocumentoBean>();
 		// TODO rellenar Documentos
@@ -154,8 +188,8 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 		BeanListaAsignaciones beanListaAsignaciones = new BeanListaAsignaciones();
 		//analistas de la muestra(serán los mismos analistas que la placa), 
 		//rellenamos los analistas de la placa a partir de los analistas de la primera muestra de la placa (porque son los mismos para todas las muestras)
-		Set<Muestra> setMuestras = placaLaboratorio.getMuestras();
-		for (Muestra muestra : setMuestras) {
+		//Set<Muestra> setMuestras = placaLaboratorio.getMuestras();		
+		for (Muestra muestra : cjtoMuestrasPlacaLaboratorio) {
 			for(UsuarioMuestra usuMuestra: muestra.getUsuarioMuestras()) {
 				Usuario usu = usuMuestra.getUsuario();
 							
