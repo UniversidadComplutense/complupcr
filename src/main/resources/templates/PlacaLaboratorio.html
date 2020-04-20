@@ -251,7 +251,7 @@
 				<button type="button" th:onclick="'window.location.href = \'' + @{/documento/placaLaboratorio?id=} + ${placa.id} + '&url=5' + '\''" th:disabled="${nueva}" class="btn btn-secondary">Asignar resultados PCR</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 3}" class="col-3 justify-content-begin mt-3">
-				<button th:id="btnListaParaAnalizar" type="button" th:onclick="listaParaAnalizar();" th:disabled="${nueva}" class="btn btn-secondary">Lista para analizar</button>			
+				<button th:id="btnListaParaAnalizar" data-toggle="modal" data-target="#modal-confirmarListaParaAnalizar" type="button" th:disabled="${nueva}" class="btn btn-secondary">Lista para analizar</button>			
 			</div>			
 			<div th:if="${nueva}" class="col-2 justify-content-begin mt-3">
 				<button th:id="btnCrearPlaca" th:disabled="${editable == 'false' || placa.numeroMuestras == ''|| placa.placasVisavetSeleccionadas == ''}" type="submit" class="btn btn-secondary">Crear placa</button>
@@ -295,7 +295,34 @@
 	    	</div>
 	  	</div>
 	</div>
-	<!-- FIN ASIGNAR EQUIPO PCR -->	
+	<!-- FIN ASIGNAR EQUIPO PCR -->
+	
+	
+	<!-- MODAL CONFIRMAR PLACA LISTA PARA ANALIZAR -->							
+		<div class="modal fade" th:id="modal-confirmarListaParaAnalizar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+			<div class="modal-dialog modal-md" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<div>	
+		        			<h5 class="modal-title" id="exampleModalLabel"><b><span th:text="'Placa ' + ${placa.id}"></span></b></h5>
+		        		</div>
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+		          			<span aria-hidden="true">&times;</span>
+		        		</button>
+		      		</div>
+		      		<div class="modal-body">	      										        
+			          	<div class="col-12 form-group">
+			          		<h6>¿Confirma que la placa pase a estar lista para analizar?</h6>	          		
+						</div>								        
+		      		</div>
+				    <div class="modal-footer">
+				    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+				    	<button type="button" class="btn btn-secondary" data-dismiss="modal" th:onclick="listaParaAnalizar();">Confirmar</button>						        
+					</div>
+		    	</div>
+		  	</div>
+		</div>
+		<!-- FIN MODAL CONFIRMAR PLACA LISTA PARA ANALIZAR -->
 	
 	
 	
