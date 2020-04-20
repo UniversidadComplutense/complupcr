@@ -2,6 +2,7 @@ package es.ucm.pcr.servicios;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import es.ucm.pcr.modelo.orm.Documento;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.PlacaVisavet;
+import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.DocumentoRepositorio;
 import es.ucm.pcr.repositorio.MuestraRepositorio;
@@ -59,10 +61,30 @@ public class DocumentoServicioImpl implements DocumentoServicio {
 			docBean.setTamanioDocumento(d.getTamanoDocumento()!= null ? Utilidades.fileSizeFormat(d.getTamanoDocumento()) : "0 MB");
 			Usuario usuario = d.getUsuario();
 			docBean.setDescripcionUsuario(usuario.getNombre() + " " + usuario.getApellido1() + (usuario.getApellido2() != null ? usuario.getApellido2() : ""));
+			docBean.setIdUsuario(d.getUsuario().getId());
 			documentoBeanList.add(docBean);
 		}
 		return documentoBeanList;
-	}	
+	}
+	
+	@Override
+	public List<DocumentoBean> findDocumentosPlacaLaboratorioYPlacasVisavet(DocumentoBusquedaBean params) {
+		List<DocumentoBean> documentoBeanList = new ArrayList<DocumentoBean>();
+		List<Documento> documentoList = documentoRepositorio.findDocuPlacaLabYPlacaVis(params);
+		DocumentoBean docBean = new DocumentoBean();
+		for (Documento d : documentoList) {
+			docBean = new DocumentoBean();
+			docBean.setId(d.getId());
+			docBean.setNombreDocumento(d.getNombre());
+			docBean.setFichero(d.getFichero());
+			docBean.setTamanioDocumento(d.getTamanoDocumento()!= null ? Utilidades.fileSizeFormat(d.getTamanoDocumento()) : "0 MB");
+			Usuario usuario = d.getUsuario();
+			docBean.setDescripcionUsuario(usuario.getNombre() + " " + usuario.getApellido1() + (usuario.getApellido2() != null ? usuario.getApellido2() : ""));
+			docBean.setIdUsuario(d.getUsuario().getId());
+			documentoBeanList.add(docBean);
+		}
+		return documentoBeanList;
+	}
 	
 	@Override
 	public ElementoDocumentacionBean obtenerDocumentosMuestra(Integer idMuestra) {
@@ -126,8 +148,36 @@ public class DocumentoServicioImpl implements DocumentoServicio {
 		elDoc.setTipoElemento(ElementoDocumentacionBean.TIPO_ELEMENTO_PLACA_LABORATORIO);
 		
 		DocumentoBusquedaBean docBusquedaBean = new DocumentoBusquedaBean();
+		
 		docBusquedaBean.setIdPlacaLaboratorio(idPlacaLaboratorio);
+
 		List<DocumentoBean> docsMuestra = findByParams(docBusquedaBean);
+		elDoc.setDocumentos(docsMuestra);
+		
+		return elDoc;
+	}
+	
+	@Override
+	public ElementoDocumentacionBean obtenerDocumentosPlacaLaboratorioYPlacasVisavet(Integer idPlacaLaboratorio) {
+		ElementoDocumentacionBean elDoc = new ElementoDocumentacionBean();
+		PlacaLaboratorio placaLaboratorio = Optional.of(placaLaboratorioRepositorio.findById(idPlacaLaboratorio).get()).orElse(null);		
+		elDoc.setId(placaLaboratorio.getId());
+		// TODO - ESTABLECER DESCRIPCION (Diana: pongo el id de la placa de momento, podemos poner lo que querais)
+		elDoc.setDescripcion("Placa " + placaLaboratorio.getId());
+		elDoc.setTipoElemento(ElementoDocumentacionBean.TIPO_ELEMENTO_PLACA_LABORATORIO);
+		
+		DocumentoBusquedaBean docBusquedaBean = new DocumentoBusquedaBean();
+		
+		docBusquedaBean.setIdPlacaLaboratorio(idPlacaLaboratorio);
+		
+		// Documento(s) asociado(s) a las placa(s) Visavet que forman parte de la placa de laboratorio
+		List<Integer> idsPlacasVisavet = new ArrayList<Integer>();
+		for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio : placaLaboratorio.getPlacaVisavetPlacaLaboratorios()){
+			idsPlacasVisavet.add(placaVisavetPlacaLaboratorio.getPlacaVisavet().getId());
+		}
+		docBusquedaBean.setPlacasVisavet(idsPlacasVisavet);		
+		//
+		List<DocumentoBean> docsMuestra = findDocumentosPlacaLaboratorioYPlacasVisavet(docBusquedaBean);
 		elDoc.setDocumentos(docsMuestra);
 		
 		return elDoc;

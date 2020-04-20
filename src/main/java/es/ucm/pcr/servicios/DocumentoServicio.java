@@ -68,4 +68,19 @@ public interface DocumentoServicio {
 	 */
 	public boolean borrar(Integer id);
 
+	
+	/**
+	 * Elemento y documentos placa laboratorio y placas Visavet
+	 * @param idPlacaLaboratorio
+	 * @return
+	 */
+	public ElementoDocumentacionBean obtenerDocumentosPlacaLaboratorioYPlacasVisavet(Integer idPlacaLaboratorio);
+
+	/**
+	 * Busqueda de documentos de una placa de laboratorio y sus placas Visavet por criterios
+	 * @param params
+	 * @return
+	 */
+	public List<DocumentoBean> findDocumentosPlacaLaboratorioYPlacasVisavet(DocumentoBusquedaBean params);
+
 }

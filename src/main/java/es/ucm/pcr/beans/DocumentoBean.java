@@ -9,6 +9,7 @@ public class DocumentoBean {
 	private String fechaDocumento;
 	private byte[] fichero;
 	String descripcionUsuario;
+	Integer idUsuario;
 
 	
 	public Integer getId() {
@@ -66,5 +67,15 @@ public class DocumentoBean {
 	public void setDescripcionUsuario(String descripcionUsuario) {
 		this.descripcionUsuario = descripcionUsuario;
 	}
+
+	public Integer getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(Integer idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+	
+	
 	
 }
