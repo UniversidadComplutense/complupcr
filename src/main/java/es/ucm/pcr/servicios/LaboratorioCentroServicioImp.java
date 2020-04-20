@@ -435,7 +435,25 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	public PlacaLaboratorioCentroBean guardarCogerODevolverPlaca(Integer idPlaca, Integer idUsuario, String accion) {
 	//metodo que recibe el idPlaca, y el id de usuario que la quiere coger
 	
-		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);		
+		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);
+		
+		//obtencion de las muestras de la placa a través de a traves de sus placas visavet los lotes
+		Set<Muestra> cjtoMuestrasPlacaLaboratorio = new HashSet<Muestra>(); //ahora no salen directamente de la placa de laboratorio		
+		Set<PlacaVisavet> placasVisavetDeLaPlacaLaboratorio = new HashSet<PlacaVisavet>();		
+		for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placa.getPlacaVisavetPlacaLaboratorios()) {
+			placasVisavetDeLaPlacaLaboratorio.add(placaVisavetPlacaLaboratorio.getPlacaVisavet());
+		}		
+		for (PlacaVisavet placaVisavet: placasVisavetDeLaPlacaLaboratorio) {			
+			// Recuperamos las muestras de la placa Visavet desde el lote
+			Set<Muestra> muestrasVisavet = new HashSet<Muestra>();
+			Set<Lote> lotes = placaVisavet.getLotes();
+			for (Lote lote : lotes) {
+				muestrasVisavet.addAll(lote.getMuestras());
+				cjtoMuestrasPlacaLaboratorio.addAll(muestrasVisavet);
+			}
+		}
+		//fin obtencion cjto de muestras
+		
 				
 		if(accion.equals("coger")) {
 			//asocia la placa al usuario, le cambia el estado de la placa a PLACA_ASIGNADA_PARA_ANALISIS y pone a todas sus muestras a estado pendente de analizar
@@ -445,7 +463,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			System.out.println("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
 			placa.setEstadoPlacaLaboratorio(estadoPlacaLab);
 			//recorremos todas las muestras de esa placa y les ponemos el estado pendente de analizar
-			for(Muestra m: placa.getMuestras()) {
+			//las muestras de la placa las obtenemos a traves de sus placas visavet y de los lotes
+			//for(Muestra m: placa.getMuestras()) {
+			for(Muestra m: cjtoMuestrasPlacaLaboratorio) {
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_PENDIENTE_ANALIZAR.getCodNum()));
 				muestraRepositorio.save(m);
 				//guardamos en el log el cambio de estado de la muestra
@@ -461,7 +481,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			placa.setEstadoPlacaLaboratorio(estadoPlacaLab);
 			//TODO preguntar que hacemos con las muestras cuando devolvermos la placa?
 			//recorremos todas las muestras de esa placa y les ponemos en el estado que tenian al llegar MUESTRA_ENVIADA_CENTRO_ANALISIS?
-			for(Muestra m: placa.getMuestras()) {
+			//las muestras de la placa las obtenemos a traves de sus placas visavet y de los lotes
+			//for(Muestra m: placa.getMuestras()) {
+			for(Muestra m: cjtoMuestrasPlacaLaboratorio) {
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS.getCodNum()));
 				muestraRepositorio.save(m);
 				//guardamos en el log el cambio de estado de la muestra
@@ -498,7 +520,26 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		for(PlacaLaboratorio placa: lisaPlacasJefe) {
 			BeanElemento beanElementoPlaca = new BeanElemento();
 			beanElementoPlaca.setCodigo(placa.getId());
-			beanElementoPlaca.setDescripcion("Placa " + placa.getId() + ", muestras: " + placa.getMuestras().size());
+			
+			//obtencion de las muestras de la placa a través de a traves de sus placas visavet los lotes
+			Set<Muestra> cjtoMuestrasPlacaLaboratorio = new HashSet<Muestra>(); //ahora no salen directamente de la placa de laboratorio		
+			Set<PlacaVisavet> placasVisavetDeLaPlacaLaboratorio = new HashSet<PlacaVisavet>();		
+			for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placa.getPlacaVisavetPlacaLaboratorios()) {
+				placasVisavetDeLaPlacaLaboratorio.add(placaVisavetPlacaLaboratorio.getPlacaVisavet());
+			}		
+			for (PlacaVisavet placaVisavet: placasVisavetDeLaPlacaLaboratorio) {			
+				// Recuperamos las muestras de la placa Visavet desde el lote
+				Set<Muestra> muestrasVisavet = new HashSet<Muestra>();
+				Set<Lote> lotes = placaVisavet.getLotes();
+				for (Lote lote : lotes) {
+					muestrasVisavet.addAll(lote.getMuestras());
+					cjtoMuestrasPlacaLaboratorio.addAll(muestrasVisavet);
+				}
+			}
+			//fin obtencion cjto de muestras
+			
+			//beanElementoPlaca.setDescripcion("Placa " + placa.getId() + ", muestras: " + placa.getMuestras().size());
+			beanElementoPlaca.setDescripcion("Placa " + placa.getId() + ", muestras: " + cjtoMuestrasPlacaLaboratorio.size());
 			listaBeanPlacasLaboratorioDeJefe.add(beanElementoPlaca);			
 		}		
 		//añado el elemento seleccione al principio
@@ -517,6 +558,23 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(formBeanGuardarAsignacionPlaca.getIdPlaca());
 		
+		//obtencion de las muestras de la placa a través de a traves de sus placas visavet los lotes
+		Set<Muestra> cjtoMuestrasPlacaLaboratorio = new HashSet<Muestra>(); //ahora no salen directamente de la placa de laboratorio		
+		Set<PlacaVisavet> placasVisavetDeLaPlacaLaboratorio = new HashSet<PlacaVisavet>();		
+		for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placa.getPlacaVisavetPlacaLaboratorios()) {
+			placasVisavetDeLaPlacaLaboratorio.add(placaVisavetPlacaLaboratorio.getPlacaVisavet());
+		}		
+		for (PlacaVisavet placaVisavet: placasVisavetDeLaPlacaLaboratorio) {			
+			// Recuperamos las muestras de la placa Visavet desde el lote
+			Set<Muestra> muestrasVisavet = new HashSet<Muestra>();
+			Set<Lote> lotes = placaVisavet.getLotes();
+			for (Lote lote : lotes) {
+				muestrasVisavet.addAll(lote.getMuestras());
+				cjtoMuestrasPlacaLaboratorio.addAll(muestrasVisavet);
+			}
+		}
+		//fin obtencion cjto de muestras
+		
 		//si se ha marcado algun analistalab, analistavol u otros vol 
 		if(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados().size()>0 ||
 			formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados().size()>0 ||
@@ -526,7 +584,8 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			
 			//recorremos todas las muestras de esa placa, les asignamos los nuevos analistas, aumentamos el contador de analistas asignados
 			//y les ponemos el estado asignada analista
-			for(Muestra muestra: placa.getMuestras()) {
+			//for(Muestra muestra: placa.getMuestras()) { //ahora obtenemos las muestras a partir de la placa visavet y el lote
+			for(Muestra muestra: cjtoMuestrasPlacaLaboratorio) {				
 				Integer numerodeAnalistasAsignadosMuestra = (muestra.getNumerodeAnalistasAsignados()==null) ? 0 : muestra.getNumerodeAnalistasAsignados(); 
 				//creamos nuevos usuarioMuestras por cada nueva asignacion de cada una de las muestras
 				//recorremos los analistas de labaratorio marcados para asignar
@@ -580,13 +639,31 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);
 		
+		//obtencion de las muestras de la placa a través de a traves de sus placas visavet los lotes
+		Set<Muestra> cjtoMuestrasPlacaLaboratorio = new HashSet<Muestra>(); //ahora no salen directamente de la placa de laboratorio		
+		Set<PlacaVisavet> placasVisavetDeLaPlacaLaboratorio = new HashSet<PlacaVisavet>();		
+		for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placa.getPlacaVisavetPlacaLaboratorios()) {
+			placasVisavetDeLaPlacaLaboratorio.add(placaVisavetPlacaLaboratorio.getPlacaVisavet());
+		}		
+		for (PlacaVisavet placaVisavet: placasVisavetDeLaPlacaLaboratorio) {			
+			// Recuperamos las muestras de la placa Visavet desde el lote
+			Set<Muestra> muestrasVisavet = new HashSet<Muestra>();
+			Set<Lote> lotes = placaVisavet.getLotes();
+			for (Lote lote : lotes) {
+				muestrasVisavet.addAll(lote.getMuestras());
+				cjtoMuestrasPlacaLaboratorio.addAll(muestrasVisavet);
+			}
+		}
+		//fin obtencion cjto de muestras
+		
 		//si exiten usuario a quitar y usuario a poner 
 		if(idUsuarioAQuitar!=null && idUsuarioAPoner!=null) {
 			
 			Date fechaAsignacion = new Date();
 			
-			//recorremos todas las muestras de esa placa, y para cada muestra reemplazamos su analista			
-			for(Muestra muestra: placa.getMuestras()) {
+			//recorremos todas las muestras de esa placa, y para cada muestra reemplazamos su analista
+			//for(Muestra muestra: placa.getMuestras()) { //ahora obtenemos las muestras a partir de la placa visavet y el lote
+			for(Muestra muestra: cjtoMuestrasPlacaLaboratorio) {
 				//por el usuario muestra del usuario a quitar
 				Optional<UsuarioMuestra> usuMuOpt = usuarioMuestraRepositorio.findByIdUsuarioAndIdMuestra(idUsuarioAQuitar, muestra.getId());
 				if(usuMuOpt.isPresent()) {
@@ -626,13 +703,34 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	@Override
 	public Boolean tienenResultadoDefinitivoLasMuestrasDeLaPlaca(Integer idPlaca) {		
 		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);
+		
+		//obtencion de las muestras de la placa a través de a traves de sus placas visavet los lotes
+		Set<Muestra> cjtoMuestrasPlacaLaboratorio = new HashSet<Muestra>(); //ahora no salen directamente de la placa de laboratorio		
+		Set<PlacaVisavet> placasVisavetDeLaPlacaLaboratorio = new HashSet<PlacaVisavet>();		
+		for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placa.getPlacaVisavetPlacaLaboratorios()) {
+			placasVisavetDeLaPlacaLaboratorio.add(placaVisavetPlacaLaboratorio.getPlacaVisavet());
+		}		
+		for (PlacaVisavet placaVisavet: placasVisavetDeLaPlacaLaboratorio) {			
+			// Recuperamos las muestras de la placa Visavet desde el lote
+			Set<Muestra> muestrasVisavet = new HashSet<Muestra>();
+			Set<Lote> lotes = placaVisavet.getLotes();
+			for (Lote lote : lotes) {
+				muestrasVisavet.addAll(lote.getMuestras());
+				cjtoMuestrasPlacaLaboratorio.addAll(muestrasVisavet);
+			}
+		}
+		//fin obtencion cjto de muestras
+		
+		
 		//si la placa no tiene muestras devolvemos false
-		if(placa.getMuestras().size()==0) {
+		//if(placa.getMuestras().size()==0) {
+		if(cjtoMuestrasPlacaLaboratorio.size()==0) {
 			return false;
 		}else {			
 			//recorremos las muestras de la placa y si alguna no está resuelta
 			// es decir	no tiene el estado resuelta, no tiene resultado o no tiene fecha de resultado) devolvemos false
-			for(Muestra m : placa.getMuestras()) {
+			//for(Muestra m : placa.getMuestras()) {
+			for(Muestra m : cjtoMuestrasPlacaLaboratorio) {
 				if(this.muestraResuelta(m)==false) {
 					return false;
 				}
@@ -679,12 +777,32 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		//buscamos todas los registros usuarioMuestra de las muestras de la placa
 		Integer idPlaca = bean.getId(); //aqui solo puede llegar el id de una placa del analista logado que tenga sus muestras sin valorar
 		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);
+		
+		//obtencion de las muestras de la placa a través de a traves de sus placas visavet los lotes
+		Set<Muestra> cjtoMuestrasPlacaLaboratorio = new HashSet<Muestra>(); //ahora no salen directamente de la placa de laboratorio		
+		Set<PlacaVisavet> placasVisavetDeLaPlacaLaboratorio = new HashSet<PlacaVisavet>();		
+		for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placa.getPlacaVisavetPlacaLaboratorios()) {
+			placasVisavetDeLaPlacaLaboratorio.add(placaVisavetPlacaLaboratorio.getPlacaVisavet());
+		}		
+		for (PlacaVisavet placaVisavet: placasVisavetDeLaPlacaLaboratorio) {			
+			// Recuperamos las muestras de la placa Visavet desde el lote
+			Set<Muestra> muestrasVisavet = new HashSet<Muestra>();
+			Set<Lote> lotes = placaVisavet.getLotes();
+			for (Lote lote : lotes) {
+				muestrasVisavet.addAll(lote.getMuestras());
+				cjtoMuestrasPlacaLaboratorio.addAll(muestrasVisavet);
+			}
+		}
+		//fin obtencion cjto de muestras
+		
+		
 		Integer idUsuarioLogado = sesionServicio.getUsuario().getId(); 
 		Date fechaActual = new Date();
 		// por cada muestra de la placa
-				HashMap<Integer, String> resultados = obtenerResultadosExcel(bean);
-				for (Muestra m : placa.getMuestras()) {
-					String valoracionExcelParaMuestra = resultados.get(m.getId());  //TODO, aquí habría que recoger la valoracion del excel para la muestra, esto es un ejemplo
+		HashMap<Integer, String> resultados = obtenerResultadosExcel(bean);
+		//for (Muestra m : placa.getMuestras()) {
+		for (Muestra m : cjtoMuestrasPlacaLaboratorio) {
+			String valoracionExcelParaMuestra = resultados.get(m.getId());  //TODO, aquí habría que recoger la valoracion del excel para la muestra, esto es un ejemplo
 			//recuperamos el usuarioMuestra asociado al usuario logado (analista que está valorando las muestras de la placa)
 			Optional<UsuarioMuestra> optusumu = usuarioMuestraRepositorio.findByIdUsuarioAndIdMuestra(idUsuarioLogado, m.getId());
 			if (optusumu.isPresent()) {

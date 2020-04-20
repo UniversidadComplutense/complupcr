@@ -9,6 +9,8 @@ import org.apache.commons.lang.StringUtils;
 import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.Paciente;
+import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.modelo.orm.UsuarioMuestra;
@@ -101,10 +103,24 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		//bean.setEstadoMuestra(beanResultado.asignarTipoEstadoYCodNum(muestra.getResultado()).getResultadoMuestra().getDescripcion());
 		bean.setEstadoMuestra(muestra.getEstadoMuestra().getDescripcion());
 		
+		
+		//ESTOY AKIIIIIIIIIIIIIII, TODO: REVISAR ESTO CON SARA- UNA MUESTRA PUEDE ESTAR EN VARIAS PLACAS DE LABORATORIO??		
+		/*
 		if(muestra.getPlacaLaboratorio()!=null) {
 			bean.setIdPlacaLaboratorio(muestra.getPlacaLaboratorio().getId()); //aqui solo se mostrarán muestras que ya esten en una placa de laboratorio
 			if(muestra.getPlacaLaboratorio().getUsuario()!=null)
 				bean.setIdJefePlaca(muestra.getPlacaLaboratorio().getUsuario().getId()); //todas las muestras que mostremos en esta vista serán aquellas cuya placa se haya asignado el jefe
+		}
+		*/
+		//de la muestra recuperamos la placa a traves del lote y placa visavet
+		Set<PlacaVisavetPlacaLaboratorio> setPlacaLabPlacaVis= muestra.getLote().getPlacaVisavet().getPlacaVisavetPlacaLaboratorios();
+		for(PlacaVisavetPlacaLaboratorio placaVisPlacaLab: setPlacaLabPlacaVis ) {
+			PlacaLaboratorio placaLab = placaVisPlacaLab.getPlacaLaboratorio();
+			if(placaLab!=null) {// && placaLab.getUsuario().getId().equals(obj)) {
+				bean.setIdPlacaLaboratorio(placaLab.getId()); //aqui solo se mostrarán muestras que ya esten en una placa de laboratorio
+				if(placaLab.getUsuario()!=null)
+					bean.setIdJefePlaca(placaLab.getUsuario().getId()); //todas las muestras que mostremos en esta vista serán aquellas cuya placa se haya asignado el jefe
+			}
 		}
 		
 		Date date = new Date(); // your date
@@ -194,9 +210,23 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		//bean.setEstadoMuestra(beanResultado.asignarTipoEstadoYCodNum(muestra.getResultado()).getResultadoMuestra().getDescripcion());
 		bean.setEstadoMuestra(muestra.getEstadoMuestra().getDescripcion());
 		
+		//ESTOY AKIIIIIIIIIIIIIII, TODO: REVISAR ESTO CON SARA- UNA MUESTRA PUEDE ESTAR EN VARIAS PLACAS DE LABORATORIO??		
+		/*
 		if(muestra.getPlacaLaboratorio()!=null) {
 			bean.setIdPlacaLaboratorio(muestra.getPlacaLaboratorio().getId()); //aqui solo se mostrarán muestras que ya esten en una placa de laboratorio
-			bean.setIdJefePlaca(muestra.getPlacaLaboratorio().getUsuario().getId()); //todas las muestras que mostremos en esta vista serán aquellas cuya placa se haya asignado el jefe
+			if(muestra.getPlacaLaboratorio().getUsuario()!=null)
+				bean.setIdJefePlaca(muestra.getPlacaLaboratorio().getUsuario().getId()); //todas las muestras que mostremos en esta vista serán aquellas cuya placa se haya asignado el jefe
+		}
+		*/
+		//de la muestra recuperamos la placa a traves del lote y placa visavet
+		Set<PlacaVisavetPlacaLaboratorio> setPlacaLabPlacaVis= muestra.getLote().getPlacaVisavet().getPlacaVisavetPlacaLaboratorios();
+		for(PlacaVisavetPlacaLaboratorio placaVisPlacaLab: setPlacaLabPlacaVis ) {
+			PlacaLaboratorio placaLab = placaVisPlacaLab.getPlacaLaboratorio();
+			if(placaLab!=null) {// && placaLab.getUsuario().getId().equals(obj)) {
+				bean.setIdPlacaLaboratorio(placaLab.getId()); //aqui solo se mostrarán muestras que ya esten en una placa de laboratorio
+				if(placaLab.getUsuario()!=null)
+					bean.setIdJefePlaca(placaLab.getUsuario().getId()); //todas las muestras que mostremos en esta vista serán aquellas cuya placa se haya asignado el jefe
+			}
 		}
 		
 		Date date = new Date(); // your date

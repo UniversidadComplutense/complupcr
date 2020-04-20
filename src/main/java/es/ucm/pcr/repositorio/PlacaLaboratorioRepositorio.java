@@ -49,7 +49,10 @@ public interface PlacaLaboratorioRepositorio extends JpaRepository<PlacaLaborato
 	
 	//Si queremos hacer busqueda metiendo el criterio valorada (pendiente, repetir....)
 	@Query("SELECT DISTINCT placa FROM PlacaLaboratorio placa "
-			+ "JOIN placa.muestras muestra "
+			+ "JOIN placa.placaVisavetPlacaLaboratorios placaVisavetPlacaLaboratorios "
+			+ "JOIN placaVisavetPlacaLaboratorios.placaVisavet placaVisavet "
+			+ "JOIN placaVisavet.lotes lote "
+			+ "JOIN lote.muestras muestra "
 			+ "JOIN muestra.usuarioMuestras usuariomuestra "
 			+ "JOIN usuariomuestra.usuario usuario "
 			+ "WHERE 1=1 and "
@@ -69,7 +72,10 @@ public interface PlacaLaboratorioRepositorio extends JpaRepository<PlacaLaborato
 	//ordenaremos por la fecha en la que se asignaron las muestras al analita (fecha en la que se asignó la placa al analita y a todas sus muestras)
 	//la mas antigua primero
 	@Query("SELECT DISTINCT placa FROM PlacaLaboratorio placa "
-			+ "JOIN placa.muestras muestra "
+			+ "JOIN placa.placaVisavetPlacaLaboratorios placaVisavetPlacaLaboratorios "
+			+ "JOIN placaVisavetPlacaLaboratorios.placaVisavet placaVisavet "
+			+ "JOIN placaVisavet.lotes lote "
+			+ "JOIN lote.muestras muestra "
 			+ "JOIN muestra.usuarioMuestras usuariomuestra "
 			+ "JOIN usuariomuestra.usuario usuario "
 			+ "WHERE 1=1 and "

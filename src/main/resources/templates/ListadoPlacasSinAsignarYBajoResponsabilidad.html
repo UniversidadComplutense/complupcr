@@ -19,10 +19,10 @@
 		<div class="row justify-content-center mt-1, titulo-menu">
 			<h5>PLACAS SIN ASIGNAR</h5>
 		</div>
-		<div th:if="${mensajeCoger !=null}"
+		<div th:if="${mensajeDevolver !=null}"
 						class="alert alert-success alert-dismissible fade show"
 						role="alert">
-						<label th:text="${mensajeCoger}"></label>
+						<label th:text="${mensajeDevolver}"></label>
 						<button type="button" class="close" data-dismiss="alert"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
@@ -122,9 +122,14 @@
 				<!-- <div class="container">
 					<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalMarcarPlacaParaResultados">Reclamar los seleccionados</button>			    
 				</div> -->
-				<div class="col-1">
-				<input type="submit" class="btn btn-secondary"
-					value="Reclamar los seleccionados"></input>
+				<div class="container">
+				<!-- <input type="submit" class="btn btn-secondary"
+					value="Reclamar los seleccionados"></input> -->
+				<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalConfirmarReclamar">
+					Reclamar los seleccionados  					
+				</button>
+					
+					
 				</div>	
 			</div>									  		
 	  </div>
@@ -141,10 +146,10 @@
 		<div class="row justify-content-center mt-1, titulo-menu">
 			<h5>PLACAS BAJO TU RESPONSABILIDAD</h5>
 		</div>
-		<div th:if="${mensajeDevolver !=null}"
+		<div th:if="${mensajeCoger !=null}"
 						class="alert alert-success alert-dismissible fade show"
 						role="alert">
-						<label th:text="${mensajeDevolver}"></label>
+						<label th:text="${mensajeCoger}"></label>
 						<button type="button" class="close" data-dismiss="alert"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
@@ -261,9 +266,12 @@
 				<!-- <div class="container">
 					<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalMarcarPlacaParaResultados">Devolver los seleccionados</button>			    
 				</div> -->
-				<div class="col-1">
-				<input type="submit" class="btn btn-secondary"
-					value="Devolver los seleccionados"></input>
+				<div class="container">
+				<!-- <input type="submit" class="btn btn-secondary"
+					value="Devolver los seleccionados"></input> -->
+				<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalConfirmarDevolver">
+					Devolver los seleccionados  					
+				</button>
 				</div>
 			</div>									  		
 	  </div>
@@ -272,7 +280,52 @@
 </form>	
 
 
-		
+<!--  MODAL CONFIRMAR RECLAMAR PLACAS -->
+<div th:id="modalConfirmarReclamar" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="MarcarPlacasParaReclamarLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">   
+   		<div class="modal-content">
+      		<div class="modal-header">
+      			<h5 class="modal-title" id="MarcarPlacasParaReclamarLabel">Reclamar placas seleccionadas</h5>
+	        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          		<span aria-hidden="true">&times;</span>
+	        	</button>      		     		
+      		</div>
+      	<div class="modal-body">
+      		<h6>¿Está seguro que desea reclamar las placas seleccionadas?</h6>           	
+      	</div>
+      	<div class="modal-footer">           	          	
+           	<button type="button" class="btn btn-secondary" data-dismiss="modal">Corregir formulario</button>
+           	<!-- <button class="btn btn-default" type="button" th:onclick="|cerrarModal('#modalConfirmarReclamar'); evaluarDirectores()|">Es correcto</button> -->
+           	<button type="button" class="btn btn-secondary" data-dismiss="modal" th:onclick="|document.getElementById('formularioCogerPlacas').submit();|">Es correcto</button>
+     	</div>
+        </div>
+    </div>
+</div>
+<!-- FIN - MODAL CONFIRMAR RECLAMAR PLACAS -->
+
+
+<!--  MODAL CONFIRMAR DEVOLVER PLACAS -->
+<div th:id="modalConfirmarDevolver" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="MarcarPlacasParaDevolverLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">   
+   		<div class="modal-content">
+      		<div class="modal-header">
+      			<h5 class="modal-title" id="MarcarPlacasParaDevolverLabel">Devolver placas seleccionadas</h5>
+	        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          		<span aria-hidden="true">&times;</span>
+	        	</button>      		     		
+      		</div>
+      	<div class="modal-body">
+      		<h6>¿Está seguro que desea devolver las placas seleccionadas?</h6>           	
+      	</div>
+      	<div class="modal-footer">           	          	
+           	<button type="button" class="btn btn-secondary" data-dismiss="modal">Corregir formulario</button>
+           	<!-- <button class="btn btn-default" type="button" th:onclick="|cerrarModal('#modalConfirmarReclamar'); evaluarDirectores()|">Es correcto</button> -->
+           	<button type="button" class="btn btn-secondary" data-dismiss="modal" th:onclick="|document.getElementById('formularioDevolverPlacas').submit();|">Es correcto</button>
+     	</div>
+        </div>
+    </div>
+</div>
+<!-- FIN - MODAL CONFIRMAR DEVOLVER PLACAS -->
 
 
 	
