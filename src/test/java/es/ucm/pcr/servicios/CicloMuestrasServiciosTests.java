@@ -51,7 +51,7 @@ import es.ucm.pcr.utilidades.Utilidades;
 
 /**
  * Para estos tests, asumimos que los usuarios y roles están ya en la BD. Se
- * cargan el el script /src/test/resources/dats.sql
+ * cargan el el script /src/test/resources/data.sql
  * 
  * @author pmarrasant
  *

@@ -57,7 +57,7 @@ public class GestorCrudServiciosTests {
 	
 	@Test
 	@Order(1)
-	public void inicializacionBasicaCentrosSalud() throws Exception {
+	public void inicializacionBasicaCentrosSalud() {
 		try {
 			// Damos de alta centros
 			Centro centro = new Centro();
@@ -95,7 +95,7 @@ public class GestorCrudServiciosTests {
 
 	@Test
 	@Order(2)
-	public void inicializacionBasicaLaboratoriosVisavet() throws Exception {
+	public void inicializacionBasicaLaboratoriosVisavet() {
 		try {
 			// Damos de alta laboratorios Visavet
 			LaboratorioVisavet labVisa = new LaboratorioVisavet();
@@ -120,7 +120,7 @@ public class GestorCrudServiciosTests {
 
 	@Test
 	@Order(3)
-	public void inicializacionBasicaLaboratoriosCentro() throws Exception {
+	public void inicializacionBasicaLaboratoriosCentro() {
 		try {
 			// Damos de alta laboratorios Visavet
 			LaboratorioCentro labCentro = new LaboratorioCentro();
@@ -140,7 +140,7 @@ public class GestorCrudServiciosTests {
 
 	@Test
 	@Order(4)
-	public void inicializacionBasicaUsuarios() throws Exception {
+	public void inicializacionBasicaUsuarios() {
 		try {
 			// Damos de alta usuario admin de centro de salud BOT con rol ADMIN
 			Usuario usuario = new Usuario();
