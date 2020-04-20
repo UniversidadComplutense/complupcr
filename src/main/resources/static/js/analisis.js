@@ -429,13 +429,35 @@ function EjecutarReemplazoAnalista(){
 				$("#modalReemplazarAnalista").modal('hide');
 				//alert("estoy en done");				
 				//$('#idcuerpo').html(respuesta);	
-				$('html').html("");
-	        	$('html').html(respuesta);
+				//$('html').html("");
+	        	//$('html').html(respuesta);
 				//$('#analistasLabSeleccionado').selectpicker('refresh');
 				//$('#analistasVolSeleccionado').selectpicker('refresh');
 				//$('#analistasVolSinLabCentroSeleccionado').selectpicker('refresh');
 				//si todo ha ido bien redireccionamos al get
 				//window.location.href = "/gestor/buscarPreinscripciones";
+	        	//alert(respuesta);
+				//$('html').html("");
+	        	//$('html').html(respuesta);
+				
+	        	//this.data = respuesta.body;
+	            //return respuesta;
+				//$('#mensaje').html("Reemplazo de analista realizado correctamente");
+				//window.location.href = "/analisis/asignarPlaca?idPlaca="+idPlaca;
+				//una vez ejecutado el post me voy al get para recargar la vista con los cambios
+				//window.location.replace("/analisis/asignarPlaca?idPlaca="+idPlaca);
+				window.location.replace("/analisis/asignarPlaca?idPlaca="+idPlaca+"&accion=R");				
+				//var urlGet = "/analisis/asignarPlaca?idPlaca="+idPlaca;
+//				$.redirect(http:urlGet,
+//		        {
+//					mensaje: "Reemplazo de analista realizado correctamente"
+//		        });
+//		    	});
+				//window.location.href = respuesta.redirect;
+//				if (respuesta.redirect !== undefined && respuesta.redirect) {
+//					alert("entro");
+//			        window.location.href = respuesta.redirect_url;
+//			    }
 				
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 				//$('#idavisos').html("ERROR: No he podido conectar con el servidor para realizar la acción").css('color', "#f00");
