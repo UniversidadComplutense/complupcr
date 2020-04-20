@@ -84,8 +84,14 @@
 		</fieldset>
 		
 		</form>
-		<div class="row"><label class="col-xs-2">Nº Total de muestras:  </label>&nbsp;<span th:text="${lotePlacaVisavetBean.totalMuestras}" id="totalMuestras" style="font-weight:bold;"></span></div>
-				
+		<div class="row"><label class="col-xs-2">Nº Total de muestras:  </label>&nbsp;<span th:text="${lotePlacaVisavetBean.totalMuestras}" id="totalMuestras" style="font-weight:bold;"></span>        
+		</div>
+		<!-- <div class="row" th:if="${lotePlacaVisavetBean.placa != null and lotePlacaVisavetBean.placa.id != null}">
+		 <a th:if="${#strings.toString(lotePlacaVisavetBean.placa.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" th:href="@{/laboratorioUni/cargaReferencias(id=${lotePlacaVisavetBean.placa.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_PLACA_VISAVET_DESDE})}" data-toggle="tooltip" style="color:black" title="Cargar referencias">					         
+					          <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size: 1.2em;"></i>					         
+		 </a> 
+		<i class="fa fa-file-excel-o" th:unless="${#strings.toString(lotePlacaVisavetBean.placa.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" aria-hidden="true" style="font-size: 1.2em;color:grey;"></i>	    
+        </div> -->		
 		 <form action="#" th:action="@{/laboratorioUni/buscarPlacasProcesar}" id="formularioConReferencias" method="post" th:object="${lotePlacaVisavetBean}" th:modelAttribute="${lotePlacaVisavetBean}"
 			class="form-horizontal">
 		<!-- Aqui vienen los resultados -->
@@ -154,8 +160,8 @@
 								<!-- th:id="${unaMuestra.referenciaInterna}" th:value="${unaMuestra.referenciaInterna}" -->
 								<div class="col-12 form-group">
 								<label class="col-xs-2" style="display:none;color:red;" th:id="mensaje+${unResultado.id}+'_'+${countM.index}">La Ref.Interna no puede estar vacía</label>
-							
-								<input class="form-control form-control-sm" th:id="ref+${unResultado.id}+'_'+${countM.index}" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].referenciaInterna}" ></input>
+							    <label class="col-xs-2" style="display:none;color:red;" th:id="mensajeRefRepetida+${unResultado.id}+'_'+${countM.index}">La Ref.Interna esta repetida</label>
+						       <input class="form-control form-control-sm" th:id="ref+${unResultado.id}+'_'+${countM.index}" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].referenciaInterna}" ></input>
 								</div>
 								</td>
 					</tr>
