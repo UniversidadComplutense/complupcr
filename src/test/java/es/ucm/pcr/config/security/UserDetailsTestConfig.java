@@ -39,6 +39,10 @@ public class UserDetailsTestConfig {
         setAuth.add(new SimpleGrantedAuthority("ROLE_TECNICOLABORATORIO"));
         User utviUserDetails = new User("tecnicovisavet@ucm.es", "PWD", setAuth);
         
-        return new InMemoryUserDetailsManager(Arrays.asList(ucsUserDetails, urviUserDetails, utviUserDetails));
+        setAuth = new HashSet<GrantedAuthority>();
+        setAuth.add(new SimpleGrantedAuthority("ROLE_RESPONSABLEPCR"));
+        User urpcrUserDetails = new User("responsablepcr@ucm.es", "PWD", setAuth);
+        
+        return new InMemoryUserDetailsManager(Arrays.asList(ucsUserDetails, urviUserDetails, utviUserDetails, urpcrUserDetails));
     }
 }

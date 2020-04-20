@@ -93,6 +93,13 @@ INSERT INTO usuario (id, nombre, apellido1, email, password, habilitado, idLabor
 	(3, 'NombreUsuCTécnicoVisavet', 'Apellido1', 'tecnicovisavet@ucm.es', '$2a$10$odTJwJjskoaZzYr4OWHcJ.9gpuzd3fOvHgSrMFshYNVZxBrZFV0QG', 'A', 1);
 INSERT INTO usuario_rol (idUsuario, idRol) VALUES
 	(3, 5);
+	
+-- Usuario Responsable PCR
+INSERT INTO usuario (id, nombre, apellido1, email, password, habilitado, idLaboratorioCentro) VALUES
+	(4, 'NombreUsuCResponsablePCR', 'Apellido1', 'responsablepcr@ucm.es', '$2a$10$odTJwJjskoaZzYr4OWHcJ.9gpuzd3fOvHgSrMFshYNVZxBrZFV0QG', 'A', 1);
+INSERT INTO usuario_rol (idUsuario, idRol) VALUES
+	(4, 6);
+
 
 ---
 --- Creamos tablas para Quartz
