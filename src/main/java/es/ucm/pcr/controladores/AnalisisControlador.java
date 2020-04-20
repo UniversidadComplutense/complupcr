@@ -791,7 +791,7 @@ public class AnalisisControlador {
 				laboratorioCentroServicio.guardarReemplazoAnalistaDePlacaYmuestras(idPlaca, idUsuarioAQuitar, idUsuarioAPoner);
 							
 				//vuelvo al formulario de asignacion de la placa				
-				redirectAttributes.addFlashAttribute("mensaje", "Reeplazo de analista realizado correctamente");
+				redirectAttributes.addFlashAttribute("mensaje", "Reemplazo de analista realizado correctamente");
 				return new ModelAndView(new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true));				
 			}
 		//}

@@ -428,10 +428,14 @@ function EjecutarReemplazoAnalista(){
 			}).done(function(respuesta) {
 				$("#modalReemplazarAnalista").modal('hide');
 				//alert("estoy en done");				
-				$('#idcuerpo').html(respuesta);	
-				$('#analistasLabSeleccionado').selectpicker('refresh');
-				$('#analistasVolSeleccionado').selectpicker('refresh');
-				$('#analistasVolSinLabCentroSeleccionado').selectpicker('refresh');
+				//$('#idcuerpo').html(respuesta);	
+				$('html').html("");
+	        	$('html').html(respuesta);
+				//$('#analistasLabSeleccionado').selectpicker('refresh');
+				//$('#analistasVolSeleccionado').selectpicker('refresh');
+				//$('#analistasVolSinLabCentroSeleccionado').selectpicker('refresh');
+				//si todo ha ido bien redireccionamos al get
+				//window.location.href = "/gestor/buscarPreinscripciones";
 				
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 				//$('#idavisos').html("ERROR: No he podido conectar con el servidor para realizar la acción").css('color', "#f00");
