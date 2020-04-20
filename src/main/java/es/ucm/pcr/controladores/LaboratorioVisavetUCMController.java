@@ -94,6 +94,10 @@ public class LaboratorioVisavetUCMController {
 	private final static Logger log = LoggerFactory.getLogger(LaboratorioVisavetUCMController.class);
 	public static final Sort ORDENACION = Sort.by(Direction.ASC, "fechaEnvio");
 	public static final Sort ORDENACION_PLACAS = Sort.by(Direction.ASC, "fechaCreacion");
+	
+	public static final String URLBUSCARLOTES="/laboratorioUni/buscarLotes?estado=4&rol=T"; 
+	public static final String URLBUSCARPLACAS="/laboratorioUni/buscarPlacas";
+	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 	    CustomDateEditor editor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
@@ -127,7 +131,9 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		}
 		busquedaLotes.setListaBeanEstado(BeanEstado.estadosLoteLaboratorioVisavet());
 		busquedaLotes.setListaCentros(centroServicio.listaCentrosOrdenada());
-
+	/*	busquedaLotes.setFechaEnvioFin(
+				Utilidades.fechafinBuscador(busquedaLotes.getFechaFinEntrada()));
+				*/
 		busquedaLotes.setRolURL(rolURL);
 		paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), ORDENACION));
 		//model.addAttribute("paginaLotes", paginaLotes);
@@ -370,7 +376,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		//este metodo obtiene los lotes q estan listos para ser procesados en placas visavet y muestran en las placas
 		@RequestMapping(value = "/laboratorioUni/procesarLotes", method = RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO')")
-		public ModelAndView buscarPlacasGet(@RequestParam("lotes") String lotes,Model model, HttpServletRequest request, HttpSession session) {
+		public ModelAndView buscarPlacasGet(@RequestParam("lotes") String lotes, @RequestParam("url") String url, Model model, HttpServletRequest request, HttpSession session) {
 			ModelAndView vista = new ModelAndView("VistaLotesPlacasVisavet");
 			LotePlacaVisavetBean lotePlacaVisavetBean= new LotePlacaVisavetBean();
 			// obtenemos los lotes con sus muestras
@@ -408,6 +414,10 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			
 			vista.addObject("lotePlacaVisavetBean",lotePlacaVisavetBean);
 			vista.addObject("botonAltaNoMostrar", this.isLotesConPlacas(listaLotes));
+		if (url.equals("P")) {
+			vista.addObject("urlVolver",URLBUSCARPLACAS);
+		}
+		else vista.addObject("urlVolver", URLBUSCARLOTES);
 			//vista.addObject("listaLotes",listaLotes);
 			// los mostramos en la vista
 			return vista;
