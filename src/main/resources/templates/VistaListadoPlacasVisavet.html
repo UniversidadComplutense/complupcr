@@ -220,7 +220,7 @@
 					</td>
 					<td nowrap="nowrap">	
 					
-						<a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}"  th:data-id="${unResultado.id}" onclick="procesarLotesDesdePlacas(this.getAttribute('data-id'))">
+						<a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}"  th:data-id="${unResultado.id}" onclick="procesarLotesDesdePlacas(this.getAttribute('data-id'),'P')">
 						     <i class="fa fa-edit" title="Modificar placa" aria-hidden="true" style="font-size: 1.2em;"></i>
 						</a>
 						<i title="Modificar placa" th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;color:grey;"></i>
