@@ -357,9 +357,10 @@ function asignarLaboratoriodesdeModal(){
 function seleccionAccion(accion){
 	
 	$("#accion").val(accion);
-
-	if (comprobarReferenciasInternas())
+ 
+	if (accion =='grabaryFinalizar' && comprobarReferenciasInternas())
 	$("#formularioConReferencias").submit();
+	if (accion =='grabar') $("#formularioConReferencias").submit();
 	
 }
 function habilitarBotonProcesar(){
@@ -382,7 +383,7 @@ function habilitarBotonProcesar(){
 function comprobarReferenciasInternas(){
 var respuesta=true;
 	var nLotes=$("#tablaLotes .trGroupLotes").length;
-
+ var listaRef =[];
 	for (var i=0;i<nLotes;i++){
 	 
 		var muestra=$("#l"+i).val();
@@ -393,10 +394,26 @@ var respuesta=true;
 		if ($("#ref"+muestra+"_"+j).val().trim() == "") { 
 			respuesta=false;
 			$("#mensaje"+muestra+"_"+j).show();
-			
+			$("#mensajeRefRepetida"+muestra+"_"+j).hide();
 			$("#muestra"+muestra).show();
 		    
 		}
+		else{
+			for (var k=0;k<listaRef.length;k++){
+				if ($("#ref"+muestra+"_"+j).val().trim() == listaRef[k]){
+				respuesta=false;
+				$("#mensajeRefRepetida"+muestra+"_"+j).show();
+				$("#mensaje"+muestra+"_"+j).hide();
+				$("#muestra"+muestra).show();
+				}
+				
+			}
+			if (respuesta) {
+				listaRef.push($("#ref"+muestra+"_"+j).val().trim()); 
+				$("#mensaje"+muestra+"_"+j).hide();
+				$("#mensajeRefRepetida"+muestra+"_"+j).hide();
+			}
+		}	
 	
 	 }
 	
