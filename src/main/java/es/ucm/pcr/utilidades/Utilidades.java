@@ -2,6 +2,9 @@ package es.ucm.pcr.utilidades;
 
 import java.text.DecimalFormat;
 import java.text.Normalizer;
+import java.util.Calendar;
+import java.util.Date;
+
 
 public class Utilidades {
 
@@ -12,6 +15,21 @@ public class Utilidades {
 	public static Integer NUMERO_PAGINACION = 20;
 	public static Integer NUMERO_PAGINACION_USUARIO = 20;
 
+	
+	public static Date fechafinBuscador(Date fechafin) {
+		if (fechafin != null){
+		    Calendar calendar = Calendar.getInstance();
+	        calendar.setTime(fechafin); // Configuramos la fecha que se recibe
+	        calendar.add(Calendar.HOUR, 23);  // numero de horas a añadir, o restar en caso de horas<0
+	        calendar.add(Calendar.MINUTE, 59);
+	        fechafin= calendar.getTime();
+		}	
+	         return fechafin ;
+			}
+	     
+	
+		
+	
 	public static String limpiarStringParaOrdenacion(String cadena) {
 		String limpio = null;
 		if (cadena != null) {

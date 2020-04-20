@@ -165,7 +165,7 @@
 											</div>								        
 							      		</div>
 									    <div class="modal-footer">
-									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>							        
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>							        
 										</div>
 							    	</div>
 							  	</div>
@@ -240,7 +240,7 @@
 <!--  	 fin  Recibido -->
 			</div>
 			<div class="row justify-content-left mt-3">
-				<input id="procesarBoton" disabled th:if="${busquedaLotes.mostrarProcesar} and ${paginaLotes.getContent().size()>0}" type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" onclick="procesarLotes()"/>
+				<input id="procesarBoton" disabled th:if="${busquedaLotes.mostrarProcesar} and ${paginaLotes.getContent().size()>0}" type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" onclick="procesarLotes('L')"/>
 		
 		
 		</div> <!--  capa de resultados -->

@@ -86,7 +86,7 @@ public class DocumentoServicioImpl implements DocumentoServicio {
 		PlacaVisavet placaVisavet = Optional.of(placaVisavetRepositorio.findById(idPlacaVisavet).get()).orElse(null);
 		elDoc.setId(placaVisavet.getId());
 		// TODO - ESTABLECER DESCRIPCION
-		elDoc.setDescripcion("");
+		elDoc.setDescripcion(placaVisavet.getId().toString());
 		elDoc.setTipoElemento(ElementoDocumentacionBean.TIPO_ELEMENTO_PLACA_VISAVET);
 		
 		DocumentoBusquedaBean docBusquedaBean = new DocumentoBusquedaBean();

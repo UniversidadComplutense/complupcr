@@ -198,7 +198,7 @@ function consultarMuestras(lote,centroProcedencia,id){
 }
 
 //funcion que obtiene los checkbox pulsados y se los envia al controlador
-function procesarLotes() {
+function procesarLotes(urlVolver) {
 
 	var nFilas = $("#tablaResultados tr").length;
 	var lotesProcesar="";
@@ -213,12 +213,12 @@ function procesarLotes() {
 		}
 	 }
 	}
-	var url="/laboratorioUni/procesarLotes?lotes="+lotesProcesar;
+	var url="/laboratorioUni/procesarLotes?lotes="+lotesProcesar+"&url="+urlVolver;
 	window.location=url;
 }
 
 // desde placas
-function procesarLotesDesdePlacas(idPlaca) {
+function procesarLotesDesdePlacas(idPlaca,url) {
 	var lotesProcesar="";
 		var n=0;
 		//lotesProcesar+=$("#lotes"+idPlaca +" input").val()+":";
@@ -239,11 +239,13 @@ function procesarLotesDesdePlacas(idPlaca) {
 			
 	
 	if (lotesProcesar !=""){
-	var url="/laboratorioUni/procesarLotes?lotes="+lotesProcesar;
+	var url="/laboratorioUni/procesarLotes?lotes="+lotesProcesar+"&url="+url;
 	window.location=url;
 	}
 }
-
+function redirigir(url){
+	window.location=url;
+}
 // funcion que al ser pulsada da de alta una nueva placa vacia
 function altaNuevaPlaca(){
 	var url = "";

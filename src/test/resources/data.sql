@@ -78,19 +78,19 @@ INSERT INTO laboratorioCentro (id, nombre) VALUES
 ---
 -- Usuario Centro Salud
 INSERT INTO usuario (id, nombre, apellido1, email, password, habilitado, idCentro) VALUES
-	(1, 'NombreUsuCentroSalud', 'Apellido1', 'centrosalud@ucm.es', 'PWD', 'A', 1);
+	(1, 'NombreUsuCentroSalud', 'Apellido1', 'centrosalud@ucm.es', '$2a$10$odTJwJjskoaZzYr4OWHcJ.9gpuzd3fOvHgSrMFshYNVZxBrZFV0QG', 'A', 1);
 INSERT INTO usuario_rol (idUsuario, idRol) VALUES
 	(1, 3);
 
 -- Usuario Recepción Visavet
 INSERT INTO usuario (id, nombre, apellido1, email, password, habilitado, idLaboratorioVisavet) VALUES
-	(2, 'NombreUsuRecepciónVisavet', 'Apellido1', 'recepcionvisavet@ucm.es', 'PWD', 'A', 1);
+	(2, 'NombreUsuRecepciónVisavet', 'Apellido1', 'recepcionvisavet@ucm.es', '$2a$10$odTJwJjskoaZzYr4OWHcJ.9gpuzd3fOvHgSrMFshYNVZxBrZFV0QG', 'A', 1);
 INSERT INTO usuario_rol (idUsuario, idRol) VALUES
 	(2, 4);
 	
 -- Usuario Técnico Laboratorio Visavet
 INSERT INTO usuario (id, nombre, apellido1, email, password, habilitado, idLaboratorioVisavet) VALUES
-	(3, 'NombreUsuCTécnicoVisavet', 'Apellido1', 'tecnicovisavet@ucm.es', 'PWD', 'A', 1);
+	(3, 'NombreUsuCTécnicoVisavet', 'Apellido1', 'tecnicovisavet@ucm.es', '$2a$10$odTJwJjskoaZzYr4OWHcJ.9gpuzd3fOvHgSrMFshYNVZxBrZFV0QG', 'A', 1);
 INSERT INTO usuario_rol (idUsuario, idRol) VALUES
 	(3, 5);
 
