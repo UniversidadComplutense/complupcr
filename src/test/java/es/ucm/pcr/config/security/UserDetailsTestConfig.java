@@ -1,40 +1,44 @@
-package es.ucm.pcr.config;
+package es.ucm.pcr.config.security;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import es.ucm.pcr.config.security.PcrUserDetails;
-import es.ucm.pcr.modelo.orm.Usuario;
+import es.ucm.pcr.servicios.CentroServicio;
 
 @TestConfiguration
 public class UserDetailsTestConfig {
-
+	
+	@Autowired
+	CentroServicio centroServicio;
+	
 	@Bean
     @Primary
-    public UserDetailsService userDetailsService() {
-        Usuario usuario = new Usuario();
-        usuario.setEmail("centrosalud@ucm.es");
-        usuario.setPassword("PWD");
+    public UserDetailsService userDetailsService() throws Exception {
+		
         Set<GrantedAuthority> setAuth = new HashSet<GrantedAuthority>();
         setAuth.add(new SimpleGrantedAuthority("ROLE_CENTROSALUD"));
-        PcrUserDetails ucsUserDetails = new PcrUserDetails(usuario, setAuth);
+        User ucsUserDetails = new User("centrosalud@ucm.es", "PWD", setAuth);
         
-        usuario = new Usuario();
-        usuario.setEmail("visavet@ucm.es");
-        usuario.setPassword("PWD");
+        
+        setAuth = new HashSet<GrantedAuthority>();
+        setAuth.add(new SimpleGrantedAuthority("ROLE_RECEPCIONLABORATORIO"));
+        User urviUserDetails = new User("recepcionvisavet@ucm.es", "PWD", setAuth);
+        
         setAuth = new HashSet<GrantedAuthority>();
         setAuth.add(new SimpleGrantedAuthority("ROLE_TECNICOLABORATORIO"));
-        PcrUserDetails uviUserDetails = new PcrUserDetails(usuario, setAuth);
+        User utviUserDetails = new User("tecnicovisavet@ucm.es", "PWD", setAuth);
         
-        return new InMemoryUserDetailsManager(Arrays.asList(ucsUserDetails, uviUserDetails));
+        return new InMemoryUserDetailsManager(Arrays.asList(ucsUserDetails, urviUserDetails, utviUserDetails));
     }
 }

@@ -1,11 +1,9 @@
 package es.ucm.pcr.servicios;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +11,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import es.ucm.pcr.beans.MenuBean;
-import es.ucm.pcr.config.security.PcrUserDetails;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
@@ -30,13 +27,13 @@ public class SesionServicioImpl implements SesionServicio {
 
 	@Autowired
 	UsuarioServicio usuarioServicio;
-	
+
 	@Autowired
 	LaboratorioVisavetRepositorio laboratorioVisavetRepositorio;
-	
+
 	@Autowired
 	LaboratorioCentroRepositorio laboratorioCentroRepositorio;
-	
+
 	@Autowired
 	Environment environment;
 
@@ -46,15 +43,9 @@ public class SesionServicioImpl implements SesionServicio {
 		if (authentication == null) {
 			return null;
 		}
-		List<String> perfilesEjecucionActivos = Arrays.asList(environment.getActiveProfiles());
-		if (perfilesEjecucionActivos.contains("test")) {
-			UserDetails ud = (UserDetails) authentication.getPrincipal();
-			Usuario usu = usuarioServicio.findByEmail(ud.getUsername());
-			return usu;
-		} else {
-			PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
-			return ud.getUsuario();
-		}
+		User user = (User) authentication.getPrincipal();
+		Usuario usu = usuarioServicio.findByEmail(user.getUsername());
+		return usu;
 	}
 
 	@Override
@@ -92,16 +83,9 @@ public class SesionServicioImpl implements SesionServicio {
 	@Transactional
 	public Centro getCentro() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		List<String> perfilesEjecucionActivos = Arrays.asList(environment.getActiveProfiles());
-		if (perfilesEjecucionActivos.contains("test")) {
-			UserDetails ud = (UserDetails) authentication.getPrincipal();
-			Usuario usu = usuarioServicio.findByEmail(ud.getUsername());
-			return usu.getCentro();
-		} else {
-			PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
-			return ud.getUsuario().getCentro();
-		}
-		
+		User user = (User) authentication.getPrincipal();
+		Usuario usuario = usuarioServicio.findByEmail(user.getUsername());
+		return usuario.getCentro();
 	}
 
 	@Override
@@ -133,12 +117,13 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Recepción laboratorio", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
-			
+
 		}
 //	Tecnico laboratorio
 		if (this.tieneRol("ADMIN") || this.tieneRol("TECNICOLABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Asignar lotes a placas", "/laboratorioUni/buscarLotes?estado=4&rol=T", null);
+			opcionSecundaria = new MenuBean("Asignar lotes a placas", "/laboratorioUni/buscarLotes?estado=4&rol=T",
+					null);
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Gestionar placas", "/laboratorioUni/buscarPlacas/list", null);
 			menuSecundario.add(opcionSecundaria);
@@ -148,10 +133,11 @@ public class SesionServicioImpl implements SesionServicio {
 //		Responsable PCR
 		if (this.tieneRol("ADMIN") || this.tieneRol("RESPONSABLEPCR")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			opcionSecundaria = new MenuBean("Recepción placas", "/laboratorioCentro/recepcionPlacas/list", null);
+			opcionSecundaria = new MenuBean("Recepción de placas con muestras a analizar",
+					"/laboratorioCentro/recepcionPlacas/list", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Gestión de placas", "/laboratorioCentro/gestionPlacas/list", null);
-			menuSecundario.add(opcionSecundaria);			
+			opcionSecundaria = new MenuBean("Gestión de placas PCR", "/laboratorioCentro/gestionPlacas/list", null);
+			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Responsable PCR", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
@@ -160,10 +146,10 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario = new ArrayList<MenuBean>();
 			opcionSecundaria = new MenuBean("Revisar muestras", "/analisis/", null);
 			menuSecundario.add(opcionSecundaria);
-			//opcionSecundaria = new MenuBean("Revisar  muestras", "", null);
-			//menuSecundario.add(opcionSecundaria);
-			//opcionSecundaria = new MenuBean("Estado  muestras", "", null);
-			//menuSecundario.add(opcionSecundaria);
+			// opcionSecundaria = new MenuBean("Revisar muestras", "", null);
+			// menuSecundario.add(opcionSecundaria);
+			// opcionSecundaria = new MenuBean("Estado muestras", "", null);
+			// menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Coger y asignar placas", "/analisis/cogerPlacas", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Jefe de servicio", "", menuSecundario);
@@ -172,46 +158,48 @@ public class SesionServicioImpl implements SesionServicio {
 //			Analista
 		if (this.tieneRol("ADMIN") || this.tieneRol("ANALISTALABORATORIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
-			//opcionSecundaria = new MenuBean("Revisar muestras", "/analisis/listarMuestrasAnalista", null);
-			//menuSecundario.add(opcionSecundaria);
+			// opcionSecundaria = new MenuBean("Revisar muestras",
+			// "/analisis/listarMuestrasAnalista", null);
+			// menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Revisar placas", "/analisis/listarPlacasAnalista", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Analista", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
 //		AUDITOR
-			if (this.tieneRol("ADMIN") || this.tieneRol("AUDITOR")) {
-				menuSecundario = new ArrayList<MenuBean>();
-				opcionSecundaria = new MenuBean("Consulta log muestras","/gestor/log",null);
-				menuSecundario.add(opcionSecundaria);
-				opcionPrincipal = new MenuBean("Auditor", "", menuSecundario);
-				menuPrincipal.add(opcionPrincipal);
-			}
+		if (this.tieneRol("ADMIN") || this.tieneRol("AUDITOR")) {
+			menuSecundario = new ArrayList<MenuBean>();
+			opcionSecundaria = new MenuBean("Consulta log muestras", "/gestor/log", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionPrincipal = new MenuBean("Auditor", "", menuSecundario);
+			menuPrincipal.add(opcionPrincipal);
+		}
 //	GESTOR
 		if (this.tieneRol("ADMIN") || this.tieneRol("GESTOR")) {
 			menuSecundario = new ArrayList<MenuBean>();
 			opcionSecundaria = new MenuBean("Centros de salud", "/gestor/listaCentros", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Laboratorios Centros UCM","/gestor/listaLaboratorioCentro",null);
+			opcionSecundaria = new MenuBean("Laboratorios Centros UCM", "/gestor/listaLaboratorioCentro", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Laboratorios Visavet","/gestor/listaLaboratorioVisavet",null);
-			menuSecundario.add(opcionSecundaria);			
-			opcionSecundaria = new MenuBean("Equipos PCR","/gestor/listaEquipos",null);
-			menuSecundario.add(opcionSecundaria);			
-			opcionSecundaria = new MenuBean("Usuarios","/gestor/lista",null);
+			opcionSecundaria = new MenuBean("Laboratorios Visavet", "/gestor/listaLaboratorioVisavet", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Equipos PCR", "/gestor/listaEquipos", null);
+			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Usuarios", "/gestor/lista", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Gestor", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
-		
+
 		return menuPrincipal;
 	}
 
 	@Override
 	public LaboratorioVisavet getLaboratorioVisavet() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
-		Integer idLabV = ud.getUsuario().getIdLaboratorioVisavet();
+		User user = (User) authentication.getPrincipal();
+		Usuario usuario = usuarioServicio.findByEmail(user.getUsername());
+		Integer idLabV = usuario.getIdLaboratorioVisavet();
 		Optional<LaboratorioVisavet> labV = laboratorioVisavetRepositorio.findById(idLabV);
 		if (labV.isPresent()) {
 			return labV.get();
@@ -223,8 +211,9 @@ public class SesionServicioImpl implements SesionServicio {
 	@Override
 	public LaboratorioCentro getLaboratorioCentro() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		PcrUserDetails ud = (PcrUserDetails) authentication.getPrincipal();
-		Integer idLabC = ud.getUsuario().getIdLaboratorioCentro();
+		User user = (User) authentication.getPrincipal();
+		Usuario usuario = usuarioServicio.findByEmail(user.getUsername());
+		Integer idLabC = usuario.getIdLaboratorioCentro();
 		Optional<LaboratorioCentro> labC = laboratorioCentroRepositorio.findById(idLabC);
 		if (labC.isPresent()) {
 			return labC.get();

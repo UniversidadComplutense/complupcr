@@ -1,6 +1,5 @@
 package es.ucm.pcr.controladores;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,15 +25,14 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,27 +50,20 @@ import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanListaAsignaciones;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.BeanResultado;
+import es.ucm.pcr.beans.BeanResultado.ResultadoMuestra;
 import es.ucm.pcr.beans.BeanRolUsuario;
+import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.beans.BeanUsuario;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
-import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
 import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.GuardarAsignacionMuestraBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.GuardarCogerYDevolverPlacasBean;
 import es.ucm.pcr.beans.MuestraBean;
-import es.ucm.pcr.beans.MuestraBusquedaBean;
-import es.ucm.pcr.beans.MuestraListadoBean;
 import es.ucm.pcr.beans.PaginadorBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesAnalistaBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesBean;
-//import es.ucm.pcr.beans.BeanMuestraCentro;
-//import es.ucm.pcr.validadores.ValidadorMuestra;
-import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
-import es.ucm.pcr.beans.BeanResultado.ResultadoMuestra;
-import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
-import es.ucm.pcr.config.security.PcrUserDetails;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.servicios.DocumentoServicio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
@@ -942,10 +933,10 @@ public class AnalisisControlador {
 			
 			System.out.println("estoy en listarMuestrasAsignadasAnalistaGET");
 			//recupero el usuario logado
-			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
+			User user = (User) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			Usuario user = usuarioServicio.findByEmail(pcrUserDetails.getUser().getUsuario().getEmail());
-			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
+			Usuario usuario = usuarioServicio.findByEmail(user.getUsername());
+			System.out.println("usuario logado: " + usuario.getNombre() + " del idLaboratorioCentro: " + usuario.getIdLaboratorioCentro());
 
 			/*
 			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)

@@ -54,6 +54,46 @@ INSERT INTO rol VALUES
 	,(8,'ANALISTALABORATORIO')
 	,(13,'AUDITOR')
 	,(14,'VOLUNTARIO');
+	
+--
+-- Dumping data for table `centro`
+--
+INSERT INTO centro (id, nombre, codCentro, telefono, email, direccion) VALUES 
+	(1,'Centro de salud test1','TEST1','123456789','centroSaludTest1@salud.es','Dirección test1');
+	
+--
+-- Dumping data for table `laboratorioVisavet`
+--
+INSERT INTO laboratorioVisavet (id, nombre, ocupacion) VALUES 
+	(1,'DemoVisavet1',100);
+
+--
+-- Dumping data for table `laboratorioCentro`
+--
+INSERT INTO laboratorioCentro (id, nombre) VALUES 
+	(1,'DemoCentro1');
+
+---
+--- Usuarios para test
+---
+-- Usuario Centro Salud
+INSERT INTO usuario (id, nombre, apellido1, email, password, habilitado, idCentro) VALUES
+	(1, 'NombreUsuCentroSalud', 'Apellido1', 'centrosalud@ucm.es', 'PWD', 'A', 1);
+INSERT INTO usuario_rol (idUsuario, idRol) VALUES
+	(1, 3);
+
+-- Usuario Recepción Visavet
+INSERT INTO usuario (id, nombre, apellido1, email, password, habilitado, idLaboratorioVisavet) VALUES
+	(2, 'NombreUsuRecepciónVisavet', 'Apellido1', 'recepcionvisavet@ucm.es', 'PWD', 'A', 1);
+INSERT INTO usuario_rol (idUsuario, idRol) VALUES
+	(2, 4);
+	
+-- Usuario Técnico Laboratorio Visavet
+INSERT INTO usuario (id, nombre, apellido1, email, password, habilitado, idLaboratorioVisavet) VALUES
+	(3, 'NombreUsuCTécnicoVisavet', 'Apellido1', 'tecnicovisavet@ucm.es', 'PWD', 'A', 1);
+INSERT INTO usuario_rol (idUsuario, idRol) VALUES
+	(3, 5);
+
 ---
 --- Creamos tablas para Quartz
 ---

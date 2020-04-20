@@ -241,15 +241,16 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	// JAVI
 	@Override
 	@Transactional
-	public boolean asignarEquipoPCR(Integer id) throws Exception {
+	public boolean asignarEquipoPCR(Integer idPlaca, Integer idEquipo) throws Exception {
 		
-		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
+		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(idPlaca);
 		if (placa.isPresent()) {
 			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_INICIADA.getCodNum()) {
 				
-				//TODO asignar a un equipo del laboratorio si así nos lo piden finalmente
-				
 				placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_PREPARADA_PARA_PCR.getCodNum()));
+				if (idEquipo != null && idEquipo > 0) {
+					placa.get().setEquipo(new Equipo(idEquipo));
+				}
 				placaLaboratorioRepositorio.save(placa.get());
 				// TODO Registrar en LOG placaLaboratorio preparada para PCR
 				return true;

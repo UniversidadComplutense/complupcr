@@ -108,6 +108,12 @@ public class EquipoServicioImp implements EquipoServicio{
 		}
 		return labUcmSeleccionado;
 	}
+
+	@Override
+	public List<Equipo> findByLaboratorioCentro(LaboratorioCentro laboratorioCentro) throws Exception {
+		
+		return equipoRepositorio.findByLaboratorioCentro(laboratorioCentro);
+	}
 	
 	
 }

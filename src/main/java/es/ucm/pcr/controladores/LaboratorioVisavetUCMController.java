@@ -375,7 +375,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			LotePlacaVisavetBean lotePlacaVisavetBean= new LotePlacaVisavetBean();
 			// obtenemos los lotes con sus muestras
 			String[] idsLotes=lotes.split(":");
-			List<LoteBeanPlacaVisavet> listaLotes=new ArrayList();
+			List<LoteBeanPlacaVisavet> listaLotes=new ArrayList<LoteBeanPlacaVisavet>();
 			Integer numeroMuestras=0;
 			//LoteBeanPlacaVisavet lotePlaca;
 			for (int i=0; i<idsLotes.length;i++) {
@@ -390,7 +390,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			} 
 			lotePlacaVisavetBean.setTotalMuestras(numeroMuestras);
 			// para probar
-			List<Integer> tamanoLista= new ArrayList();
+			List<Integer> tamanoLista= new ArrayList<Integer>();
 			tamanoLista.add(20);
 			tamanoLista.add(96);
 			
@@ -467,7 +467,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		
 	    if (session.getAttribute("busquedaPlacasVisavetBean") == null) { 
 	    	busquedaPlacasVisavetBean = new BusquedaPlacasVisavetBean();
-	    	busquedaPlacasVisavetBean.setIdLaboratorioCentro(0);
+	    	busquedaPlacasVisavetBean.setIdLaboratorioCentro(null);
 			busquedaPlacasVisavetBean=this.rellenarBusquedaPlacas(busquedaPlacasVisavetBean);
 			
 	    }
@@ -596,7 +596,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				public String asignarPlacasGet(@RequestParam("idPlaca") int idPlaca,  Model model, HttpServletRequest request, HttpSession session) {
 				// grabar en el servicio la placa junto con el que tenga lote que venga del modelo
 					LotePlacaVisavetBean lotePlacaVisavetBean = (LotePlacaVisavetBean )session.getAttribute("lotePlacaVisavetBean");
-					List<LoteBeanPlacaVisavet> listaLotesDisponibles= new ArrayList();
+					List<LoteBeanPlacaVisavet> listaLotesDisponibles= new ArrayList<LoteBeanPlacaVisavet>();
 					if (lotePlacaVisavetBean == null)lotePlacaVisavetBean= new LotePlacaVisavetBean();
 						for (LoteBeanPlacaVisavet lote:lotePlacaVisavetBean.getListaLotesDisponibles()) {
 				      	

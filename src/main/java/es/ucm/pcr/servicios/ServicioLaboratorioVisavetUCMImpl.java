@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import es.ucm.pcr.beans.BeanEstado;
+import es.ucm.pcr.beans.BeanEstado.Estado;
+import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.beans.BeanLaboratorioVisavet;
 import es.ucm.pcr.beans.BeanPlacaVisavetUCM;
 import es.ucm.pcr.beans.BusquedaLotesBean;
@@ -32,30 +34,18 @@ import es.ucm.pcr.beans.LoteBusquedaBean;
 import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraListadoBean;
-import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
-import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
-import es.ucm.pcr.beans.BeanEstado;
-import es.ucm.pcr.beans.BeanEstado.Estado;
-import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.modelo.orm.EstadoLote;
-import es.ucm.pcr.modelo.orm.EstadoMuestra;
-import es.ucm.pcr.modelo.orm.EstadoPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Lote;
 import es.ucm.pcr.modelo.orm.Muestra;
-import es.ucm.pcr.modelo.orm.Paciente;
-import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.PlacaVisavet;
-import es.ucm.pcr.modelo.orm.UsuarioMuestra;
 import es.ucm.pcr.repositorio.LaboratorioCentroRepositorio;
 import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
 import es.ucm.pcr.repositorio.LoteRepositorio;
 import es.ucm.pcr.repositorio.MuestraRepositorio;
-import es.ucm.pcr.repositorio.PlacaLaboratorioRepositorio;
 import es.ucm.pcr.repositorio.PlacaVisavetRepositorio;
-import es.ucm.pcr.utilidades.Utilidades;
 @Service
 public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVisavetUCM{
 	
@@ -140,7 +130,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		return null;
 	}
 	
-
+	@Transactional
 	public Page<BeanPlacaVisavetUCM> buscarPlacas(BusquedaPlacasVisavetBean busqueda, Pageable pageable){
 		
 	busqueda.setIdLaboratorioVisavet(sesionServicio.getLaboratorioVisavet().getId());	
@@ -257,6 +247,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 
 	}
 	
+	@Transactional
 	public BeanPlacaVisavetUCM buscarPlacaById(Integer id) {
 		Optional<PlacaVisavet> placa=placaVisavetRepositorio.findById(id);
 		if (placa.isPresent()) 

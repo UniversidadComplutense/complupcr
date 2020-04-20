@@ -137,6 +137,7 @@
 												<table>
 													<thead class="thead-light">	
 									    				<tr>
+									    				    <th>Centro Procedencia</th>
 										      				<th>Lote</th>
 															<th>Número de muestras</th>
 															
@@ -144,6 +145,7 @@
 													</thead>
 													<tbody>
 														<tr th:if="${unResultado.listaLotes != null}" th:each="lote,count : ${unResultado.listaLotes}">
+														   <td><span th:text="${lote.centroProcedencia}"></span></td>
 															<td>
 															<input type="hidden" id="lote+${count.index}" th:value="${lote.id}"/>
 															<span th:text="${lote.numLote}"></span></td>					

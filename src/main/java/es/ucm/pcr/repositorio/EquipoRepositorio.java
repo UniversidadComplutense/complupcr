@@ -11,4 +11,5 @@ public interface EquipoRepositorio extends JpaRepository<Equipo, Integer> {
 	
 	List<Equipo> findByLaboratorioCentro (LaboratorioCentro laboratorioCentro);
 
+
 }

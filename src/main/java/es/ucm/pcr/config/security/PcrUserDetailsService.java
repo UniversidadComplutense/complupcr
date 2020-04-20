@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -49,7 +50,7 @@ public class PcrUserDetailsService implements UserDetailsService {
 		}
 		Usuario miUser = usuario.get();
 
-		return new PcrUserDetails(miUser, getAuthorities(miUser));
+		return new User(miUser.getEmail(), miUser.getPassword(), getAuthorities(miUser));
 
 	}
 
@@ -68,8 +69,8 @@ public class PcrUserDetailsService implements UserDetailsService {
 		}
 
 		final Usuario usuario = passToken.get().getUsuario();
-		final PcrUserDetails pcrUserDetails = new PcrUserDetails(usuario, getAuthorities(usuario));
-		final Authentication auth = new UsernamePasswordAuthenticationToken(pcrUserDetails, null,
+		final User user = new User(usuario.getEmail(), usuario.getPassword(), getAuthorities(usuario));
+		final Authentication auth = new UsernamePasswordAuthenticationToken(user, null,
 				Arrays.asList(new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		return null;

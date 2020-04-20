@@ -95,7 +95,10 @@
 							<a style="color:black;cursor: pointer;" th:href="@{/documento/descargar(id=${doc.id})}" title="Descargar">
 					          	<i class="fa fa-download" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
-					        <a style="color:black;cursor: pointer;" th:href="@{/documento/borrar(idDoc=${doc.id}, id=*{id}, tipoElemento=*{tipoElemento}, url=*{codiUrl})}" title="Borrar">
+					        <a style="color:black;cursor: pointer;" 
+					        	th:data-href="@{/documento/borrar(idDoc=${doc.id}, id=*{id}, tipoElemento=*{tipoElemento}, url=*{codiUrl})}" 
+					        	title="Borrar"
+					        	data-toggle="modal" data-target="#confirm-borrar" th:data-whatever="${doc.nombreDocumento}">
 					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>					        
 						</td>						
@@ -105,6 +108,28 @@
 		</div>		
 	</form>
 
+	</div>
+		<!-- Modal confirmación borrado -->
+	<div class="modal fade" id="confirm-borrar" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmación</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>¿Está seguro de que quiere borrar este documento?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancelar</button>
+					<a class="btn btn-danger btn-borrar">Borrar</a>
+				</div>
+			</div>
+		</div>
 	</div>
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
     <object th:replace="fragmentos :: scripts" th:remove="tag"></object>
@@ -132,6 +157,14 @@
 				$('#submitButton').prop('disabled', false);
 			}
 	    }
+    	$('#confirm-borrar').on('show.bs.modal', function (e) {
+        	  $(this).find('.btn-borrar').attr('href', $(e.relatedTarget).data('href'));
+      	  var button = $(e.relatedTarget); 
+      	  var recipient = button.data('whatever'); 
+      	  var modal = $(this);
+      		  modal.find('.modal-body').text('¿Está seguro de que quiere borrar el documento ' + recipient + '?');
+      	  });
+
 	    
     </script>
 </body>

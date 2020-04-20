@@ -40,6 +40,7 @@ import es.ucm.pcr.beans.BusquedaRecepcionPlacasVisavetBean;
 import es.ucm.pcr.beans.PaginadorBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
+import es.ucm.pcr.servicios.EquipoServicio;
 import es.ucm.pcr.servicios.LaboratorioCentroServicio;
 import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 import es.ucm.pcr.servicios.SesionServicio;
@@ -64,6 +65,9 @@ public class LabCentroControlador {
 	private SesionServicio sesionServicio;
 	
 	@Autowired
+	private EquipoServicio equipoServicio;
+	
+	@Autowired
 	private LaboratorioCentroValidador laboratorioCentroValidador;
 	
 	public static final Sort ORDENACION = Sort.by(Direction.ASC, "fechaCreacion");
@@ -81,6 +85,11 @@ public class LabCentroControlador {
 		vista.addObject("estadosPlacaVisavet", BeanEstado.estadosPlacaVisavetParaLaboratorioCentro());
 	}
 	
+	private void agregarEquiposPCR (ModelAndView vista) throws Exception {
+		
+		// Equipos PCR disponibles en el laboratorio
+		vista.addObject("equiposPCR", equipoServicio.findByLaboratorioCentro(sesionServicio.getLaboratorioCentro()));
+	}
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -284,23 +293,14 @@ public class LabCentroControlador {
 		vista.addObject("paginadorBean", paginadorBean);
 		return vista;
 	}
-
-	
-	@RequestMapping(value = "/gestionPlacas/consultar{id}", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
-	public ModelAndView consultarPlaca(HttpSession session, @PathVariable Integer idPlaca) throws Exception {
-
-		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
-		vista.addObject("placa", laboratorioCentroServicio.buscarPlaca(idPlaca));		
-		return vista;
-	}
 		
 	
 	@RequestMapping(value = "/gestionPlacas/nueva", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
 	public ModelAndView nuevaPlacaGET(HttpSession session, @PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
 	
-		ModelAndView vista = new ModelAndView("PlacaLaboratorio");		
+		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
+		this.agregarEquiposPCR(vista);
 		PlacaLaboratorioCentroBean placa = new PlacaLaboratorioCentroBean();
 
 
@@ -328,6 +328,7 @@ public class LabCentroControlador {
 	public ModelAndView nuevaPlacaPOST(@Valid @ModelAttribute("placa") PlacaLaboratorioCentroBean placa, BindingResult result) throws Exception {
 
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
+		this.agregarEquiposPCR(vista);
 		
 		if (!result.hasErrors() && laboratorioCentroServicio.esRellenable(placa, Integer.valueOf(placa.getNumeroMuestras()))){
 			placa = laboratorioCentroServicio.rellenarPlaca(placa, Integer.valueOf(placa.getNumeroMuestras()));
@@ -355,6 +356,7 @@ public class LabCentroControlador {
 										@PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
 		
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
+		this.agregarEquiposPCR(vista);
 		PlacaLaboratorioCentroBean placa = laboratorioCentroServicio.buscarPlaca(id);
 
 		// Recuperamos las placas VISAVET que se pueden combinar (recepcionadas).
@@ -393,7 +395,7 @@ public class LabCentroControlador {
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
 	public ModelAndView asignarEquipoPCRPOST(@ModelAttribute("placa") PlacaLaboratorioCentroBean placa, RedirectAttributes redirectAttributes) throws Exception {
 		
-		if (laboratorioCentroServicio.asignarEquipoPCR(placa.getId())) {
+		if (laboratorioCentroServicio.asignarEquipoPCR(placa.getId(), placa.getIdEquipo())) {
 			redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " está preparada para la prueba PCR.");
 		} else {
 			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible dar por preparada para PCR la placa " + placa.getId() + ".");

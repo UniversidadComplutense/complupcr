@@ -236,9 +236,13 @@
 					        <a th:if="${lote.fechaEnvio != null || #lists.size(lote.muestras) == 0}" style="color:grey;cursor: pointer;" title="Enviar">
 					          	<i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>			        
-					        <a th:if="${#lists.size(lote.muestras) > 0 && lote.fechaEnvio == null && lote.descLaboratorio != null}" style="color:black;cursor: pointer;" th:href="@{/centroSalud/lote/enviado(id=${lote.id})}" title="Enviar">
+					        <a th:if="${#lists.size(lote.muestras) > 0 && lote.fechaEnvio == null && lote.descLaboratorio != null}" 
+					       	style="color:black;cursor: pointer;" 
+					       	th:data-href="@{/centroSalud/lote/enviado(id=${lote.id})}" 
+					       	title="Enviar"
+					       	data-toggle="modal" data-target="#confirm-envio" th:data-whatever="${lote.numLote}">
 					          	<i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;"></i>
-					        </a>	
+					        </a>		
 					        <a th:if="${#lists.size(lote.muestras) > 0 && lote.fechaEnvio == null && lote.descLaboratorio == null}" style="color:black;cursor: pointer;" title="Enviar" data-toggle="modal" data-target="#confirm-asignar-laboratorio">
 					          	<i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>				        
@@ -279,6 +283,28 @@
 			</div>
 		</div>
 	</div>
+	<!-- Modal confirmación envio -->
+	<div class="modal fade" id="confirm-envio" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmación</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>¿Está seguro de que quiere enviar este lote?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancelar</button>
+					<a class="btn btn-success btn-enviar">Enviar</a>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- Modal aviso asignar laboratorio -->
 	<div class="modal fade" id="confirm-asignar-laboratorio" tabindex="-1" role="dialog">
 		<div class="modal-dialog" role="document">
@@ -306,6 +332,13 @@
     	$('#confirm-borrar').on('show.bs.modal', function(e) {
     	    $(this).find('.btn-borrar').attr('href', $(e.relatedTarget).data('href'));
     	});    
+    	$('#confirm-envio').on('show.bs.modal', function (e) {
+      	  $(this).find('.btn-enviar').attr('href', $(e.relatedTarget).data('href'));
+    	  var button = $(e.relatedTarget); 
+    	  var recipient = button.data('whatever'); 
+    	  var modal = $(this);
+    		  modal.find('.modal-body').text('¿Está seguro de que quiere enviar el lote ' + recipient + '?');
+    	  });
 
     	function asignarLote(idLote, idLaboratorio) {
         	$("#idLote").val(idLote);
