@@ -27,6 +27,7 @@ import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.PlacaVisavet;
 import es.ucm.pcr.repositorio.LaboratorioVisavetRepositorio;
 import es.ucm.pcr.repositorio.PlacaVisavetRepositorio;
+import es.ucm.pcr.utilidades.Utilidades;
 
 @Service
 public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio{
@@ -105,45 +106,38 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 			Pageable pageable) throws Exception {
 		
 		List<PlacaLaboratorioVisavetBean> listaPlacasVisavetBean = new ArrayList<PlacaLaboratorioVisavetBean>();
-		
+
 		if (criteriosBusqueda.getFechaBusquedaInicio() != null) {
 			
-			if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_ASIGNADA.getCodNum()) {
-				criteriosBusqueda.setFechaAsignadaInicio(criteriosBusqueda.getFechaBusquedaInicio());
+			if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_ENVIADA.getCodNum()) {
+				criteriosBusqueda.setFechaEnviadaInicio(criteriosBusqueda.getFechaBusquedaInicio());
 			} else {
-				if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_ENVIADA.getCodNum()) {
-					criteriosBusqueda.setFechaEnviadaInicio(criteriosBusqueda.getFechaBusquedaInicio());
-				} else {
-					if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_RECIBIDA.getCodNum()) {
-						criteriosBusqueda.setFechaRecepcionInicio(criteriosBusqueda.getFechaBusquedaInicio());
-					}
+				if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_RECIBIDA.getCodNum()) {
+					criteriosBusqueda.setFechaRecepcionInicio(criteriosBusqueda.getFechaBusquedaInicio());
 				}
-			}	
+			}
 		}
 		
 		if (criteriosBusqueda.getFechaBusquedaFin() != null) {
 			
-			if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_ASIGNADA.getCodNum()) {
-				criteriosBusqueda.setFechaAsignadaFin(criteriosBusqueda.getFechaBusquedaFin());
+			if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_ENVIADA.getCodNum()) {
+				criteriosBusqueda.setFechaEnviadaFin(Utilidades.fechafinBuscador(criteriosBusqueda.getFechaBusquedaFin()));
 			} else {
-				if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_ENVIADA.getCodNum()) {
-					criteriosBusqueda.setFechaEnviadaFin(criteriosBusqueda.getFechaBusquedaFin());
-				} else {
-					if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_RECIBIDA.getCodNum()) {
-						criteriosBusqueda.setFechaRecepcionFin(criteriosBusqueda.getFechaBusquedaFin());
-					}
+				if (criteriosBusqueda.getIdEstadoPlaca() == Estado.PLACAVISAVET_RECIBIDA.getCodNum()) {
+					criteriosBusqueda.setFechaRecepcionFin(Utilidades.fechafinBuscador(criteriosBusqueda.getFechaBusquedaFin()));
 				}
-			}	
+			}
 		}
 		
 		// Si no se ha seleccionado el estado de la placa en la búsqueda, buscamos por los estados PLACAVISAVET_ENVIADA ó PLACAVISAVET_RECIBIDA
 		if (criteriosBusqueda.getIdEstadoPlaca() == 0) {
-			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(5,6));
+			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(Estado.PLACAVISAVET_ENVIADA.getCodNum(), Estado.PLACAVISAVET_RECIBIDA.getCodNum()));
 		} else {
 			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(criteriosBusqueda.getIdEstadoPlaca()));
 		}
-		
-		Page<PlacaVisavet> PagePlacasVisavet = placaVisavetRepositorio.findByParams(criteriosBusqueda, pageable); 		
+
+		Page<PlacaVisavet> PagePlacasVisavet = placaVisavetRepositorio.findByParams(criteriosBusqueda, pageable); 
+
 		for (PlacaVisavet placa : PagePlacasVisavet.getContent()) {
 			listaPlacasVisavetBean.add(PlacaLaboratorioVisavetBean.modelToBean(placa));
 		}		
