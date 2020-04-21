@@ -198,9 +198,14 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		// Si no se ha seleccionado el estado de la placa en la búsqueda, buscamos por los estados: PLACA_INICIADA ó PLACA_PREPARADA_PARA_PCR
 		// ó PLACA_FINALIZADA_PCR ó PLACA_LISTA_PARA_ANALISIS
 		if (criteriosBusqueda.getIdEstadoPlaca() == 0) {
-			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(1,2,3,4));
+			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(Estado.PLACA_INICIADA.getCodNum(), Estado.PLACA_PREPARADA_PARA_PCR.getCodNum(), 
+																Estado.PLACA_FINALIZADA_PCR.getCodNum(), Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum()));
 		} else {
 			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(criteriosBusqueda.getIdEstadoPlaca()));
+		}
+		
+		if (criteriosBusqueda.getFechaCreacionFin() != null) {
+			criteriosBusqueda.setFechaCreacionFin(Utilidades.fechafinBuscador(criteriosBusqueda.getFechaCreacionFin()));			
 		}
 		
 		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = placaLaboratorioRepositorio.findByParams(criteriosBusqueda, pageable); 		
