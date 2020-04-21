@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -80,6 +82,9 @@ import es.ucm.pcr.validadores.DocumentoValidador;
 @RequestMapping(value = "/analisis")
 public class AnalisisControlador {
 	
+	@SuppressWarnings("unused")
+	private final static Logger log = LoggerFactory.getLogger(AnalisisControlador.class);
+	
 	@Value("${analisis.numAnalistas}")
     private Integer  numAnalistas;
 	
@@ -104,10 +109,6 @@ public class AnalisisControlador {
 	
 	public static final Sort ORDENACION = Sort.by(Direction.ASC, "etiqueta");
 	
-		//@Autowired
-		//private ValidadorMuestra validadorMuestra;
-	
-		
 		
 				
 		@InitBinder
@@ -135,10 +136,6 @@ public class AnalisisControlador {
 //			binder.setValidator(new AsignacionPlacaLaboratorioCentroValidador(laboratorioCentroServicio, session));
 //		}
 		
-//		@InitBinder("beanMuestra")
-//		public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session) throws Exception {  
-//			binder.setValidator(validadorMuestra);
-//		}
 				
 		@ModelAttribute("beanListaPlacasDeJefe")
 		public  List<BeanElemento> rellenaListaPlacasJefe() {
@@ -174,7 +171,331 @@ public class AnalisisControlador {
 		
 		
 		
-		@RequestMapping(value="/", method=RequestMethod.GET)
+		
+		//JEFE DE SERVICIO: 1-COGER PLACAS Y ASIGNAR ANALISTAS A PLACAS
+		
+		//Coger placas	
+		@RequestMapping(value = "/cogerPlacas", method = RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public ModelAndView buscarPlacasinAsignarYBajoResponsabilidadGET(HttpSession session, HttpServletRequest request, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
+
+			ModelAndView vista = new ModelAndView("ListadoPlacasSinAsignarYBajoResponsabilidad");
+			
+			String mensajeCoger = null;
+			String mensajeDevolver = null;
+			// Comprobamos si hay mensajes enviados desde los posts
+			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+			if (inputFlashMap != null) {
+				mensajeCoger = (String) inputFlashMap.get("mensajeCoger");
+				log.info("mensajeCoger vale: " + mensajeCoger);
+				mensajeDevolver = (String) inputFlashMap.get("mensajeDevolver");
+				log.info("mensajeDevolver vale: " + mensajeDevolver);
+			}
+			vista.addObject("mensajeCoger", mensajeCoger);
+			vista.addObject("mensajeDevolver", mensajeDevolver);
+			
+			//recupero el usuario logado			
+			Usuario user = sesionServicio.getUsuario();
+			log.info("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
+
+			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
+			// del idLaboratorioCentro del usuario jefe logado
+			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
+			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
+			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
+			List<PlacaLaboratorioCentroAsignacionesBean> listaPlacasListasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaListaParaAnalisis, pageable).getContent();
+			log.info("listaPlacasListasParaAnalisis tiene: "+ listaPlacasListasParaAnalisis.size());
+			
+			// Buscamos las placas con estado 'Asignada para análisis' (un jefe ya las ha puesto bajo su responsabilidad)
+			// del centro del usuario jefe logado 
+			// y que esten asignadas al jefe logado
+			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaAsignadaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
+			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
+			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
+			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdJefe(user.getId());
+			List<PlacaLaboratorioCentroAsignacionesBean> listaPlacasAsignadasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaAnalisis, pageable).getContent();
+			log.info("listaPlacasAsignadasParaAnalisis tiene: "+ listaPlacasAsignadasParaAnalisis.size());			
+			
+			GuardarCogerYDevolverPlacasBean guardarCogerYDevolverPlacasBean = new GuardarCogerYDevolverPlacasBean();
+			
+			vista.addObject("listaPlacasListasParaAnalisis", listaPlacasListasParaAnalisis);
+			vista.addObject("listaPlacasAsignadasParaAnalisis", listaPlacasAsignadasParaAnalisis);
+			vista.addObject("guardarCogerYDevolverPlacasBean", guardarCogerYDevolverPlacasBean);			
+			
+			
+			return vista;
+
+		}
+		
+		//boton "reclamar los seleccionados"
+		@RequestMapping(value = "/cogerPlacas", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public RedirectView cogerPlacasSeleccionadas(HttpSession session, @ModelAttribute GuardarCogerYDevolverPlacasBean guardarCogerYDevolverPlacasBean, 
+				@PageableDefault(page = 0, value = 20) Pageable pageable, RedirectAttributes redirectAttributes) throws Exception {
+
+			//recupero el usuario logado			
+			Usuario user = sesionServicio.getUsuario();
+			log.info("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
+						
+			//recogemos las placas marcadas para coger
+			List<Integer> listaIdsPlacasSeleccionadosParaCoger = guardarCogerYDevolverPlacasBean.getListaIdsPlacasSeleccionadosParaCoger();
+			log.info("listaIdsPlacasSeleccionadosParaCoger: " + listaIdsPlacasSeleccionadosParaCoger.toString());
+			
+			//cogemos esas placas, les asignamos el jefe logado, fecha de asignacion, cambiamos estado a PLACA_ASIGNADA_PARA_ANALISIS y las guardamos
+			//TODO coger las muestras de esa placa y ponerles estado pendente de analizar
+			for(Integer idPlacaSeleccionada : listaIdsPlacasSeleccionadosParaCoger) {
+				laboratorioCentroServicio.guardarCogerODevolverPlaca(idPlacaSeleccionada, user.getId(), "coger");
+			}						
+			
+			redirectAttributes.addFlashAttribute("mensajeCoger", "Placas reclamadas");
+			return new RedirectView("/analisis/cogerPlacas", true);			
+			
+		}
+		
+		//boton "devolver los seleccionados"
+		@RequestMapping(value = "/devolverPlacas", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public RedirectView devolverPlacasSeleccionadas(HttpSession session, @ModelAttribute GuardarCogerYDevolverPlacasBean guardarCogerYDevolverPlacasBean, 
+				@PageableDefault(page = 0, value = 20) Pageable pageable, RedirectAttributes redirectAttributes) throws Exception {
+
+			//recogemos las placas marcadas para devolver
+			List<Integer> listaIdsPlacasSeleccionadosParaDevolver = guardarCogerYDevolverPlacasBean.getListaIdsPlacasSeleccionadosParaDevolver();
+			log.info("listaIdsPlacasSeleccionadosParaDevolver: " + listaIdsPlacasSeleccionadosParaDevolver.toString());
+			
+			//devolver esas placas, quitarles el jefe asignado, fecha de asignacion, cambiar estado a placa a PLACA_LISTA_PARA_ANALISIS y guardarlas
+			//TODO ¿que hacemos con las muestras?, las ponemos en el estado anterior "enviada centro analisis"			
+			for(Integer idPlacaSeleccionada : listaIdsPlacasSeleccionadosParaDevolver) {
+				laboratorioCentroServicio.guardarCogerODevolverPlaca(idPlacaSeleccionada, null, "devolver");
+			}	
+						
+			
+			redirectAttributes.addFlashAttribute("mensajeDevolver", "Placas devueltas");
+			return new RedirectView("/analisis/cogerPlacas", true);			
+			
+		}
+		
+		//metodos de asignacion de analistas a placas
+		
+		//metodo privado que rellena un bean con los datos de la placa y sus analistas asignados y la listas de posibles nuevos analistas a asignar
+		//para poder mapearlo a la vista
+		private GuardarAsignacionPlacaLaboratorioCentroBean rellenaGuardarAsignacionPlacaLaboratorioCentroBean(Integer idPlaca, GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro) {
+			//y permitira recoger los analistas y voluntarios seleccionados
+						
+			PlacaLaboratorioCentroAsignacionesBean placaLaboratorioCentroAsignacionesBean=laboratorioCentroServicio.buscarPlacaAsignaciones(idPlaca);
+			
+			//obtenemos los listados de analistas del laboratorio, voluntarios del laboratorio y voluntarios sin laboratorio
+			
+			//recupero el usuario logado			
+			Usuario user = sesionServicio.getUsuario();
+			log.info("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
+			
+			//List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
+			List<BeanUsuario> beanListadoAnalistaLab = usuarioServicio.listaUsuariosAnalistasDeLaboratorioCentro(user.getIdLaboratorioCentro()) ;
+			List<BeanUsuario> beanListadoAnalistaVol = usuarioServicio.listaUsuariosVoluntariosDeLaboratorioCentro(user.getIdLaboratorioCentro());	
+			List<BeanUsuario> beanListadoVoluntariosSinLaboratorioCentro = usuarioServicio.listaUsuariosVoluntariosSinLaboratorioCentro();	
+			
+			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la placa para no mostrarlos como posibles a asignar en el desplegable
+			//listaAnalistasLab
+			List<BeanAsignacion> beanListadoAnalistaLabAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasLab();
+			List<BeanUsuario> beanListadoAnalistaLabABorrar = new ArrayList<BeanUsuario>();
+			//convierto la lista BeanAsignacion en lista BeanUsuario
+			for(BeanAsignacion beanAsig: beanListadoAnalistaLabAsignados) {
+				beanListadoAnalistaLabABorrar.add(beanAsig.getBeanUsuario());				
+			}
+			log.info("beanListadoAnalistaLabABorrar tiene: " + beanListadoAnalistaLabABorrar.size());
+			//borro de la lista todal de analistaslab los asignados
+			beanListadoAnalistaLab.removeAll(beanListadoAnalistaLabABorrar);
+			
+			//listaAnalistasVol			
+			List<BeanAsignacion> beanListadoAnalistaVolAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasVol();
+			List<BeanUsuario> beanListadoAnalistaVolABorrar = new ArrayList<BeanUsuario>();
+			//convierto la lista BeanAsignacion en lista BeanUsuario
+			for(BeanAsignacion beanAsig: beanListadoAnalistaVolAsignados) {
+				beanListadoAnalistaVolABorrar.add(beanAsig.getBeanUsuario());				
+			}
+			log.info("beanListadoAnalistaVolABorrar tiene: " + beanListadoAnalistaVolABorrar.size());
+			//borro de la lista todal de analistaslab los asignados
+			beanListadoAnalistaVol.removeAll(beanListadoAnalistaVolABorrar);
+			
+			
+			//listaAnalistasVolSinCentro			
+			List<BeanAsignacion> beanListadoAnalistaVolSinLabCentroAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasVolSinLabCentro();
+			List<BeanUsuario> beanListadoAnalistaVolSinCentroABorrar = new ArrayList<BeanUsuario>();
+			//convierto la lista BeanAsignacion en lista BeanUsuario
+			for(BeanAsignacion beanAsig: beanListadoAnalistaVolSinLabCentroAsignados) {
+				beanListadoAnalistaVolSinCentroABorrar.add(beanAsig.getBeanUsuario());				
+			}
+			log.info("beanListadoAnalistaVolSinCentroABorrar tiene: " + beanListadoAnalistaVolSinCentroABorrar.size());
+			//borro de la lista todal de analistas los asignados
+			beanListadoVoluntariosSinLaboratorioCentro.removeAll(beanListadoAnalistaVolSinCentroABorrar);
+			
+			//no se puede asignar nuevos analistas a la placa si la placa tiene ya todas sus muestras con resultado definitivo
+			Boolean noSePuedeAsignarNuevosAnalistasAPlaca = laboratorioCentroServicio.tienenResultadoDefinitivoLasMuestrasDeLaPlaca(idPlaca);
+			
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setPlacaLaboratorioCentroAsignacionesBean(placaLaboratorioCentroAsignacionesBean);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setBeanListadoAnalistaLab(beanListadoAnalistaLab);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setBeanListadoAnalistaVol(beanListadoAnalistaVol);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setBeanListadoVoluntariosSinLaboratorioCentro(beanListadoVoluntariosSinLaboratorioCentro);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setNoSePuedeAsignarNuevosAnalistasAPlaca(noSePuedeAsignarNuevosAnalistasAPlaca);
+			
+			return formBeanGuardarAsignacionPlacaLaboratorioCentro;
+		}
+		
+		@RequestMapping(value="/asignarPlaca", method=RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public ModelAndView asignarPlaca(HttpSession session, HttpServletRequest request, @RequestParam("idPlaca") Integer idPlaca,
+				@RequestParam(value = "accion", required = false) String accion) throws Exception {				
+			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAPlaca");
+				
+			log.info("estoy en asignarPlaca");
+			String mensaje = null;
+			// Comprobamos si hay mensaje enviado desde guardarAsignacion.
+			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+			if (inputFlashMap != null) {
+				mensaje = (String) inputFlashMap.get("mensaje");
+				log.info("mensaje vale: " + mensaje);
+			}
+			vista.addObject("mensaje", mensaje);
+			
+			// Comprobamos si hay mensaje enviado desde guardarReemplazo.			
+			if (accion != null && accion.equals("R")) {
+				mensaje = "Reemplazo de analista realizado correctamente";
+				log.info("mensaje vale: " + mensaje);
+			}
+			vista.addObject("mensaje", mensaje);
+
+			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = new GuardarAsignacionPlacaLaboratorioCentroBean();
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setIdPlaca(idPlaca);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setNumAnalistasPermitidos(numAnalistas);
+			
+			formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(idPlaca, formBeanGuardarAsignacionPlacaLaboratorioCentro);
+						
+			vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
+			//vista.addObject("placaLaboratorioCentroAsignacionesBean", placaLaboratorioCentroAsignacionesBean);
+			//vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
+			//vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);			
+			//vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
+			//vista.addObject("beanListadoVoluntariosSinLaboratorioCentro", beanListadoVoluntariosSinLaboratorioCentro);
+			//vista.addObject("noSePuedeAsignarNuevosAnalistasAPlaca", noSePuedeAsignarNuevosAnalistasAPlaca);
+			return vista;
+		}
+		
+		
+		@RequestMapping(value = "/guardarAsignacionPlaca", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public ModelAndView guardarAsignacionPlaca(@Valid @ModelAttribute("formBeanGuardarAsignacionPlaca") GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca,
+				BindingResult result, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
+			
+			//formBeanGuardarAsignacionPlaca traerá relleno solo los inputs que son las listas de id's seleccionados
+			if (result.hasErrors()) {	
+				log.info("estoy en hasErrors");
+				ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAPlaca");
+				//volvemos a calcular los datos que necesitamos para la vista
+				formBeanGuardarAsignacionPlaca = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(formBeanGuardarAsignacionPlaca.getIdPlaca(), formBeanGuardarAsignacionPlaca);
+				//asignamos lo que hemos cogido del formulario para no perderlo
+				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasLabSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados());
+				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasVolSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados());
+				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsVolSinLabCentroSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados());
+				vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlaca);
+				return vista;
+			} else {			
+				log.info("placa id: " + formBeanGuardarAsignacionPlaca.getIdPlaca());
+				log.info("analistas de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados().toString());
+				log.info("voluntarios de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados().toString());
+				log.info("voluntarios sin labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados().toString());
+				
+				//llamamos a metodo de servicio que a partir de formBeanGuardarAsignacionPlaca recupere la placa y le asigne a todas sus muestras los nuevos analistas lab, analistas vol y otros vol
+				//y cambie el estado de las muestras a asignada analista			
+				laboratorioCentroServicio.guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(formBeanGuardarAsignacionPlaca);
+				
+							
+				//vuelvo al formulario de asignacion de la placa
+				String idPlaca = String.valueOf(formBeanGuardarAsignacionPlaca.getIdPlaca());
+				redirectAttributes.addFlashAttribute("mensaje", "Asignaciones de placa guardadas");
+				return new ModelAndView(new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true));				
+			}
+		}
+		
+
+		//reemplazar analista
+		//metodo que recibe el analista a reemplazar y muestra los posibles analistas para permitir escoger el que lo reemplazará
+		//busca sus datos y los muestra en el modal
+		@RequestMapping(value = "/reemplazarAnalista", method=RequestMethod.GET)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public String reemplazarAnalista(HttpSession session, //HttpServletRequest req,
+				@RequestParam("idUsuarioAReemplazar") Integer idUsuarioAReemplazar,
+				@RequestParam("idPlaca") Integer idPlaca,
+				Model model, Locale locale) {
+						
+			log.info("GetMapping reemplazarAnalista");				
+			
+			//String idUsuarioAReemplazarStr = req.getParameter("idUsuarioAReemplazar");				
+			log.info("el usuario a reemplazar es: " + idUsuarioAReemplazar);
+			//String idPlacaStr = req.getParameter("idPlaca");
+			//Integer idPlaca = Integer.valueOf(idPlacaStr);
+			log.info("la placa es: " + idPlaca);
+			
+			
+			
+			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = new GuardarAsignacionPlacaLaboratorioCentroBean();
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setIdPlaca(idPlaca);
+			formBeanGuardarAsignacionPlacaLaboratorioCentro.setNumAnalistasPermitidos(numAnalistas);
+			
+			formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(idPlaca, formBeanGuardarAsignacionPlacaLaboratorioCentro);
+						
+			model.addAttribute("formBeanGuardarReemplazoAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
+			model.addAttribute("idUsuarioAReemplazar", idUsuarioAReemplazar);
+		
+			return "VistaReemplazarAnalista";
+			
+		}
+
+		@RequestMapping(value = "/guardaReemplazarAnalista", method = RequestMethod.POST)
+		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		public ModelAndView guardaReemplazarAnalista(@ModelAttribute("formBeanGuardarReemplazoAsignacionPlaca") GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca,
+				BindingResult result, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
+			log.info("estoy en guardaReemplazarAnalista");
+			ModelAndView vista = new ModelAndView("VistaReemplazarAnalista");
+			//formBeanGuardarAsignacionPlaca traerá relleno solo los inputs que son las listas de id's seleccionados
+//			if (result.hasErrors()) {	
+//				log.info("estoy en hasErrors");
+//				ModelAndView vista = new ModelAndView("VistaReemplazarAnalista");
+//				//volvemos a calcular los datos que necesitamos para la vista
+//				formBeanGuardarAsignacionPlaca = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(formBeanGuardarAsignacionPlaca.getIdPlaca(), formBeanGuardarAsignacionPlaca);
+//				//asignamos lo que hemos cogido del formulario para no perderlo
+//				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasLabSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados());
+//				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasVolSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados());
+//				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsVolSinLabCentroSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados());
+//				vista.addObject("formBeanGuardarReemplazoAsignacionPlaca", formBeanGuardarAsignacionPlaca);
+//				return vista;
+//			} else {
+				Integer idUsuarioAQuitar = Integer.valueOf(request.getParameter("idUsuarioAQuitar"));
+				Integer idUsuarioAPoner = Integer.valueOf(request.getParameter("idUsuarioAPoner"));
+				Integer idPlaca = Integer.valueOf(request.getParameter("idPlaca"));
+				log.info("placa id: " + idPlaca);
+				log.info("idUsuarioAQuitar: " + idUsuarioAQuitar);
+				log.info("idUsuarioAPoner: " + idUsuarioAPoner);
+				
+				//llamamos a metodo de servicio que recupere la placa y reemplaza un analista por otro en sus muestras
+				laboratorioCentroServicio.guardarReemplazoAnalistaDePlacaYmuestras(idPlaca, idUsuarioAQuitar, idUsuarioAPoner);
+							
+				//vuelvo al formulario de asignacion de la placa				
+				//redirectAttributes.addFlashAttribute("mensaje", "Reemplazo de analista realizado correctamente");
+				//return new ModelAndView(new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true));
+				//NO vuelvo a formulario de asignacion de la placa desde aquí, volveré desde jquery	
+				return vista;
+			}
+		//}
+		
+		//fin metodos de asignacion de analistas a placas
+
+		//FIN- JEFE DE SERVICIO: 1-COGER PLACAS Y ASIGNAR ANALISTAS A PLACAS
+		
+		
+		
+		//JEFE DE SERVICIO: 2-REVISAR MUESTRAS
+		
+		@RequestMapping(value="/revisarMuestras", method=RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView buscadorMuestras(HttpSession session) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaMuestraListadoAnalisis");
@@ -238,7 +559,7 @@ public class AnalisisControlador {
 			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
 			if (inputFlashMap != null) {
 				mensaje = (String) inputFlashMap.get("mensaje");
-				System.out.println("mensaje vale: " + mensaje);
+				log.info("mensaje vale: " + mensaje);
 			}
 			vista.addObject("mensaje", mensaje);
 
@@ -264,7 +585,7 @@ public class AnalisisControlador {
 			for(BeanAsignacion beanAsig: beanListadoAnalistaLabAsignados) {
 				beanListadoAnalistaLabABorrar.add(beanAsig.getBeanUsuario());				
 			}
-			System.out.println("beanListadoAnalistaLabABorrar tiene: " + beanListadoAnalistaLabABorrar.size());
+			log.info("beanListadoAnalistaLabABorrar tiene: " + beanListadoAnalistaLabABorrar.size());
 			//borro de la lista todal de analistaslab los asignados
 			beanListadoAnalistaLab.removeAll(beanListadoAnalistaLabABorrar);
 			
@@ -275,7 +596,7 @@ public class AnalisisControlador {
 			for(BeanAsignacion beanAsig: beanListadoAnalistaVolAsignados) {
 				beanListadoAnalistaVolABorrar.add(beanAsig.getBeanUsuario());				
 			}
-			System.out.println("beanListadoAnalistaVolABorrar tiene: " + beanListadoAnalistaVolABorrar.size());
+			log.info("beanListadoAnalistaVolABorrar tiene: " + beanListadoAnalistaVolABorrar.size());
 			//borro de la lista todal de analistaslab los asignados
 			beanListadoAnalistaVol.removeAll(beanListadoAnalistaVolABorrar);
 			
@@ -293,9 +614,9 @@ public class AnalisisControlador {
 		public RedirectView guardarAsignacion(@ModelAttribute("formBeanGuardarAsignacionMuestra") GuardarAsignacionMuestraBean formBeanGuardarAsignacionMuestra,
 				HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
 			
-			System.out.println("muestra id: " + formBeanGuardarAsignacionMuestra.getId());
-			System.out.println("analistasLab seleccionados para asignar: " + formBeanGuardarAsignacionMuestra.getListaIdsAnalistasLabSeleccionados().toString());
-			System.out.println("analistasVol seleccionados para asignar: " + formBeanGuardarAsignacionMuestra.getListaIdsAnalistasVolSeleccionados().toString());
+			log.info("muestra id: " + formBeanGuardarAsignacionMuestra.getId());
+			log.info("analistasLab seleccionados para asignar: " + formBeanGuardarAsignacionMuestra.getListaIdsAnalistasLabSeleccionados().toString());
+			log.info("analistasVol seleccionados para asignar: " + formBeanGuardarAsignacionMuestra.getListaIdsAnalistasVolSeleccionados().toString());
 			
 			//TODO llamar a metodo de servicio que a partir de formBeanGuardarAsignacionMuestra recupere la muestra y le asigne los nuevos analistas lab y analistas vol
 			
@@ -308,7 +629,7 @@ public class AnalisisControlador {
 		}
 		//fin metodos de asignacion de muestras a analistas
 		
-		//muestra pantalla al jefe para que resuelva la muestra
+		//muestra pantalla al jefe para que resuelva la muestra (ahora no se usa porque el jefe no resuelve muestras)
 		@RequestMapping(value="/revisar", method=RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
 		public ModelAndView revisarMuestra(HttpSession session, HttpServletRequest request, @RequestParam("idMuestra") Integer idMuestra) throws Exception {
@@ -319,7 +640,7 @@ public class AnalisisControlador {
 			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
 			if (inputFlashMap != null) {
 				mensaje = (String) inputFlashMap.get("mensaje");
-				System.out.println("mensaje vale: " + mensaje);
+				log.info("mensaje vale: " + mensaje);
 			}
 			vista.addObject("mensaje", mensaje);
 
@@ -328,7 +649,7 @@ public class AnalisisControlador {
 			//beanMuestra.setResultado("P");
 			
 			List<BeanElemento> beanListadoPosiblesResultadosMuestra = getBeanListadoPosiblesResultadosMuestra();
-			System.out.println("el beanListadoPosiblesResultadosMuestra tiene: " + beanListadoPosiblesResultadosMuestra.toString());
+			log.info("el beanListadoPosiblesResultadosMuestra tiene: " + beanListadoPosiblesResultadosMuestra.toString());
 			
 			vista.addObject("beanMuestra", beanMuestra);
 			vista.addObject("beanListadoPosiblesResultadosMuestra", beanListadoPosiblesResultadosMuestra);	
@@ -343,8 +664,8 @@ public class AnalisisControlador {
 		public RedirectView guardarAsignacion(@ModelAttribute("beanMuestra") MuestraBean beanMuestra,
 				HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
 			
-			System.out.println("muestra id: " + beanMuestra.getId());
-			System.out.println("resultado seleccionado por el jefe: " + beanMuestra.getResultado());			
+			log.info("muestra id: " + beanMuestra.getId());
+			log.info("resultado seleccionado por el jefe: " + beanMuestra.getResultado());			
 			
 			//TODO llamar a metodo de servicio que a partir de beanMuestra recupere la muestra y le asigne el resultado escogido por el jefe
 			
@@ -367,7 +688,7 @@ public class AnalisisControlador {
 			String[] parts = claves.split(",");
 			for(String codnumMuestra: parts) {
 				Integer codnumLeeInt = Integer.parseInt(codnumMuestra);
-				System.out.println("el codnum vale: " + codnumLeeInt);
+				log.info("el codnum vale: " + codnumLeeInt);
 				//obtenemos la muestra
 				BeanListadoMuestraAnalisis beanMuestraAnalisis = muestraServicio.buscarMuestra(codnumLeeInt);				
 				listaBeanListadoMuestraAnalisis.add(beanMuestraAnalisis);
@@ -386,15 +707,14 @@ public class AnalisisControlador {
 			
 			//metodo que recibe los codnum de muestras en los que se ha marcado el checkbox para cerrarlas
 			//busca esos resgistros, y presenta sus datos en una lista
-			System.out.println("Diana- postMapping buscarMuestrasACerrar");				
+			log.info("Diana- postMapping buscarMuestrasACerrar");				
 			
 			String claves = req.getParameter("claves");				
-			System.out.println("lista de claves que tienen check activado: " + claves);
-			
-			//ESTOY AKIIIII
+			log.info("lista de claves que tienen check activado: " + claves);
+						
 			List<BeanListadoMuestraAnalisis> beanListadoMuestraAnalisis = this.findByClaves(claves);
 			
-			System.out.println("beanListadoMuestraAnalisis tiene: " + beanListadoMuestraAnalisis.size());
+			log.info("beanListadoMuestraAnalisis tiene: " + beanListadoMuestraAnalisis.size());
 				
 			model.addAttribute("listadoMuestras", beanListadoMuestraAnalisis);
 			
@@ -411,18 +731,18 @@ public class AnalisisControlador {
 			//metodo que recibe los codnum de muestras en los que se ha marcado el checkbox para cerrar
 			//busca esos resgistros, los actualiza y los guarda
 			
-			System.out.println("Diana post mapping ejecutarCierreMuestras ");
+			log.info("Diana post mapping ejecutarCierreMuestras ");
 
 			/*
 			if (result.hasErrors()) {
-				System.out.println("errores de validacion del formulario al ejecutar llamamiento");
+				log.info("errores de validacion del formulario al ejecutar llamamiento");
 				return ListaEsperaController.VIEW_LIST_FORM;			
 			} else {
 			*/					
 				
 				String claves = req.getParameter("claves");
 				StringTokenizer codnums = new StringTokenizer(claves, ",");			
-				System.out.println("lista de claves que tienen check activado: " + claves);
+				log.info("lista de claves que tienen check activado: " + claves);
 				
 				//TODO cambiar el estado de las muesetras a resueltas con fecha de resolucion, (cerradas por el jefe)
 				//y recalcular aciertos y posibles
@@ -484,345 +804,19 @@ public class AnalisisControlador {
 				//return buscarMuestras(session, beanBusquedaMuestra);
 				return "redirect:/analisis/list";
 			
-			
 		}
-		
-		//FUNCIONALIDAD JEFE: COGER PLACAS Y ASIGNAR ANALISTAS A PLACAS
-		
-		//gestionar lotes (en realidad es gestionar placas)		
-		@RequestMapping(value = "/cogerPlacas", method = RequestMethod.GET)
-		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public ModelAndView buscarPlacasinAsignarYBajoResponsabilidadGET(HttpSession session, HttpServletRequest request, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
-
-			ModelAndView vista = new ModelAndView("ListadoPlacasSinAsignarYBajoResponsabilidad");
-			
-			String mensajeCoger = null;
-			String mensajeDevolver = null;
-			// Comprobamos si hay mensajes enviados desde los posts
-			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
-			if (inputFlashMap != null) {
-				mensajeCoger = (String) inputFlashMap.get("mensajeCoger");
-				System.out.println("mensajeCoger vale: " + mensajeCoger);
-				mensajeDevolver = (String) inputFlashMap.get("mensajeDevolver");
-				System.out.println("mensajeDevolver vale: " + mensajeDevolver);
-			}
-			vista.addObject("mensajeCoger", mensajeCoger);
-			vista.addObject("mensajeDevolver", mensajeDevolver);
-			
-			//recupero el usuario logado			
-			Usuario user = sesionServicio.getUsuario();
-			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
-
-			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
-			// del idLaboratorioCentro del usuario jefe logado
-			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaListaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
-			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
-			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
-			List<PlacaLaboratorioCentroAsignacionesBean> listaPlacasListasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaListaParaAnalisis, pageable).getContent();
-			System.out.println("listaPlacasListasParaAnalisis tiene: "+ listaPlacasListasParaAnalisis.size());
-			
-			// Buscamos las placas con estado 'Asignada para análisis' (un jefe ya las ha puesto bajo su responsabilidad)
-			// del centro del usuario jefe logado 
-			// y que esten asignadas al jefe logado
-			BusquedaPlacaLaboratorioJefeBean criteriosBusquedaPlacaAsignadaParaAnalisis = new BusquedaPlacaLaboratorioJefeBean();			
-			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
-			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
-			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdJefe(user.getId());
-			List<PlacaLaboratorioCentroAsignacionesBean> listaPlacasAsignadasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaAnalisis, pageable).getContent();
-			System.out.println("listaPlacasAsignadasParaAnalisis tiene: "+ listaPlacasAsignadasParaAnalisis.size());			
-			
-			GuardarCogerYDevolverPlacasBean guardarCogerYDevolverPlacasBean = new GuardarCogerYDevolverPlacasBean();
-			
-			vista.addObject("listaPlacasListasParaAnalisis", listaPlacasListasParaAnalisis);
-			vista.addObject("listaPlacasAsignadasParaAnalisis", listaPlacasAsignadasParaAnalisis);
-			vista.addObject("guardarCogerYDevolverPlacasBean", guardarCogerYDevolverPlacasBean);			
-			
-			
-			return vista;
-
-		}
-		
-		//boton "reclamar los seleccionados"
-		@RequestMapping(value = "/cogerPlacas", method = RequestMethod.POST)
-		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public RedirectView cogerPlacasSeleccionadas(HttpSession session, @ModelAttribute GuardarCogerYDevolverPlacasBean guardarCogerYDevolverPlacasBean, 
-				@PageableDefault(page = 0, value = 20) Pageable pageable, RedirectAttributes redirectAttributes) throws Exception {
-
-			//recupero el usuario logado			
-			Usuario user = sesionServicio.getUsuario();
-			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
-						
-			//recogemos las placas marcadas para coger
-			List<Integer> listaIdsPlacasSeleccionadosParaCoger = guardarCogerYDevolverPlacasBean.getListaIdsPlacasSeleccionadosParaCoger();
-			System.out.println("listaIdsPlacasSeleccionadosParaCoger: " + listaIdsPlacasSeleccionadosParaCoger.toString());
-			
-			//cogemos esas placas, les asignamos el jefe logado, fecha de asignacion, cambiamos estado a PLACA_ASIGNADA_PARA_ANALISIS y las guardamos
-			//TODO coger las muestras de esa placa y ponerles estado pendente de analizar
-			for(Integer idPlacaSeleccionada : listaIdsPlacasSeleccionadosParaCoger) {
-				laboratorioCentroServicio.guardarCogerODevolverPlaca(idPlacaSeleccionada, user.getId(), "coger");
-			}						
-			
-			redirectAttributes.addFlashAttribute("mensajeCoger", "Placas reclamadas");
-			return new RedirectView("/analisis/cogerPlacas", true);			
-			
-		}
-		
-		//boton "devolver los seleccionados"
-		@RequestMapping(value = "/devolverPlacas", method = RequestMethod.POST)
-		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public RedirectView devolverPlacasSeleccionadas(HttpSession session, @ModelAttribute GuardarCogerYDevolverPlacasBean guardarCogerYDevolverPlacasBean, 
-				@PageableDefault(page = 0, value = 20) Pageable pageable, RedirectAttributes redirectAttributes) throws Exception {
-
-			//recogemos las placas marcadas para devolver
-			List<Integer> listaIdsPlacasSeleccionadosParaDevolver = guardarCogerYDevolverPlacasBean.getListaIdsPlacasSeleccionadosParaDevolver();
-			System.out.println("listaIdsPlacasSeleccionadosParaDevolver: " + listaIdsPlacasSeleccionadosParaDevolver.toString());
-			
-			//devolver esas placas, quitarles el jefe asignado, fecha de asignacion, cambiar estado a placa a PLACA_LISTA_PARA_ANALISIS y guardarlas
-			//TODO ¿que hacemos con las muestras?, las ponemos en el estado anterior "enviada centro analisis"			
-			for(Integer idPlacaSeleccionada : listaIdsPlacasSeleccionadosParaDevolver) {
-				laboratorioCentroServicio.guardarCogerODevolverPlaca(idPlacaSeleccionada, null, "devolver");
-			}	
-						
-			
-			redirectAttributes.addFlashAttribute("mensajeDevolver", "Placas devueltas");
-			return new RedirectView("/analisis/cogerPlacas", true);			
-			
-		}
-		
-		//metodos de asignacion de analistas a placas
-		
-		//metodo privado que rellena un bean con los datos de la placa y sus analistas asignados y la listas de posibles nuevos analistas a asignar
-		//para poder mapearlo a la vista
-		private GuardarAsignacionPlacaLaboratorioCentroBean rellenaGuardarAsignacionPlacaLaboratorioCentroBean(Integer idPlaca, GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro) {
-			//y permitira recoger los analistas y voluntarios seleccionados
-						
-			PlacaLaboratorioCentroAsignacionesBean placaLaboratorioCentroAsignacionesBean=laboratorioCentroServicio.buscarPlacaAsignaciones(idPlaca);
-			
-			//obtenemos los listados de analistas del laboratorio, voluntarios del laboratorio y voluntarios sin laboratorio
-			
-			//recupero el usuario logado			
-			Usuario user = sesionServicio.getUsuario();
-			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
-			
-			//List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
-			List<BeanUsuario> beanListadoAnalistaLab = usuarioServicio.listaUsuariosAnalistasDeLaboratorioCentro(user.getIdLaboratorioCentro()) ;
-			List<BeanUsuario> beanListadoAnalistaVol = usuarioServicio.listaUsuariosVoluntariosDeLaboratorioCentro(user.getIdLaboratorioCentro());	
-			List<BeanUsuario> beanListadoVoluntariosSinLaboratorioCentro = usuarioServicio.listaUsuariosVoluntariosSinLaboratorioCentro();	
-			
-			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la placa para no mostrarlos como posibles a asignar en el desplegable
-			//listaAnalistasLab
-			List<BeanAsignacion> beanListadoAnalistaLabAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasLab();
-			List<BeanUsuario> beanListadoAnalistaLabABorrar = new ArrayList<BeanUsuario>();
-			//convierto la lista BeanAsignacion en lista BeanUsuario
-			for(BeanAsignacion beanAsig: beanListadoAnalistaLabAsignados) {
-				beanListadoAnalistaLabABorrar.add(beanAsig.getBeanUsuario());				
-			}
-			System.out.println("beanListadoAnalistaLabABorrar tiene: " + beanListadoAnalistaLabABorrar.size());
-			//borro de la lista todal de analistaslab los asignados
-			beanListadoAnalistaLab.removeAll(beanListadoAnalistaLabABorrar);
-			
-			//listaAnalistasVol			
-			List<BeanAsignacion> beanListadoAnalistaVolAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasVol();
-			List<BeanUsuario> beanListadoAnalistaVolABorrar = new ArrayList<BeanUsuario>();
-			//convierto la lista BeanAsignacion en lista BeanUsuario
-			for(BeanAsignacion beanAsig: beanListadoAnalistaVolAsignados) {
-				beanListadoAnalistaVolABorrar.add(beanAsig.getBeanUsuario());				
-			}
-			System.out.println("beanListadoAnalistaVolABorrar tiene: " + beanListadoAnalistaVolABorrar.size());
-			//borro de la lista todal de analistaslab los asignados
-			beanListadoAnalistaVol.removeAll(beanListadoAnalistaVolABorrar);
-			
-			
-			//listaAnalistasVolSinCentro			
-			List<BeanAsignacion> beanListadoAnalistaVolSinLabCentroAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasVolSinLabCentro();
-			List<BeanUsuario> beanListadoAnalistaVolSinCentroABorrar = new ArrayList<BeanUsuario>();
-			//convierto la lista BeanAsignacion en lista BeanUsuario
-			for(BeanAsignacion beanAsig: beanListadoAnalistaVolSinLabCentroAsignados) {
-				beanListadoAnalistaVolSinCentroABorrar.add(beanAsig.getBeanUsuario());				
-			}
-			System.out.println("beanListadoAnalistaVolSinCentroABorrar tiene: " + beanListadoAnalistaVolSinCentroABorrar.size());
-			//borro de la lista todal de analistas los asignados
-			beanListadoVoluntariosSinLaboratorioCentro.removeAll(beanListadoAnalistaVolSinCentroABorrar);
-			
-			//no se puede asignar nuevos analistas a la placa si la placa tiene ya todas sus muestras con resultado definitivo
-			Boolean noSePuedeAsignarNuevosAnalistasAPlaca = laboratorioCentroServicio.tienenResultadoDefinitivoLasMuestrasDeLaPlaca(idPlaca);
-			
-			formBeanGuardarAsignacionPlacaLaboratorioCentro.setPlacaLaboratorioCentroAsignacionesBean(placaLaboratorioCentroAsignacionesBean);
-			formBeanGuardarAsignacionPlacaLaboratorioCentro.setBeanListadoAnalistaLab(beanListadoAnalistaLab);
-			formBeanGuardarAsignacionPlacaLaboratorioCentro.setBeanListadoAnalistaVol(beanListadoAnalistaVol);
-			formBeanGuardarAsignacionPlacaLaboratorioCentro.setBeanListadoVoluntariosSinLaboratorioCentro(beanListadoVoluntariosSinLaboratorioCentro);
-			formBeanGuardarAsignacionPlacaLaboratorioCentro.setNoSePuedeAsignarNuevosAnalistasAPlaca(noSePuedeAsignarNuevosAnalistasAPlaca);
-			
-			return formBeanGuardarAsignacionPlacaLaboratorioCentro;
-		}
-		
-		@RequestMapping(value="/asignarPlaca", method=RequestMethod.GET)
-		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public ModelAndView asignarPlaca(HttpSession session, HttpServletRequest request, @RequestParam("idPlaca") Integer idPlaca,
-				@RequestParam(value = "accion", required = false) String accion) throws Exception {				
-			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAPlaca");
-				
-			System.out.println("estoy en asignarPlaca");
-			String mensaje = null;
-			// Comprobamos si hay mensaje enviado desde guardarAsignacion.
-			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
-			if (inputFlashMap != null) {
-				mensaje = (String) inputFlashMap.get("mensaje");
-				System.out.println("mensaje vale: " + mensaje);
-			}
-			vista.addObject("mensaje", mensaje);
-			
-			// Comprobamos si hay mensaje enviado desde guardarReemplazo.			
-			if (accion != null && accion.equals("R")) {
-				mensaje = "Reemplazo de analista realizado correctamente";
-				System.out.println("mensaje vale: " + mensaje);
-			}
-			vista.addObject("mensaje", mensaje);
-
-			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = new GuardarAsignacionPlacaLaboratorioCentroBean();
-			formBeanGuardarAsignacionPlacaLaboratorioCentro.setIdPlaca(idPlaca);
-			formBeanGuardarAsignacionPlacaLaboratorioCentro.setNumAnalistasPermitidos(numAnalistas);
-			
-			formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(idPlaca, formBeanGuardarAsignacionPlacaLaboratorioCentro);
-						
-			vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
-			//vista.addObject("placaLaboratorioCentroAsignacionesBean", placaLaboratorioCentroAsignacionesBean);
-			//vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
-			//vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);			
-			//vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
-			//vista.addObject("beanListadoVoluntariosSinLaboratorioCentro", beanListadoVoluntariosSinLaboratorioCentro);
-			//vista.addObject("noSePuedeAsignarNuevosAnalistasAPlaca", noSePuedeAsignarNuevosAnalistasAPlaca);
-			return vista;
-		}
-		
-		
-		@RequestMapping(value = "/guardarAsignacionPlaca", method = RequestMethod.POST)
-		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public ModelAndView guardarAsignacionPlaca(@Valid @ModelAttribute("formBeanGuardarAsignacionPlaca") GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca,
-				BindingResult result, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
-			
-			//formBeanGuardarAsignacionPlaca traerá relleno solo los inputs que son las listas de id's seleccionados
-			if (result.hasErrors()) {	
-				System.out.println("estoy en hasErrors");
-				ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAPlaca");
-				//volvemos a calcular los datos que necesitamos para la vista
-				formBeanGuardarAsignacionPlaca = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(formBeanGuardarAsignacionPlaca.getIdPlaca(), formBeanGuardarAsignacionPlaca);
-				//asignamos lo que hemos cogido del formulario para no perderlo
-				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasLabSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados());
-				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasVolSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados());
-				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsVolSinLabCentroSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados());
-				vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlaca);
-				return vista;
-			} else {			
-				System.out.println("placa id: " + formBeanGuardarAsignacionPlaca.getIdPlaca());
-				System.out.println("analistas de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados().toString());
-				System.out.println("voluntarios de labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados().toString());
-				System.out.println("voluntarios sin labCentro seleccionados para asignar: " + formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados().toString());
-				
-				//llamamos a metodo de servicio que a partir de formBeanGuardarAsignacionPlaca recupere la placa y le asigne a todas sus muestras los nuevos analistas lab, analistas vol y otros vol
-				//y cambie el estado de las muestras a asignada analista			
-				laboratorioCentroServicio.guardarAsignacionesAnalistasYVoluntariosAPlacaYmuestras(formBeanGuardarAsignacionPlaca);
-				
-							
-				//vuelvo al formulario de asignacion de la placa
-				String idPlaca = String.valueOf(formBeanGuardarAsignacionPlaca.getIdPlaca());
-				redirectAttributes.addFlashAttribute("mensaje", "Asignaciones de placa guardadas");
-				return new ModelAndView(new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true));				
-			}
-		}
-		
-
-		//reemplazar analista
-		//metodo que recibe el analista a reemplazar y muestra los posibles analistas para permitir escoger el que lo reemplazara
-		//busca sus datos y los muestra en el modal
-		@RequestMapping(value = "/reemplazarAnalista", method=RequestMethod.GET)
-		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public String reemplazarAnalista(HttpSession session, //HttpServletRequest req,
-				@RequestParam("idUsuarioAReemplazar") Integer idUsuarioAReemplazar,
-				@RequestParam("idPlaca") Integer idPlaca,
-				Model model, Locale locale) {
-			
-			//metodo que recibe los codnum de muestras en los que se ha marcado el checkbox para cerrarlas
-			//busca esos resgistros, y presenta sus datos en una lista
-			System.out.println("Diana- getMapping reemplazarAnalista");				
-			
-			//String idUsuarioAReemplazarStr = req.getParameter("idUsuarioAReemplazar");				
-			System.out.println("el usuario a reemplazar es: " + idUsuarioAReemplazar);
-			//String idPlacaStr = req.getParameter("idPlaca");
-			//Integer idPlaca = Integer.valueOf(idPlacaStr);
-			System.out.println("la placa es: " + idPlaca);
-			
-			
-			
-			GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlacaLaboratorioCentro = new GuardarAsignacionPlacaLaboratorioCentroBean();
-			formBeanGuardarAsignacionPlacaLaboratorioCentro.setIdPlaca(idPlaca);
-			formBeanGuardarAsignacionPlacaLaboratorioCentro.setNumAnalistasPermitidos(numAnalistas);
-			
-			formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(idPlaca, formBeanGuardarAsignacionPlacaLaboratorioCentro);
-						
-			model.addAttribute("formBeanGuardarReemplazoAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
-			model.addAttribute("idUsuarioAReemplazar", idUsuarioAReemplazar);
-			
-		/*	//ESTOY AKIIIII
-			List<BeanListadoMuestraAnalisis> beanListadoMuestraAnalisis = this.findByClaves(claves);
-			
-			System.out.println("beanListadoMuestraAnalisis tiene: " + beanListadoMuestraAnalisis.size());
-				
-			model.addAttribute("listadoMuestras", beanListadoMuestraAnalisis);
-			return "VistaMuestrasMarcadasParaCerrar";
-		*/	
-			return "VistaReemplazarAnalista";
-			
-		}
-
-		@RequestMapping(value = "/guardaReemplazarAnalista", method = RequestMethod.POST)
-		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public ModelAndView guardaReemplazarAnalista(@ModelAttribute("formBeanGuardarReemplazoAsignacionPlaca") GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca,
-				BindingResult result, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
-			System.out.println("estoy en guardaReemplazarAnalista");
-			ModelAndView vista = new ModelAndView("VistaReemplazarAnalista");
-			//formBeanGuardarAsignacionPlaca traerá relleno solo los inputs que son las listas de id's seleccionados
-//			if (result.hasErrors()) {	
-//				System.out.println("estoy en hasErrors");
-//				ModelAndView vista = new ModelAndView("VistaReemplazarAnalista");
-//				//volvemos a calcular los datos que necesitamos para la vista
-//				formBeanGuardarAsignacionPlaca = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(formBeanGuardarAsignacionPlaca.getIdPlaca(), formBeanGuardarAsignacionPlaca);
-//				//asignamos lo que hemos cogido del formulario para no perderlo
-//				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasLabSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasLabSeleccionados());
-//				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsAnalistasVolSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsAnalistasVolSeleccionados());
-//				//formBeanGuardarAsignacionPlacaLaboratorioCentro.setListaIdsVolSinLabCentroSeleccionados(formBeanGuardarAsignacionPlaca.getListaIdsVolSinLabCentroSeleccionados());
-//				vista.addObject("formBeanGuardarReemplazoAsignacionPlaca", formBeanGuardarAsignacionPlaca);
-//				return vista;
-//			} else {
-				Integer idUsuarioAQuitar = Integer.valueOf(request.getParameter("idUsuarioAQuitar"));
-				Integer idUsuarioAPoner = Integer.valueOf(request.getParameter("idUsuarioAPoner"));
-				Integer idPlaca = Integer.valueOf(request.getParameter("idPlaca"));
-				System.out.println("placa id: " + idPlaca);
-				System.out.println("idUsuarioAQuitar: " + idUsuarioAQuitar);
-				System.out.println("idUsuarioAPoner: " + idUsuarioAPoner);
-				
-				//llamamos a metodo de servicio que recupere la placa y reemplaza un analista por otro en sus muestras
-				laboratorioCentroServicio.guardarReemplazoAnalistaDePlacaYmuestras(idPlaca, idUsuarioAQuitar, idUsuarioAPoner);
-							
-				//vuelvo al formulario de asignacion de la placa				
-				//redirectAttributes.addFlashAttribute("mensaje", "Reemplazo de analista realizado correctamente");
-				//return new ModelAndView(new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true));
-				//NO vuelvo a formulario de asignacion de la placa desde aquí, volveré desde jquery	
-				return vista;
-			}
-		//}
-		
-		//fin metodos de asignacion de analistas a placas
+		//FIN- JEFE DE SERVICIO: 2-REVISAR MUESTRAS
 
 		
 		
-		//FIN FUNCIONALIDAD JEFE: COGER PLACAS Y ASIGNAR ANALISTAS A PLACAS
+		
+		
 		
 		
 		//ANALISTA O VOLUNTARIOS (SOLO ANALIZAN)
 		
 		
-		//ANALISTAS- REVISAR PLACA		
+		//ANALISTAS: 1-REVISAR PLACA		
 		
 		@RequestMapping(value = "/listarPlacasAnalista", method = RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO')")
@@ -830,20 +824,11 @@ public class AnalisisControlador {
 
 			ModelAndView vista = new ModelAndView("ListadoPlacasARevisarAnalista");
 			
-			System.out.println("estoy en listarPlacasAsignadasAnalistaGET");
+			log.info("estoy en listarPlacasAsignadasAnalistaGET");
 			
 			//recupero el usuario logado
 			Usuario user = sesionServicio.getUsuario();
-			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
-			
-			/*
-			//si uso el sesionServicio tengo problemas cuando se pierde la sesion, si uso el securityContextHolder si no hay sesion lo hace bien y me lleva a la pagina de inicio			
-			PcrUserDetails pcrUserDetails = (PcrUserDetails) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			Usuario user = pcrUserDetails.getUsuario();
-			System.out.println("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
-			*/
-			
+			log.info("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
 			
 			
 			//Placas Pendientes: buscamos las placas pendientes de revisar por el analista
@@ -861,8 +846,8 @@ public class AnalisisControlador {
 			criteriosBusquedaPlacaAsignadaParaRevision.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum());
 			criteriosBusquedaPlacaAsignadaParaRevision.setValoracion(null);
 			List<PlacaLaboratorioCentroAsignacionesAnalistaBean> listaPlacasAsignadasParaRevision = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevision, pageable).getContent();
-			System.out.println("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.size());
-			System.out.println("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.toString());
+			log.info("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.size());
+			log.info("listaPlacasAsignadasParaRevision tiene: "+ listaPlacasAsignadasParaRevision.toString());
 			
 			
 			//Placas Valoradas por analista: 
@@ -882,10 +867,7 @@ public class AnalisisControlador {
 			//criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setIdEstadoMuestras(BeanEstado.Estado.MUESTRA_RESUELTA.getCodNum());
 			criteriosBusquedaPlacaAsignadaParaRevisionYaValorada.setValoracion("X"); //pongo cualquier dato distinto de null
 			List<PlacaLaboratorioCentroAsignacionesAnalistaBean> listaPlacasAsignadasParaRevisionYaRevisadas = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaRevisionYaValorada, pageable).getContent();
-			System.out.println("listaPlacasAsignadasParaRevisionYaRevisadas tiene: "+ listaPlacasAsignadasParaRevisionYaRevisadas.size());
-			
-			
-			
+			log.info("listaPlacasAsignadasParaRevisionYaRevisadas tiene: "+ listaPlacasAsignadasParaRevisionYaRevisadas.size());
 			
 			
 			//vista.addObject("listaPlacasListasParaAnalisis", listaPlacasListasParaAnalisis);
@@ -925,8 +907,8 @@ public class AnalisisControlador {
 				vista.addObject("elementoDoc", bean);
 				return vista;
 			} else {
-				System.out.println("El nombre de la hoja es: " + bean.getHoja());
-				System.out.println("El nombre de la columna es: " + bean.getColumna());
+				log.info("El nombre de la hoja es: " + bean.getHoja());
+				log.info("El nombre de la columna es: " + bean.getColumna());
 				//guardamos el documento excel asociandolo a la placa 
 				documentoServicio.guardar(bean);
 				//guardamos las valoraciones de las muestras que ha puesto el analista en el excel y si es el ultimo analista de los numAnalistas globales de la aplicacion
@@ -938,21 +920,22 @@ public class AnalisisControlador {
 			return new ModelAndView(new RedirectView("/analisis/cargaResultados/placaLaboratorio/?id=" + bean.getId() + "&url=" + bean.getCodiUrl(), true));
 		}
 		
-		//FIN ANALISTAS-REVISAR PLACA
+		//FIN- ANALISTAS: 1-REVISAR PLACA
 		
-		//ANALISTAS- REVISAR MUESTRA		
+		
+		//ANALISTAS: 2- REVISAR MUESTRA	(YA NO SE USA)	
 		@RequestMapping(value = "/listarMuestrasAnalista", method = RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO')")
 		public ModelAndView listarMuestrasAsignadasAnalistaGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
 
 			ModelAndView vista = new ModelAndView("ListadoMuestrasARevisarAnalista");
 			
-			System.out.println("estoy en listarMuestrasAsignadasAnalistaGET");
+			log.info("estoy en listarMuestrasAsignadasAnalistaGET");
 			//recupero el usuario logado
 			User user = (User) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
 			Usuario usuario = usuarioServicio.findByEmail(user.getUsername());
-			System.out.println("usuario logado: " + usuario.getNombre() + " del idLaboratorioCentro: " + usuario.getIdLaboratorioCentro());
+			log.info("usuario logado: " + usuario.getNombre() + " del idLaboratorioCentro: " + usuario.getIdLaboratorioCentro());
 
 			/*
 			// Buscamos las placas con estado 'Lista para análisis' (ya han salido de la maquina, tienen cargado un resultado pcr y estan listas para analizar)
@@ -961,7 +944,7 @@ public class AnalisisControlador {
 			criteriosBusquedaPlacaListaParaAnalisis.setIdEstadoPlaca(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());
 			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
 			List<PlacaLaboratorioCentroBean> listaPlacasListasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaListaParaAnalisis, pageable).getContent();
-			System.out.println("listaPlacasListasParaAnalisis tiene: "+ listaPlacasListasParaAnalisis.size());
+			log.info("listaPlacasListasParaAnalisis tiene: "+ listaPlacasListasParaAnalisis.size());
 			
 			// Buscamos las placas con estado 'Asignada para análisis' (un jefe ya las ha puesto bajo su responsabilidad)
 			// del centro del usuario jefe logado 
@@ -971,7 +954,7 @@ public class AnalisisControlador {
 			criteriosBusquedaPlacaListaParaAnalisis.setIdLaboratorioCentro(user.getIdLaboratorioCentro());
 			criteriosBusquedaPlacaAsignadaParaAnalisis.setIdJefe(user.getId());
 			List<PlacaLaboratorioCentroBean> listaPlacasAsignadasParaAnalisis = laboratorioCentroServicio.buscarPlacas(criteriosBusquedaPlacaAsignadaParaAnalisis, pageable).getContent();
-			System.out.println("listaPlacasAsignadasParaAnalisis tiene: "+ listaPlacasAsignadasParaAnalisis.size());			
+			log.info("listaPlacasAsignadasParaAnalisis tiene: "+ listaPlacasAsignadasParaAnalisis.size());			
 			
 			//this.agregarListasDesplegables(vista);
 			//vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
@@ -996,7 +979,7 @@ public class AnalisisControlador {
 			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
 			if (inputFlashMap != null) {
 				mensaje = (String) inputFlashMap.get("mensaje");
-				System.out.println("mensaje vale: " + mensaje);
+				log.info("mensaje vale: " + mensaje);
 			}
 			vista.addObject("mensaje", mensaje);
 
@@ -1005,7 +988,7 @@ public class AnalisisControlador {
 			//beanMuestra.setResultado("P");
 			
 			List<BeanElemento> beanListadoPosiblesResultadosMuestra = getBeanListadoPosiblesResultadosMuestra();
-			System.out.println("el beanListadoPosiblesResultadosMuestra tiene: " + beanListadoPosiblesResultadosMuestra.toString());
+			log.info("el beanListadoPosiblesResultadosMuestra tiene: " + beanListadoPosiblesResultadosMuestra.toString());
 			
 			vista.addObject("beanMuestra", beanMuestra);
 			vista.addObject("beanListadoPosiblesResultadosMuestra", beanListadoPosiblesResultadosMuestra);	
@@ -1020,8 +1003,8 @@ public class AnalisisControlador {
 		public RedirectView guardarRevisionAnalista(@ModelAttribute("beanMuestra") MuestraBean beanMuestra,
 				HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
 			
-			System.out.println("muestra id: " + beanMuestra.getId());
-			System.out.println("resultado seleccionado por el analista: " + beanMuestra.getResultado());			
+			log.info("muestra id: " + beanMuestra.getId());
+			log.info("resultado seleccionado por el analista: " + beanMuestra.getResultado());			
 			
 			//TODO llamar a metodo de servicio que a partir de beanMuestra recupere la muestra y le asigne el resultado escogido por el jefe
 			
@@ -1036,7 +1019,9 @@ public class AnalisisControlador {
 			redirectAttributes.addFlashAttribute("mensaje", "Resultado de muestra guardado");
 			return new RedirectView("/analisis/revisarAnalista?idMuestra="+idMuestra, true);
 		}
-		//ANALISTAS- REVISAR MUESTRA	
+		
+		//FIN- ANALISTAS: 2- REVISAR MUESTRA	(YA NO SE USA)	
+			
 		
 		//FIN ANALISTA O VOLUNTARIOS (SOLO ANALIZAN)
 		
@@ -1045,21 +1030,7 @@ public class AnalisisControlador {
 		
 		
 		
-		/*
-		@RequestMapping(value = "/gestionPlacas/resultados", method = RequestMethod.POST)
-		@PreAuthorize("hasAnyRole('RESPONSANBLEPCR','ADMIN')")
-		public ModelAndView buscarPlacasEsperandoResultadosPOST(HttpSession session, 
-				@ModelAttribute BusquedaPlacaLaboratorioBean criteriosBusqueda, 
-				@PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
-
-			ModelAndView vista = new ModelAndView("ListadoPlacasEsperandoResultadosPCR");
-			List<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, pageable).getContent();
-
-			vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
-			vista.addObject("listaPlacas", listaPlacas);
-			return vista;
-		}
-		*/
+		
 		
 		
 		/*
@@ -1081,95 +1052,8 @@ public class AnalisisControlador {
 		*/
 		
 		
-//		@RequestMapping(value="/nueva", method=RequestMethod.GET)
-//		@PreAuthorize("hasAnyRole('ADMIN')")
-//		public ModelAndView nuevaMuestra(HttpSession session) throws Exception {
-//			ModelAndView vista = new ModelAndView("VistaMuestra");
-//		
-//			BeanMuestraCentro beanMuestra = new BeanMuestraCentro();
-//			beanMuestra.setFechaEntrada(new Date());
-//			
-//			vista.addObject("beanMuestra", beanMuestra);
-//			return vista;
-//		}
-		
-//		@RequestMapping(value="/{id}", method=RequestMethod.GET)
-//		@PreAuthorize("hasAnyRole('ADMIN')")
-//		public ModelAndView consultaMuestras(HttpSession session, @PathVariable Integer id) throws Exception {
-//			ModelAndView vista = new ModelAndView("VistaMuestra");
-//			
-//			BeanMuestraCentro beanMuestra = getBeanCentro(id.intValue());
-//		
-//			
-//			vista.addObject("beanMuestra", beanMuestra);
-//			return vista;
-//		}
-		
-//		@RequestMapping(value="/guardar", method=RequestMethod.POST)
-//		@PreAuthorize("hasAnyRole('ADMIN')")
-//		public ModelAndView nuevaMuestra(@Valid @ModelAttribute("beanMuestra") BeanMuestraCentro beanMuestra, BindingResult result) throws Exception {
-//			ModelAndView vista = new ModelAndView("VistaMuestra");
-//		
-//			if (result.hasErrors()) {
-//				vista.addObject("beanMuestra", beanMuestra);
-//				return vista;			
-//			} else {
-//				// TODO - GUARDAR
-//				ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/muestra/", true));
-//				return respuesta;
-//			}
-//		}
 		
 
-		public BeanListadoMuestraAnalisis getBean(int i) {
-			BeanListadoMuestraAnalisis bean = new BeanListadoMuestraAnalisis();
-			bean.setId(i);
-			bean.setNombrePaciente("Paciente " + i);
-			bean.setNhcPaciente("nhc-" + i);
-			bean.setEtiquetaMuestra("etiquetaM-" + i);
-			bean.setRefInternaMuestra("refInternaM-" + i);
-			bean.setFechaEnvioMuestraIni(new Date());
-			bean.setFechaResultadoMuestraIni(new Date());
-			bean.setEstadoMuestra("Pendiente");
-			if (i > 2) {
-				bean.setEstadoMuestra("Negativo");
-			}
-			//bean.setCodNumLote("codLote-" + i);
-			
-			Date date = new Date(); // your date
-		    Calendar cal = Calendar.getInstance();
-		    cal.setTime(date);
-			BeanAnalisis beanAnalisis  = new BeanAnalisis();
-			BeanListaAsignaciones beanListaAsignaciones = new BeanListaAsignaciones();
-			//usuarios que analizan, 2 analistas y 2 voluntario
-			for(int j=0;j<2; j++) {
-				BeanAsignacion beanAsigAna = new BeanAsignacion();
-				BeanUsuario ana = new BeanUsuario();
-				ana.setId(j);
-				ana.setNom("analista-" + j);
-				ana.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_ANALISTALABORATORIO));
-				beanAsigAna.setBeanUsuario(ana);				
-				beanAsigAna.setFechaAsignacion(date);
-				beanAsigAna.setValoracion("P");
-				beanListaAsignaciones.getListaAnalistasLab().add(beanAsigAna);
-				
-				BeanAsignacion beanAsigVol = new BeanAsignacion();
-				BeanUsuario vol = new BeanUsuario();
-				vol.setId(j);
-				vol.setNom("voluntario-" + j);
-				vol.setBeanRolUsuario(new BeanRolUsuario(RolUsuario.ROL_USUARIO_VOLUNTARIO));
-				beanAsigVol.setBeanUsuario(vol);				
-				beanAsigVol.setFechaAsignacion(date);
-				beanAsigVol.setValoracion("N");
-				beanListaAsignaciones.getListaAnalistasVol().add(beanAsigVol);
-			}
-			beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
-			bean.setBeanAnalisis(beanAnalisis);		
-			bean.setEsCerrable(true); //lo pongo a true para que esté habilitado el check
-			
-			
-			return bean;
-		}
 		
 		
 		
@@ -1273,31 +1157,6 @@ public class AnalisisControlador {
 		}
 		
 		
-//		public BeanMuestraCentro getBeanCentro(int i) {
-//			BeanMuestraCentro bean = new BeanMuestraCentro();
-//			bean.setId(i);
-//			bean.setNombreApellidos("Paciente " + i);
-//			bean.setNhc("nhc-" + i);
-//			bean.setEtiqueta("etiquetaM-" + i);
-//			bean.setRefInterna("refInternaM-" + i);
-//			bean.setFechaEntrada(new Date());
-//			bean.setFechaResultado(new Date());
-//			//bean.setResultado("Pendiente");
-//			bean.setTipoMuestra("N");
-//			
-//			return bean;
-//		}
-		
-		/*@RequestMapping(value="", method=RequestMethod.POST)	
-		public ModelAndView grabarAltaLaboratorio ( @ModelAttribute("formBeanLaboratorio") BeanLaboratorio beanLaboratorio, HttpSession session) throws Exception {
-
-			System.out.println("Laboratorio a grabar: " + beanLaboratorio.toString());
-			
-			// Volvemos a grabar mas centros
-			ModelAndView vista = new ModelAndView(new RedirectView("AltaLaboratorio",true));	
-			return vista;
-			
-		}*/	
 
 
 }
