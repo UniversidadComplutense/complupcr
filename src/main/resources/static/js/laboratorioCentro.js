@@ -50,6 +50,34 @@ function revisarEstadoBotonRellenarPlaca(){
 	}
 }
 
+// Inhabilita buscar por fechas si no se ha seleccionado el estado, para buscar
+// por fecha de envío o de recepción
+function revisarFechas(){
+	
+	if ($('#selectorEstados option:selected').text() == 'Seleccione'){
+		$('#fechaInicio').val(null);
+		$('#fechaInicio').attr('disabled','disabled');
+		$('#fechaFin').val(null);
+		$('#fechaFin').attr('disabled','disabled');		
+	} else {
+		$('#fechaInicio').removeAttr('disabled');
+		$('#fechaFin').removeAttr('disabled');
+	}
+}
+
+function borrarInputs(){
+
+	$('#selectorCapacidad').val(null);
+	$('#selectorEstados').val(0);
+	$('#fechaInicio').val(null);
+	$('#fechaFin').val(null);
+}
+
+function borrarCodigo(){
+
+	$('#codigo').val(null);
+}
+
 // Confirmar la recepción de una placa Visavet
 function confirmarRecepcionPlacaVisavet(){	
 	$("#formGuardarRecepcionPlaca").submit();

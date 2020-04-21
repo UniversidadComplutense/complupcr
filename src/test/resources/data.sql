@@ -72,6 +72,10 @@ INSERT INTO laboratorioVisavet (id, nombre, ocupacion) VALUES
 --
 INSERT INTO laboratorioCentro (id, nombre) VALUES 
 	(1,'DemoCentro1');
+	
+--- Dumping data for table equipo
+INSERT INTO equipo (id, nombre, capacidad, IdLaboratorio) VALUES
+	(1, 'Equipo PCR-01', 300, 1);
 
 ---
 --- Usuarios para test

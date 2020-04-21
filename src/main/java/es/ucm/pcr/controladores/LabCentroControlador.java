@@ -297,7 +297,7 @@ public class LabCentroControlador {
 	
 	@RequestMapping(value = "/gestionPlacas/nueva", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
-	public ModelAndView nuevaPlacaGET(HttpSession session, @PageableDefault(page = 0, value = 120) Pageable pageable) throws Exception {
+	public ModelAndView nuevaPlacaGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
 	
 		ModelAndView vista = new ModelAndView("PlacaLaboratorio");
 		this.agregarEquiposPCR(vista);

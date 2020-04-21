@@ -14,22 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.ActiveProfiles;
 
-import es.ucm.pcr.beans.BeanCentro;
-import es.ucm.pcr.beans.BeanLaboratorioVisavet;
-import es.ucm.pcr.beans.BeanRol;
-import es.ucm.pcr.beans.BeanUsuarioGestion;
 import es.ucm.pcr.modelo.orm.Centro;
+import es.ucm.pcr.modelo.orm.Equipo;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
-import es.ucm.pcr.utilidades.Utilidades;
 
 @ActiveProfiles(profiles = "test")
 @SpringBootTest
@@ -53,6 +45,11 @@ public class GestorCrudServiciosTests {
 
 	@Autowired
 	UsuarioServicio usuarioServicio;
+	
+	@Autowired
+	EquipoServicio equipoServicio;
+	
+	static Integer idLAbCentro;
 
 	
 	@Test
@@ -128,7 +125,13 @@ public class GestorCrudServiciosTests {
 			laboratorioCentroServicio.save(labCentro);
 			labCentro = new LaboratorioCentro();
 			labCentro.setNombre("Biología PCR");
-			laboratorioCentroServicio.save(labCentro);
+			LaboratorioCentro labCentro2 =  laboratorioCentroServicio.save(labCentro);
+			
+			//Pasamos el id para sucesivos tests
+			GestorCrudServiciosTests.idLAbCentro = labCentro2.getId();
+			
+			LaboratorioCentro labCentro3 = laboratorioCentroServicio.findById(GestorCrudServiciosTests.idLAbCentro).get();
+			assertEquals("Biología PCR", labCentro3.getNombre(),"El nombre del laboratorio debería ser Biología PCR y no es así.");
 
 		} catch (
 
@@ -211,4 +214,32 @@ public class GestorCrudServiciosTests {
 			fail("Falló la prueba de inicialización básica de Usuarios.");
 		}
 	}	
+	@Test
+	@Order(5)
+	public void inicializacionBasicaEquiposPCR() {
+		try {
+			//Recuperamos el laboratorio centro
+			LaboratorioCentro labCentro = laboratorioCentroServicio.findById(GestorCrudServiciosTests.idLAbCentro).get();
+			
+			//Damos de alta un equipo
+			Equipo equipo = new Equipo();
+			equipo.setLaboratorioCentro(labCentro);
+			equipo.setNombre("Equipo PCR 1");
+			equipo.setCapacidad(100);
+			equipo = equipoServicio.save(equipo);
+			
+			//Comprobamos
+			Equipo equipo2 = equipoServicio.findById(equipo.getId()).get();
+			assertEquals("Equipo PCR 1", equipo2.getNombre(), "El equipo debería llamarse 'Equipo PCR 1' y no es así.");
+			
+			List<Equipo> equipos = equipoServicio.findByLaboratorioCentro(labCentro);
+			assertEquals(1, equipos.size(), "Debería haber un equipo y hay " + equipos.size());
+			assertEquals("Equipo PCR 1", equipos.get(0).getNombre(), "El equipo debería llamarse 'Equipo PCR 1' y no es así.");
+		} catch (
+
+		Exception e) {
+			e.printStackTrace();
+			fail("Falló la prueba de inicialización básica de laboratorios centro.");
+		}
+	}
 }

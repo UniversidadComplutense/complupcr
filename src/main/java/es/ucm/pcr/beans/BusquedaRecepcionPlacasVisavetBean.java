@@ -10,8 +10,6 @@ public class BusquedaRecepcionPlacasVisavetBean {
 	private Integer idEstadoPlaca;
 	private Date fechaBusquedaInicio;
 	private Date fechaBusquedaFin;
-	private Date fechaAsignadaInicio;
-	private Date fechaAsignadaFin;
 	private Date fechaEnviadaInicio;
 	private Date fechaEnviadaFin;
 	private Date fechaRecepcionInicio;
@@ -57,22 +55,6 @@ public class BusquedaRecepcionPlacasVisavetBean {
 
 	public void setFechaBusquedaFin(Date fechaBusquedaFin) {
 		this.fechaBusquedaFin = fechaBusquedaFin;
-	}
-
-	public Date getFechaAsignadaInicio() {
-		return fechaAsignadaInicio;
-	}
-
-	public void setFechaAsignadaInicio(Date fechaAsignadaInicio) {
-		this.fechaAsignadaInicio = fechaAsignadaInicio;
-	}
-
-	public Date getFechaAsignadaFin() {
-		return fechaAsignadaFin;
-	}
-
-	public void setFechaAsignadaFin(Date fechaAsignadaFin) {
-		this.fechaAsignadaFin = fechaAsignadaFin;
 	}
 
 	public Date getFechaEnviadaInicio() {
