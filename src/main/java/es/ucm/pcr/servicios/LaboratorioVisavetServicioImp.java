@@ -154,6 +154,7 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	
 	// JAVI para buscar una placa Visavet e incorporarla a 'BusquedaPlacasVisavetBean'
 	@Override
+	@Transactional
 	public PlacaLaboratorioVisavetBean buscarPlaca(Integer id) throws Exception {
 		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(id);
 		if (placa.isPresent()) {

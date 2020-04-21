@@ -22,10 +22,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import es.ucm.pcr.config.security.UserDetailsTestConfig;
 import es.ucm.pcr.controladores.InicioControlador;
 
 @ActiveProfiles(profiles = "test")
-@SpringBootTest
+@SpringBootTest(classes = UserDetailsTestConfig.class)
 @AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
 public class PcrCovid19ApplicationTests {

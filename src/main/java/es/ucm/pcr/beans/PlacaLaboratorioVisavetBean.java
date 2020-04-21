@@ -131,6 +131,7 @@ public class PlacaLaboratorioVisavetBean {
 			muestraBean.setEstado(muestra.getEstadoMuestra().getDescripcion());
 			muestraBean.setEtiqueta(muestra.getEtiqueta());
 			muestraBean.setRefInterna(muestra.getRefInternaVisavet());
+			muestraBean.setIdPlacaVisavet(placaVisavet.getId());
 			listadoMuestras.add(muestraBean);
 		}
 		bean.setMuestras(listadoMuestras);

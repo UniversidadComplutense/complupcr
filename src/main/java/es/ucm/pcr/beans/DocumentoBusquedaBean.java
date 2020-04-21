@@ -1,5 +1,7 @@
 package es.ucm.pcr.beans;
 
+import java.util.List;
+
 public class DocumentoBusquedaBean {
 
 	private Integer id;
@@ -10,6 +12,7 @@ public class DocumentoBusquedaBean {
 	private Integer idPlacaLaboratorio;
 	private Integer idPlacaVisavet;
 	private String tipo;
+	private List<Integer> placasVisavet;
 
 	public DocumentoBusquedaBean() {
 	}
@@ -76,6 +79,14 @@ public class DocumentoBusquedaBean {
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+
+	public List<Integer> getPlacasVisavet() {
+		return placasVisavet;
+	}
+
+	public void setPlacasVisavet(List<Integer> placasVisavet) {
+		this.placasVisavet = placasVisavet;
 	}
 	
 	

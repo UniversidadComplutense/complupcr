@@ -16,7 +16,7 @@
 	<div th:if="${mensaje != null}" class="alert alert-warning">
 		<span th:text="${mensaje}"></span>
 	</div>
-	<form action="#" th:action="@{/laboratorioCentro/recepcionPlacas/recepcionar}" method="post" th:object="${placa}" id="formGuardar" role="form">
+	<form action="#" th:action="@{/laboratorioCentro/recepcionPlacas/recepcionar}" method="post" th:object="${placa}" id="formGuardarRecepcionPlaca" role="form">
 		<input type="hidden" th:field="${placa.id}"  th:value="${placa.id}" />
 		<input type="hidden" name="estado" th:value="${placa.beanEstado.estado.codNum}" th:if="${placa.beanEstado} != null"/> 
 		<fieldset id="datosPlaca" class="form-group border p-2" th:disabled="true">
@@ -50,6 +50,33 @@
 				</div>				
 			</div>					
 		</fieldset>
+	
+		
+		<!-- MODAL CONFIRMAR RECEPCIONAR PLACA -->							
+		<div class="modal fade" th:id="modal-confirmarRecepcion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+			<div class="modal-dialog modal-md" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<div>	
+		        			<h5 class="modal-title" id="exampleModalLabel"><b><span th:text="'Placa VISAVET ' + ${placa.id}"></span></b></h5>
+		        		</div>
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+		          			<span aria-hidden="true">&times;</span>
+		        		</button>
+		      		</div>
+		      		<div class="modal-body">	      										        
+			          	<div class="col-10 form-group">
+			          		<h6>¿Confirma que desea recepcionar la placa?</h6>	          		
+						</div>								        
+		      		</div>
+				    <div class="modal-footer">
+				    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+				    	<button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="confirmarRecepcionPlacaVisavet();">Confirmar</button>						        
+					</div>
+		    	</div>
+		  	</div>
+		</div>
+		<!-- FIN MODAL CONFIRMAR RECEPCIONAR PLACA -->
 		
 
 		<!-- ACCCIONES -->
@@ -58,7 +85,7 @@
 				<button type="button" th:onclick="'window.location.href = \'' + @{/laboratorioCentro/recepcionPlacas} + '\''" class="btn btn-secondary">Volver</button>				
 			</div>			
 			<div th:if="${recepcionable}" class="col-2 justify-content-begin mt-3">
-				<button th:disabled="!${recepcionable}" type="submit" class="btn btn-secondary">Recepcionar placa</button>
+				<button th:disabled="!${recepcionable}" data-toggle="modal" data-target="#modal-confirmarRecepcion" type="button" class="btn btn-secondary">Recepcionar placa</button>
 			</div>			
 		</div>					
 	</form>

@@ -24,4 +24,21 @@ public interface DocumentoRepositorio extends PagingAndSortingRepository<Documen
 			+ "and (:#{#params.idPlacaVisavet} is null or documento.placaVisavet.id = :#{#params.idPlacaVisavet})"
 			+ "and (:#{#params.tipo} is null or documento.tipo = :#{#params.tipo}) ")
 	public List<Documento> findByParams(@Param("params") DocumentoBusquedaBean params);
+	
+	
+	
+	@Query("SELECT documento FROM Documento documento "
+			+ "WHERE 1=1 "
+			+ "and (:#{#params.id} is null or documento.id = :#{#params.id}) "
+			+ "and (:#{#params.idCentro} is null or documento.centro.id = :#{#params.idCentro}) "
+			+ "and (:#{#params.idLaboratorioCentro} is null or documento.laboratorioCentro.id = :#{#params.idLaboratorioCentro}) "
+			+ "and (:#{#params.idLaboratorioVisavet} is null or documento.laboratorioVisavet.id = :#{#params.idLaboratorioVisavet}) "
+			+ "and (:#{#params.idMuestra} is null or documento.muestra.id = :#{#params.idMuestra}) "
+			+ "and (:#{#params.idPlacaLaboratorio} is null or documento.placaLaboratorio.id = :#{#params.idPlacaLaboratorio}) "
+			+ "or  (:#{#params.placasVisavet} is null or documento.placaVisavet.id in (:#{#params.placasVisavet}))"
+			+ "and (:#{#params.idPlacaVisavet} is null or documento.placaVisavet.id = :#{#params.idPlacaVisavet})"
+			+ "and (:#{#params.tipo} is null or documento.tipo = :#{#params.tipo}) ")
+	public List<Documento> findDocuPlacaLabYPlacaVis(@Param("params") DocumentoBusquedaBean params);
+	
+	
 }

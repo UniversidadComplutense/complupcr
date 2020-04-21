@@ -50,6 +50,11 @@ function revisarEstadoBotonRellenarPlaca(){
 	}
 }
 
+// Confirmar la recepción de una placa Visavet
+function confirmarRecepcionPlacaVisavet(){	
+	$("#formGuardarRecepcionPlaca").submit();
+}
+
 // Dar por finalizado PCR de una placa
 function finalizarPCR() {
     $("#formGuardarFinalizadoPCR").submit();

@@ -82,7 +82,7 @@
 				<tbody>
 					<tr th:if="*{documentos != null}" th:each="doc : *{documentos}">
 						<td>
-							<span th:text="${doc.nombreDocumento}"></span>
+							<span th:text="${doc.nombreDocumento}"  th:style ="${doc.idUsuario} == ${idUsuario} ? 'font-weight: bold' : 'font-weight: normal' "></span>
 						</td>
 						<td>
 							<span th:text="${doc.tamanioDocumento}"></span>

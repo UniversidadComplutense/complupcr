@@ -34,6 +34,7 @@ import es.ucm.pcr.beans.DocumentoBean;
 import es.ucm.pcr.beans.DocumentoBusquedaBean;
 import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.servicios.DocumentoServicio;
+import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.validadores.DocumentoValidador;
 
 @Controller
@@ -48,6 +49,9 @@ public class DocumentoControlador {
 
 	@Autowired
 	private DocumentoServicio documentoServicio;
+	
+	@Autowired
+	SesionServicio sesionServicio;
 
 	private Map<Integer, String> ACCIONES_MENSAJE = Stream
 			.of(new Object[][] { { ACCION_GUARDAR_DOCUMENTO, "Documento guardado correctamente" },
@@ -122,14 +126,18 @@ public class DocumentoControlador {
 			@RequestParam(value = "url", required = true) Integer url) throws Exception {
 		ModelAndView vista = new ModelAndView("VistaDocumentacion");
 
-		ElementoDocumentacionBean elementoDoc = documentoServicio.obtenerDocumentosPlacaLaboratorio(id);
-		elementoDoc.setCodiUrl(url);
-		if (url == URL_VOLVER_PLACA_LABORATORIO_DESDE_ASIGNAR_RESULTADOS_PCR) {
+		ElementoDocumentacionBean elementoDoc = documentoServicio.obtenerDocumentosPlacaLaboratorioYPlacasVisavet(id);
+		
+		if (url == URL_VOLVER_PLACA_LABORATORIO_DESDE_ASIGNAR_RESULTADOS_PCR) {			
 			elementoDoc.setUrlVolver(URL_VOLVER.get(url) + id);
 		} else {
 			elementoDoc.setUrlVolver(URL_VOLVER.get(url));
-		}		
+		}
+		elementoDoc.setCodiUrl(url);
 		vista.addObject("elementoDoc", elementoDoc);
+		
+		// Para destacar en negrilla los documentos del usuario logado
+		vista.addObject("idUsuario", sesionServicio.getUsuario().getId());
 		return vista;
 	}
 

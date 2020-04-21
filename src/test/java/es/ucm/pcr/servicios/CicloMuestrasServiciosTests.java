@@ -1,8 +1,14 @@
 package es.ucm.pcr.servicios;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +22,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +31,8 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.ucm.pcr.beans.BeanEstado;
@@ -42,8 +51,10 @@ import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
 import es.ucm.pcr.beans.PaginadorBean;
+import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
 import es.ucm.pcr.config.security.UserDetailsTestConfig;
 import es.ucm.pcr.modelo.orm.Centro;
+import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Usuario;
@@ -51,13 +62,14 @@ import es.ucm.pcr.utilidades.Utilidades;
 
 /**
  * Para estos tests, asumimos que los usuarios y roles están ya en la BD. Se
- * cargan el el script /src/test/resources/dats.sql
+ * cargan el el script /src/test/resources/data.sql
  * 
  * @author pmarrasant
  *
  */
 @ActiveProfiles(profiles = "test")
 @SpringBootTest(classes = UserDetailsTestConfig.class)
+@AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
 public class CicloMuestrasServiciosTests {
 
@@ -90,6 +102,11 @@ public class CicloMuestrasServiciosTests {
 
 	@Autowired
 	private DocumentoServicio documentoServicio;
+	
+	@Autowired
+	MockMvc mockMvc;
+
+	static Integer placaVisavetId = 0;
 
 	@Test
 	@Order(1)
@@ -535,9 +552,51 @@ public class CicloMuestrasServiciosTests {
 			assertEquals(1,placac.getIdLaboratorioCentro(), "La placa no está asignada al laboratorio centro correcto.");
 			ElementoDocumentacionBean eleDoc2 = documentoServicio.obtenerDocumentosPlacaVisavet(placac.getId());
 			assertEquals(1, eleDoc2.getDocumentos().size(),"Debería haber un documento exactamente asociado a la placa.");
+			
+			//Los pasamos al test siguiente.
+			CicloMuestrasServiciosTests.placaVisavetId = placac.getId();
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Falló la prueba para técnico Visavet Placas");
+		}
+	}
+	
+	@Test
+	@Order(5)
+	@WithUserDetails("responsablepcr@ucm.es")
+	public void responsablePCRRecepcionPlacas() {
+		try {
+			//Entramos en la pantalla de recepción de placas Visavet en Centro PCR
+			//Tenemos que tener el id de la placa y las 2 referencias internas de nuestras
+			//muestras en el contenido de la respuesta
+			this.mockMvc.perform(get("http://localhost/laboratorioCentro/recepcionPlacas/list"))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("<td><span>"+CicloMuestrasServiciosTests.placaVisavetId+"</span></td>")))
+				.andExpect(content().string(containsString("Interna1")))
+				.andExpect(content().string(containsString("Interna2")));
+			//Ahora vamos a recepcionarla
+			this.mockMvc.perform(get("http://localhost/laboratorioCentro/recepcionPlacas/recepcionar?id="+CicloMuestrasServiciosTests.placaVisavetId))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("<input type=\"text\" class=\"form-control form-control-sm\" value=\""+CicloMuestrasServiciosTests.placaVisavetId+"\"/>")));
+			MockHttpServletRequestBuilder recepcionar = post("http://localhost/laboratorioCentro/recepcionPlacas/recepcionar")
+						.param("id",CicloMuestrasServiciosTests.placaVisavetId.toString());
+			this.mockMvc.perform(recepcionar)
+				.andDo(print())
+				.andExpect(status().isOk())  // TODO: MAL. No se aplica patrón PCR en este controlador POST. Corregir controlador y test
+				.andExpect(content().string(containsString("<span>La placa "+CicloMuestrasServiciosTests.placaVisavetId+" se ha recepcionado correctamente.</span>")));
+			
+			//Vamos a recuperar la placa para comprobar que está recepcionada
+			PlacaLaboratorioVisavetBean placa = laboratorioVisavetServicio.buscarPlaca(CicloMuestrasServiciosTests.placaVisavetId);
+			assertTrue(placa.getFechaRecepcion() != null, "La placa no tiene fecha de recepción en laboratorio centro y debería.");
+			BeanEstado estadoPlaca = new BeanEstado();
+			estadoPlaca.setEstado(Estado.PLACAVISAVET_RECIBIDA);
+			estadoPlaca.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
+			assertEquals(estadoPlaca.getEstado().getCodNum(), placa.getBeanEstado().getEstado().getCodNum(),"La placa no está en estado recido y debería.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Falló la prueba para responsable PCR recepción placas");
 		}
 	}
 }
