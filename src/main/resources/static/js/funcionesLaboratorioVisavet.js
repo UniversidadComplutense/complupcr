@@ -424,3 +424,18 @@ var respuesta=true;
 	 return respuesta;
 
 }
+function guardarReferencias(){
+	var nFilas = $("#tablaResultados .trGroupLotes").length;
+	
+	var referenciaLotes="";
+	if (nFilas>0) {
+	 
+	 for (var i=0; i<nFilas;i++){
+		 var lote=$("#id"+i).val();
+		 var referencia=$("#referenciaLote"+i).val();
+		 referenciaLotes+=lote+"_"+referencia+":";
+		 
+	 }
+	}
+	if (referenciaLotes != "") window.location="/laboratorioUni/guardarReferenciaLotes?lotes="+referenciaLotes;
+}

@@ -111,6 +111,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 			     listaMuestrasVisavet.add(muestraBeanLaboratorioVisavet);
 				}
 				lotePlaca.setListaMuestras(listaMuestrasVisavet);
+				lotePlaca.setReferenciaInternaLote(unResultado.getReferenciaInternaLote());
 				listaBeans.add(lotePlaca);
 			}
 		

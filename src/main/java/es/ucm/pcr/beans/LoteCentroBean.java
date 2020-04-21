@@ -22,6 +22,8 @@ public class LoteCentroBean {
 	private boolean tieneMuestras;
 	private Integer numeroMuestras;
 	private Date fechaRecibido;
+	private Integer referenciaInternaLote;
+	private String errorReferenciaInternaLote;
 	public LoteCentroBean() {
 		super();	
 	}
@@ -119,6 +121,21 @@ public class LoteCentroBean {
 	public void setFechaRecibido(Date fechaRecibido) {
 		this.fechaRecibido = fechaRecibido;
 	}
+	public Integer getReferenciaInternaLote() {
+		return referenciaInternaLote;
+	}
+	public void setReferenciaInternaLote(Integer referenciaInternaLote) {
+		this.referenciaInternaLote = referenciaInternaLote;
+	}
+	
+	
+	public String getErrorReferenciaInternaLote() {
+		return errorReferenciaInternaLote;
+	}
+
+	public void setErrorReferenciaInternaLote(String errorReferenciaInternaLote) {
+		this.errorReferenciaInternaLote = errorReferenciaInternaLote;
+	}
 
 	public static Lote beanToModel(LoteCentroBean loteBean) {
 		Lote lote = new Lote();
@@ -133,6 +150,7 @@ public class LoteCentroBean {
 		if (loteBean.getIdLaboratorio() != null) {
 			lote.setLaboratorioVisavet(new LaboratorioVisavet(loteBean.getIdLaboratorio()));
 		}
+		lote.setReferenciaInternaLote(loteBean.getReferenciaInternaLote());
 		return lote;
 	}
 	
@@ -153,7 +171,7 @@ public class LoteCentroBean {
 		loteBean.setNumeroMuestras(!CollectionUtils.isEmpty(lote.getMuestras()) ? lote.getMuestras().size() : 0);
 		
 		
-		
+		loteBean.setReferenciaInternaLote(lote.getReferenciaInternaLote());
 		// yoli
 		loteBean.setIdCentro(lote.getCentro().getId());
 		// TODO - COMPLETAR MUESTRAS

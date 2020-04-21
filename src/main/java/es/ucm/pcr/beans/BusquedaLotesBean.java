@@ -24,6 +24,7 @@ private String orden;
 private String sentidoOrden;
 private Boolean mostrarProcesar;
 private String rolURL;
+private Boolean mostrarGuardarRef;
 
 public String getIdLaboratorio() {
 	return idLaboratorio;
@@ -119,6 +120,12 @@ public String getRolURL() {
 }
 public void setRolURL(String rolURL) {
 	this.rolURL = rolURL;
+}
+public Boolean getMostrarGuardarRef() {
+	return mostrarGuardarRef;
+}
+public void setMostrarGuardarRef(Boolean mostrarGuardarRef) {
+	this.mostrarGuardarRef = mostrarGuardarRef;
 }
 
 }

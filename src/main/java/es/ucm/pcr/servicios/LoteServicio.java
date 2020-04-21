@@ -37,12 +37,29 @@ public interface LoteServicio {
 	public List<LoteListadoBean> findLoteByEstados(Integer idCentro, List<Integer> idsEstado);
 	
 	/**
-	 * Guardar lote
+	 * Busca los lotes que cumplan una referencia interna de lote
+	 * @param referenciaInterna 
+	
+	 * @return
+	 */
+	public List<LoteListadoBean> findLoteByReferenciaExterna(Integer referenciaExterna);
+	
+	
+	
+	
+	/**
+	 * Guardar lote 
 	 * @param loteBean
 	 * @return lote guardado
 	 */
 	public LoteCentroBean guardar(LoteCentroBean loteBean);
 	
+	/**
+	 * Guardar todo el lote 
+	 * @param loteBean
+	 * @return lote guardado
+	 */
+	public LoteCentroBean guardarLote(LoteCentroBean loteBean);
 	/**
 	 * Busca loteCentroBean por id
 	 * @param id
