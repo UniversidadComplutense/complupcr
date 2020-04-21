@@ -47,6 +47,7 @@ import es.ucm.pcr.beans.BusquedaPlacasVisavetBean;
 import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteCentroBean;
+import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.LotePlacaVisavetBean;
 import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.PaginadorBean;
@@ -60,6 +61,7 @@ import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
 import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.utilidades.Utilidades;
 import es.ucm.pcr.validadores.DocumentoValidador;
+import es.ucm.pcr.validadores.LoteValidador;
 
 
 
@@ -90,7 +92,7 @@ public class LaboratorioVisavetUCMController {
     @Autowired
 	private DocumentoServicio documentoServicio;
 
-	@SuppressWarnings("unused")
+    @SuppressWarnings("unused")
 	private final static Logger log = LoggerFactory.getLogger(LaboratorioVisavetUCMController.class);
 	public static final Sort ORDENACION = Sort.by(Direction.ASC, "fechaEnvio");
 	public static final Sort ORDENACION_PLACAS = Sort.by(Direction.ASC, "fechaCreacion");
@@ -110,6 +112,17 @@ public class LaboratorioVisavetUCMController {
 		binder.setValidator(documentoValidador);
 	}
 
+	private Boolean mostrarGuardarRef(List<LoteBeanPlacaVisavet> lotes) {
+	 Boolean mostrar= false;
+	 for (LoteBeanPlacaVisavet lote: lotes) {
+		if (lote.getEstado().getEstado().equals(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS)){
+			mostrar=true;
+			break;
+		}
+	 }
+	 return mostrar;
+	}
+	
 private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes) throws Exception {
 
 	busquedaLotes.setListaBeanEstado(BeanEstado.estadosLoteLaboratorioVisavet());
@@ -139,7 +152,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		//model.addAttribute("paginaLotes", paginaLotes);
 		vista.addObject("paginaLotes", paginaLotes);
 		vista.addObject("busquedaLotes",busquedaLotes);
-		
+	    busquedaLotes.setMostrarGuardarRef(this.mostrarGuardarRef(paginaLotes.getContent()));
 		// guardo los criterios de busqueda de lotes
 		session.setAttribute("busquedaLotes", busquedaLotes);
 	    return vista;
@@ -205,6 +218,83 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 	
 	}
 	*/
+	@RequestMapping(value = "/laboratorioUni/guardarReferenciaLotes", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','RECEPCIONLABORATORIO','TECNICOLABORATORIO')")
+	public ModelAndView guardarReferenciasLotes(@RequestParam("lotes") String lotes,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 50000000,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) throws Exception {
+		
+	
+			String[] lotesList=lotes.split(":");
+			List<LoteCentroBean> lotesError=new ArrayList();
+			for (String lote: lotesList) {
+				String[] unLote=lote.split("_");
+				LoteCentroBean beanLote;
+				if (unLote.length > 1 && unLote[0] !="") {
+ 				beanLote = loteServicio.findById(Integer.parseInt(unLote[0]));
+ 				beanLote.setReferenciaInternaLote(Integer.parseInt(unLote[1]));
+ 				List<LoteListadoBean> listaLote=loteServicio.findLoteByReferenciaExterna(beanLote.getReferenciaInternaLote());
+ 				if (listaLote == null || listaLote.size() == 0)
+ 				   loteServicio.guardarLote(beanLote);
+ 				else {
+ 					boolean incluir=true;
+ 					 for (LoteListadoBean loteBbdd:listaLote) {
+ 						 if (loteBbdd.getId()== beanLote.getId()) {
+ 					     incluir =false;
+ 						 break;
+ 						 }
+ 					 }
+ 					 if (incluir) {
+ 					 beanLote.setErrorReferenciaInternaLote("La referencia interna esta repetida");
+                     lotesError.add(beanLote);
+ 					 }
+ 				}
+				}
+			}
+			
+			
+		
+			BusquedaLotesBean busqueda=(BusquedaLotesBean) session.getAttribute("busquedaLotes");
+			if (busqueda ==null) busqueda= new BusquedaLotesBean();
+			if (busqueda.getRolURL()==null) busqueda.setRolURL("R");
+		//	return  this.buscarLotes(busqueda,busqueda.getRolURL(), request, session, pageable);
+			Page<LoteBeanPlacaVisavet> paginaLotes = null;
+			ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
+			busqueda.setMostrarProcesar(false);
+			
+			for (String rol:sesionServicio.getRoles()){
+				if ((rol.equals("ROLE_TECNICOLABORATORIO")|| rol.equals("ROLE_ADMIN")) && busqueda.getRolURL().equals("T")) {
+					busqueda.setMostrarProcesar(true);
+					 break;
+				}
+			}
+			busqueda.setListaBeanEstado(BeanEstado.estadosLoteLaboratorioVisavet());
+			busqueda.setListaCentros(centroServicio.listaCentrosOrdenada());
+			paginaLotes = servicioLaboratorioUni.buscarLotes(busqueda, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), ORDENACION));
+		    for (LoteBeanPlacaVisavet lote: paginaLotes.getContent()) {
+		    	for (LoteCentroBean loteError : lotesError) {
+		    		if (lote.getId()==loteError.getId()) {
+		    			lote.setErrorReferenciaLote(loteError.getErrorReferenciaInternaLote());
+		    			lote.setReferenciaInternaLote(loteError.getReferenciaInternaLote());
+		    			break;
+		    		}
+		    	}
+		    	
+		    }
+
+			
+			
+			vista.addObject("paginaLotes", paginaLotes);
+			vista.addObject("busquedaLotes",busqueda);
+		
+			busqueda.setMostrarGuardarRef(this.mostrarGuardarRef(paginaLotes.getContent()));
+			// guardo los criterios de busqueda de lotes
+			session.setAttribute("busquedaLotes", busqueda);
+		    return vista;
+		
+		//
+	}
+	
+	
+	
 	private String mostrarResultadosLotes(List<LoteBeanPlacaVisavet> lista) {
 		String tabla="<table class=\"col-xs-12 table\" id=\"tablaResultadosCabecera\">";
 		 tabla+="<thead class=\"thead-light\"><tr><th  style=\"text-align: left;\"></th><th  style=\"text-align: left;\">#Lotes</th><th style=\"text-align: left;\">Centro</th><th  style=\"text-align: left;\">F.Entrada</th>";
@@ -358,7 +448,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
           */
            model.addAttribute("muestras", muestras);
 			
-			return "VistaListadoRecepcionLotes :: #trMuestra";
+			return "Vist)aListadoRecepcionLotes :: #trMuestra";
 		}
 		
 // request PLACAS

@@ -23,7 +23,8 @@ public class LoteListadoBean {
 	
 	private CentroBean centroBean;
 	private BeanEstado beanEstado;
-
+	private Integer referenciaInternaLote;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -110,6 +111,14 @@ public class LoteListadoBean {
 	}
 
 
+	public Integer getReferenciaInternaLote() {
+		return referenciaInternaLote;
+	}
+
+	public void setReferenciaInternaLote(Integer referenciaInternaLote) {
+		this.referenciaInternaLote = referenciaInternaLote;
+	}
+
 	public static LoteListadoBean modelToBean(Lote lote) {
 		// TODO - LABORATORIO, FECHA ENVIO		
 		// TODO - MUESTRAS
@@ -138,7 +147,7 @@ public class LoteListadoBean {
 		}
 		
 		
-		
+		bean.setReferenciaInternaLote(lote.getReferenciaInternaLote());
 		return bean;
 	}
 

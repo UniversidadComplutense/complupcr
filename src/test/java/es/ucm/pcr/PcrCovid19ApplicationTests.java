@@ -17,6 +17,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -52,35 +54,38 @@ public class PcrCovid19ApplicationTests {
 		try {
 			// Intento acceder a raiz --> Me debe redirigir a acceso
 			this.mockMvc.perform(get("http://localhost/"))
-				.andDo(print())
+				//.andDo(print())
 				.andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrl("http://localhost/acceso"));
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
 			//Accedo a acceso --> Debe llegar y mostrar
 			this.mockMvc.perform(get("http://localhost/acceso"))
-				.andDo(print())
+				//.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("Acceso COVID-19")));
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
 			//Login incorrecto --> Debe devolver una redierección a acceso con error
 			MockHttpServletRequestBuilder loginMal = post("http://localhost/acceso")
 					.param("email", "centrosalud@ucm.es")
 					.param("password","password mala");
 			this.mockMvc.perform(loginMal)
-				.andDo(print())
+				//.andDo(print())
 				.andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrl("/acceso?error"));
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
 			//Login correcto --> Debe hacer una redirección a la página raiz
 			MockHttpServletRequestBuilder loginBien = post("http://localhost/acceso")
 					.param("email", "centrosalud@ucm.es")
 					.param("password","mypassword");
 			this.mockMvc.perform(loginBien)
-				.andDo(print())
+				//.andDo(print())
 				.andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrl("/"));
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Error al acceder sin sesión.");
 		}
-		// .andExpect(content().string(containsString("Acceso COVID-19")));
 	}
 
 	// Comprobamos que un usuario con sesión puede acceder a la página de inicio
@@ -90,13 +95,15 @@ public class PcrCovid19ApplicationTests {
 	public void paginaInicio() {
 		try {
 			this.mockMvc.perform(get("http://localhost/"))
-				.andDo(print())
+				//.andDo(print())
 				.andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrl("/inicio"));
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
 			this.mockMvc.perform(get("http://localhost/inicio"))
-				.andDo(print())
+				//.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("PCR-Covid19")));
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Error al acceder con sesión.");
