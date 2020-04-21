@@ -23,11 +23,11 @@
 			<div class="row">
 				<div class="col-3 form-group">
 					<label>Código</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.idPlaca}" th:value="${busquedaPlacaLaboratorioBean.idPlaca}" maxlength="100"/>
+				 	<input id="codigo" type="text" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.idPlaca}" th:value="${busquedaPlacaLaboratorioBean.idPlaca}" maxlength="100" onclick="borrarInputs();"/>
 				</div>	
 				<div class="col-3 form-group">
 					<label>Capacidad</label>
-				 	<select class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.numeroMuestras}" th:value="${busquedaPlacaLaboratorioBean.numeroMuestras}">
+				 	<select id="selectorCapacidad" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.numeroMuestras}" th:value="${busquedaPlacaLaboratorioBean.numeroMuestras}" onclick="borrarCodigo();">
 				 		<option value="">Seleccione</option>
 				 		<option value="20">20</option>
 				 		<option value="96">96</option>
@@ -37,7 +37,7 @@
 			<div class="row">			
 				<div class="col-3 form-group">
 					<label>Estado</label>
-				 	<select class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.idEstadoPlaca}"  th:value="${busquedaPlacaLaboratorioBean.idEstadoPlaca}">
+				 	<select id="selectorEstados" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.idEstadoPlaca}"  th:value="${busquedaPlacaLaboratorioBean.idEstadoPlaca}" onclick="borrarCodigo();" onchange="revisarFechas();">
 				 		<option value="0">Seleccione</option>
 				 		<option th:each="var: ${estadosPlacaLaboratorio}"
 									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
@@ -45,12 +45,12 @@
 				 	</select>
 				</div>
 				<div class="col-3 form-group">
-					<label >Fecha de creación</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.fechaCreacionInicio}"  th:value="${busquedaPlacaLaboratorioBean.fechaCreacionInicio}"/>
+					<label>Fecha de creación</label>
+				 	<input id="fechaInicio" type="date" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.fechaCreacionInicio}"  th:value="${busquedaPlacaLaboratorioBean.fechaCreacionInicio}" onclick="borrarCodigo();"/>
 				</div>
 				<div class="col-3 form-group">
-					<label >a</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.fechaCreacionFin}"  th:value="${busquedaPlacaLaboratorioBean.fechaCreacionFin}"/>
+					<label>a</label>
+				 	<input id="fechaFin" type="date" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.fechaCreacionFin}"  th:value="${busquedaPlacaLaboratorioBean.fechaCreacionFin}" onclick="borrarCodigo();"/>
 				</div>							
 			</div>
 		</fieldset>

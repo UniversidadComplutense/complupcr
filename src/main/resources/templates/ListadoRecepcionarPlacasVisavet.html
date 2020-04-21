@@ -23,11 +23,12 @@
 			<div class="row">
 				<div class="col-3 form-group">
 					<label>Código</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="${busquedaPlacaVisavetBean.idPlaca}" th:value="${busquedaPlacaVisavetBean.idPlaca}" maxlength="100"/>
+				 	<input id="codigo" type="text" class="form-control form-control-sm" th:field="${busquedaPlacaVisavetBean.idPlaca}" th:value="${busquedaPlacaVisavetBean.idPlaca}" maxlength="100" onclick="borrarInputs();"/>
 				</div>	
 				<div class="col-3 form-group">
 					<label>Capacidad</label>
-				 	<select class="form-control form-control-sm" th:field="${busquedaPlacaVisavetBean.numeroMuestras}" th:value="${busquedaPlacaVisavetBean.numeroMuestras}">
+				 	<select id="selectorCapacidad" class="form-control form-control-sm" th:field="${busquedaPlacaVisavetBean.numeroMuestras}" th:value="${busquedaPlacaVisavetBean.numeroMuestras}" onclick="borrarCodigo();"/>
+				</div>	>
 				 		<option value="">Seleccione</option>
 				 		<option value="20">20</option>
 				 		<option value="96">96</option>
@@ -37,7 +38,7 @@
 			<div class="row">			
 				<div class="col-3 form-group">
 					<label>Estado</label>
-				 	<select class="form-control form-control-sm" th:field="${busquedaPlacaVisavetBean.idEstadoPlaca}"  th:value="${busquedaPlacaVisavetBean.idEstadoPlaca}">
+				 	<select id="selectorEstados" class="form-control form-control-sm" th:field="${busquedaPlacaVisavetBean.idEstadoPlaca}"  th:value="${busquedaPlacaVisavetBean.idEstadoPlaca}" onclick="borrarCodigo();" onchange="revisarFechas();">
 				 		<option value="0">Seleccione</option>
 				 		<option th:each="var: ${estadosPlacaVisavet}"
 									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
@@ -45,12 +46,12 @@
 				 	</select>
 				</div>
 				<div class="col-3 form-group">
-					<label >Fecha de </label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${busquedaPlacaVisavetBean.fechaBusquedaInicio}"  th:value="${busquedaPlacaVisavetBean.fechaBusquedaInicio}"/>
+					<label>Fecha de </label>
+				 	<input id="fechaInicio" type="date" class="form-control form-control-sm" th:disabled="${busquedaPlacaVisavetBean.idEstadoPlaca == 0}" th:field="${busquedaPlacaVisavetBean.fechaBusquedaInicio}"  th:value="${busquedaPlacaVisavetBean.fechaBusquedaInicio}" onclick="borrarCodigo();"/>
 				</div>
 				<div class="col-3 form-group">
-					<label >a</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${busquedaPlacaVisavetBean.fechaBusquedaFin}"  th:value="${busquedaPlacaVisavetBean.fechaBusquedaFin}"/>
+					<label>a</label>
+				 	<input id="fechaFin" type="date" class="form-control form-control-sm" th:disabled="${busquedaPlacaVisavetBean.idEstadoPlaca == 0}" th:field="${busquedaPlacaVisavetBean.fechaBusquedaFin}"  th:value="${busquedaPlacaVisavetBean.fechaBusquedaFin}" onclick="borrarCodigo();"/>
 				</div>							
 			</div>
 		</fieldset>
