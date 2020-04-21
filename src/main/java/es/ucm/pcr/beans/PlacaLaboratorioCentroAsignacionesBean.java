@@ -35,9 +35,8 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 	//serán los mismos que se asignen a sus respesctivas muestras (por parte del jefe de servicio)  F6y F7
 	private BeanAnalisis beanAnalisisPlaca; 
 	
-	//será la fecha en la que se asignó la placa (y todas sus muestras) al analista que ha iniciado sesion, 
-	//solo se rellena al recuperar las placas asignadas al analista que inicia sesion
-	//private Date fechaAsignacionAAnalistaLogado;   
+	//una placa será devolvible si sus muestras aun no estan asignadas a analitas (podremos devolver la placa para que la coja otro jefe)
+	private Boolean esDevolvible = true; //podremos devolver la placa si no tiene muestras o si no está aun asignada (por defecto es devolvible) 
 	
 	public PlacaLaboratorioCentroAsignacionesBean() {
 		super();
@@ -107,9 +106,14 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 		this.beanAnalisisPlaca = beanAnalisisPlaca;
 	}
 
-	
-	
 
+	public Boolean getEsDevolvible() {
+		return esDevolvible;
+	}
+
+	public void setEsDevolvible(Boolean esDevolvible) {
+		this.esDevolvible = esDevolvible;
+	}
 
 	@Override
 	public String toString() {
@@ -242,7 +246,14 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 		beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
 		//el total de analistas asignados será la suma de los analistas lab, analistas vol y analistas vol sin centro
 		beanAnalisis.setNumTotalAnalistasAsignados(beanListaAsignaciones.getListaAnalistasLab().size() + beanListaAsignaciones.getListaAnalistasVol().size() + beanListaAsignaciones.getListaAnalistasVolSinLabCentro().size());
-		bean.setBeanAnalisisPlaca(beanAnalisis);	
+		bean.setBeanAnalisisPlaca(beanAnalisis);
+		
+		//la placa será devolvible si no tiene analistas asignados
+		if(beanAnalisis.getNumTotalAnalistasAsignados()==0) {
+			bean.setEsDevolvible(true);
+		}else if (beanAnalisis.getNumTotalAnalistasAsignados()>0){
+			bean.setEsDevolvible(false);
+		}
 
 
 		return bean;

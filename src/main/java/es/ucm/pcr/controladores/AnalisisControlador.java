@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -657,7 +658,8 @@ public class AnalisisControlador {
 		
 		@RequestMapping(value="/asignarPlaca", method=RequestMethod.GET)
 		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
-		public ModelAndView asignarPlaca(HttpSession session, HttpServletRequest request, @RequestParam("idPlaca") Integer idPlaca) throws Exception {
+		public ModelAndView asignarPlaca(HttpSession session, HttpServletRequest request, @RequestParam("idPlaca") Integer idPlaca,
+				@RequestParam(value = "accion", required = false) String accion) throws Exception {				
 			ModelAndView vista = new ModelAndView("VistaAsignarAnalistasAPlaca");
 				
 			System.out.println("estoy en asignarPlaca");
@@ -666,6 +668,13 @@ public class AnalisisControlador {
 			Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
 			if (inputFlashMap != null) {
 				mensaje = (String) inputFlashMap.get("mensaje");
+				System.out.println("mensaje vale: " + mensaje);
+			}
+			vista.addObject("mensaje", mensaje);
+			
+			// Comprobamos si hay mensaje enviado desde guardarReemplazo.			
+			if (accion != null && accion.equals("R")) {
+				mensaje = "Reemplazo de analista realizado correctamente";
 				System.out.println("mensaje vale: " + mensaje);
 			}
 			vista.addObject("mensaje", mensaje);
@@ -771,6 +780,7 @@ public class AnalisisControlador {
 		public ModelAndView guardaReemplazarAnalista(@ModelAttribute("formBeanGuardarReemplazoAsignacionPlaca") GuardarAsignacionPlacaLaboratorioCentroBean formBeanGuardarAsignacionPlaca,
 				BindingResult result, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
 			System.out.println("estoy en guardaReemplazarAnalista");
+			ModelAndView vista = new ModelAndView("VistaReemplazarAnalista");
 			//formBeanGuardarAsignacionPlaca traerá relleno solo los inputs que son las listas de id's seleccionados
 //			if (result.hasErrors()) {	
 //				System.out.println("estoy en hasErrors");
@@ -795,8 +805,10 @@ public class AnalisisControlador {
 				laboratorioCentroServicio.guardarReemplazoAnalistaDePlacaYmuestras(idPlaca, idUsuarioAQuitar, idUsuarioAPoner);
 							
 				//vuelvo al formulario de asignacion de la placa				
-				redirectAttributes.addFlashAttribute("mensaje", "Reemplazo de analista realizado correctamente");
-				return new ModelAndView(new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true));				
+				//redirectAttributes.addFlashAttribute("mensaje", "Reemplazo de analista realizado correctamente");
+				//return new ModelAndView(new RedirectView("/analisis/asignarPlaca?idPlaca="+idPlaca, true));
+				//NO vuelvo a formulario de asignacion de la placa desde aquí, volveré desde jquery	
+				return vista;
 			}
 		//}
 		

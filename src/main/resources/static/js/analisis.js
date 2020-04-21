@@ -429,13 +429,35 @@ function EjecutarReemplazoAnalista(){
 				$("#modalReemplazarAnalista").modal('hide');
 				//alert("estoy en done");				
 				//$('#idcuerpo').html(respuesta);	
-				$('html').html("");
-	        	$('html').html(respuesta);
+				//$('html').html("");
+	        	//$('html').html(respuesta);
 				//$('#analistasLabSeleccionado').selectpicker('refresh');
 				//$('#analistasVolSeleccionado').selectpicker('refresh');
 				//$('#analistasVolSinLabCentroSeleccionado').selectpicker('refresh');
 				//si todo ha ido bien redireccionamos al get
 				//window.location.href = "/gestor/buscarPreinscripciones";
+	        	//alert(respuesta);
+				//$('html').html("");
+	        	//$('html').html(respuesta);
+				
+	        	//this.data = respuesta.body;
+	            //return respuesta;
+				//$('#mensaje').html("Reemplazo de analista realizado correctamente");
+				//window.location.href = "/analisis/asignarPlaca?idPlaca="+idPlaca;
+				//una vez ejecutado el post me voy al get para recargar la vista con los cambios
+				//window.location.replace("/analisis/asignarPlaca?idPlaca="+idPlaca);
+				window.location.replace("/analisis/asignarPlaca?idPlaca="+idPlaca+"&accion=R");				
+				//var urlGet = "/analisis/asignarPlaca?idPlaca="+idPlaca;
+//				$.redirect(http:urlGet,
+//		        {
+//					mensaje: "Reemplazo de analista realizado correctamente"
+//		        });
+//		    	});
+				//window.location.href = respuesta.redirect;
+//				if (respuesta.redirect !== undefined && respuesta.redirect) {
+//					alert("entro");
+//			        window.location.href = respuesta.redirect_url;
+//			    }
 				
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 				//$('#idavisos').html("ERROR: No he podido conectar con el servidor para realizar la acción").css('color', "#f00");
@@ -446,6 +468,27 @@ function EjecutarReemplazoAnalista(){
 	}
 }
 
+function habilitarDeshabilitarBotReclamar() {
+	
+	var checkboxesReclamar = $("[id*=checkReclamar]"); //aquellos cuyo id contenga el texto checkReclamar
+	//$('#botReclamar').prop('disabled', !checkboxesReclamar.filter(':checked').length);
+	if (checkboxesReclamar.filter(':checked').length >= 1) {
+        $('#botReclamar').prop("disabled", false);
+      } else {
+        $('#botReclamar').prop("disabled", true);
+      }
+}
+
+function habilitarDeshabilitarBotDevolver() {
+	
+	var checkboxesDevolver = $("[id*=checkDevolver]"); //aquellos cuyo id contenga el texto checkDevolver
+	//$('#botReclamar').prop('disabled', !checkboxesReclamar.filter(':checked').length);
+	if (checkboxesDevolver.filter(':checked').length >= 1) {
+        $('#botDevolver').prop("disabled", false);
+      } else {
+        $('#botDevolver').prop("disabled", true);
+      }
+}
 
 /*function EjecutarReemplazoAnalista() {
 	alert("estoy en EjecutarReemplazoAnalista");
