@@ -45,7 +45,8 @@
 				  <tbody th:if="${listaPlacasListasParaAnalisis != null}" th:each="placa : ${listaPlacasListasParaAnalisis}">
 				    <tr>
 				      <td>				      	
-				      	<input class="form-check-input, justify-content-center" type="checkbox" th:field="*{listaIdsPlacasSeleccionadosParaCoger}" name="certificates" th:value="${placa.id}"/>
+				      	<input th:id="checkReclamar+${placa.id}" class="form-check-input, justify-content-center" type="checkbox" th:field="*{listaIdsPlacasSeleccionadosParaCoger}" name="certificates" th:value="${placa.id}" 
+				      		onclick="habilitarDeshabilitarBotReclamar();"/>
 				      </td>
 				      <td><span th:text="${placa.id}"></span></td>
 				      <td><span th:text="${placa.laboratorioCentro.nombre}"></span></td>
@@ -125,7 +126,8 @@
 				<div class="container">
 				<!-- <input type="submit" class="btn btn-secondary"
 					value="Reclamar los seleccionados"></input> -->
-				<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalConfirmarReclamar">
+				<!--  el boton reclamar no estará habilitado hasta que haya alguna placa marcada para reclamar -->
+				<button disabled id="botReclamar" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalConfirmarReclamar">
 					Reclamar los seleccionados  					
 				</button>
 					
@@ -172,7 +174,11 @@
 				  <tbody th:if="${listaPlacasAsignadasParaAnalisis != null}" th:each="placaAsignada : ${listaPlacasAsignadasParaAnalisis}">
 				    <tr>
 				      <td>
-				      	<input class="form-check-input, justify-content-center" type="checkbox" th:field="*{listaIdsPlacasSeleccionadosParaDevolver}" name="certificates" th:value="${placaAsignada.id}"/>
+				      	<!-- la placa no se podrá marcar para devolver si ya tiene analistas asignados -->
+				      	<!-- <input type="text" th:value= "${placaAsignada.esDevolvible}" /> -->
+				      	<input th:id="checkDevolver+${placaAsignada.id}" class="form-check-input, justify-content-center" type="checkbox" th:field="*{listaIdsPlacasSeleccionadosParaDevolver}" name="certificates" th:value="${placaAsignada.id}"
+				      		onclick="habilitarDeshabilitarBotDevolver();"
+				      		th:disabled="${!placaAsignada.esDevolvible}"/>
 				      </td>
 				      <td><span th:text="${placaAsignada.id}"></span></td>
 				      <td><span th:text="${placaAsignada.laboratorioCentro.nombre}"></span></td>
@@ -269,7 +275,7 @@
 				<div class="container">
 				<!-- <input type="submit" class="btn btn-secondary"
 					value="Devolver los seleccionados"></input> -->
-				<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalConfirmarDevolver">
+				<button disabled id="botDevolver" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalConfirmarDevolver">
 					Devolver los seleccionados  					
 				</button>
 				</div>
@@ -289,7 +295,7 @@
 	        	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          		<span aria-hidden="true">&times;</span>
 	        	</button>      		     		
-      		</div>
+      		</div>      		     		
       	<div class="modal-body">
       		<h6>¿Está seguro que desea reclamar las placas seleccionadas?</h6>           	
       	</div>
@@ -355,5 +361,6 @@
 		
 	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+	<script th:src="@{/js/analisis.js}"></script>
 </body>
 </html>

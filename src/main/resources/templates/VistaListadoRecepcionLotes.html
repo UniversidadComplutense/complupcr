@@ -111,6 +111,7 @@
 					<th  class="p-1" scope="col">Centro</th>
 					<th  class="p-1" scope="col">F.Entrada</th>
 					<th  class="p-1" scope="col">#Muestras</th>
+					<th  class="p-1" scope="col">Referencia Interna</th>
 					<th  class="p-1" scope="col">Test</th>
 					<th  class="p-1" scope="col">Estado</th>
 			      	<th  class="p-1" scope="col">Acciones</th>
@@ -174,6 +175,15 @@
 		  
                            <!-- fin modal -->
 								</td>
+								<td>
+								<input type="hidden"  th:id="id+${count.index}" th:value="${unResultado.id}"/>
+				               		<label style="color:red;display:none;" th:id="mensajeReferenciaLote+${count.index}" >La referencia interna del lote no puede estar vacía</label>
+								<label style="color:red;display:none;" th:id="mensajeReferenciaLoteGuardar+${count.index}" >Debe pulsar el botón "Guardar Referencias"</label>
+								
+								
+				               	<label style="color:red;" th:id="mensajeError+${count.index}" th:if="${#strings.toString(unResultado.errorReferenciaLote) != ''}" th:text="${unResultado.errorReferenciaLote}"></label>
+				               	<input type="hidden" th:id="referenciaLoteBbdd+${count.index}" th:value="${unResultado.referenciaInternaLote}"></input>
+								<input type="text" th:id="referenciaLote+${count.index}" th:disabled="${#strings.toString(unResultado.estado.Estado) != 'LOTE_RECIBIDO_CENTRO_ANALISIS'}" th:value="${unResultado.referenciaInternaLote}"></input></td>
 								<td><span>Covid19</span></td>
 								<td><span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
 								</td>
@@ -241,7 +251,8 @@
 			</div>
 			<div class="row justify-content-left mt-3">
 				<input id="procesarBoton" disabled th:if="${busquedaLotes.mostrarProcesar} and ${paginaLotes.getContent().size()>0}" type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" onclick="procesarLotes('L')"/>
-		
+		 &nbsp;
+		 <button type="button" id="guardarRef" th:if="${busquedaLotes.mostrarGuardarRef} and ${paginaLotes.getContent().size()>0}"  class="btn btn-secondary" th:onClick="guardarReferencias();">Guardar Referencias</button>
 		
 		</div> <!--  capa de resultados -->
 		<!-- <div th:include="fragmentos :: paginador(${busquedaLotes.urlPaginada},${paginaLotes},${busquedaLotes.orden},${busquedaLotes.sentidoOrden},'0')"></div>

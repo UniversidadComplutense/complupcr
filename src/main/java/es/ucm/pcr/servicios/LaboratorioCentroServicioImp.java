@@ -189,6 +189,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	// JAVI
 	@Override
+	@Transactional
 	public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioBean criteriosBusqueda,
 			Pageable pageable) throws Exception {
 		
@@ -218,6 +219,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	
 	// JAVI
 	@Override
+	@Transactional
 	public PlacaLaboratorioCentroBean buscarPlaca(Integer id) throws Exception {
 		
 		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);

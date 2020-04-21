@@ -103,6 +103,16 @@ public class LoteServicioImpl implements LoteServicio {
 		lote = loteRepositorio.save(lote);
 		return LoteCentroBean.modelToBean(lote);
 	}
+	@Override
+	@Transactional
+	public LoteCentroBean guardarLote(LoteCentroBean loteBean) {
+		Lote lote = null;
+		
+		lote = LoteCentroBean.beanToModel(loteBean);
+		
+		lote = loteRepositorio.save(lote);
+		return LoteCentroBean.modelToBean(lote);
+	}
 	
 	@Override
 	@Transactional
@@ -190,5 +200,17 @@ public class LoteServicioImpl implements LoteServicio {
 		}
 		return new LoteBeanPlacaVisavet();
 	}
+	@Override
+	public List<LoteListadoBean> findLoteByReferenciaExterna(Integer referenciaExterna){
+		List<Lote> lotes = loteRepositorio.findByReferenciaExterna(referenciaExterna);
+        List<LoteListadoBean> listLotesBean = new ArrayList();
+		
+		for (Lote l : lotes) {
+			listLotesBean.add(LoteListadoBean.modelToBean(l));
+		}
+		
+		return listLotesBean;
+	}
+	
 	
 }

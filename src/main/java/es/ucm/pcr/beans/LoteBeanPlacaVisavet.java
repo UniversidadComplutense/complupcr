@@ -30,6 +30,8 @@ public class LoteBeanPlacaVisavet{
 	private String funcionEjecutar;
 	private String test;
 	private Integer idPlacaVisavet; 
+	private Integer referenciaInternaLote;
+	private String errorReferenciaLote;
 	//private BeanPlacaVisavetUCM beanPlacaVisavetUCM;
 	public Integer getId() {
 		return id;
@@ -107,13 +109,20 @@ public class LoteBeanPlacaVisavet{
 		this.centroBean = centroBean;
 	}
 	
-/*	public BeanPlacaVisavetUCM getBeanPlacaVisavetUCM() {
+public Integer getReferenciaInternaLote() {
+		return referenciaInternaLote;
+	}
+	public void setReferenciaInternaLote(Integer referenciaInternaLote) {
+		this.referenciaInternaLote = referenciaInternaLote;
+	}
+	/*	public BeanPlacaVisavetUCM getBeanPlacaVisavetUCM() {
 		return beanPlacaVisavetUCM;
 	}
 	public void setBeanPlacaVisavetUCM(BeanPlacaVisavetUCM beanPlacaVisavetUCM) {
 		this.beanPlacaVisavetUCM = beanPlacaVisavetUCM;
 	}
 	*/
+	
 	public static LoteBeanPlacaVisavet modelToBean(Lote lote) {
 		LoteBeanPlacaVisavet lotePlaca= new LoteBeanPlacaVisavet();
 		lotePlaca.setId(lote.getId());
@@ -141,7 +150,14 @@ public class LoteBeanPlacaVisavet{
 		/*if (lote.getPlacaVisavet()!=null)
 		lotePlaca.setBeanPlacaVisavetUCM(BeanPlacaVisavetUCM.modelToBean(lote.getPlacaVisavet()));
 		*/
+		lotePlaca.setReferenciaInternaLote(lote.getReferenciaInternaLote());
 		return lotePlaca;
+	}
+	public String getErrorReferenciaLote() {
+		return errorReferenciaLote;
+	}
+	public void setErrorReferenciaLote(String errorReferenciaLote) {
+		this.errorReferenciaLote = errorReferenciaLote;
 	}
 	public static Lote beanToModel(LoteBeanPlacaVisavet lotePlaca) {
 		Lote lote= new Lote();
@@ -161,7 +177,7 @@ public class LoteBeanPlacaVisavet{
 			}
 		}
 		lote.setMuestras(listaMuestras);
-		
+		lote.setReferenciaInternaLote(lotePlaca.getReferenciaInternaLote());
 		return lote;
 	}
 }

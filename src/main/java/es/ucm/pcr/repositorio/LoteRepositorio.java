@@ -61,4 +61,9 @@ public interface LoteRepositorio extends PagingAndSortingRepository<Lote, Intege
 			+ "(estadoLote.id IN (:idsEstado)) ")	
 	public List<Lote> findByEstado(@Param("idCentro") Integer idCentro, @Param("idsEstado")List<Integer> idsEstado);
 	
+	@Query("SELECT lote FROM Lote lote "
+			+ "WHERE  "
+			+ "(:referenciaInterna is null or lote.referenciaInternaLote = :referenciaInterna)")	
+	public List<Lote> findByReferenciaExterna(@Param("referenciaInterna") Integer referenciaInterna);
+	
 }

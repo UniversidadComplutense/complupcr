@@ -29,6 +29,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -40,6 +42,7 @@ import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.beans.BeanPlacaVisavetUCM;
 import es.ucm.pcr.beans.BusquedaLotesBean;
+import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacasVisavetBean;
 import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
@@ -51,10 +54,10 @@ import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
 import es.ucm.pcr.beans.PaginadorBean;
+import es.ucm.pcr.beans.PlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
 import es.ucm.pcr.config.security.UserDetailsTestConfig;
 import es.ucm.pcr.modelo.orm.Centro;
-import es.ucm.pcr.modelo.orm.EstadoPlacaVisavet;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
 import es.ucm.pcr.modelo.orm.LaboratorioVisavet;
 import es.ucm.pcr.modelo.orm.Usuario;
@@ -102,12 +105,17 @@ public class CicloMuestrasServiciosTests {
 
 	@Autowired
 	private DocumentoServicio documentoServicio;
-	
-	@Autowired
-	MockMvc mockMvc;
 
 	static Integer placaVisavetId = 0;
+	static Integer placaPCRId = 0;
 
+	@Autowired
+	private MockMvc mockMvc;
+
+	/**
+	 * Testeo de usuario del centro de salud. Creamos lote asignado a un labo
+	 * visavet, creamos 2 muestras, enviamos el lote al laboratorio
+	 */
 	@Test
 	@Order(1)
 	@WithUserDetails("centrosalud@ucm.es")
@@ -179,6 +187,7 @@ public class CicloMuestrasServiciosTests {
 			lcb.setNumeroMuestras(0);
 			lcb.setNumLote("lote1");
 			lcb.setTieneMuestras(false);
+			lcb.setReferenciaInternaLote(1);
 			lcb = loteServicio.guardar(lcb);
 
 			// Asignamos las muestras al lote.
@@ -229,6 +238,10 @@ public class CicloMuestrasServiciosTests {
 		}
 	}
 
+	/**
+	 * Test para la recepción en laboratorio visavet. Se recepciona el lote del test
+	 * anterior.
+	 */
 	@Test
 	@Order(2)
 	@WithUserDetails("recepcionvisavet@ucm.es")
@@ -296,6 +309,13 @@ public class CicloMuestrasServiciosTests {
 		}
 	}
 
+	/**
+	 * Test para el técnico del laboratorio visavet.
+	 * 
+	 * Se localiza el lote recepcionado en el test anterior. Se crea una placa
+	 * visavet. Se asigna al lote. Se asignan referencias internas a las muestras
+	 * del lote. (Lote procesado)
+	 */
 	@Test
 	@Order(3)
 	@WithUserDetails("tecnicovisavet@ucm.es")
@@ -484,6 +504,12 @@ public class CicloMuestrasServiciosTests {
 		}
 	}
 
+	/**
+	 * Test para el técnico de laboratorio visavet.
+	 * 
+	 * Sa adjunta un documento a la placa del test anterior, se asigna la misma a un
+	 * laboratorio de centro, y se envía.
+	 */
 	@Test
 	@Order(4)
 	@WithUserDetails("tecnicovisavet@ucm.es")
@@ -546,57 +572,256 @@ public class CicloMuestrasServiciosTests {
 			placab.setEstado(estadoEnv);
 			placab.setFechaEnviadaLaboratorio(new Date());
 			BeanPlacaVisavetUCM placac = servicioLaboratorioVisavetUCM.guardar(placab);
-			
-			//Comprobamos
-			assertEquals(estadoEnv.getEstado().getCodNum(), placac.getEstado().getEstado().getCodNum(), "La placa no está enviada");
-			assertEquals(1,placac.getIdLaboratorioCentro(), "La placa no está asignada al laboratorio centro correcto.");
+
+			// Comprobamos
+			assertEquals(estadoEnv.getEstado().getCodNum(), placac.getEstado().getEstado().getCodNum(),
+					"La placa no está enviada");
+			assertEquals(1, placac.getIdLaboratorioCentro(),
+					"La placa no está asignada al laboratorio centro correcto.");
 			ElementoDocumentacionBean eleDoc2 = documentoServicio.obtenerDocumentosPlacaVisavet(placac.getId());
-			assertEquals(1, eleDoc2.getDocumentos().size(),"Debería haber un documento exactamente asociado a la placa.");
-			
-			//Los pasamos al test siguiente.
+			assertEquals(1, eleDoc2.getDocumentos().size(),
+					"Debería haber un documento exactamente asociado a la placa.");
+
+			// Los pasamos al test siguiente.
 			CicloMuestrasServiciosTests.placaVisavetId = placac.getId();
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Falló la prueba para técnico Visavet Placas");
 		}
 	}
-	
+
+	/**
+	 * Test para el responsable PCR. Se localiza la placa visavet del test anterior
+	 * y se recepciona en laboratorio centro.
+	 */
 	@Test
 	@Order(5)
 	@WithUserDetails("responsablepcr@ucm.es")
 	public void responsablePCRRecepcionPlacas() {
 		try {
-			//Entramos en la pantalla de recepción de placas Visavet en Centro PCR
-			//Tenemos que tener el id de la placa y las 2 referencias internas de nuestras
-			//muestras en el contenido de la respuesta
+			// Primero testeamos temas de sesión
+			Usuario user = sesionServicio.getUsuario();
+			assertEquals("responsablepcr@ucm.es", user.getEmail(), "No se recupera bien el usuario de la sesión.");
+			String email = sesionServicio.getEmail();
+			assertEquals("responsablepcr@ucm.es", email, "No se recupera bien el email de la sesión.");
+			List<String> roles = sesionServicio.getRoles();
+			assertTrue(roles.contains("ROLE_RESPONSABLEPCR"), "El usuario debe tener el rol RESPONSABLEPCR.");
+			assertTrue(sesionServicio.tieneRol("RESPONSABLEPCR"), "El usuario debe tener el rol RESPONSABLEPCR.");
+			List<MenuBean> menu = sesionServicio.getMenu();
+			assertTrue(menu != null && menu.size() > 0, "El menú del usuario está vacío.");
+
+			// Recuperamos el laboratorioVisavet del usuario de la sesión
+			LaboratorioCentro labo = sesionServicio.getLaboratorioCentro();
+			assertEquals("DemoCentro1", labo.getNombre(),
+					"Hay problemas con la asignación de usuario al laboratorio centro.");
+
+			// Entramos en la pantalla de recepción de placas Visavet en Centro PCR
+			// Tenemos que tener el id de la placa y las 2 referencias internas de nuestras
+			// muestras en el contenido de la respuesta
 			this.mockMvc.perform(get("http://localhost/laboratorioCentro/recepcionPlacas/list"))
-				.andDo(print())
-				.andExpect(status().isOk())
-				.andExpect(content().string(containsString("<td><span>"+CicloMuestrasServiciosTests.placaVisavetId+"</span></td>")))
-				.andExpect(content().string(containsString("Interna1")))
-				.andExpect(content().string(containsString("Interna2")));
-			//Ahora vamos a recepcionarla
-			this.mockMvc.perform(get("http://localhost/laboratorioCentro/recepcionPlacas/recepcionar?id="+CicloMuestrasServiciosTests.placaVisavetId))
-				.andDo(print())
-				.andExpect(status().isOk())
-				.andExpect(content().string(containsString("<input type=\"text\" class=\"form-control form-control-sm\" value=\""+CicloMuestrasServiciosTests.placaVisavetId+"\"/>")));
-			MockHttpServletRequestBuilder recepcionar = post("http://localhost/laboratorioCentro/recepcionPlacas/recepcionar")
-						.param("id",CicloMuestrasServiciosTests.placaVisavetId.toString());
+					// .andDo(print())
+					.andExpect(status().isOk())
+					.andExpect(content().string(
+							containsString("<td><span>" + CicloMuestrasServiciosTests.placaVisavetId + "</span></td>")))
+					.andExpect(content().string(containsString("Interna1")))
+					.andExpect(content().string(containsString("Interna2")));
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+			// Ahora vamos a recepcionarla
+			this.mockMvc
+					.perform(get("http://localhost/laboratorioCentro/recepcionPlacas/recepcionar?id="
+							+ CicloMuestrasServiciosTests.placaVisavetId))
+					// .andDo(print())
+					.andExpect(status().isOk())
+					.andExpect(content().string(
+							containsString("<input type=\"text\" class=\"form-control form-control-sm\" value=\""
+									+ CicloMuestrasServiciosTests.placaVisavetId + "\"/>")));
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+			MockHttpServletRequestBuilder recepcionar = post(
+					"http://localhost/laboratorioCentro/recepcionPlacas/recepcionar").param("id",
+							CicloMuestrasServiciosTests.placaVisavetId.toString());
 			this.mockMvc.perform(recepcionar)
-				.andDo(print())
-				.andExpect(status().isOk())  // TODO: MAL. No se aplica patrón PCR en este controlador POST. Corregir controlador y test
-				.andExpect(content().string(containsString("<span>La placa "+CicloMuestrasServiciosTests.placaVisavetId+" se ha recepcionado correctamente.</span>")));
-			
-			//Vamos a recuperar la placa para comprobar que está recepcionada
-			PlacaLaboratorioVisavetBean placa = laboratorioVisavetServicio.buscarPlaca(CicloMuestrasServiciosTests.placaVisavetId);
-			assertTrue(placa.getFechaRecepcion() != null, "La placa no tiene fecha de recepción en laboratorio centro y debería.");
+					// .andDo(print())
+					.andExpect(status().isOk()) // TODO: MAL. No se aplica
+												// patrón PCR en este
+												// controlador POST. Corregir
+												// controlador y test
+					.andExpect(content()
+							.string(containsString("<span>La placa " + CicloMuestrasServiciosTests.placaVisavetId
+									+ " se ha recepcionado correctamente.</span>")));
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+			// Vamos a recuperar la placa para comprobar que está recepcionada
+			PlacaLaboratorioVisavetBean placa = laboratorioVisavetServicio
+					.buscarPlaca(CicloMuestrasServiciosTests.placaVisavetId);
+			assertTrue(placa.getFechaRecepcion() != null,
+					"La placa no tiene fecha de recepción en laboratorio centro y debería.");
 			BeanEstado estadoPlaca = new BeanEstado();
 			estadoPlaca.setEstado(Estado.PLACAVISAVET_RECIBIDA);
 			estadoPlaca.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
-			assertEquals(estadoPlaca.getEstado().getCodNum(), placa.getBeanEstado().getEstado().getCodNum(),"La placa no está en estado recido y debería.");
+			assertEquals(estadoPlaca.getEstado().getCodNum(), placa.getBeanEstado().getEstado().getCodNum(),
+					"La placa no está en estado recido y debería.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Falló la prueba para responsable PCR recepción placas");
+		}
+	}
+
+	/**
+	 * Test para el responsable PCR. Gestión de la placa PCR. Se crea la placa PCR a
+	 * partir de la placa Visavet del test anterior. Se le asigna un equipo PCR
+	 * (proveniente de data.sql) y se finaliza el PCR
+	 */
+
+	@Test
+	@Order(6)
+	@WithUserDetails("responsablepcr@ucm.es")
+	public void responsablePCRGestionPlacas1() {
+		try {
+
+			// Entramos en la pantalla de nueva placa PCR y comprobamos que tenemos la placa
+			// visavet anterior con sus 2 muestras.
+			this.mockMvc.perform(get("http://localhost/laboratorioCentro/gestionPlacas/nueva"))
+					// .andDo(print())
+					.andExpect(status().isOk())
+					.andExpect(content()
+							.string(containsString("<span>" + CicloMuestrasServiciosTests.placaVisavetId + "</span>")))
+					.andExpect(content().string(containsString("<span>Interna1</span>")))
+					.andExpect(content().string(containsString("<span>Interna2</span>")));
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+			// Escogemos la placa visavet y creamos la placa PCR
+			MockHttpServletRequestBuilder crearPlacaPCR = post("http://localhost/laboratorioCentro/gestionPlacas/nueva")
+					.param("id", "").param("numeroMuestras", "20")
+					.param("placasVisavetSeleccionadas", CicloMuestrasServiciosTests.placaVisavetId.toString() + ":"); // El
+																														// :
+																														// es
+																														// el
+																														// separador
+																														// de
+																														// placas
+																														// visavet.
+																														// Aquí
+																														// sólo
+																														// hay
+																														// una.
+			this.mockMvc.perform(crearPlacaPCR)
+					.andExpect(content().string(containsString("se ha creado correctamente.</span>")));
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+			// Comprobamos que la placa PCR está creada y nos guardamos s4 id
+			BusquedaPlacaLaboratorioBean criteriosBusqueda = new BusquedaPlacaLaboratorioBean();
+			// Inicializamos búsqueda con estado 'PLACA_INICIADA' y laboratorio al que
+			// pertenece el usuario
+			BeanEstado estadoPlaca = new BeanEstado();
+			estadoPlaca.setEstado(Estado.PLACA_INICIADA);
+			estadoPlaca.setTipoEstado(TipoEstado.EstadoPlacaLabCentro);
+			criteriosBusqueda.setIdEstadoPlaca(estadoPlaca.getEstado().getCodNum());// Primero testeamos temas de sesión
+			criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getLaboratorioCentro().getId());
+			Page<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda,
+					PageRequest.of(0, Utilidades.NUMERO_PAGINACION, Sort.by(Direction.ASC, "fechaCreacion")));
+			assertEquals(1, listaPlacas.getContent().size(),
+					"Sólo debería haber una placa PCR y hay " + listaPlacas.getContent().size());
+			assertEquals(2, listaPlacas.getContent().get(0).getMuestras().size(),
+					"La placa debería tener 2 muestras y tiene "
+							+ listaPlacas.getContent().get(0).getMuestras().size());
+
+			CicloMuestrasServiciosTests.placaPCRId = listaPlacas.getContent().get(0).getId();
+
+			// Asignamos un equipo PCR a la placa, pasando por la pantalla de selección de
+			// equipos
+			this.mockMvc
+					.perform(get("http://localhost/laboratorioCentro/gestionPlacas/modificar?id="
+							+ CicloMuestrasServiciosTests.placaPCRId))
+					.andExpect(content().string(
+							containsString("<input type=\"text\" class=\"form-control form-control-sm\" value=\""
+									+ CicloMuestrasServiciosTests.placaPCRId + "\"/>")))
+					.andExpect(content()
+							.string(containsString("<span>" + CicloMuestrasServiciosTests.placaVisavetId + "</span>")))
+					.andExpect(content().string(containsString("<span>Interna1</span>")))
+					.andExpect(content().string(containsString("<span>Interna2</span>")))
+					.andExpect(content().string(containsString(
+							"<option value=\"1\">Equipo PCR-01 con capacidad para 300 muestras.</option>")));
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+			MockHttpServletRequestBuilder asignarEquipo = post(
+					"http://localhost/laboratorioCentro/gestionPlacas/asignarEquipo")
+							.param("id", CicloMuestrasServiciosTests.placaPCRId.toString()).param("idEquipo", "1");
+			this.mockMvc.perform(asignarEquipo).andDo(print());
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+
+			// Comprobamos
+			PlacaLaboratorioCentroBean plcb = laboratorioCentroServicio
+					.buscarPlaca(CicloMuestrasServiciosTests.placaPCRId);
+			assertEquals(BeanEstado.Estado.PLACA_PREPARADA_PARA_PCR.getCodNum(),
+					plcb.getBeanEstado().getEstado().getCodNum(), "La placa PCR debería estar preparada para PCR.");
+			assertEquals(2, plcb.getMuestras().size(), "La placa PCR debería tener 2 muestras.");
+			assertEquals("1", plcb.getLaboratorioCentro().getId(), "La placa debería esta asignada al laboratorio 1");
+
+			// Finalizamos el PCR
+			this.mockMvc.perform(post("http://localhost/laboratorioCentro/gestionPlacas/finalPCR").param("id",
+					CicloMuestrasServiciosTests.placaPCRId.toString())).andExpect(status().is3xxRedirection());
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+			// Comprobamos
+			PlacaLaboratorioCentroBean plcbF = laboratorioCentroServicio
+					.buscarPlaca(CicloMuestrasServiciosTests.placaPCRId);
+			assertEquals(BeanEstado.Estado.PLACA_FINALIZADA_PCR.getCodNum(),
+					plcbF.getBeanEstado().getEstado().getCodNum(),
+					"La placa PCR debería estar en estado Finalizada PCR.");
+			assertEquals(2, plcbF.getMuestras().size(), "La placa PCR debería tener 2 muestras.");
+			assertEquals("1", plcbF.getLaboratorioCentro().getId(), "La placa debería esta asignada al loboratorio 1");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Falló la prueba para responsable PCR gestión placas 1");
+		}
+	}
+
+	/**
+	 * Test para el responsable PCR. Gestión de la placa PCR. Se adjunta el
+	 * resultado PCR y se deja lista para análisis.
+	 */
+	@Test
+	@Order(7)
+	@WithUserDetails("responsablepcr@ucm.es")
+	public void responsablePCRGestionPlacas2() {
+		try {
+			this.mockMvc.perform(get("http://localhost/documento/placaLaboratorio?id="
+					+ CicloMuestrasServiciosTests.placaPCRId + "&url=5")).andExpect(status().isOk());
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+
+			
+			ElementoDocumentacionBean elementoDoc = new ElementoDocumentacionBean();																										// anteriores
+			elementoDoc.setTipoElemento(ElementoDocumentacionBean.TIPO_ELEMENTO_PLACA_LABORATORIO);
+			elementoDoc.setId(CicloMuestrasServiciosTests.placaPCRId);
+			File file = new File("src/test/resources/erdpcr_2.pdf");
+			FileInputStream input = new FileInputStream(file);
+			MultipartFile multipartFile = new MockMultipartFile("file", file.getName(), "application/pdf",
+					IOUtils.toByteArray(input));
+			elementoDoc.setFile(multipartFile);
+			documentoServicio.guardar(elementoDoc);
+
+			ElementoDocumentacionBean elementoDoc2 = documentoServicio
+					.obtenerDocumentosPlacaLaboratorio(CicloMuestrasServiciosTests.placaPCRId);
+			assertEquals(1, elementoDoc2.getDocumentos().size(), "La  placa debería tener un documento exactamente.");
+			assertEquals("erdpcr_2.pdf", elementoDoc2.getDocumentos().get(0).getNombreDocumento(),
+					"No se ha guardado bien el documento.");
+
+			// Lo ponemos en lista para analizar.
+			MockHttpServletRequestBuilder listaAnalizar = post(
+					"http://localhost/laboratorioCentro/gestionPlacas/resultados").param("id",
+							CicloMuestrasServiciosTests.placaPCRId.toString());
+			this.mockMvc.perform(listaAnalizar).andExpect(status().is3xxRedirection());
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+
+			// Comprobamos
+			PlacaLaboratorioCentroBean plcbF = laboratorioCentroServicio
+					.buscarPlaca(CicloMuestrasServiciosTests.placaPCRId);
+			assertEquals(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum(),
+					plcbF.getBeanEstado().getEstado().getCodNum(),
+					"La placa PCR debería estar en estado Lista para Análisis.");
+			assertEquals(2, plcbF.getMuestras().size(), "La placa PCR debería tener 2 muestras.");
+			assertEquals("1", plcbF.getLaboratorioCentro().getId(), "La placa debería esta asignada al loboratorio 1");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Falló la prueba para responsable PCR gestión placas 2.");
 		}
 	}
 }

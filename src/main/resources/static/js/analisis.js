@@ -468,6 +468,27 @@ function EjecutarReemplazoAnalista(){
 	}
 }
 
+function habilitarDeshabilitarBotReclamar() {
+	
+	var checkboxesReclamar = $("[id*=checkReclamar]"); //aquellos cuyo id contenga el texto checkReclamar
+	//$('#botReclamar').prop('disabled', !checkboxesReclamar.filter(':checked').length);
+	if (checkboxesReclamar.filter(':checked').length >= 1) {
+        $('#botReclamar').prop("disabled", false);
+      } else {
+        $('#botReclamar').prop("disabled", true);
+      }
+}
+
+function habilitarDeshabilitarBotDevolver() {
+	
+	var checkboxesDevolver = $("[id*=checkDevolver]"); //aquellos cuyo id contenga el texto checkDevolver
+	//$('#botReclamar').prop('disabled', !checkboxesReclamar.filter(':checked').length);
+	if (checkboxesDevolver.filter(':checked').length >= 1) {
+        $('#botDevolver').prop("disabled", false);
+      } else {
+        $('#botDevolver').prop("disabled", true);
+      }
+}
 
 /*function EjecutarReemplazoAnalista() {
 	alert("estoy en EjecutarReemplazoAnalista");
