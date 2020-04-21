@@ -739,6 +739,7 @@ public class CicloMuestrasServiciosTests {
 					.andExpect(content().string(containsString(
 							"<option value=\"1\">Equipo PCR-01 con capacidad para 300 muestras.</option>")));
 			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
 			MockHttpServletRequestBuilder asignarEquipo = post(
 					"http://localhost/laboratorioCentro/gestionPlacas/asignarEquipo")
 							.param("id", CicloMuestrasServiciosTests.placaPCRId.toString()).param("idEquipo", "1");
@@ -758,12 +759,13 @@ public class CicloMuestrasServiciosTests {
 					CicloMuestrasServiciosTests.placaPCRId.toString())).andExpect(status().is3xxRedirection());
 			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
 			// Comprobamos
-			PlacaLaboratorioCentroBean plcbF= laboratorioCentroServicio
+			PlacaLaboratorioCentroBean plcbF = laboratorioCentroServicio
 					.buscarPlaca(CicloMuestrasServiciosTests.placaPCRId);
 			assertEquals(BeanEstado.Estado.PLACA_FINALIZADA_PCR.getCodNum(),
-					plcbF.getBeanEstado().getEstado().getCodNum(), "La placa PCR debería estar en estado Finalizada PCR.");
-			assertEquals(2, plcb.getMuestras().size(), "La placa PCR debería tener 2 muestras.");
-			assertEquals("1", plcb.getLaboratorioCentro().getId(), "La placa debería esta asignada al loboratorio 1");
+					plcbF.getBeanEstado().getEstado().getCodNum(),
+					"La placa PCR debería estar en estado Finalizada PCR.");
+			assertEquals(2, plcbF.getMuestras().size(), "La placa PCR debería tener 2 muestras.");
+			assertEquals("1", plcbF.getLaboratorioCentro().getId(), "La placa debería esta asignada al loboratorio 1");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -772,17 +774,52 @@ public class CicloMuestrasServiciosTests {
 	}
 
 	/**
-	 * Test para el responsable PCR. Gestión de la placa PCR. 
-	 * Se adjunta el resultado PCR y se deja lista para análisis.
+	 * Test para el responsable PCR. Gestión de la placa PCR. Se adjunta el
+	 * resultado PCR y se deja lista para análisis.
 	 */
-
 	@Test
 	@Order(7)
 	@WithUserDetails("responsablepcr@ucm.es")
 	public void responsablePCRGestionPlacas2() {
 		try {
+			this.mockMvc.perform(get("http://localhost/documento/placaLaboratorio?id="
+					+ CicloMuestrasServiciosTests.placaPCRId + "&url=5")).andExpect(status().isOk());
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+
 			
-		} catch (Exception e ) {
+			ElementoDocumentacionBean elementoDoc = new ElementoDocumentacionBean();																										// anteriores
+			elementoDoc.setTipoElemento(ElementoDocumentacionBean.TIPO_ELEMENTO_PLACA_LABORATORIO);
+			elementoDoc.setId(CicloMuestrasServiciosTests.placaPCRId);
+			File file = new File("src/test/resources/erdpcr_2.pdf");
+			FileInputStream input = new FileInputStream(file);
+			MultipartFile multipartFile = new MockMultipartFile("file", file.getName(), "application/pdf",
+					IOUtils.toByteArray(input));
+			elementoDoc.setFile(multipartFile);
+			documentoServicio.guardar(elementoDoc);
+
+			ElementoDocumentacionBean elementoDoc2 = documentoServicio
+					.obtenerDocumentosPlacaLaboratorio(CicloMuestrasServiciosTests.placaPCRId);
+			assertEquals(1, elementoDoc2.getDocumentos().size(), "La  placa debería tener un documento exactamente.");
+			assertEquals("erdpcr_2.pdf", elementoDoc2.getDocumentos().get(0).getNombreDocumento(),
+					"No se ha guardado bien el documento.");
+
+			// Lo ponemos en lista para analizar.
+			MockHttpServletRequestBuilder listaAnalizar = post(
+					"http://localhost/laboratorioCentro/gestionPlacas/resultados").param("id",
+							CicloMuestrasServiciosTests.placaPCRId.toString());
+			this.mockMvc.perform(listaAnalizar).andExpect(status().is3xxRedirection());
+			SecurityContextHolder.setContext(TestSecurityContextHolder.getContext());
+
+			// Comprobamos
+			PlacaLaboratorioCentroBean plcbF = laboratorioCentroServicio
+					.buscarPlaca(CicloMuestrasServiciosTests.placaPCRId);
+			assertEquals(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum(),
+					plcbF.getBeanEstado().getEstado().getCodNum(),
+					"La placa PCR debería estar en estado Lista para Análisis.");
+			assertEquals(2, plcbF.getMuestras().size(), "La placa PCR debería tener 2 muestras.");
+			assertEquals("1", plcbF.getLaboratorioCentro().getId(), "La placa debería esta asignada al loboratorio 1");
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Falló la prueba para responsable PCR gestión placas 2.");
 		}
