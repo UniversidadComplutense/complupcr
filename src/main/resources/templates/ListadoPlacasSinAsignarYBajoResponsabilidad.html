@@ -174,8 +174,11 @@
 				  <tbody th:if="${listaPlacasAsignadasParaAnalisis != null}" th:each="placaAsignada : ${listaPlacasAsignadasParaAnalisis}">
 				    <tr>
 				      <td>
+				      	<!-- la placa no se podrá marcar para devolver si ya tiene analistas asignados -->
+				      	<!-- <input type="text" th:value= "${placaAsignada.esDevolvible}" /> -->
 				      	<input th:id="checkDevolver+${placaAsignada.id}" class="form-check-input, justify-content-center" type="checkbox" th:field="*{listaIdsPlacasSeleccionadosParaDevolver}" name="certificates" th:value="${placaAsignada.id}"
-				      		onclick="habilitarDeshabilitarBotDevolver();"/>
+				      		onclick="habilitarDeshabilitarBotDevolver();"
+				      		th:disabled="${!placaAsignada.esDevolvible}"/>
 				      </td>
 				      <td><span th:text="${placaAsignada.id}"></span></td>
 				      <td><span th:text="${placaAsignada.laboratorioCentro.nombre}"></span></td>

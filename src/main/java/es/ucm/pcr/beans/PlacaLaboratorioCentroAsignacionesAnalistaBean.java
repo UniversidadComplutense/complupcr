@@ -192,6 +192,12 @@ public class PlacaLaboratorioCentroAsignacionesAnalistaBean extends PlacaLaborat
 		beanAnalisis.setNumTotalAnalistasAsignados(beanListaAsignaciones.getListaAnalistasLab().size() + beanListaAsignaciones.getListaAnalistasVol().size() + beanListaAsignaciones.getListaAnalistasVolSinLabCentro().size());
 		bean.setBeanAnalisisPlaca(beanAnalisis);	
 
+		//la placa será devolvible si no tiene analistas asignados
+		if(beanAnalisis.getNumTotalAnalistasAsignados()==0) {
+			bean.setEsDevolvible(true);
+		}else if (beanAnalisis.getNumTotalAnalistasAsignados()>0){
+			bean.setEsDevolvible(false);
+		}
 
 		return bean;
 
