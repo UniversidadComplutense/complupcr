@@ -200,21 +200,39 @@ function consultarMuestras(lote,centroProcedencia,id){
 //funcion que obtiene los checkbox pulsados y se los envia al controlador
 function procesarLotes(urlVolver) {
 
-	var nFilas = $("#tablaResultados tr").length;
+	var nFilas = $("#tablaResultados .trGroupLotes").length;
 	var lotesProcesar="";
 	if (nFilas>0) {
-	 
+	 var seguir=true;
 	 for (var i=0; i<nFilas;i++){
 		 var seleccionado="#seleccionado"+i;
+		 var referencia="#referenciaLote"+i;
+		 var referenciaLoteBbdd="#referenciaLoteBbdd"+i;
+		 if (($(referencia).val().trim() == "") || $("#mensajeError"+i).val() !="" ||  $("#mensajeReferenciaLote"+i).is(":visible")) {
+			 seguir=false;
+			 if($("#mensajeReferenciaLote"+i).is(":visible")) $("#mensajeReferenciaLoteGuardar"+i).show();
+			 else
+			 $("#mensajeReferenciaLote"+i).show();
+		 }
+		 else{
+			 if ($(referenciaLoteBbdd).val==""){
+				 $("#mensajeReferenciaLoteGuardar"+i).show();
+				 seguir=false;
+			 }	 else{
+			 $("#mensajeReferenciaLote"+i).hide();
 		if ($(seleccionado).is(':checked')) {
 			//lotesProcesar
 		
 			lotesProcesar+=$(seleccionado).val()+":";
 		}
+			 }
+		 }
 	 }
 	}
 	var url="/laboratorioUni/procesarLotes?lotes="+lotesProcesar+"&url="+urlVolver;
+	if (seguir)
 	window.location=url;
+	
 }
 
 // desde placas

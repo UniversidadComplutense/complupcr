@@ -273,6 +273,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		    	for (LoteCentroBean loteError : lotesError) {
 		    		if (lote.getId()==loteError.getId()) {
 		    			lote.setErrorReferenciaLote(loteError.getErrorReferenciaInternaLote());
+		    			lote.setReferenciaInternaLote(loteError.getReferenciaInternaLote());
 		    			break;
 		    		}
 		    	}
@@ -283,6 +284,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			
 			vista.addObject("paginaLotes", paginaLotes);
 			vista.addObject("busquedaLotes",busqueda);
+		
 			busqueda.setMostrarGuardarRef(this.mostrarGuardarRef(paginaLotes.getContent()));
 			// guardo los criterios de busqueda de lotes
 			session.setAttribute("busquedaLotes", busqueda);
