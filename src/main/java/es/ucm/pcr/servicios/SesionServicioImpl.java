@@ -151,8 +151,8 @@ public class SesionServicioImpl implements SesionServicio {
 			opcionPrincipal = new MenuBean("Jefe de servicio", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}
-//			Analista
-		if (this.tieneRol("ADMIN") || this.tieneRol("ANALISTALABORATORIO")) {
+//			Analista (analistas laboratorio y voluntarios)
+		if (this.tieneRol("ADMIN") || this.tieneRol("ANALISTALABORATORIO") || this.tieneRol("VOLUNTARIO")) {
 			menuSecundario = new ArrayList<MenuBean>();
 			// opcionSecundaria = new MenuBean("Revisar muestras",
 			// "/analisis/listarMuestrasAnalista", null);

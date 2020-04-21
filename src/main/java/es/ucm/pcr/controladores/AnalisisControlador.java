@@ -819,7 +819,7 @@ public class AnalisisControlador {
 		//ANALISTAS: 1-REVISAR PLACA		
 		
 		@RequestMapping(value = "/listarPlacasAnalista", method = RequestMethod.GET)
-		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO')")
+		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO', 'VOLUNTARIO')")		
 		public ModelAndView listarPlacasAsignadasAnalistaGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
 
 			ModelAndView vista = new ModelAndView("ListadoPlacasARevisarAnalista");
@@ -925,7 +925,7 @@ public class AnalisisControlador {
 		
 		//ANALISTAS: 2- REVISAR MUESTRA	(YA NO SE USA)	
 		@RequestMapping(value = "/listarMuestrasAnalista", method = RequestMethod.GET)
-		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO')")
+		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO', 'VOLUNTARIO')")
 		public ModelAndView listarMuestrasAsignadasAnalistaGET(HttpSession session, @PageableDefault(page = 0, value = 20) Pageable pageable) throws Exception {
 
 			ModelAndView vista = new ModelAndView("ListadoMuestrasARevisarAnalista");
@@ -970,7 +970,7 @@ public class AnalisisControlador {
 		
 		//muestra pantalla al analista para que resuelva la muestra
 		@RequestMapping(value="/revisarAnalista", method=RequestMethod.GET)
-		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO')")
+		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO', 'VOLUNTARIO')")
 		public ModelAndView revisarMuestraAnalista(HttpSession session, HttpServletRequest request, @RequestParam("idMuestra") Integer idMuestra) throws Exception {
 			ModelAndView vista = new ModelAndView("VistaRevisarMuestraAnalista");
 						
@@ -999,7 +999,7 @@ public class AnalisisControlador {
 		
 		
 		@RequestMapping(value = "/guardarRevisionAnalista", method = RequestMethod.POST)
-		@PreAuthorize("hasAnyRole('ADMIN','JEFESERVICIO')")
+		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO', 'VOLUNTARIO')")
 		public RedirectView guardarRevisionAnalista(@ModelAttribute("beanMuestra") MuestraBean beanMuestra,
 				HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
 			
