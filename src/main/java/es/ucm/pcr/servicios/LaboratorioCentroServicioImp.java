@@ -14,9 +14,10 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,6 @@ import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
-import es.ucm.pcr.beans.DocumentoBean;
 import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesAnalistaBean;
@@ -872,32 +872,32 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		String cellValueReferencia;
 		HashMap<Integer, String> resultados = new HashMap<Integer, String>();
 
-		XSSFWorkbook workbook = new XSSFWorkbook(elementoDocBean.getFile().getInputStream());
-		XSSFSheet xssfSheet = workbook.getSheet(elementoDocBean.getHoja());
-		XSSFRow xssfRow;
-		int rows = xssfSheet.getLastRowNum();
+		Workbook workbook = WorkbookFactory.create(elementoDocBean.getFile().getInputStream());
+		Sheet sheet = workbook.getSheet(elementoDocBean.getHoja());
+		Row row;
+		int rows = sheet.getLastRowNum();
 		for (int r = 0; r < rows; r++) {
-			xssfRow = xssfSheet.getRow(r);
-			if (xssfRow == null) {
+			row = sheet.getRow(r);
+			if (row == null) {
 				break;
 			} else {
-				cols = xssfRow.getLastCellNum();
+				cols = row.getLastCellNum();
 				if (r == 0) {
 					for (int c = 0; c < cols; c++) {
 
-						cellValue = xssfRow.getCell(c) == null ? ""
-								: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
-										? xssfRow.getCell(c).getStringCellValue()
-										: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
-												? "" + xssfRow.getCell(c).getNumericCellValue()
-												: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
-														? "" + xssfRow.getCell(c).getBooleanCellValue()
-														: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
+						cellValue = row.getCell(c) == null ? ""
+								: (row.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
+										? row.getCell(c).getStringCellValue()
+										: (row.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
+												? "" + row.getCell(c).getNumericCellValue()
+												: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+														? "" + row.getCell(c).getBooleanCellValue()
+														: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
 																? "BLANK"
-																: (xssfRow.getCell(c)
+																: (row.getCell(c)
 																		.getCellType() == Cell.CELL_TYPE_FORMULA)
 																				? "FORMULA"
-																				: (xssfRow.getCell(c)
+																				: (row.getCell(c)
 																						.getCellType() == Cell.CELL_TYPE_ERROR)
 																								? "ERROR"
 																								: "";
@@ -906,37 +906,37 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 						}
 					}
 				} else if (r > 0 && colResultado != null) {
-					cellValueResultado = xssfRow.getCell(colResultado) == null ? ""
-							: (xssfRow.getCell(colResultado).getCellType() == Cell.CELL_TYPE_STRING)
-									? xssfRow.getCell(colResultado).getStringCellValue()
-									: (xssfRow.getCell(colResultado).getCellType() == Cell.CELL_TYPE_NUMERIC)
-											? "" + xssfRow.getCell(colResultado).getNumericCellValue()
-											: (xssfRow.getCell(colResultado).getCellType() == Cell.CELL_TYPE_BOOLEAN)
-													? "" + xssfRow.getCell(colResultado).getBooleanCellValue()
-													: (xssfRow.getCell(colResultado)
+					cellValueResultado = row.getCell(colResultado) == null ? ""
+							: (row.getCell(colResultado).getCellType() == Cell.CELL_TYPE_STRING)
+									? row.getCell(colResultado).getStringCellValue()
+									: (row.getCell(colResultado).getCellType() == Cell.CELL_TYPE_NUMERIC)
+											? "" + row.getCell(colResultado).getNumericCellValue()
+											: (row.getCell(colResultado).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+													? "" + row.getCell(colResultado).getBooleanCellValue()
+													: (row.getCell(colResultado)
 															.getCellType() == Cell.CELL_TYPE_BLANK)
 																	? "BLANK"
-																	: (xssfRow.getCell(colResultado)
+																	: (row.getCell(colResultado)
 																			.getCellType() == Cell.CELL_TYPE_FORMULA)
 																					? "FORMULA"
-																					: (xssfRow.getCell(colResultado)
+																					: (row.getCell(colResultado)
 																							.getCellType() == Cell.CELL_TYPE_ERROR)
 																									? "ERROR"
 																									: "";
 
-					cellValueReferencia = xssfRow.getCell(0) == null ? ""
-							: (xssfRow.getCell(0).getCellType() == Cell.CELL_TYPE_STRING)
-									? xssfRow.getCell(0).getStringCellValue()
-									: (xssfRow.getCell(0).getCellType() == Cell.CELL_TYPE_NUMERIC)
-											? "" + xssfRow.getCell(0).getNumericCellValue()
-											: (xssfRow.getCell(0).getCellType() == Cell.CELL_TYPE_BOOLEAN)
-													? "" + xssfRow.getCell(0).getBooleanCellValue()
-													: (xssfRow.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK)
+					cellValueReferencia = row.getCell(0) == null ? ""
+							: (row.getCell(0).getCellType() == Cell.CELL_TYPE_STRING)
+									? row.getCell(0).getStringCellValue()
+									: (row.getCell(0).getCellType() == Cell.CELL_TYPE_NUMERIC)
+											? "" + row.getCell(0).getNumericCellValue()
+											: (row.getCell(0).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+													? "" + row.getCell(0).getBooleanCellValue()
+													: (row.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK)
 															? "BLANK"
-															: (xssfRow.getCell(0)
+															: (row.getCell(0)
 																	.getCellType() == Cell.CELL_TYPE_FORMULA)
 																			? "FORMULA"
-																			: (xssfRow.getCell(0)
+																			: (row.getCell(0)
 																					.getCellType() == Cell.CELL_TYPE_ERROR)
 																							? "ERROR"
 																							: "";

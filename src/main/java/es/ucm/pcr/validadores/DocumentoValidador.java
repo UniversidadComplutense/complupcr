@@ -8,9 +8,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -75,39 +76,39 @@ public class DocumentoValidador implements Validator {
 	private void validarExcelResutadosAnalista(ElementoDocumentacionBean elementoDocBean, Errors errors) {
 
 		try {
-			XSSFWorkbook workbook = new XSSFWorkbook(elementoDocBean.getFile().getInputStream());
-			XSSFSheet xssfSheet = workbook.getSheet(elementoDocBean.getHoja());
-			if (xssfSheet == null) {
+			Workbook workbook = WorkbookFactory.create(elementoDocBean.getFile().getInputStream());
+			Sheet sheet = workbook.getSheet(elementoDocBean.getHoja());
+			if (sheet == null) {
 				errors.rejectValue("hoja", "campo.invalid", "No existe la hoja indicada en el libro subido");
 			} else {
-				XSSFRow xssfRow;
-				int rows = xssfSheet.getLastRowNum();
+				Row row;
+				int rows = sheet.getLastRowNum();
 				int cols = 0;
 				Integer colResultado = null;
 				String cellValue;
 				List<String> listaMuestrasExcel = new ArrayList<String>();
 				List<String> listaMuestrasLaboratorio = new ArrayList<String>();
 				for (int r = 0; r < rows; r++) {
-					xssfRow = xssfSheet.getRow(r);
-					if (xssfRow == null) {
+					row = sheet.getRow(r);
+					if (row == null) {
 						break;
 					} else {
-						cols = xssfRow.getLastCellNum();
+						cols = row.getLastCellNum();
 						for (int c = 0; c < cols; c++) {
 
-							cellValue = xssfRow.getCell(c) == null ? ""
-									: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
-											? xssfRow.getCell(c).getStringCellValue()
-											: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
-													? "" + xssfRow.getCell(c).getNumericCellValue()
-													: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
-															? "" + xssfRow.getCell(c).getBooleanCellValue()
-															: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
+							cellValue = row.getCell(c) == null ? ""
+									: (row.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
+											? row.getCell(c).getStringCellValue()
+											: (row.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
+													? "" + row.getCell(c).getNumericCellValue()
+													: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+															? "" + row.getCell(c).getBooleanCellValue()
+															: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
 																	? "BLANK"
-																	: (xssfRow.getCell(c)
+																	: (row.getCell(c)
 																			.getCellType() == Cell.CELL_TYPE_FORMULA)
 																					? "FORMULA"
-																					: (xssfRow.getCell(c)
+																					: (row.getCell(c)
 																							.getCellType() == Cell.CELL_TYPE_ERROR)
 																									? "ERROR"
 																									: "";
@@ -160,7 +161,7 @@ public class DocumentoValidador implements Validator {
 				}
 
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			errors.rejectValue("file", "campo.invalid", "El fichero de resultado no es un fichero valido");
 
 		}
@@ -176,13 +177,13 @@ public class DocumentoValidador implements Validator {
 	private void validarExcelReferenciasLaboratorio(ElementoDocumentacionBean elementoDocBean, Errors errors) {
 
 		try {
-			XSSFWorkbook workbook = new XSSFWorkbook(elementoDocBean.getFile().getInputStream());
-			XSSFSheet xssfSheet = workbook.getSheet(elementoDocBean.getHoja());
-			if (xssfSheet == null) {
+			Workbook workbook = WorkbookFactory.create(elementoDocBean.getFile().getInputStream());
+			Sheet sheet = workbook.getSheet(elementoDocBean.getHoja());
+			if (sheet == null) {
 				errors.rejectValue("hoja", "campo.invalid", "No existe la hoja indicada en el libro subido");
 			} else {
-				XSSFRow xssfRow;
-				int rows = xssfSheet.getLastRowNum();
+				Row row;
+				int rows = sheet.getLastRowNum();
 				int cols = 0;
 				Integer colMuestra = null;
 				Integer colReferencia = null;
@@ -190,26 +191,26 @@ public class DocumentoValidador implements Validator {
 				List<String> listaMuestrasExcel = new ArrayList<String>();
 				List<String> listaMuestrasVisavet = new ArrayList<String>();
 				for (int r = 0; r < rows; r++) {
-					xssfRow = xssfSheet.getRow(r);
-					if (xssfRow == null) {
+					row = sheet.getRow(r);
+					if (row == null) {
 						break;
 					} else {
-						cols = xssfRow.getLastCellNum();
+						cols = row.getLastCellNum();
 						for (int c = 0; c < cols; c++) {
 
-							cellValue = xssfRow.getCell(c) == null ? ""
-									: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
-											? xssfRow.getCell(c).getStringCellValue()
-											: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
-													? "" + xssfRow.getCell(c).getNumericCellValue()
-													: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
-															? "" + xssfRow.getCell(c).getBooleanCellValue()
-															: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
+							cellValue = row.getCell(c) == null ? ""
+									: (row.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
+											? row.getCell(c).getStringCellValue()
+											: (row.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
+													? "" + row.getCell(c).getNumericCellValue()
+													: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+															? "" + row.getCell(c).getBooleanCellValue()
+															: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
 																	? "BLANK"
-																	: (xssfRow.getCell(c)
+																	: (row.getCell(c)
 																			.getCellType() == Cell.CELL_TYPE_FORMULA)
 																					? "FORMULA"
-																					: (xssfRow.getCell(c)
+																					: (row.getCell(c)
 																							.getCellType() == Cell.CELL_TYPE_ERROR)
 																									? "ERROR"
 																									: "";
@@ -263,7 +264,7 @@ public class DocumentoValidador implements Validator {
 				}
 
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			errors.rejectValue("file", "campo.invalid", "El fichero de resultado no es un fichero valido");
 
 		}
