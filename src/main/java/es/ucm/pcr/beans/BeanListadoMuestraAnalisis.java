@@ -104,7 +104,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		bean.setEstadoMuestra(muestra.getEstadoMuestra().getDescripcion());
 		
 		
-		//ESTOY AKIIIIIIIIIIIIIII, TODO: REVISAR ESTO CON SARA- UNA MUESTRA PUEDE ESTAR EN VARIAS PLACAS DE LABORATORIO??		
+		//TODO: REVISAR ESTO CON SARA- UNA MUESTRA PUEDE ESTAR EN VARIAS PLACAS DE LABORATORIO??		
 		/*
 		if(muestra.getPlacaLaboratorio()!=null) {
 			bean.setIdPlacaLaboratorio(muestra.getPlacaLaboratorio().getId()); //aqui solo se mostrarán muestras que ya esten en una placa de laboratorio
@@ -210,7 +210,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		//bean.setEstadoMuestra(beanResultado.asignarTipoEstadoYCodNum(muestra.getResultado()).getResultadoMuestra().getDescripcion());
 		bean.setEstadoMuestra(muestra.getEstadoMuestra().getDescripcion());
 		
-		//ESTOY AKIIIIIIIIIIIIIII, TODO: REVISAR ESTO CON SARA- UNA MUESTRA PUEDE ESTAR EN VARIAS PLACAS DE LABORATORIO??		
+		//TODO: REVISAR ESTO CON SARA- UNA MUESTRA PUEDE ESTAR EN VARIAS PLACAS DE LABORATORIO??		
 		/*
 		if(muestra.getPlacaLaboratorio()!=null) {
 			bean.setIdPlacaLaboratorio(muestra.getPlacaLaboratorio().getId()); //aqui solo se mostrarán muestras que ya esten en una placa de laboratorio
@@ -241,11 +241,10 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 			Usuario usu = usuMu.getUsuario();			
 			//si el usumuestra es el mismo que el usuario logado rellenamos el beanAsignacionUsuarioLogado			
 			Integer idUsu = usu.getId();
-			System.out.println("id usuarioMuestra vale: " + usuMu.getIdUsuarioMuestra());
-			System.out.println("id usu vale: " + idUsu);
-			System.out.println("is usuario logado vale: " + idUsuarioLogado);
-			if(idUsu.equals(idUsuarioLogado)) {
-				System.out.println("ENTRO EN EL IF, id usuarioMuestra vale: " + usuMu.getIdUsuarioMuestra());
+			//System.out.println("id usuarioMuestra vale: " + usuMu.getIdUsuarioMuestra());
+			//System.out.println("id usu vale: " + idUsu);
+			//System.out.println("is usuario logado vale: " + idUsuarioLogado);
+			if(idUsu.equals(idUsuarioLogado)) {				
 				BeanUsuario beanUsuLogado = BeanUsuario.modelToBean(usu);
 				//no puedo asociarle el rol porque puede tener varios
 				//BeanRolUsuario beanRolUsuario = new BeanRolUsuario();				
@@ -307,7 +306,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		beanAnalisis.setBeanListaAsignaciones(beanListaAsignaciones);
 		//el total de analistas asignados será la suma de los analistas lab, analistas vol y analistas vol sin centro
 		beanAnalisis.setNumTotalAnalistasAsignados(beanListaAsignaciones.getListaAnalistasLab().size() + beanListaAsignaciones.getListaAnalistasVol().size() + beanListaAsignaciones.getListaAnalistasVolSinLabCentro().size());
-		System.out.println("beanAnalisis vale: " + beanAnalisis.toString());
+		//System.out.println("beanAnalisis vale: " + beanAnalisis.toString());
 		bean.setBeanAnalisis(beanAnalisis);
 		BeanResultado beanResultado = new BeanResultado();
 		bean.setResultado(beanResultado.asignarTipoEstadoYCodNum(muestra.getResultado()).getResultadoMuestra().getDescripcion());
@@ -316,34 +315,8 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		
 		return bean;
 		
-			
+				
 		
-		
-		
-		
-		/*
-		BeanAsignacion beanAsignacionUsuarioLogado = new BeanAsignacion();
-		Set<UsuarioMuestra> usuarioMuestras = muestra.getUsuarioMuestras(); //conjunto de usuarios asignados a la muestra (analistas, voluntarios y jefes)
-		for(UsuarioMuestra usuMu: usuarioMuestras) {
-			//nos quedamos solo con el usumuestra de usuario logado
-			Usuario usu = usuMu.getUsuario();
-			Integer idUsu = usu.getId();
-			System.out.println("id usu vale: " + idUsu);
-			if(idUsu==idUsuarioLogado) {						
-				BeanUsuario beanUsuLogado = BeanUsuario.modelToBean(usu);
-				//no puedo asociarle el rol porque puede tener varios
-				//BeanRolUsuario beanRolUsuario = new BeanRolUsuario();				
-				//beanUsuLogado.setBeanRolUsuario(beanRolUsuario.asignarRolUsuarioPorCodNum(usuarioLogado.get));
-				beanAsignacionUsuarioLogado.setBeanUsuario(beanUsuLogado);
-				beanAsignacionUsuarioLogado.setFechaAsignacion(usuMu.getFechaAsignacion());
-				beanAsignacionUsuarioLogado.setValoracion(usuMu.getValoracion());
-				beanAsignacionUsuarioLogado.setFechaValoracion(usuMu.getFechaValoracion());
-			}
-		}
-		bean.getBeanAnalisis().setAsignacionUsuarioLogado(beanAsignacionUsuarioLogado);
-		
-		return bean;
-		*/
 	}
 	
 	
