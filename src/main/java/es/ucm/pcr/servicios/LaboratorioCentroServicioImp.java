@@ -876,7 +876,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		Sheet sheet = workbook.getSheet(elementoDocBean.getHoja());
 		Row row;
 		int rows = sheet.getLastRowNum();
-		for (int r = 0; r < rows; r++) {
+		for (int r = 0; r <= rows; r++) {
 			row = sheet.getRow(r);
 			if (row == null) {
 				break;
