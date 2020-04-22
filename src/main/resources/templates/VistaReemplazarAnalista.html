@@ -74,22 +74,18 @@
 		
 	</fielset>		
 	
-		<!-- botones cancelar y guardar asignacion -->		
-		<div class="row justify-content-center mt-4">		
-			<!-- <div class="col-1">							
-				<a th:href="@{/analisis/cogerPlacas}" class="btn btn-secondary ">Cancelar</a>
-			</div>
-			<div class="col-1">
-				<input th:disabled="${noSePuedeAsignarNuevosAnalistasAPlaca}" type="submit" class="btn btn-primary "
-					value="Guardar asignacion"></input>
-			</div> -->
-			<div class="col-1-left">
+		<!-- botones cancelar y guardar asignacion -->	
+		
+		<div class="row justify-content-center mt-4">
+		
+			<div class="col-2">				
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
 			</div>			
-			<div class="col-1-right">	
+			<div class="col-2">	
 				<!-- <input  type="submit" class="btn btn-primary "	value="Guardar"></input> -->	
 				<input type="button" class="btn btn-secondary" onclick="EjecutarReemplazoAnalista()" value="Guardar" />
 			</div>
+						
 		</div>
 	
 	

@@ -224,8 +224,8 @@ public class LabCentroControlador {
 		session.setAttribute("paginaActual", currentPage);
 		
 		BusquedaPlacaLaboratorioBean criteriosBusqueda = new BusquedaPlacaLaboratorioBean();
-		// Inicializamos búsqueda con estado 'PLACA_INICIADA' y laboratorio al que pertenece el usuario
-		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACA_INICIADA.getCodNum());
+		// Inicializamos búsqueda con el laboratorio al que pertenece el usuario
+		criteriosBusqueda.setIdEstadoPlaca(0);
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getLaboratorioCentro().getId());
 		session.setAttribute("beanBusqueda", criteriosBusqueda);
 		

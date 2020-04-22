@@ -14,9 +14,10 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,6 @@ import es.ucm.pcr.beans.BeanLaboratorioCentro;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
-import es.ucm.pcr.beans.DocumentoBean;
 import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.GuardarAsignacionPlacaLaboratorioCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioCentroAsignacionesAnalistaBean;
@@ -442,11 +442,11 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	@Override
 	@Transactional
 	public PlacaLaboratorioCentroBean guardarCogerODevolverPlaca(Integer idPlaca, Integer idUsuario, String accion) {
-	//metodo que recibe el idPlaca, y el id de usuario que la quiere coger
+	//metodo que recibe el idPlaca, y el id de usuario que la quiere coger o devolver
 	
 		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);
 		
-		//obtencion de las muestras de la placa a través de a traves de sus placas visavet los lotes
+		//obtencion de las muestras de la placa a través de a traves de sus placas visavet y los lotes
 		Set<Muestra> cjtoMuestrasPlacaLaboratorio = new HashSet<Muestra>(); //ahora no salen directamente de la placa de laboratorio		
 		Set<PlacaVisavet> placasVisavetDeLaPlacaLaboratorio = new HashSet<PlacaVisavet>();		
 		for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placa.getPlacaVisavetPlacaLaboratorios()) {
@@ -465,11 +465,11 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		
 				
 		if(accion.equals("coger")) {
-			//asocia la placa al usuario, le cambia el estado de la placa a PLACA_ASIGNADA_PARA_ANALISIS y pone a todas sus muestras a estado pendente de analizar
+			//asocia la placa al usuario, le cambia el estado de la placa a PLACA_ASIGNADA_PARA_ANALISIS y pone a todas sus muestras a estado MUESTRA_PENDIENTE_ANALIZAR
 			Usuario usuario = usuarioRepositorio.getOne(idUsuario);
 			placa.setUsuario(usuario);
 			EstadoPlacaLaboratorio estadoPlacaLab = estadoPlacaLaboratorioRepositorio.getOne(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
-			System.out.println("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
+			log.info("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
 			placa.setEstadoPlacaLaboratorio(estadoPlacaLab);
 			//recorremos todas las muestras de esa placa y les ponemos el estado pendente de analizar
 			//las muestras de la placa las obtenemos a traves de sus placas visavet y de los lotes
@@ -483,10 +483,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
 			}			
 		}else if(accion.equals("devolver")) {
-			//desasocia la placa del usuario, le cambia el estado de la placa a PLACA_LISTA_PARA_ANALISIS (estado anterior) y ¿Qué hacemos con las muestras?
+			//desasocia la placa del usuario, le cambia el estado de la placa a PLACA_LISTA_PARA_ANALISIS (estado anterior) y ponemos a las muestras su estado anterior MUESTRA_ENVIADA_CENTRO_ANALISIS
 			placa.setUsuario(null);
 			EstadoPlacaLaboratorio estadoPlacaLab = estadoPlacaLaboratorioRepositorio.getOne(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());			
-			System.out.println("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
+			log.info("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
 			placa.setEstadoPlacaLaboratorio(estadoPlacaLab);
 			//TODO preguntar que hacemos con las muestras cuando devolvermos la placa?
 			//recorremos todas las muestras de esa placa y les ponemos en el estado que tenian al llegar MUESTRA_ENVIADA_CENTRO_ANALISIS?
@@ -633,7 +633,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		}
 		else {
 			//si no se ha marcado ningun nuevo analista no hacemos nada
-			System.out.println("no se ha escogido ningun analista nuevo, no hacemos asignaciones nuevas ni cambiamos el estado a sus muestras");			
+			log.info("no se ha escogido ningun analista nuevo, no hacemos asignaciones nuevas ni cambiamos el estado a sus muestras");			
 		}
 				
 		//a la placa no hay que cambiarle el estado, solo cambiamos el estado de sus muestras		
@@ -758,7 +758,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		List<PlacaLaboratorioCentroAsignacionesAnalistaBean> listaPlacasLaboratorioCentroAsignacionesBean = new ArrayList<PlacaLaboratorioCentroAsignacionesAnalistaBean>();		
 		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = placaLaboratorioRepositorio.findByParamsValoradasAndNotValoradas(criteriosBusqueda, pageable); 		
 		for (PlacaLaboratorio placa : PagePlacasLaboratorioCentro.getContent()) {
-			System.out.println("Placa vale: "+ placa.toString());
+			log.info("Placa vale: "+ placa.toString());
 			PlacaLaboratorioCentroAsignacionesAnalistaBean placaLaboratorioCentroAsignacionesAnalistaBean = PlacaLaboratorioCentroAsignacionesAnalistaBean.modelToBean(placa, criteriosBusqueda.getIdAnalistaMuestras());			
 			listaPlacasLaboratorioCentroAsignacionesBean.add(placaLaboratorioCentroAsignacionesAnalistaBean);
 		}		
@@ -828,7 +828,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			//por cada muestra calculamos si ya se han dado las valoraciones de todos los analistas
 			//en ese caso el resultado sería definitivo y se guardara el resultado en la muestra y se enviará la notificacion 
 			Integer numValoracionesMuestra = this.calculaCuantasValoracionesTieneLaMuestra(m);
-			System.out.println("el numero de valoraciones actuales de la muestra con id: "+ m.getId()+" es: " + numValoracionesMuestra);
+			log.info("el numero de valoraciones actuales de la muestra con id: "+ m.getId()+" es: " + numValoracionesMuestra);
 			if(numValoracionesMuestra.equals(numAnalistas)) {
 				//guardamos como resultado definitivo este ultimo resultado que está dando el analista que viene del excel
 				m.setResultado(valoracionExcelParaMuestra);
@@ -843,7 +843,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				//Envio de notificacion al pacientes si tiene activada la notificacion automatica
 				//recupero el paciente de la muestra
 				Paciente paciente = m.getPaciente();
-				System.out.println("el paciente con id: " + paciente.getId()+" tiene la notificacion automato a: " + paciente.getNotificarAutomato());
+				log.info("el paciente con id: " + paciente.getId()+" tiene la notificacion automato a: " + paciente.getNotificarAutomato());
 				if(paciente.getNotificarAutomato().equals("S")) {
 					muestraServicio.actualizarNotificacionMuestra(m.getId(), true); //actualiza fecha de notificación y envia correo
 				}
@@ -872,32 +872,32 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		String cellValueReferencia;
 		HashMap<Integer, String> resultados = new HashMap<Integer, String>();
 
-		XSSFWorkbook workbook = new XSSFWorkbook(elementoDocBean.getFile().getInputStream());
-		XSSFSheet xssfSheet = workbook.getSheet(elementoDocBean.getHoja());
-		XSSFRow xssfRow;
-		int rows = xssfSheet.getLastRowNum();
+		Workbook workbook = WorkbookFactory.create(elementoDocBean.getFile().getInputStream());
+		Sheet sheet = workbook.getSheet(elementoDocBean.getHoja());
+		Row row;
+		int rows = sheet.getLastRowNum();
 		for (int r = 0; r < rows; r++) {
-			xssfRow = xssfSheet.getRow(r);
-			if (xssfRow == null) {
+			row = sheet.getRow(r);
+			if (row == null) {
 				break;
 			} else {
-				cols = xssfRow.getLastCellNum();
+				cols = row.getLastCellNum();
 				if (r == 0) {
 					for (int c = 0; c < cols; c++) {
 
-						cellValue = xssfRow.getCell(c) == null ? ""
-								: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
-										? xssfRow.getCell(c).getStringCellValue()
-										: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
-												? "" + xssfRow.getCell(c).getNumericCellValue()
-												: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
-														? "" + xssfRow.getCell(c).getBooleanCellValue()
-														: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
+						cellValue = row.getCell(c) == null ? ""
+								: (row.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
+										? row.getCell(c).getStringCellValue()
+										: (row.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
+												? "" + row.getCell(c).getNumericCellValue()
+												: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+														? "" + row.getCell(c).getBooleanCellValue()
+														: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
 																? "BLANK"
-																: (xssfRow.getCell(c)
+																: (row.getCell(c)
 																		.getCellType() == Cell.CELL_TYPE_FORMULA)
 																				? "FORMULA"
-																				: (xssfRow.getCell(c)
+																				: (row.getCell(c)
 																						.getCellType() == Cell.CELL_TYPE_ERROR)
 																								? "ERROR"
 																								: "";
@@ -906,37 +906,37 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 						}
 					}
 				} else if (r > 0 && colResultado != null) {
-					cellValueResultado = xssfRow.getCell(colResultado) == null ? ""
-							: (xssfRow.getCell(colResultado).getCellType() == Cell.CELL_TYPE_STRING)
-									? xssfRow.getCell(colResultado).getStringCellValue()
-									: (xssfRow.getCell(colResultado).getCellType() == Cell.CELL_TYPE_NUMERIC)
-											? "" + xssfRow.getCell(colResultado).getNumericCellValue()
-											: (xssfRow.getCell(colResultado).getCellType() == Cell.CELL_TYPE_BOOLEAN)
-													? "" + xssfRow.getCell(colResultado).getBooleanCellValue()
-													: (xssfRow.getCell(colResultado)
+					cellValueResultado = row.getCell(colResultado) == null ? ""
+							: (row.getCell(colResultado).getCellType() == Cell.CELL_TYPE_STRING)
+									? row.getCell(colResultado).getStringCellValue()
+									: (row.getCell(colResultado).getCellType() == Cell.CELL_TYPE_NUMERIC)
+											? "" + row.getCell(colResultado).getNumericCellValue()
+											: (row.getCell(colResultado).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+													? "" + row.getCell(colResultado).getBooleanCellValue()
+													: (row.getCell(colResultado)
 															.getCellType() == Cell.CELL_TYPE_BLANK)
 																	? "BLANK"
-																	: (xssfRow.getCell(colResultado)
+																	: (row.getCell(colResultado)
 																			.getCellType() == Cell.CELL_TYPE_FORMULA)
 																					? "FORMULA"
-																					: (xssfRow.getCell(colResultado)
+																					: (row.getCell(colResultado)
 																							.getCellType() == Cell.CELL_TYPE_ERROR)
 																									? "ERROR"
 																									: "";
 
-					cellValueReferencia = xssfRow.getCell(0) == null ? ""
-							: (xssfRow.getCell(0).getCellType() == Cell.CELL_TYPE_STRING)
-									? xssfRow.getCell(0).getStringCellValue()
-									: (xssfRow.getCell(0).getCellType() == Cell.CELL_TYPE_NUMERIC)
-											? "" + xssfRow.getCell(0).getNumericCellValue()
-											: (xssfRow.getCell(0).getCellType() == Cell.CELL_TYPE_BOOLEAN)
-													? "" + xssfRow.getCell(0).getBooleanCellValue()
-													: (xssfRow.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK)
+					cellValueReferencia = row.getCell(0) == null ? ""
+							: (row.getCell(0).getCellType() == Cell.CELL_TYPE_STRING)
+									? row.getCell(0).getStringCellValue()
+									: (row.getCell(0).getCellType() == Cell.CELL_TYPE_NUMERIC)
+											? "" + row.getCell(0).getNumericCellValue()
+											: (row.getCell(0).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+													? "" + row.getCell(0).getBooleanCellValue()
+													: (row.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK)
 															? "BLANK"
-															: (xssfRow.getCell(0)
+															: (row.getCell(0)
 																	.getCellType() == Cell.CELL_TYPE_FORMULA)
 																			? "FORMULA"
-																			: (xssfRow.getCell(0)
+																			: (row.getCell(0)
 																					.getCellType() == Cell.CELL_TYPE_ERROR)
 																							? "ERROR"
 																							: "";

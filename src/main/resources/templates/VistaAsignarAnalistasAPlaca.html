@@ -236,20 +236,12 @@
 			</div>
 			<!-- solo aparecerá el boton guardar asignacion si tenemos el fieldeset de asignar mas analistas (misma condicion que el fieldset)-->
 			<div class="col-1" th:if="${formBeanGuardarAsignacionPlaca.placaLaboratorioCentroAsignacionesBean.beanAnalisisPlaca.numTotalAnalistasAsignados < formBeanGuardarAsignacionPlaca.numAnalistasPermitidos}">
-				<input th:disabled="${noSePuedeAsignarNuevosAnalistasAPlaca}" type="submit" class="btn btn-primary "
+				<input th:disabled="${noSePuedeAsignarNuevosAnalistasAPlaca}" type="submit" class="btn btn-secondary"
 					value="Guardar asignacion"></input>
 			</div>		
 		</div>
 		
-		<!-- ACCCIONES Tere -->
-		<!-- <div class="row justify-content-center mt-3">
-			<div class="col-1">
-				<a th:href="@{/centroSalud/muestra/}" class="btn btn-secondary">Volver</a>				
-			</div>
-			<div class="col-1">
-				<button th:disabled="${beanMuestra.id} != null" type="submit" class="btn btn-secondary">Guardar</button>
-			</div>
-		</div>	 -->
+		
 		
 	</form>	
 	
