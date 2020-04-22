@@ -139,6 +139,7 @@
 									    				<tr>
 									    				    <th>Centro Procedencia</th>
 										      				<th>Lote</th>
+										      				<th>Ref. Interna lote</th>
 															<th>Número de muestras</th>
 															
 														</tr>
@@ -148,7 +149,8 @@
 														   <td><span th:text="${lote.centroProcedencia}"></span></td>
 															<td>
 															<input type="hidden" id="lote+${count.index}" th:value="${lote.id}"/>
-															<span th:text="${lote.numLote}"></span></td>					
+															<span th:text="${lote.numLote}"></span></td>	
+															<td><span th:text="${lote.referenciaInternaLote}"></span></td>				
 															<td><span th:text="${#lists.size(lote.listaMuestras)}"></span></td>
 																													
 														</tr>		
@@ -368,24 +370,31 @@
         
          <div class="modal-body">
 		 <form id="laboratorioForm" action="" th:modelAttribute="beanPlacaVisavetUCM" >
-			 <label class="col-xs-2">Laboratorio a asignar:</label>
-			    <select class="form-control form-control-sm" id="laboratorioLab" onChange="habilitarBotonAsignarLaboratorio();">
+			
+			 <input type="hidden" id="laboratorioLab" th:value="${busqueda.idLaboratorioCentro}"></input>
+			
+			  <!--   <select class="form-control form-control-sm" id="laboratorioLab" onChange="habilitarBotonAsignarLaboratorio();">
 			    <option value="">Seleccione</option>
 				<option th:each="var: ${busqueda.listaLaboratorioCentro}"
 									th:value="${var.id}" th:text="${var.nombre}"
 									th:select="${busqueda.idLaboratorioCentro}">Laboratorio</option>
 				</select>
+				-->
 				<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
 				<div id="capaMuestrasMostrar">
 				<div id="capaFechaEnvio" style="display:none;"><label class="col-xs-2">Fecha de Envio: </label><span id="fechaEnvioModal"></span></div>
 				
 				<table class="col-xs-12 table" th:id="tablaLaboratorios" >
-				  <thead class="thead-light"><th  scope="col">Nombre</th><th  scope="col">Nº de equipos</th><th  scope="col">Placas a la espera</th>
+				  <thead class="thead-light"><th  scope="col">&nbsp;</th><th  scope="col">Nombre</th><th  scope="col">Nº de equipos</th><th  scope="col">Placas a la espera</th>
 				 
 				  </thead>
 				  <tbody>
 					 <tr id="trLaboratorio">	</tr>
 			     <tr id="trLaboratorio"  th:each="laboratorio, count : ${laboratorios}" >
+			     <td th:class="${#lists.size(laboratorio.equipos)<laboratorio.placasVisavetaLaEspera}? 'filaRed': 'filaVerde'">
+			     <input type="radio" th:data-laboratorio="${laboratorio.id}" th:onClick="habilitarBotonAsignarLaboratorio(this.getAttribute('data-laboratorio'));" th:id="laboratorio+${count.index}" th:value="${laboratorio.id}"></input>
+			 
+			     </td>
 			      <td th:class="${#lists.size(laboratorio.equipos)<laboratorio.placasVisavetaLaEspera}? 'filaRed': 'filaVerde'"><span th:text="${laboratorio.nombre}"></td>
 			             <td th:class="${#lists.size(laboratorio.equipos)<laboratorio.placasVisavetaLaEspera}? 'filaRed': 'filaVerde'"><span th:text="${#lists.size(laboratorio.equipos)}"></td>
 				         <td th:class="${#lists.size(laboratorio.equipos)<laboratorio.placasVisavetaLaEspera}? 'filaRed': 'filaVerde'"><span th:text="${#strings.toString(laboratorio.placasVisavetaLaEspera)}"></td>
