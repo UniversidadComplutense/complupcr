@@ -221,12 +221,11 @@ public class MuestraControlador {
 			return vista;
 		} else {
 			beanMuestra.setIdCentro(sesionServicio.getCentro().getId());
-			MuestraCentroBean muestra = muestraServicio.guardar(beanMuestra);
-			// TODO - VER A DONDE REDIRIGIR AL GUARDAR LOTE
+			muestraServicio.guardar(beanMuestra);
 
 			redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_GUARDAR_MUESTRA));
 			ModelAndView respuesta = new ModelAndView(
-					new RedirectView("/centroSalud/muestra/modificar?id=" + muestra.getId(), true));
+					new RedirectView("/centroSalud/muestra/list", true));
 			return respuesta;
 		}
 	}

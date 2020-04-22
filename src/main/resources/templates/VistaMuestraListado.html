@@ -146,6 +146,7 @@
 
 			</fieldset>
 
+			<!-- ACCIONES -->
 			<div class="row justify-content-end mt-2">
 				<div class="col-1">
 					<a th:href="@{/centroSalud/muestra/nueva}"
@@ -153,6 +154,9 @@
 				</div>
 				<div class="col-1">
 					<button type="submit" class="btn btn-secondary">Buscar</button>
+				</div>
+				<div class="col-1">
+					<button id="limpiarFormulario" onclick="resetForm('formBusqueda')" type="button" class="btn btn-secondary">Limpiar</button>
 				</div>
 			</div>
 
@@ -217,21 +221,29 @@
 								<span th:text="${muestra.codNumLote}"></span>
 							</td>
 							<td class="p-1">
-								<!-- ACCIONES --> <a style="color: black"
-								th:href="@{/centroSalud/muestra/modificar(id=${muestra.id})}"
-								title="Editar"> <i class="fa fa-edit" aria-hidden="true"
-									style="font-size: 1.2em;"></i>
-							</a> <a th:if="${muestra.fechaEnvioMuestraIni} != null"
-								style="color: grey; cursor: pointer;" title="Borrar"> <i
-									class="fa fa-eraser" aria-hidden="true"
-									style="font-size: 1.2em;"></i>
-							</a> <a th:if="${muestra.fechaEnvioMuestraIni} == null"
-								style="color: black; cursor: pointer;"
-								th:data-href="@{/centroSalud/muestra/borrar(id=${muestra.id})}"
-								title="Borrar" data-toggle="modal" data-target="#confirm-borrar">
-									<i class="fa fa-eraser" aria-hidden="true"
-									style="font-size: 1.2em;"></i>
-							</a> <!-- TODO - PENDIENTE DE OCULTAR 
+								<!-- ACCIONES --> 
+								<a style="color: black" th:if="${muestra.fechaEnvioMuestraIni == null}"
+									th:href="@{/centroSalud/muestra/modificar(id=${muestra.id})}"
+									title="Modificar"> <i class="fa fa-edit" aria-hidden="true"
+										style="font-size: 1.2em;"></i>
+								</a> 
+								<a style="color: black" th:if="${muestra.fechaEnvioMuestraIni != null}"
+									th:href="@{/centroSalud/muestra/{id}(id=${muestra.id})}"
+									title="Consultar"> <i class="fa fa-eye" aria-hidden="true"
+										style="font-size: 1.2em;"></i>
+								</a> 
+								<a th:if="${muestra.fechaEnvioMuestraIni} != null"
+									style="color: grey; cursor: pointer;" title="Borrar"> <i
+										class="fa fa-eraser" aria-hidden="true"
+										style="font-size: 1.2em;"></i>
+								</a> 
+								<a th:if="${muestra.fechaEnvioMuestraIni} == null"
+									style="color: black; cursor: pointer;"
+									th:data-href="@{/centroSalud/muestra/borrar(id=${muestra.id})}"
+									title="Borrar" data-toggle="modal" data-target="#confirm-borrar">
+										<i class="fa fa-eraser" aria-hidden="true"
+										style="font-size: 1.2em;"></i>
+								</a> <!-- TODO - PENDIENTE DE OCULTAR 
 					        <a style="color:black;cursor: pointer;" 
 					        		th:href="@{/documento/muestra(id=${muestra.id}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_MUESTRA_DESDE_MUESTRAS})}" 
 					        		title="Documentos">
@@ -277,7 +289,7 @@
 	    });
     	$('#confirm-borrar').on('show.bs.modal', function(e) {
     	    $(this).find('.btn-borrar').attr('href', $(e.relatedTarget).data('href'));
-    	});
+    	});    	
     </script>
 </body>
 </html>

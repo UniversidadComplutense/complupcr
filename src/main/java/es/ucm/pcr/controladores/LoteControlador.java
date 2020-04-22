@@ -241,11 +241,10 @@ public class LoteControlador {
 		} else {
 			// guardar lote
 			beanLote.setIdCentro(sesionServicio.getCentro().getId());
-			LoteCentroBean lote = loteServicio.guardar(beanLote);
-			// TODO - VER A DONDE REDIRIGIR AL GUARDAR LOTE 
+			loteServicio.guardar(beanLote);
 			
 			redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_GUARDAR_LOTE));
-			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/" + lote.getId(), true));
+			ModelAndView respuesta = new ModelAndView(new RedirectView("/centroSalud/lote/list", true));
 			return respuesta;
 		}
 	}

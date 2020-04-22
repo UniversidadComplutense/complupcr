@@ -54,7 +54,7 @@ public interface MuestraRepositorio extends PagingAndSortingRepository<Muestra, 
 			+ "(:#{#params.criterioSegundoApellido} is null or pacienteMuestra.apellido2paciente like :#{#params.criterioSegundoApellido}) and "
 			+ "(:#{#params.criterioNHC} is null or pacienteMuestra.nhc like :#{#params.criterioNHC}) and "
 			+ "(:#{#params.criterioCorreo} is null or pacienteMuestra.email like :#{#params.criterioCorreo}) and "
-			+ "(:#{#params.criterioEtiqueta} is null or muestra.etiqueta like :#{#params.criterioEtiqueta}) and "
+			+ "(:#{#params.etiquetaMuestra} is null or muestra.etiqueta = :#{#params.etiquetaMuestra}) and "
 			+ "(:#{#params.criterioRefInterna} is null or muestra.refInternaVisavet like :#{#params.criterioRefInterna}) and "
 			+ "(:#{#params.fechaEnvioMuestraIni} is null or muestra.fechaEnvio >= :#{#params.fechaEnvioMuestraIni}) and "
 			+ "(:#{#params.fechaEnvioMuestraFin} is null or muestra.fechaEnvio <= :#{#params.fechaEnvioMuestraFin}) and "
