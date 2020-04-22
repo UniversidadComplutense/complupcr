@@ -13,6 +13,8 @@ public class LogMuestraListadoBean {
 	private String descEstadoMuestra;
 	private Date fechaCambio;
 	private String nombreAutorCambio;
+	private String descPlacaVisavet;
+	private String descPlacaLaboratorio;
 
 	public LogMuestraListadoBean() {
 	}
@@ -87,6 +89,22 @@ public class LogMuestraListadoBean {
 
 	public void setNombreAutorCambio(String nombreAutorCambio) {
 		this.nombreAutorCambio = nombreAutorCambio;
+	}
+
+	public String getDescPlacaVisavet() {
+		return descPlacaVisavet;
+	}
+
+	public void setDescPlacaVisavet(String descPlacaVisavet) {
+		this.descPlacaVisavet = descPlacaVisavet;
+	}
+
+	public String getDescPlacaLaboratorio() {
+		return descPlacaLaboratorio;
+	}
+
+	public void setDescPlacaLaboratorio(String descPlacaLaboratorio) {
+		this.descPlacaLaboratorio = descPlacaLaboratorio;
 	}
 
 }

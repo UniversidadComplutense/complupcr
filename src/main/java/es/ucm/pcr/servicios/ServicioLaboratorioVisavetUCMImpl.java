@@ -11,9 +11,10 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -335,32 +336,32 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		String cellValueReferencia;
 		HashMap<String, String> resultados = new HashMap<String, String>();
 
-		XSSFWorkbook workbook = new XSSFWorkbook(bean.getFile().getInputStream());
-		XSSFSheet xssfSheet = workbook.getSheet(bean.getHoja());
-		XSSFRow xssfRow;
-		int rows = xssfSheet.getLastRowNum();
+		Workbook workbook = WorkbookFactory.create(bean.getFile().getInputStream());
+		Sheet sheet = workbook.getSheet(bean.getHoja());
+		Row row;
+		int rows = sheet.getLastRowNum();
 		for (int r = 0; r < rows; r++) {
-			xssfRow = xssfSheet.getRow(r);
-			if (xssfRow == null) {
+			row = sheet.getRow(r);
+			if (row == null) {
 				break;
 			} else {
-				cols = xssfRow.getLastCellNum();
+				cols = row.getLastCellNum();
 				if (r == 0) {
 					for (int c = 0; c < cols; c++) {
 
-						cellValue = xssfRow.getCell(c) == null ? ""
-								: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
-										? xssfRow.getCell(c).getStringCellValue()
-										: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
-												? "" + xssfRow.getCell(c).getNumericCellValue()
-												: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
-														? "" + xssfRow.getCell(c).getBooleanCellValue()
-														: (xssfRow.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
+						cellValue = row.getCell(c) == null ? ""
+								: (row.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
+										? row.getCell(c).getStringCellValue()
+										: (row.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
+												? "" + row.getCell(c).getNumericCellValue()
+												: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+														? "" + row.getCell(c).getBooleanCellValue()
+														: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
 																? "BLANK"
-																: (xssfRow.getCell(c)
+																: (row.getCell(c)
 																		.getCellType() == Cell.CELL_TYPE_FORMULA)
 																				? "FORMULA"
-																				: (xssfRow.getCell(c)
+																				: (row.getCell(c)
 																						.getCellType() == Cell.CELL_TYPE_ERROR)
 																								? "ERROR"
 																								: "";
@@ -372,37 +373,37 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 						}
 					}
 				} else if (r > 0 && colMuestra != null && colReferencia != null) {
-					cellValueMuestra = xssfRow.getCell(colMuestra) == null ? ""
-							: (xssfRow.getCell(colMuestra).getCellType() == Cell.CELL_TYPE_STRING)
-									? xssfRow.getCell(colMuestra).getStringCellValue()
-									: (xssfRow.getCell(colMuestra).getCellType() == Cell.CELL_TYPE_NUMERIC)
-											? "" + xssfRow.getCell(colMuestra).getNumericCellValue()
-											: (xssfRow.getCell(colMuestra).getCellType() == Cell.CELL_TYPE_BOOLEAN)
-													? "" + xssfRow.getCell(colMuestra).getBooleanCellValue()
-													: (xssfRow.getCell(colMuestra)
+					cellValueMuestra = row.getCell(colMuestra) == null ? ""
+							: (row.getCell(colMuestra).getCellType() == Cell.CELL_TYPE_STRING)
+									? row.getCell(colMuestra).getStringCellValue()
+									: (row.getCell(colMuestra).getCellType() == Cell.CELL_TYPE_NUMERIC)
+											? "" + row.getCell(colMuestra).getNumericCellValue()
+											: (row.getCell(colMuestra).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+													? "" + row.getCell(colMuestra).getBooleanCellValue()
+													: (row.getCell(colMuestra)
 															.getCellType() == Cell.CELL_TYPE_BLANK)
 																	? "BLANK"
-																	: (xssfRow.getCell(colMuestra)
+																	: (row.getCell(colMuestra)
 																			.getCellType() == Cell.CELL_TYPE_FORMULA)
 																					? "FORMULA"
-																					: (xssfRow.getCell(colMuestra)
+																					: (row.getCell(colMuestra)
 																							.getCellType() == Cell.CELL_TYPE_ERROR)
 																									? "ERROR"
 																									: "";
 
-					cellValueReferencia = xssfRow.getCell(colReferencia) == null ? ""
-							: (xssfRow.getCell(colReferencia).getCellType() == Cell.CELL_TYPE_STRING)
-									? xssfRow.getCell(colReferencia).getStringCellValue()
-									: (xssfRow.getCell(colReferencia).getCellType() == Cell.CELL_TYPE_NUMERIC)
-											? "" + xssfRow.getCell(colReferencia).getNumericCellValue()
-											: (xssfRow.getCell(colReferencia).getCellType() == Cell.CELL_TYPE_BOOLEAN)
-													? "" + xssfRow.getCell(colReferencia).getBooleanCellValue()
-													: (xssfRow.getCell(colReferencia).getCellType() == Cell.CELL_TYPE_BLANK)
+					cellValueReferencia = row.getCell(colReferencia) == null ? ""
+							: (row.getCell(colReferencia).getCellType() == Cell.CELL_TYPE_STRING)
+									? row.getCell(colReferencia).getStringCellValue()
+									: (row.getCell(colReferencia).getCellType() == Cell.CELL_TYPE_NUMERIC)
+											? "" + row.getCell(colReferencia).getNumericCellValue()
+											: (row.getCell(colReferencia).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+													? "" + row.getCell(colReferencia).getBooleanCellValue()
+													: (row.getCell(colReferencia).getCellType() == Cell.CELL_TYPE_BLANK)
 															? "BLANK"
-															: (xssfRow.getCell(colReferencia)
+															: (row.getCell(colReferencia)
 																	.getCellType() == Cell.CELL_TYPE_FORMULA)
 																			? "FORMULA"
-																			: (xssfRow.getCell(colReferencia)
+																			: (row.getCell(colReferencia)
 																					.getCellType() == Cell.CELL_TYPE_ERROR)
 																							? "ERROR"
 																							: "";

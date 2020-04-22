@@ -24,6 +24,7 @@ import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.Paciente;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.PlacaVisavet;
+import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.modelo.orm.Usuario;
 import es.ucm.pcr.repositorio.LogMuestrasRepositorio;
 import es.ucm.pcr.repositorio.LoteRepositorio;
@@ -60,7 +61,7 @@ public class ServicioLogImpl implements ServicioLog {
 		Optional<Muestra> muestraOp = muestraRepositorio.findById(idMuestra);
 		if (muestraOp.isPresent()) {
 			Muestra muestra = muestraOp.get();
-			actualizarEstadoMuestra(muestra, estado);
+			actualizarEstadoMuestra(muestra,null,null,null, estado);
 		}
 	}
 
@@ -70,7 +71,7 @@ public class ServicioLogImpl implements ServicioLog {
 		if (loteOp.isPresent()) {
 			Lote lote = loteOp.get();
 			for (Muestra muestra : lote.getMuestras()) {
-				actualizarEstadoMuestra(muestra, estado);
+				actualizarEstadoMuestra(muestra,lote,null,null, estado);
 			}
 		}
 	}
@@ -82,8 +83,7 @@ public class ServicioLogImpl implements ServicioLog {
 			PlacaVisavet placaVisavet = placaVisavetOp.get();
 			for (Lote lote : placaVisavet.getLotes()) {
 				for (Muestra muestra : lote.getMuestras()) {
-					muestra.setPlacaVisavet(placaVisavet);
-				actualizarEstadoMuestra(muestra, estado);
+					actualizarEstadoMuestra(muestra,lote,placaVisavet,null, estado);
 				}
 			}
 		}
@@ -94,17 +94,22 @@ public class ServicioLogImpl implements ServicioLog {
 		Optional<PlacaLaboratorio> placaLaboratorioOp = placaLaboratorioRepositorio.findById(idPlacaLaboratorio);
 		if (placaLaboratorioOp.isPresent()) {
 			PlacaLaboratorio placaLaboratorio = placaLaboratorioOp.get();
-			for (Muestra muestra : placaLaboratorio.getMuestras()) {
-				actualizarEstadoMuestra(muestra, estado);
+			for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio : placaLaboratorio.getPlacaVisavetPlacaLaboratorios()) {
+				PlacaVisavet placaVisavet=placaVisavetPlacaLaboratorio.getPlacaVisavet();
+				for (Lote lote : placaVisavet.getLotes()) {
+					for (Muestra muestra : lote.getMuestras()) {
+					actualizarEstadoMuestra(muestra,lote,placaVisavet,placaLaboratorio, estado);
+					}
+				}
 			}
 		}
-
 	}
 
-	private void actualizarEstadoMuestra(Muestra muestra, BeanEstado estadoActualizar) {
+	private void actualizarEstadoMuestra(Muestra muestra,Lote lote, PlacaVisavet placaVisavet,
+			PlacaLaboratorio placaLaboratorio, BeanEstado estadoActualizar) {
 
-		LogMuestras logMuestras = new LogMuestras(muestra, muestra.getLote(), muestra.getPlacaVisavet(),
-				muestra.getPlacaLaboratorio(), new EstadoMuestra(estadoActualizar.getEstado().getCodNum()), new Date(),
+		LogMuestras logMuestras = new LogMuestras(muestra, lote, placaVisavet,
+				placaLaboratorio, new EstadoMuestra(estadoActualizar.getEstado().getCodNum()), new Date(),
 				sesionServicio.getUsuario());
 		logMuestrasRepositorio.save(logMuestras);
 	}
@@ -120,6 +125,8 @@ public class ServicioLogImpl implements ServicioLog {
 			logMuestra = new LogMuestraListadoBean();
 			logMuestra.setId(l.getId());
 			logMuestra.setDescLote(l.getLote() != null ? l.getLote().getNumeroLote() : "");
+			logMuestra.setDescPlacaVisavet(l.getPlacaVisavet() != null ? l.getPlacaVisavet().getId().toString() : "");
+			logMuestra.setDescPlacaLaboratorio(l.getPlacaLaboratorio() != null ? String.valueOf(l.getPlacaLaboratorio().getId()) : "");
 			logMuestra.setDescCentroSalud(l.getMuestra().getCentro().getNombre());
 			logMuestra.setDescMuestra(l.getMuestra().getEtiqueta());
 			Paciente paciente = l.getMuestra().getPaciente();

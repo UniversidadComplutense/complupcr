@@ -145,8 +145,11 @@
 							<!-- FIN MODAL MUESTRAS -->	
 						</td>
 						<td>
-					        <a style="color:black" th:href="@{/laboratorioCentro/recepcionPlacas/recepcionar(id=${placa.id})}">
-					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;" title="Recepcionar placa"></i>
+					        <a th:if="${placa.beanEstado.estado.codNum == 5}" style="color:black" th:href="@{/laboratorioCentro/recepcionPlacas/recepcionar(id=${placa.id})}">
+					          	<i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;" title="Recepcionar placa"></i>
+					        </a>
+					        <a th:if="${placa.beanEstado.estado.codNum == 6}" style="color:grey" href="#">
+					          	<i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
 						</td>						
 					</tr>		

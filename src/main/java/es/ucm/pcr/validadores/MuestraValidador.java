@@ -39,7 +39,7 @@ public class MuestraValidador implements Validator {
 		MuestraCentroBean muestra = (MuestraCentroBean) target;
 		
 		// valida el numero historial clinico, no se puede repetir por centro
-		validateNHC(muestra, errors);
+		//validateNHC(muestra, errors);
 		
 		// si se ha rellenado el lote valida que no sobrepase la capacidad del lote
 		validateLote(muestra, errors);
@@ -150,8 +150,8 @@ public class MuestraValidador implements Validator {
 					errors.rejectValue("etiqueta", "campo.invalid", "Ya existe una muestra con la misma etiqueta");
 				}
 			} else {
-				MuestraListadoBean muestraBean = muestras.stream().filter(muestrasList -> muestra.getId().equals(muestrasList.getId())).findAny().orElse(null);
-				if (muestraBean == null) {
+				MuestraListadoBean muestraBean = muestras.stream().filter(muestrasList -> !muestra.getId().equals(muestrasList.getId())).findAny().orElse(null);
+				if (muestraBean != null) {
 					errors.rejectValue("etiqueta", "campo.invalid", "Ya existe una muestra con la misma etiqueta");
 				}
 			}
