@@ -37,7 +37,7 @@
 			<div class="row">			
 				<div class="col-3 form-group">
 					<label>Estado</label>
-				 	<select id="selectorEstados" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.idEstadoPlaca}"  th:value="${busquedaPlacaLaboratorioBean.idEstadoPlaca}" onclick="borrarCodigo();" onchange="revisarFechas();">
+				 	<select id="selectorEstados" class="form-control form-control-sm" th:field="${busquedaPlacaLaboratorioBean.idEstadoPlaca}"  th:value="${busquedaPlacaLaboratorioBean.idEstadoPlaca}" onclick="borrarCodigo();">
 				 		<option value="0">Seleccione</option>
 				 		<option th:each="var: ${estadosPlacaLaboratorio}"
 									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
