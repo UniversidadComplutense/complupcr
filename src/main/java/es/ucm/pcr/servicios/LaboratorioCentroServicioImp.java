@@ -442,11 +442,11 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	@Override
 	@Transactional
 	public PlacaLaboratorioCentroBean guardarCogerODevolverPlaca(Integer idPlaca, Integer idUsuario, String accion) {
-	//metodo que recibe el idPlaca, y el id de usuario que la quiere coger
+	//metodo que recibe el idPlaca, y el id de usuario que la quiere coger o devolver
 	
 		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);
 		
-		//obtencion de las muestras de la placa a través de a traves de sus placas visavet los lotes
+		//obtencion de las muestras de la placa a través de a traves de sus placas visavet y los lotes
 		Set<Muestra> cjtoMuestrasPlacaLaboratorio = new HashSet<Muestra>(); //ahora no salen directamente de la placa de laboratorio		
 		Set<PlacaVisavet> placasVisavetDeLaPlacaLaboratorio = new HashSet<PlacaVisavet>();		
 		for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placa.getPlacaVisavetPlacaLaboratorios()) {
@@ -465,11 +465,11 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		
 				
 		if(accion.equals("coger")) {
-			//asocia la placa al usuario, le cambia el estado de la placa a PLACA_ASIGNADA_PARA_ANALISIS y pone a todas sus muestras a estado pendente de analizar
+			//asocia la placa al usuario, le cambia el estado de la placa a PLACA_ASIGNADA_PARA_ANALISIS y pone a todas sus muestras a estado MUESTRA_PENDIENTE_ANALIZAR
 			Usuario usuario = usuarioRepositorio.getOne(idUsuario);
 			placa.setUsuario(usuario);
 			EstadoPlacaLaboratorio estadoPlacaLab = estadoPlacaLaboratorioRepositorio.getOne(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
-			System.out.println("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
+			log.info("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
 			placa.setEstadoPlacaLaboratorio(estadoPlacaLab);
 			//recorremos todas las muestras de esa placa y les ponemos el estado pendente de analizar
 			//las muestras de la placa las obtenemos a traves de sus placas visavet y de los lotes
@@ -483,10 +483,10 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
 			}			
 		}else if(accion.equals("devolver")) {
-			//desasocia la placa del usuario, le cambia el estado de la placa a PLACA_LISTA_PARA_ANALISIS (estado anterior) y ¿Qué hacemos con las muestras?
+			//desasocia la placa del usuario, le cambia el estado de la placa a PLACA_LISTA_PARA_ANALISIS (estado anterior) y ponemos a las muestras su estado anterior MUESTRA_ENVIADA_CENTRO_ANALISIS
 			placa.setUsuario(null);
 			EstadoPlacaLaboratorio estadoPlacaLab = estadoPlacaLaboratorioRepositorio.getOne(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());			
-			System.out.println("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
+			log.info("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
 			placa.setEstadoPlacaLaboratorio(estadoPlacaLab);
 			//TODO preguntar que hacemos con las muestras cuando devolvermos la placa?
 			//recorremos todas las muestras de esa placa y les ponemos en el estado que tenian al llegar MUESTRA_ENVIADA_CENTRO_ANALISIS?
@@ -633,7 +633,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		}
 		else {
 			//si no se ha marcado ningun nuevo analista no hacemos nada
-			System.out.println("no se ha escogido ningun analista nuevo, no hacemos asignaciones nuevas ni cambiamos el estado a sus muestras");			
+			log.info("no se ha escogido ningun analista nuevo, no hacemos asignaciones nuevas ni cambiamos el estado a sus muestras");			
 		}
 				
 		//a la placa no hay que cambiarle el estado, solo cambiamos el estado de sus muestras		
@@ -758,7 +758,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		List<PlacaLaboratorioCentroAsignacionesAnalistaBean> listaPlacasLaboratorioCentroAsignacionesBean = new ArrayList<PlacaLaboratorioCentroAsignacionesAnalistaBean>();		
 		Page<PlacaLaboratorio> PagePlacasLaboratorioCentro = placaLaboratorioRepositorio.findByParamsValoradasAndNotValoradas(criteriosBusqueda, pageable); 		
 		for (PlacaLaboratorio placa : PagePlacasLaboratorioCentro.getContent()) {
-			System.out.println("Placa vale: "+ placa.toString());
+			log.info("Placa vale: "+ placa.toString());
 			PlacaLaboratorioCentroAsignacionesAnalistaBean placaLaboratorioCentroAsignacionesAnalistaBean = PlacaLaboratorioCentroAsignacionesAnalistaBean.modelToBean(placa, criteriosBusqueda.getIdAnalistaMuestras());			
 			listaPlacasLaboratorioCentroAsignacionesBean.add(placaLaboratorioCentroAsignacionesAnalistaBean);
 		}		
@@ -828,7 +828,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			//por cada muestra calculamos si ya se han dado las valoraciones de todos los analistas
 			//en ese caso el resultado sería definitivo y se guardara el resultado en la muestra y se enviará la notificacion 
 			Integer numValoracionesMuestra = this.calculaCuantasValoracionesTieneLaMuestra(m);
-			System.out.println("el numero de valoraciones actuales de la muestra con id: "+ m.getId()+" es: " + numValoracionesMuestra);
+			log.info("el numero de valoraciones actuales de la muestra con id: "+ m.getId()+" es: " + numValoracionesMuestra);
 			if(numValoracionesMuestra.equals(numAnalistas)) {
 				//guardamos como resultado definitivo este ultimo resultado que está dando el analista que viene del excel
 				m.setResultado(valoracionExcelParaMuestra);
@@ -843,7 +843,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				//Envio de notificacion al pacientes si tiene activada la notificacion automatica
 				//recupero el paciente de la muestra
 				Paciente paciente = m.getPaciente();
-				System.out.println("el paciente con id: " + paciente.getId()+" tiene la notificacion automato a: " + paciente.getNotificarAutomato());
+				log.info("el paciente con id: " + paciente.getId()+" tiene la notificacion automato a: " + paciente.getNotificarAutomato());
 				if(paciente.getNotificarAutomato().equals("S")) {
 					muestraServicio.actualizarNotificacionMuestra(m.getId(), true); //actualiza fecha de notificación y envia correo
 				}

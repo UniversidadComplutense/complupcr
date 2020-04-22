@@ -242,7 +242,7 @@ public class AnalisisControlador {
 			log.info("listaIdsPlacasSeleccionadosParaCoger: " + listaIdsPlacasSeleccionadosParaCoger.toString());
 			
 			//cogemos esas placas, les asignamos el jefe logado, fecha de asignacion, cambiamos estado a PLACA_ASIGNADA_PARA_ANALISIS y las guardamos
-			//TODO coger las muestras de esa placa y ponerles estado pendente de analizar
+			//cogemos las muestras de esas placas y les ponemos estado pendente de analizar
 			for(Integer idPlacaSeleccionada : listaIdsPlacasSeleccionadosParaCoger) {
 				laboratorioCentroServicio.guardarCogerODevolverPlaca(idPlacaSeleccionada, user.getId(), "coger");
 			}						
@@ -263,7 +263,7 @@ public class AnalisisControlador {
 			log.info("listaIdsPlacasSeleccionadosParaDevolver: " + listaIdsPlacasSeleccionadosParaDevolver.toString());
 			
 			//devolver esas placas, quitarles el jefe asignado, fecha de asignacion, cambiar estado a placa a PLACA_LISTA_PARA_ANALISIS y guardarlas
-			//TODO ¿que hacemos con las muestras?, las ponemos en el estado anterior "enviada centro analisis"			
+			//cogemos las muestras de esas placas y las ponemos en el estado anterior "enviada centro analisis"			
 			for(Integer idPlacaSeleccionada : listaIdsPlacasSeleccionadosParaDevolver) {
 				laboratorioCentroServicio.guardarCogerODevolverPlaca(idPlacaSeleccionada, null, "devolver");
 			}	
@@ -288,13 +288,12 @@ public class AnalisisControlador {
 			//recupero el usuario logado			
 			Usuario user = sesionServicio.getUsuario();
 			log.info("usuario logado: " + user.getNombre() + " del idLaboratorioCentro: " + user.getIdLaboratorioCentro());
-			
-			//List<BeanUsuario> beanListadoAnalistaLab =getBeanListadoAnalistasLaboratorio();
+						
 			List<BeanUsuario> beanListadoAnalistaLab = usuarioServicio.listaUsuariosAnalistasDeLaboratorioCentro(user.getIdLaboratorioCentro()) ;
 			List<BeanUsuario> beanListadoAnalistaVol = usuarioServicio.listaUsuariosVoluntariosDeLaboratorioCentro(user.getIdLaboratorioCentro());	
 			List<BeanUsuario> beanListadoVoluntariosSinLaboratorioCentro = usuarioServicio.listaUsuariosVoluntariosSinLaboratorioCentro();	
 			
-			//de los listados totales quitamos los analistaslab y analistasvol que ya tiene asignados la placa para no mostrarlos como posibles a asignar en el desplegable
+			//de los listados totales quitamos los analistaslab, analistasvol y anlistasvolsincentro que ya tiene asignados la placa para no mostrarlos como posibles a asignar en el desplegable
 			//listaAnalistasLab
 			List<BeanAsignacion> beanListadoAnalistaLabAsignados = placaLaboratorioCentroAsignacionesBean.getBeanAnalisisPlaca().getBeanListaAsignaciones().getListaAnalistasLab();
 			List<BeanUsuario> beanListadoAnalistaLabABorrar = new ArrayList<BeanUsuario>();
@@ -371,12 +370,7 @@ public class AnalisisControlador {
 			formBeanGuardarAsignacionPlacaLaboratorioCentro = this.rellenaGuardarAsignacionPlacaLaboratorioCentroBean(idPlaca, formBeanGuardarAsignacionPlacaLaboratorioCentro);
 						
 			vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
-			//vista.addObject("placaLaboratorioCentroAsignacionesBean", placaLaboratorioCentroAsignacionesBean);
-			//vista.addObject("formBeanGuardarAsignacionPlaca", formBeanGuardarAsignacionPlacaLaboratorioCentro);
-			//vista.addObject("beanListadoAnalistaLab", beanListadoAnalistaLab);			
-			//vista.addObject("beanListadoAnalistaVol", beanListadoAnalistaVol);
-			//vista.addObject("beanListadoVoluntariosSinLaboratorioCentro", beanListadoVoluntariosSinLaboratorioCentro);
-			//vista.addObject("noSePuedeAsignarNuevosAnalistasAPlaca", noSePuedeAsignarNuevosAnalistasAPlaca);
+			
 			return vista;
 		}
 		
