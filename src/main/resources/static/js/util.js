@@ -1,4 +1,5 @@
 /** Limpia los campos de un formulario **/
 function resetForm(idForm) {
-	$('#' + idForm)[0].reset();
+	$('#' + idForm).find("input[type=text], textarea, select").val("");
+	$('#' + idForm).find("input[type=date]").val("");
 }

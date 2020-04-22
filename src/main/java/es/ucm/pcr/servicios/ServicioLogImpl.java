@@ -120,6 +120,8 @@ public class ServicioLogImpl implements ServicioLog {
 			logMuestra = new LogMuestraListadoBean();
 			logMuestra.setId(l.getId());
 			logMuestra.setDescLote(l.getLote() != null ? l.getLote().getNumeroLote() : "");
+			logMuestra.setDescPlacaVisavet(l.getPlacaVisavet() != null ? l.getPlacaVisavet().getId().toString() : "");
+			logMuestra.setDescPlacaLaboratorio(l.getPlacaLaboratorio() != null ? String.valueOf(l.getPlacaLaboratorio().getId()) : "");
 			logMuestra.setDescCentroSalud(l.getMuestra().getCentro().getNombre());
 			logMuestra.setDescMuestra(l.getMuestra().getEtiqueta());
 			Paciente paciente = l.getMuestra().getPaciente();

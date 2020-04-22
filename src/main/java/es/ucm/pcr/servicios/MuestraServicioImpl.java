@@ -134,16 +134,33 @@ public class MuestraServicioImpl implements MuestraServicio {
 			muestra.setLote(new Lote(muestraBean.getIdLote()));			
 		} 
 		
+		Muestra muestraBBDD = muestra.getId() != null ? muestraRepositorio.findById(muestra.getId()).get() : null;		
 		Paciente paciente = muestra.getPaciente();
 		muestra = muestraRepositorio.save(muestra);
 		paciente.setMuestra(muestra);
 		pacienteRepositorio.save(paciente);
 		
-		BeanEstado estadoMuestra = new BeanEstado();
-		estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, muestra.getEstadoMuestra().getId());
-		servicioLog.actualizarEstadoMuestra(muestra.getId(), estadoMuestra);
+		
+		if (cambioEstado(muestra, muestraBBDD)) {
+			BeanEstado estadoMuestra = new BeanEstado();
+			estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, muestra.getEstadoMuestra().getId());
+			servicioLog.actualizarEstadoMuestra(muestra.getId(), estadoMuestra);
+		}
 		
 		return MuestraCentroBean.modelToBean(findByIdMuestra(muestra.getId()));
+	}
+	
+	/**
+	 * La muestra registra cambio de estado si es nueva o si el estado al que pasa es distinto al que tiene
+	 * @param muestraBean
+	 * @return
+	 */
+	private boolean cambioEstado(Muestra muestra, Muestra muestraBBDD) {
+		if (muestra.getId() == null || muestraBBDD == null) {
+			return true;
+		} else {			
+			return muestra.getEstadoMuestra().getId().intValue() != muestraBBDD.getEstadoMuestra().getId().intValue();
+		}
 	}
 	
 	@Override
