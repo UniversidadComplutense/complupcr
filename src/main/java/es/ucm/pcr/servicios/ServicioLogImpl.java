@@ -105,7 +105,7 @@ public class ServicioLogImpl implements ServicioLog {
 		}
 	}
 
-	private void actualizarEstadoMuestra(Muestra muestra,Lote lote, PlacaVisavet placaVisavet,
+	public void actualizarEstadoMuestra(Muestra muestra,Lote lote, PlacaVisavet placaVisavet,
 			PlacaLaboratorio placaLaboratorio, BeanEstado estadoActualizar) {
 
 		LogMuestras logMuestras = new LogMuestras(muestra, lote, placaVisavet,

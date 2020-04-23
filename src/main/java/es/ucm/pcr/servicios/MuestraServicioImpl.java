@@ -135,16 +135,17 @@ public class MuestraServicioImpl implements MuestraServicio {
 		} 
 		
 		Muestra muestraBBDD = muestra.getId() != null ? muestraRepositorio.findById(muestra.getId()).get() : null;		
+		boolean cambioEstado = cambioEstado(muestra, muestraBBDD);
+		
 		Paciente paciente = muestra.getPaciente();
 		muestra = muestraRepositorio.save(muestra);
 		paciente.setMuestra(muestra);
-		pacienteRepositorio.save(paciente);
+		pacienteRepositorio.save(paciente);				
 		
-		
-		if (cambioEstado(muestra, muestraBBDD)) {
+		if (cambioEstado) {
 			BeanEstado estadoMuestra = new BeanEstado();
 			estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, muestra.getEstadoMuestra().getId());
-			servicioLog.actualizarEstadoMuestra(muestra.getId(), estadoMuestra);
+			servicioLog.actualizarEstadoMuestra(muestra, muestra.getLote(), null, null, estadoMuestra);
 		}
 		
 		return MuestraCentroBean.modelToBean(findByIdMuestra(muestra.getId()));
@@ -159,7 +160,8 @@ public class MuestraServicioImpl implements MuestraServicio {
 		if (muestra.getId() == null || muestraBBDD == null) {
 			return true;
 		} else {			
-			return muestra.getEstadoMuestra().getId().intValue() != muestraBBDD.getEstadoMuestra().getId().intValue();
+			return (muestra.getEstadoMuestra().getId().intValue() != muestraBBDD.getEstadoMuestra().getId().intValue()) ||
+					(muestra.getLote().getId().intValue() != muestraBBDD.getLote().getId());
 		}
 	}
 	

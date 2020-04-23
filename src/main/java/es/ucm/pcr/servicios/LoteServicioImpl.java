@@ -143,7 +143,7 @@ public class LoteServicioImpl implements LoteServicio {
 						
 						BeanEstado estadoMuestra = new BeanEstado();
 						estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
-						servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
+						servicioLog.actualizarEstadoMuestra(m, m.getLote(), null, null, estadoMuestra);
 					}
 					muestraRepositorio.saveAll(lote.getMuestras());
 				}

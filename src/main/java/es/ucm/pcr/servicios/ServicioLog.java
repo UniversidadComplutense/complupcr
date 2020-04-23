@@ -6,6 +6,10 @@ import org.springframework.data.domain.Pageable;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.LogMuestraBusquedaBean;
 import es.ucm.pcr.beans.LogMuestraListadoBean;
+import es.ucm.pcr.modelo.orm.Lote;
+import es.ucm.pcr.modelo.orm.Muestra;
+import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
+import es.ucm.pcr.modelo.orm.PlacaVisavet;
 
 public interface ServicioLog {
 
@@ -55,5 +59,16 @@ public interface ServicioLog {
 	 * @param idMuestra
 	 */
 	public void borrarEstadosMuestra(Integer idMuestra);
+	
+	/**
+	 * Actualizar estado muestra
+	 * @param muestra
+	 * @param lote
+	 * @param placaVisavet
+	 * @param placaLaboratorio
+	 * @param estadoActualizar
+	 */
+	public void actualizarEstadoMuestra(Muestra muestra,Lote lote, PlacaVisavet placaVisavet,
+			PlacaLaboratorio placaLaboratorio, BeanEstado estadoActualizar);
 
 }
