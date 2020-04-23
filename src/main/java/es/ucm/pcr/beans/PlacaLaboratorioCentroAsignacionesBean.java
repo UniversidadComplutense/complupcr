@@ -25,7 +25,9 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 	//private String numeroMuestras;
 	private BeanEstado beanEstado;
 	private LaboratorioCentroBean laboratorioCentro;
-	private Date fechaCreacion;	
+	private Date fechaCreacion;
+	private Date fechaListaAnalisis;
+	private Date fechaAsignadaJefe;	
 	private List<DocumentoBean> documentos;
 	private List<BeanListadoMuestraAnalisis> muestras;	//las muestras tendran sus analista asignados y sus valoraciones
 	
@@ -70,6 +72,22 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
+	}
+	
+	public Date getFechaListaAnalisis() {
+		return fechaListaAnalisis;
+	}
+
+	public void setFechaListaAnalisis(Date fechaListaAnalisis) {
+		this.fechaListaAnalisis = fechaListaAnalisis;
+	}
+
+	public Date getFechaAsignadaJefe() {
+		return fechaAsignadaJefe;
+	}
+
+	public void setFechaAsignadaJefe(Date fechaAsignadaJefe) {
+		this.fechaAsignadaJefe = fechaAsignadaJefe;
 	}
 
 	public List<DocumentoBean> getDocumentos() {
@@ -137,6 +155,8 @@ public class PlacaLaboratorioCentroAsignacionesBean {
 				placaLaboratorio.getEstadoPlacaLaboratorio().getId());
 		bean.setBeanEstado(beanEstado);		
 		bean.setFechaCreacion(placaLaboratorio.getFechaCreacion());
+		bean.setFechaListaAnalisis(placaLaboratorio.getFechaListaAnalisis());
+		bean.setFechaAsignadaJefe(placaLaboratorio.getFechaAsignadaJefe());
 		
 		LaboratorioCentroBean laboratorioCentroBean = new LaboratorioCentroBean();	
 		laboratorioCentroBean.setId(String.valueOf((placaLaboratorio.getLaboratorioCentro().getId())));

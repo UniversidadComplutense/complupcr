@@ -241,7 +241,7 @@ public class AnalisisControlador {
 			List<Integer> listaIdsPlacasSeleccionadosParaCoger = guardarCogerYDevolverPlacasBean.getListaIdsPlacasSeleccionadosParaCoger();
 			log.info("listaIdsPlacasSeleccionadosParaCoger: " + listaIdsPlacasSeleccionadosParaCoger.toString());
 			
-			//cogemos esas placas, les asignamos el jefe logado, fecha de asignacion, cambiamos estado a PLACA_ASIGNADA_PARA_ANALISIS y las guardamos
+			//cogemos esas placas, les asignamos el jefe logado, fecha de asignacion jefe, cambiamos estado a PLACA_ASIGNADA_PARA_ANALISIS y las guardamos
 			//cogemos las muestras de esas placas y les ponemos estado pendente de analizar
 			for(Integer idPlacaSeleccionada : listaIdsPlacasSeleccionadosParaCoger) {
 				laboratorioCentroServicio.guardarCogerODevolverPlaca(idPlacaSeleccionada, user.getId(), "coger");

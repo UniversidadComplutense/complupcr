@@ -62,6 +62,8 @@ public class PlacaLaboratorioCentroAsignacionesAnalistaBean extends PlacaLaborat
 				placaLaboratorio.getEstadoPlacaLaboratorio().getId());
 		bean.setBeanEstado(beanEstado);		
 		bean.setFechaCreacion(placaLaboratorio.getFechaCreacion());
+		bean.setFechaListaAnalisis(placaLaboratorio.getFechaListaAnalisis());
+		bean.setFechaAsignadaJefe(placaLaboratorio.getFechaAsignadaJefe());
 		
 		LaboratorioCentroBean laboratorioCentroBean = new LaboratorioCentroBean();	
 		laboratorioCentroBean.setId(String.valueOf((placaLaboratorio.getLaboratorioCentro().getId())));

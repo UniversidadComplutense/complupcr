@@ -473,12 +473,13 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		
 				
 		if(accion.equals("coger")) {
-			//asocia la placa al usuario, le cambia el estado de la placa a PLACA_ASIGNADA_PARA_ANALISIS y pone a todas sus muestras a estado MUESTRA_PENDIENTE_ANALIZAR
+			//asocia la placa al usuario y fecha asignacion, le cambia el estado de la placa a PLACA_ASIGNADA_PARA_ANALISIS y pone a todas sus muestras a estado MUESTRA_PENDIENTE_ANALIZAR
 			Usuario usuario = usuarioRepositorio.getOne(idUsuario);
 			placa.setUsuario(usuario);
+			placa.setFechaAsignadaJefe(new Date());
 			EstadoPlacaLaboratorio estadoPlacaLab = estadoPlacaLaboratorioRepositorio.getOne(BeanEstado.Estado.PLACA_ASIGNADA_PARA_ANALISIS.getCodNum());
 			log.info("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
-			placa.setEstadoPlacaLaboratorio(estadoPlacaLab);
+			placa.setEstadoPlacaLaboratorio(estadoPlacaLab);			
 			//recorremos todas las muestras de esa placa y les ponemos el estado pendente de analizar
 			//las muestras de la placa las obtenemos a traves de sus placas visavet y de los lotes
 			//for(Muestra m: placa.getMuestras()) {
@@ -491,11 +492,13 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
 			}			
 		}else if(accion.equals("devolver")) {
-			//desasocia la placa del usuario, le cambia el estado de la placa a PLACA_LISTA_PARA_ANALISIS (estado anterior) y ponemos a las muestras su estado anterior MUESTRA_ENVIADA_CENTRO_ANALISIS
+			//desasocia la placa del usuario y le quita la fecha de asignacion, le cambia el estado de la placa a PLACA_LISTA_PARA_ANALISIS (estado anterior) y ponemos a las muestras su estado anterior MUESTRA_ENVIADA_CENTRO_ANALISIS
 			placa.setUsuario(null);
+			placa.setFechaAsignadaJefe(null);
 			EstadoPlacaLaboratorio estadoPlacaLab = estadoPlacaLaboratorioRepositorio.getOne(BeanEstado.Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum());			
 			log.info("el estado que le vamos a asignar a la placa es: " + estadoPlacaLab.getDescripcion());
 			placa.setEstadoPlacaLaboratorio(estadoPlacaLab);
+			//placa.setFechaListaAnalisis(new Date()); la fecha en que transicionó a lista para analisis al llegar a los jefes no la machaco aunque devuelva la placa 
 			//TODO preguntar que hacemos con las muestras cuando devolvermos la placa?
 			//recorremos todas las muestras de esa placa y les ponemos en el estado que tenian al llegar MUESTRA_ENVIADA_CENTRO_ANALISIS?
 			//las muestras de la placa las obtenemos a traves de sus placas visavet y de los lotes
