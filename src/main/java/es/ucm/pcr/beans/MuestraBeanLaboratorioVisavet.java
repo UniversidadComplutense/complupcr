@@ -9,6 +9,7 @@ public class MuestraBeanLaboratorioVisavet{
 	private int id;
 	private String etiqueta;
 	private String tipoMuestra;
+	private String descripcionMuestra;
 	private Calendar fecha;
 	private String referenciaInterna;
 	private BeanEstado estado;
@@ -64,6 +65,14 @@ public class MuestraBeanLaboratorioVisavet{
 	public void setCentro(BeanCentro centro) {
 		this.centro = centro;
 	}
+	
+	
+	public String getDescripcionMuestra() {
+		return descripcionMuestra;
+	}
+	public void setDescripcionMuestra(String descripcionMuestra) {
+		this.descripcionMuestra = descripcionMuestra;
+	}
 	public static MuestraBeanLaboratorioVisavet modelToBean(Muestra muestra) {
 	//
 	
@@ -72,6 +81,8 @@ public class MuestraBeanLaboratorioVisavet{
     muestraBeanLaboratorioVisavet.setEtiqueta(muestra.getEtiqueta());
     muestraBeanLaboratorioVisavet.setTipoMuestra(muestra.getTipoMuestra());
     muestraBeanLaboratorioVisavet.setReferenciaInterna(muestra.getRefInternaVisavet());
+    
+    
     return muestraBeanLaboratorioVisavet;
 	//
 	}

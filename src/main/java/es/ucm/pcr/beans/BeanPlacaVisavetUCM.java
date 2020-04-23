@@ -24,7 +24,7 @@ private BeanEstado estado;
 private Integer idLaboratorioCentro;
 private BeanLaboratorioCentro laboratorioCentro;
 private List<MuestraBeanLaboratorioVisavet>  listaMuestras;
-
+private String nombrePlacaVisavet;
 
 public List<MuestraBeanLaboratorioVisavet> getListaMuestras() {
 	return listaMuestras;
@@ -93,6 +93,13 @@ public Date getFechaEnviadaLaboratorio() {
 public void setFechaEnviadaLaboratorio(Date fechaEnviadaLaboratorio) {
 	this.fechaEnviadaLaboratorio = fechaEnviadaLaboratorio;
 }
+
+public String getNombrePlacaVisavet() {
+	return nombrePlacaVisavet;
+}
+public void setNombrePlacaVisavet(String nombrePlacaVisavet) {
+	this.nombrePlacaVisavet = nombrePlacaVisavet;
+}
 public static BeanPlacaVisavetUCM modelToBean(PlacaVisavet placaVisavet) {
 
 	BeanPlacaVisavetUCM bean = new BeanPlacaVisavetUCM();
@@ -137,7 +144,7 @@ public static BeanPlacaVisavetUCM modelToBean(PlacaVisavet placaVisavet) {
 	
 	bean.setMuestras(listadoMuestras);
 	*/
-	
+	bean.setNombrePlacaVisavet(placaVisavet.getNombrePlacaVisavet());
 	bean.setListaLotes(listaLotes);
 	return bean;
 
@@ -175,6 +182,7 @@ public static PlacaVisavet beanToModel(BeanPlacaVisavetUCM bean) {
 	
 	bean.setMuestras(listadoMuestras);
 	*/
+   placaVisavet.setNombrePlacaVisavet(bean.getNombrePlacaVisavet());
 	return placaVisavet;
 
 }

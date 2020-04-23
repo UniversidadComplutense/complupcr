@@ -12,7 +12,7 @@
 	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
 <div id="lotesRecibidos" class="container">
 	<div class="alert alert-secondary m-1 mt-2" role="alert">
-			<label>Gestión de lotes</label>
+			<label>Asignación de lotes a placas</label>
 		</div>
    <!--  <div class="row justify-content-left mt-3">
     	
@@ -38,6 +38,10 @@
 			  <div class="row">
 				<div class="col-3 form-group">
 				<label class="col-xs-2">Placa número:&nbsp;</label><label class="col-xs-2"><span style="font-weight:bold;" id="numPlacaSpan"/></label>
+				<input type="text" th:field="*{placa.id}" ></input>
+				</div>
+				<div class="col-3 form-group">
+				<label class="col-xs-2">Nombre de la placa:&nbsp;</label><label class="col-xs-2"><input type="text" th:field="*{placa.nombrePlacaVisavet}" ></input></label>
 				</div>
 				<div class="col-2 form-group">
 				<label class="col-xs-2">Tamaño: </label>
@@ -103,11 +107,12 @@
 				<thead class="thead-light">
 				
 				<tr>
-				    <th class="p-1" width="20%">#Placa</th>
-					<th class="p-1" width="20%">#Lote</th>
-					<th class="p-1" width="20%">Ref. interna lote</th>
+				    <th class="p-1" width="15%">#Placa</th>
+				    <th class="p-1" width="15%">Nombre Placa</th>
+					<th class="p-1" width="15%">#Lote</th>
+					<th class="p-1" width="15%">Ref. interna lote</th>
 					<th class="p-1" width="20%">Centro</th>
-					<th class="p-1" width="20%">Nº de muestras</th>
+					<th class="p-1" width="15%">Nº de muestras</th>
 				</tr>
 				</thead>
 				 </table>
@@ -115,27 +120,30 @@
 				<tbody>
 				
 				<tr id="trGroup"  style="border: none;" th:fragment="trGroup" th:each="unResultado,count : ${lotePlacaVisavetBean.placa.listaLotes}">
-				 <td colspan="4" style="border-bottom: 1px solid #dee2e6;">  
+				 <td colspan="6" style="border-bottom: 1px solid #dee2e6;">  
 					   
 					    <table  class="col-xs-12 tablaMuestrasPlacas"  style="border: none;" width="100%" id="tablaMuestras">
 				    <tbody>
 				    <tr class="trGroupLotes" style="border: none;">
-					           <td width="20%">
+					           <td width="15%">
 					          <input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].idPlacaVisavet}"/>
 								<span th:text="${unResultado.idPlacaVisavet}"></span>
 								</td>
-								<td width="20%">
+								<td width="15%">
+									<span th:text="${unResultado.nombrePlaca}"></span>
+								</td>
+								<td width="15%">
 								<input type="hidden" th:id="l+${count.index}" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].id}"/>
 								<span th:text="${unResultado.numLote}"></span>
 								</td>
-								  <td width="20%">
+								  <td width="15%">
                                 <span th:text="${unResultado.referenciaInternaLote}"></span>
 								</td>
                                 <td width="25%">
                                 <span th:text="${unResultado.centroProcedencia}"></span>
 								</td>
                                 
-                              <td width="20%">
+                              <td width="15%">
                               <a th:data-lote="${unResultado.id}" href="#" th:onclick="|mostrarMuestrasPlacas(this.getAttribute('data-lote'));|">
 										<i class="fa fa-table" aria-hidden="true" 
 										style="font-size: 1.2em;"></i>
@@ -145,7 +153,7 @@
 							
 				</tr>
 				<tr th:id="muestra+${unResultado.id}" style="display:none; border:0px;">
-				<td colspan="4">  
+				<td colspan="6">  
 					<table  class="col-xs-12 border-tableMuestras">
 					<thead class="thead-light"><tr><th class="p-1" scope="col" style="color:#6c757d;">Tipo Muestra</th><th class="p-1" scope="col" style="color:#6c757d;">Etiqueta</th><th class="p-1" scope="col" style="color:#6c757d;">Referencia Interna</th></tr></thead>
 					<tbody>
@@ -153,7 +161,9 @@
 					
 								<td>
 								<input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].id}"/>
-								<span th:text="${unaMuestra.tipoMuestra}"></span>
+								<span th:if="${#strings.toString(unaMuestra.tipoMuestra)=='N'}">Nariz</span>
+								<span th:if="${#strings.toString(unaMuestra.tipoMuestra)=='B'}">Boca</span>
+							
 								</td>
 								<td>
 								<span th:text="${unaMuestra.etiqueta}"></span>

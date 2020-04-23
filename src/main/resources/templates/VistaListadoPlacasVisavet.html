@@ -43,15 +43,12 @@
 						</div>
 			    </div>
 			     <div class="col-4 form-group">
-						<label class="col-xs-3">Estado:</label>
+						<label class="col-xs-3">Nombre Placa:</label>
 						<div class="col-xs-9">
-							<select class="form-control form-control-sm" id="estado"
-								th:field="*{codNumEstadoSeleccionado}">
-                                <option value="">Seleccione</option>
-								<option th:each="var: ${busqueda.listaBeanEstado}"
-									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
-									th:selected="${busqueda.codNumEstadoSeleccionado}">Estado</option>
-							</select>
+							
+								<input type="text" class="form-control form-control-sm" id="nombrePlacaVisavet"
+								th:value="${busqueda.nombrePlacaVisavet}"
+								th:field="*{nombrePlacaVisavet}" />
 						</div>
 						
 					</div>
@@ -68,6 +65,19 @@
 						a </label><input type="date" class="form-control" id="fechaCreacionFin"
 								th:field="*{fechaCreacionFin}" th:value="${busqueda.fechaCreacionFin}" />
                    </div>
+                   <div class="col-4 form-group">
+						<label class="col-xs-3">Estado:</label>
+						<div class="col-xs-9">
+							<select class="form-control form-control-sm" id="estado"
+								th:field="*{codNumEstadoSeleccionado}">
+                                <option value="">Seleccione</option>
+								<option th:each="var: ${busqueda.listaBeanEstado}"
+									th:value="${var.estado.codNum}" th:text="${var.estado.descripcion}"
+									th:selected="${busqueda.codNumEstadoSeleccionado}">Estado</option>
+							</select>
+						</div>
+						
+					</div>
                  <!-- <div class="col-4 form-group">
 			
                    	<label class="col-xs-4">Muestra:</label>
@@ -82,6 +92,9 @@
 		   <div class="row justify-content-end mt-2">
 			<div class="col-1">
 				 <button type="submit"  class="btn btn-secondary">Buscar</button>
+			</div>
+			<div class="col-1">
+			<button type="button" onclick="resetForm('formularioPrueba')" class="btn btn-secondary">Limpiar</button>
 			</div>
 		</div>	
 		</form>
@@ -100,6 +113,7 @@
 				<tr>
 				    
 					<th class="p-1" scope="col" width="20%">#Placa</th>
+					<th class="p-1" scope="col" width="20%">Nombre</th>
 					<th class="p-1" scope="col" width="20%">F. Creación</th>
 					<th class="p-1" scope="col" width="20%">#Lotes</th>
 					<th class="p-1" scope="col" width="10%">Nº Muestras</th>
@@ -110,13 +124,15 @@
 				<tbody>	
 			 	<tr th:id="trGroup+${count.index}"  th:each="unResultado,count : ${pagina.getContent()}" class="trGroupLotes">
 					<td><span th:text="${unResultado.id}"></span></td>
+					<td><span th:text="${unResultado.nombrePlacaVisavet}"></span></td>
+					
 					<td><span th:text="${#dates.format(unResultado.fechaCreacion, 'dd/MM/yyyy')}"></span></td>
                     <td> <!-- ${unResultado.listaLotes}">  -->
                     <p th:id="lotes+${unResultado.id}" th:class="lotes+${unResultado.id}" style="display:none" th:each="lote,count: ${unResultado.listaLotes}">
                             <input type="text" th:id="lote+${unResultado.id}+'_'+${count.index}" th:value="${lote.id}"/>
                             </p>
                             <a data-toggle="modal" data-target="#modalConsultarLotes" th:attr="data-target='#modalConsultarLotes'+${unResultado.id}" style="cursor: pointer;" title="Ver lotes">                                                 
-                    <i class="fa fa-dropbox" aria-hidden="true" style="font-size: 1.2em;"></i><span th:text="${#lists.size(unResultado.listaLotes)}"></span>	
+                    <i class="fa fa-dropbox" aria-hidden="true" style="font-size: 1.2em;"></i>&nbsp;<span th:text="${#lists.size(unResultado.listaLotes)}"></span>	
                      
                        </a>
                        
@@ -199,7 +215,10 @@
 													<tbody>
 														<tr th:if="${unResultado.listaMuestras != null}" th:each="muestra : ${unResultado.listaMuestras}">
 															<td><span th:text="${muestra.etiqueta}"></span></td>					
-															<td><span th:text="${muestra.tipoMuestra}"></span></td>
+															<td>
+															<span th:if="${#strings.toString(muestra.tipoMuestra)=='N'}">Nariz</span>
+															<span th:if="${#strings.toString(muestra.tipoMuestra)=='B'}">Boca</span>
+															</td>
 															<td><span th:text="${muestra.referenciaInterna}"></span></td>		
 																													
 														</tr>		

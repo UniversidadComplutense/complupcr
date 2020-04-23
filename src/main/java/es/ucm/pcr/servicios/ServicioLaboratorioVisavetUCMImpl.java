@@ -136,7 +136,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	public Page<BeanPlacaVisavetUCM> buscarPlacas(BusquedaPlacasVisavetBean busqueda, Pageable pageable){
 		
 	busqueda.setIdLaboratorioVisavet(sesionServicio.getLaboratorioVisavet().getId());	
-	
+	if (busqueda.getNombrePlacaVisavet()!= null && busqueda.getNombrePlacaVisavet().equals("")) busqueda.setNombrePlacaVisavet(null);
 //	if (busqueda.getIdLaboratorioCentro().equals("")) busqueda.setIdLaboratorioCentro(null);
 	List<BeanPlacaVisavetUCM> listPlacaBean = new ArrayList<BeanPlacaVisavetUCM>();
 	//List<PlacaVisavet> placasList =placaVisavetRepositorio.findByParams(busqueda); 
@@ -196,7 +196,6 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		PlacaVisavet placa = new PlacaVisavet();
 		placa.setLaboratorioVisavet(new LaboratorioVisavet(sesionServicio.getUsuario().getIdLaboratorioVisavet()));
 		
-		// Placa nueva
 		if (beanPlacaVisavetUCM.getId() == null) {
 			placa.setFechaCreacion(new Date());
 			placa.setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_INICIADA.getCodNum()));
@@ -212,8 +211,12 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 			
 		}
 		
+		if (beanPlacaVisavetUCM.getTamano()!=null)placa.setNumeromuestras(Integer.parseInt(beanPlacaVisavetUCM.getTamano()));
+		// Placa nueva
 		
-		
+		if (beanPlacaVisavetUCM.getNombrePlacaVisavet()!= null && !beanPlacaVisavetUCM.getNombrePlacaVisavet().equals("")) {
+			placa.setNombrePlacaVisavet(beanPlacaVisavetUCM.getNombrePlacaVisavet());
+		}
 	/*	if (placa.getId()!= null) {
 			for (Lote l: placa.getLotes()) {
 				Lote lbbdd = loteRepositorio1.findById(l.getId()).get();

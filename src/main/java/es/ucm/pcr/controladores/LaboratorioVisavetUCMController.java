@@ -148,6 +148,8 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				Utilidades.fechafinBuscador(busquedaLotes.getFechaFinEntrada()));
 				*/
 		busquedaLotes.setRolURL(rolURL);
+		busquedaLotes.setFechaFinEntrada(
+				Utilidades.fechafinBuscador(busquedaLotes.getFechaFinEntrada()));
 		paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), ORDENACION));
 		//model.addAttribute("paginaLotes", paginaLotes);
 		vista.addObject("paginaLotes", paginaLotes);
@@ -355,6 +357,55 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 		BeanEstado estado= new BeanEstado();
 		estado.setTipoEstado(TipoEstado.EstadoLote);
 		estado.setEstado(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS);
+		/*		beanLote.setEstado(estado);
+		System.out.println(beanLote.getIdCentro());
+		
+			List<LoteBeanPlacaVisavet> list=new ArrayList();
+					for (int i = 0; i<20; i++) {
+						list.add(getBean(i));
+						if (list.get(i).getId().equals(0)) {
+							// cambiamos estado
+							
+							list.get(i).setEstado(estado);
+						}
+						//para que tenga mas de dos lotes 
+						if (list.get(i).getId().equals(3)) {
+							// cambiamos estado
+							BeanEstado estado= new BeanEstado();
+							estado.setTipoEstado(TipoEstado.EstadoLote);
+							estado.setEstado(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS);
+							list.get(i).setEstado(estado);
+						}
+					}	
+				*/	
+		loteServicio.actualizarEstadoLote(beanLote, estado);
+		//LoteCentroBean lote = loteServicio.guardarLotePlavaVisavet(beanLote,estado);
+		BusquedaLotesBean busqueda=(BusquedaLotesBean) session.getAttribute("busquedaLotes");
+		if (busqueda ==null) busqueda= new BusquedaLotesBean();
+		if (busqueda.getRolURL()==null) busqueda.setRolURL("R");
+		return  this.buscarLotes(busqueda,busqueda.getRolURL(), request, session, pageable);
+				/*	Page<LoteBeanPlacaVisavet> paginaLotes = null;
+					paginaLotes = new PageImpl<LoteBeanPlacaVisavet>(list, pageable,pageable.getPageSize());
+					// fin para probar 
+					model.addAttribute("paginaLotes", paginaLotes);
+					model.addAttribute("busquedaLotes", session.getAttribute("busquedaLotes"));
+					vista.addObject("paginaLotes", paginaLotes);
+					vista.addObject("busquedaLotes", session.getAttribute("busquedaLotes"));
+				
+				    return vista;	*/
+	}
+	@RequestMapping(value = "/laboratorioUni/cancelarReciboLote", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','RECEPCIONLABORATORIO','TECNICOLABORATORIO')")
+	public ModelAndView cancelarReciboLote(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 50000000,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) throws Exception {
+	// llamar al servicio lotes y cambiar el estado de id a Recibido
+		// para probar
+		
+		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
+		LoteCentroBean beanLote = loteServicio.findById(id);
+		beanLote.setFechaRecibido(new Date());
+		BeanEstado estado= new BeanEstado();
+		estado.setTipoEstado(TipoEstado.EstadoLote);
+		estado.setEstado(Estado.LOTE_ENVIADO_CENTRO_ANALISIS);
 		/*		beanLote.setEstado(estado);
 		System.out.println(beanLote.getIdCentro());
 		
@@ -623,6 +674,9 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			ModelAndView vista = new ModelAndView("VistaListadoPlacasVisavet");
 		if (busqueda == null) new BusquedaPlacasVisavetBean();
 			busqueda= this.rellenarBusquedaPlacas(busqueda);
+			busqueda.setFechaCreacionFin(
+					Utilidades.fechafinBuscador(busqueda.getFechaCreacionFin()));
+			
 			pagina = servicioLaboratorioUni.buscarPlacas(busqueda, pageable);
 			//model.addAttribute("paginaLotes", paginaLotes);
 			vista.addObject("pagina", pagina);
@@ -693,7 +747,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				
 				@RequestMapping(value = "/laboratorioUni/asignarPlaca", method = RequestMethod.GET)
 				
-				public String asignarPlacasGet(@RequestParam("idPlaca") int idPlaca,  Model model, HttpServletRequest request, HttpSession session) {
+				public String asignarPlacasGet(@RequestParam("idPlaca") int idPlaca, @ModelAttribute("lotePlacaVisavetBean") LotePlacaVisavetBean loteFormulario , Model model, HttpServletRequest request, HttpSession session) {
 				// grabar en el servicio la placa junto con el que tenga lote que venga del modelo
 					LotePlacaVisavetBean lotePlacaVisavetBean = (LotePlacaVisavetBean )session.getAttribute("lotePlacaVisavetBean");
 					List<LoteBeanPlacaVisavet> listaLotesDisponibles= new ArrayList<LoteBeanPlacaVisavet>();
@@ -701,6 +755,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 						for (LoteBeanPlacaVisavet lote:lotePlacaVisavetBean.getListaLotesDisponibles()) {
 				      	
 					      lote.setIdPlacaVisavet(idPlaca);
+					    
 					      BeanEstado estado=new BeanEstado();
 						  estado.setTipoEstado(TipoEstado.EstadoLote);
 						  estado.setEstado(Estado.LOTE_PROCESADO_CENTRO_ANALISIS);
@@ -711,6 +766,8 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 					lotePlacaVisavetBean.setListaLotesDisponibles(listaLotesDisponibles);
 					BeanPlacaVisavetUCM placaVisavet =new BeanPlacaVisavetUCM();
 					placaVisavet.setId(idPlaca);
+					placaVisavet.setNombrePlacaVisavet(loteFormulario.getPlaca().getNombrePlacaVisavet());
+					placaVisavet.setTamano(loteFormulario.getPlaca().getTamano());
 					placaVisavet.setListaLotes(lotePlacaVisavetBean.getListaLotesDisponibles());
 					BeanEstado estado=new BeanEstado();
 					estado.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
