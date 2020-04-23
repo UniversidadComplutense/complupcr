@@ -128,9 +128,9 @@
                     <td><span th:text="${unResultado.centroProcedencia}"></span></td>
                     <td><span th:text="${#dates.format(unResultado.fechaEntrada, 'dd/MM/yyyy')}"></span></td>
                     <td><a data-toggle="modal" data-target="#modalConsultarMuestras" th:attr="data-target='#modalConsultarMuestras'+${unResultado.id}" style="cursor: pointer;" title="Ver muestras">                                                 
-                    <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i><span th:text="${#lists.size(unResultado.listaMuestras)}"></span>	
+                    <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i> <span th:text="${#lists.size(unResultado.listaMuestras)}"></span>
                        </a>
-                       
+                     
                            <!--  un modal -->
                            
                            	<div class="modal fade" th:id="modalConsultarMuestras+${unResultado.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
@@ -157,7 +157,9 @@
 													<tbody>
 														<tr th:if="${unResultado.listaMuestras != null}" th:each="muestra : ${unResultado.listaMuestras}">
 															<td><span th:text="${muestra.etiqueta}"></span></td>					
-															<td><span th:text="${muestra.tipoMuestra}"></span></td>
+															<td><span th:if="${#strings.toString(muestra.tipoMuestra)=='N'}">Nariz</span>
+															<span th:if="${#strings.toString(muestra.tipoMuestra)=='B'}">Boca</span>
+															</td>
 															<td><span th:text="${muestra.referenciaInterna}"></span></td>		
 																													
 														</tr>		

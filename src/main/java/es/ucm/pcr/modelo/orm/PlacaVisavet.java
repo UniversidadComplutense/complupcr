@@ -42,6 +42,7 @@ public class PlacaVisavet implements java.io.Serializable {
 	private Date fechaAsignadaLaboratorioCentro;
 	private Date fechaEnviadaLaboratorioCentro;
 	private Date fechaRecepcionLaboratorioCentro;
+	private String nombrePlacaVisavet;
 	private Set<Muestra> muestras = new HashSet<Muestra>(0);
 	
 
@@ -198,6 +199,14 @@ public class PlacaVisavet implements java.io.Serializable {
 
 	public void setMuestras(Set<Muestra> muestras) {
 		this.muestras = muestras;
+	}
+
+	public String getNombrePlacaVisavet() {
+		return nombrePlacaVisavet;
+	}
+	@Column(name = "nombrePlacaVisavet")
+	public void setNombrePlacaVisavet(String nombrePlacaVisavet) {
+		this.nombrePlacaVisavet = nombrePlacaVisavet;
 	}
 	
 }
