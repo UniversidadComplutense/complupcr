@@ -394,6 +394,55 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				
 				    return vista;	*/
 	}
+	@RequestMapping(value = "/laboratorioUni/cancelarReciboLote", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','RECEPCIONLABORATORIO','TECNICOLABORATORIO')")
+	public ModelAndView cancelarReciboLote(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session,@PageableDefault(page = 0, value = 50000000,sort = "lote", direction =Sort.Direction.DESC) Pageable pageable) throws Exception {
+	// llamar al servicio lotes y cambiar el estado de id a Recibido
+		// para probar
+		
+		ModelAndView vista = new ModelAndView("VistaListadoRecepcionLotes");
+		LoteCentroBean beanLote = loteServicio.findById(id);
+		beanLote.setFechaRecibido(new Date());
+		BeanEstado estado= new BeanEstado();
+		estado.setTipoEstado(TipoEstado.EstadoLote);
+		estado.setEstado(Estado.LOTE_ENVIADO_CENTRO_ANALISIS);
+		/*		beanLote.setEstado(estado);
+		System.out.println(beanLote.getIdCentro());
+		
+			List<LoteBeanPlacaVisavet> list=new ArrayList();
+					for (int i = 0; i<20; i++) {
+						list.add(getBean(i));
+						if (list.get(i).getId().equals(0)) {
+							// cambiamos estado
+							
+							list.get(i).setEstado(estado);
+						}
+						//para que tenga mas de dos lotes 
+						if (list.get(i).getId().equals(3)) {
+							// cambiamos estado
+							BeanEstado estado= new BeanEstado();
+							estado.setTipoEstado(TipoEstado.EstadoLote);
+							estado.setEstado(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS);
+							list.get(i).setEstado(estado);
+						}
+					}	
+				*/	
+		loteServicio.actualizarEstadoLote(beanLote, estado);
+		//LoteCentroBean lote = loteServicio.guardarLotePlavaVisavet(beanLote,estado);
+		BusquedaLotesBean busqueda=(BusquedaLotesBean) session.getAttribute("busquedaLotes");
+		if (busqueda ==null) busqueda= new BusquedaLotesBean();
+		if (busqueda.getRolURL()==null) busqueda.setRolURL("R");
+		return  this.buscarLotes(busqueda,busqueda.getRolURL(), request, session, pageable);
+				/*	Page<LoteBeanPlacaVisavet> paginaLotes = null;
+					paginaLotes = new PageImpl<LoteBeanPlacaVisavet>(list, pageable,pageable.getPageSize());
+					// fin para probar 
+					model.addAttribute("paginaLotes", paginaLotes);
+					model.addAttribute("busquedaLotes", session.getAttribute("busquedaLotes"));
+					vista.addObject("paginaLotes", paginaLotes);
+					vista.addObject("busquedaLotes", session.getAttribute("busquedaLotes"));
+				
+				    return vista;	*/
+	}
 	@RequestMapping(value = "/laboratorioUni/confirmarEnviadaPlaca", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO')")
 	public String confirmarEnviadaPlaca(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session) throws Exception {

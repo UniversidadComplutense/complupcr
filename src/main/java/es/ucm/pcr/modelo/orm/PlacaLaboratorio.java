@@ -34,6 +34,8 @@ public class PlacaLaboratorio implements java.io.Serializable {
 	private LaboratorioCentro laboratorioCentro;
 	private String numeromuestras;
 	private Date fechaCreacion;
+	private Date fechaListaAnalisis;
+	private Date fechaAsignadaJefe;
 	private Set<PlacaVisavetPlacaLaboratorio> placaVisavetPlacaLaboratorios = new HashSet<PlacaVisavetPlacaLaboratorio>(
 			0);
 	private Set<Documento> documentos = new HashSet<Documento>(0);
@@ -158,6 +160,26 @@ public class PlacaLaboratorio implements java.io.Serializable {
 
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaListaAnalisis", length = 10)
+	public Date getFechaListaAnalisis() {
+		return fechaListaAnalisis;
+	}
+
+	public void setFechaListaAnalisis(Date fechaListaAnalisis) {
+		this.fechaListaAnalisis = fechaListaAnalisis;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaAsignadaJefe", length = 10)
+	public Date getFechaAsignadaJefe() {
+		return fechaAsignadaJefe;
+	}
+
+	public void setFechaAsignadaJefe(Date fechaAsignadaJefe) {
+		this.fechaAsignadaJefe = fechaAsignadaJefe;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "placaLaboratorio")

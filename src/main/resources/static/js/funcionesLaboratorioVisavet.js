@@ -149,6 +149,13 @@ function loadConfirmarEnvio(id, numLote, centroProcedencia){
 	$("#centroModal").html(centroProcedencia);
 	$("#id").val(id);
 }
+
+function loadCancelarEnvio(id, numLote, centroProcedencia){
+	
+	$("#numeroLoteCancelar").html(numLote);
+	$("#centroModalCancelar").html(centroProcedencia);
+	$("#idCancelar").val(id);
+}
 function cambiarEstadoaEnviada(id, laboratorio){
 	
 	$("#idPlacaConfirmar").html(id);
@@ -172,6 +179,14 @@ function confirmarLote(){
 	
 	var id=$("#id").val();
 	url =  '/laboratorioUni/confirmarReciboLote?id='+id;
+	window.location=url;
+}
+function cancelarLote(){
+	var url = "";
+	//var urlAbs = getAbsolutePath();
+	
+	var id=$("#idCancelar").val();
+	url =  '/laboratorioUni/cancelarReciboLote?id='+id;
 	window.location=url;
 }
 
