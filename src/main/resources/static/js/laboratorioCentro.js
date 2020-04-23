@@ -103,7 +103,10 @@ function rellenarPlaca() {
     $("#formGuardarRellenarPlaca").submit();
 }
 
-
+function confirmarRecepcionPlacaVisavetDesdeModal(idPlaca){
+	var url="/laboratorioCentro/recepcionPlacas/recepciona?id=" + idPlaca;
+	window.location=url;
+}
 
 
 

@@ -216,6 +216,20 @@ public class LabCentroControlador {
 		return vista;
 	}
 	
+	@RequestMapping(value = "/recepcionPlacas/recepciona", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
+	public ModelAndView recepcionarPlacaVisavetModalGET(@RequestParam(value = "id", required = true) Integer id, RedirectAttributes redirectAttributes)  throws Exception {
+
+		if (laboratorioVisavetServicio.recepcionarPlaca(id)) {
+			redirectAttributes.addFlashAttribute("mensaje", "La placa " + id + " se ha recepcionado correctamente.");
+		} else {
+			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible recepcionar la placa " +  id + ".");
+		}				
+		
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/recepcionPlacas", true));
+		return respuesta;
+	}
+	
 	@RequestMapping(value = "/gestionPlacas/list", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
 	public ModelAndView buscarPlacasListasParaPcrGETList(HttpSession session, @RequestParam("pagina") Optional<Integer> page) throws Exception {
