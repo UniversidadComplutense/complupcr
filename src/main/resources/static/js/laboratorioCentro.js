@@ -108,5 +108,13 @@ function confirmarRecepcionPlacaVisavetDesdeModal(idPlaca){
 	window.location=url;
 }
 
+function asignarEquipoPCRDesdeModal(idPlaca){
+	
+	var selectorEquipos = $("*").find("[data-idPlaca='" + idPlaca + "']"); 
+	var idEquipo = selectorEquipos.val();
+	var url="/laboratorioCentro/gestionPlacas/asignaEquipo?id=" + idPlaca + "&idEquipo=" + idEquipo;
+	window.location=url;
+}
+
 
 

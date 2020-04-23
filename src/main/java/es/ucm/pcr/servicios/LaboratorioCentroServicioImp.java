@@ -197,7 +197,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 		// Si no se ha seleccionado el estado de la placa en la búsqueda, buscamos por los estados: PLACA_INICIADA ó PLACA_PREPARADA_PARA_PCR
 		// ó PLACA_FINALIZADA_PCR ó PLACA_LISTA_PARA_ANALISIS
-		if (criteriosBusqueda.getIdEstadoPlaca() == 0) {
+		if (criteriosBusqueda.getIdEstadoPlaca() == null || criteriosBusqueda.getIdEstadoPlaca() == 0) {
 			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(Estado.PLACA_INICIADA.getCodNum(), Estado.PLACA_PREPARADA_PARA_PCR.getCodNum(), 
 																Estado.PLACA_FINALIZADA_PCR.getCodNum(), Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum()));
 		} else {

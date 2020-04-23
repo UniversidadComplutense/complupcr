@@ -218,7 +218,7 @@ public class LabCentroControlador {
 	
 	@RequestMapping(value = "/recepcionPlacas/recepciona", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
-	public ModelAndView recepcionarPlacaVisavetModalGET(@RequestParam(value = "id", required = true) Integer id, RedirectAttributes redirectAttributes)  throws Exception {
+	public ModelAndView recepcionarPlacaVisavetDesdeModalGET(@RequestParam(value = "id", required = true) Integer id, RedirectAttributes redirectAttributes)  throws Exception {
 
 		if (laboratorioVisavetServicio.recepcionarPlaca(id)) {
 			redirectAttributes.addFlashAttribute("mensaje", "La placa " + id + " se ha recepcionado correctamente.");
@@ -260,7 +260,7 @@ public class LabCentroControlador {
 		session.setAttribute("paginaActual", currentPage);
 		
 		ModelAndView vista = new ModelAndView("ListadoPlacasLaboratorio");
-
+		this.agregarEquiposPCR(vista);
 		gestionPlacas(vista, currentPage, session);
 		
 		return vista;
@@ -274,6 +274,7 @@ public class LabCentroControlador {
 		Page<PlacaLaboratorioCentroBean> listaPlacas = laboratorioCentroServicio.buscarPlacas(criteriosBusqueda, 
 				PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION, ORDENACION));
 		this.agregarEstadosBusquedaPlacaLaboratorio(vista);
+		this.agregarEquiposPCR(vista);
 		vista.addObject("busquedaPlacaLaboratorioBean", criteriosBusqueda);
 		vista.addObject("listaPlacas", listaPlacas.getContent());
 		
@@ -288,6 +289,7 @@ public class LabCentroControlador {
 			@ModelAttribute BusquedaPlacaLaboratorioBean criteriosBusqueda) throws Exception {
 
 		ModelAndView vista = new ModelAndView("ListadoPlacasLaboratorio");
+		this.agregarEquiposPCR(vista);
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getLaboratorioCentro().getId());
 		
 		if (criteriosBusqueda.getNumeroMuestras() == "") {
@@ -412,13 +414,27 @@ public class LabCentroControlador {
 		if (laboratorioCentroServicio.asignarEquipoPCR(placa.getId(), placa.getIdEquipo())) {
 			redirectAttributes.addFlashAttribute("mensaje", "La placa " + placa.getId() + " está preparada para la prueba PCR.");
 		} else {
-			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible dar por preparada para PCR la placa " + placa.getId() + ".");
+			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible dar por preparada para PCR a la placa " + placa.getId() + ".");
 		}
 		
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placa.getId(), true));
 		return respuesta;
 	}
-
+	
+	@RequestMapping(value="/gestionPlacas/asignaEquipo", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
+	public ModelAndView asignarEquipoPCRDesdeModalGET(@RequestParam(value = "id", required = true) Integer id, @RequestParam(value = "idEquipo", required = true) Integer idEquipo, 
+														RedirectAttributes redirectAttributes)  throws Exception {
+		
+		if (laboratorioCentroServicio.asignarEquipoPCR(id, idEquipo)) {
+			redirectAttributes.addFlashAttribute("mensaje", "La placa " + id + " está preparada para la prueba PCR.");
+		} else {
+			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible dar por preparada para PCR a la placa " + id + ".");
+		}				
+		
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas", true));
+		return respuesta;
+	}
 	
 	@RequestMapping(value="/gestionPlacas/resultados", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
