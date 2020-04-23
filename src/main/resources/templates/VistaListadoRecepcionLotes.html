@@ -180,6 +180,7 @@
 				               		<label style="color:red;display:none;" th:id="mensajeReferenciaLote+${count.index}" >La referencia interna del lote no puede estar vacía</label>
 								<label style="color:red;display:none;" th:id="mensajeReferenciaLoteGuardar+${count.index}" >Debe pulsar el botón "Guardar Referencias"</label>
 								
+								<label style="color:red;display:none;" th:id="mensajeReferenciaLoteInteger+${count.index}" >La referencia interna debe ser numérica</label>
 								
 				               	<label style="color:red;" th:id="mensajeError+${count.index}" th:if="${#strings.toString(unResultado.errorReferenciaLote) != ''}" th:text="${unResultado.errorReferenciaLote}"></label>
 				               	<input type="hidden" th:id="referenciaLoteBbdd+${count.index}" th:value="${unResultado.referenciaInternaLote}"></input>

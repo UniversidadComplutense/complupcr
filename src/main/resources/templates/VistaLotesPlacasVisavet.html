@@ -26,7 +26,7 @@
 		  <div class="row justify-content-end mt-2">
 			<div>
 			<!-- th:disabled="${botonAltaNoMostrar}" -->
-				<button type="button"  th:disabled="${botonAltaNoMostrar}" th:onClick="|altaNuevaPlaca(); return false|"  class="btn btn-secondary">Nueva placa</button>
+				<button type="button"  th:disabled="${botonAltaNoMostrar}"  id="botonAlta" th:onClick="|altaNuevaPlaca(); return false|"  class="btn btn-secondary">Nueva placa</button>
 			</div>
 		</div>	  
 
@@ -103,10 +103,11 @@
 				<thead class="thead-light">
 				
 				<tr>
-				    <th class="p-1" width="25%">#Placa</th>
-					<th class="p-1" width="25%">#Lote</th>
-					<th class="p-1" width="25%">Centro</th>
-					<th class="p-1" width="25%">Nº de muestras</th>
+				    <th class="p-1" width="20%">#Placa</th>
+					<th class="p-1" width="20%">#Lote</th>
+					<th class="p-1" width="20%">Ref. interna lote</th>
+					<th class="p-1" width="20%">Centro</th>
+					<th class="p-1" width="20%">Nº de muestras</th>
 				</tr>
 				</thead>
 				 </table>
@@ -119,19 +120,22 @@
 					    <table  class="col-xs-12 tablaMuestrasPlacas"  style="border: none;" width="100%" id="tablaMuestras">
 				    <tbody>
 				    <tr class="trGroupLotes" style="border: none;">
-					           <td width="25%">
+					           <td width="20%">
 					          <input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].idPlacaVisavet}"/>
 								<span th:text="${unResultado.idPlacaVisavet}"></span>
 								</td>
-								<td width="25%">
+								<td width="20%">
 								<input type="hidden" th:id="l+${count.index}" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].id}"/>
 								<span th:text="${unResultado.numLote}"></span>
+								</td>
+								  <td width="20%">
+                                <span th:text="${unResultado.referenciaInternaLote}"></span>
 								</td>
                                 <td width="25%">
                                 <span th:text="${unResultado.centroProcedencia}"></span>
 								</td>
                                 
-                              <td width="25%">
+                              <td width="20%">
                               <a th:data-lote="${unResultado.id}" href="#" th:onclick="|mostrarMuestrasPlacas(this.getAttribute('data-lote'));|">
 										<i class="fa fa-table" aria-hidden="true" 
 										style="font-size: 1.2em;"></i>
