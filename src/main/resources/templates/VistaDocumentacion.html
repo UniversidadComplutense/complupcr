@@ -49,7 +49,7 @@
 				<div class="col-6 m-0 form-group">
 					<label>Documento</label>
 					<div class="custom-file">
-					    <input type="file" onchange="validarFichero(this)" required class="custom-file-input form-control-sm" th:field="*{file}"  th:value="*{file}" accept=".pdf, .doc, .docx, .jpg, .jpeg, .png">
+					    <input type="file" onchange="validarFichero(this)" required class="custom-file-input form-control-sm" th:field="*{file}"  th:value="*{file}" accept=".pdf, .doc, .docx, .jpg, .jpeg, .png, .xlsx, .xls">
 					    <label class="custom-file-label" for="file">Seleccionar fichero</label>
 					    <label class="text-warning" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></label>
 					    <label id="labelError" class="text-warning d-none"></label>
@@ -73,10 +73,11 @@
 			<table class="table">
 				<thead class="thead-light">	
 	    			<tr>
-	      				<th scope="col" style="width: 50%">Nombre</th>
+	      				<th scope="col" style="width: 40%">Nombre</th>
 	      				<th scope="col" style="width: 10%">Tamaño</th>
 	      				<th scope="col" style="width: 25%">Usuario</th>
-						<th scope="col" style="width: 10%">Acciones</th>						
+	      				<th scope="col" style="width: 20%">Fecha</th>
+						<th scope="col" style="width: 5%">Acciones</th>						
 					</tr>
 				</thead>
 				<tbody>
@@ -89,6 +90,9 @@
 						</td>
 						<td>
 							<span th:text="${doc.descripcionUsuario}"></span>
+						</td>
+						<td>
+							<span th:text="${#dates.format(doc.fechaDocumento, 'dd/MM/yyyy HH:mm:ss')}"></span>
 						</td>
 						<td>
 							<!-- ACCIONES -->

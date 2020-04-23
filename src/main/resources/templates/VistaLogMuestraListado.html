@@ -49,6 +49,9 @@
 			<div class="col-1">
 				<button type="submit" class="btn btn-secondary">Buscar</button>
 			</div>
+			<div class="col-1">
+				<button type="button" onclick="resetForm('formBusqueda')" class="btn btn-secondary">Limpiar</button>
+			</div>
 		</div>	
 		
 		<!-- PAGINACION -->
@@ -64,6 +67,9 @@
 	      				<th scope="col" width="20%">Paciente</th>
 	      				<th scope="col" width="8%">NHC</th>	      				
 						<th scope="col" width="12%">Estado</th>
+						<th scope="col" width="10%">Lote</th>
+						<th scope="col" width="10%">Placa visavet</th>
+						<th scope="col" width="10%">Placa laboratorio</th>
 						<th scope="col" width="10%">Autor</th>	
 						<th scope="col" width="16%">Fecha</th>										
 					</tr>
@@ -75,6 +81,9 @@
 						<td><span th:text="${log.descPaciente}"></span></td>
 						<td><span th:text="${log.nhcPaciente}"></span></td>
 						<td><span th:text="${log.descEstadoMuestra}"></span></td>
+						<td><span th:text="${log.descLote}"></span></td>
+						<td><span th:text="${log.descPlacaVisavet}"></span></td>
+						<td><span th:text="${log.descPlacaLaboratorio}"></span></td>
 						<td><span th:text="${log.nombreAutorCambio}"></span></td>
 						<td><span th:text="${#dates.format(log.fechaCambio, 'dd/MM/yyyy HH:mm:ss')}"></span></td>															
 					</tr>		

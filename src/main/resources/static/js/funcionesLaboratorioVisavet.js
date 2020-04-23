@@ -1,3 +1,5 @@
+
+
 function eliminaFilas()
 {
 //OBTIENE EL NÚMERO DE FILAS DE LA TABLA
@@ -278,7 +280,7 @@ function altaNuevaPlaca(){
         dataType: 'html'
        
 	}).done(function(respuesta) {
-	 
+		$("#botonAlta").attr('disabled',true);
 	   $("#criteriosBusqueda").show();
 		$("#numPlacaSpan").html(respuesta);
 		
@@ -323,10 +325,23 @@ function asignarPlaca(){
 	});
 	}
 }
-function habilitarBotonAsignarLaboratorio(){
-if ($("#laboratorioLab option:selected").val()=="") $("#asignarLaboratorio").attr('disabled',true);
+function habilitarBotonAsignarLaboratorio(idLaboratorio){
+	
+	 var nfilas=$("#tablaLaboratorios tbody tr").length;
+	  var habilitar=false;
+		for (var i=0;i<nfilas;i++){
+			var seleccionado="#laboratorio"+i;
+			$(seleccionado).prop('checked',false);
+			
+			if ($(seleccionado).val() == idLaboratorio) {
+			$(seleccionado).prop('checked',true);
+			habilitar=true;
+			}
+		}
+	
+if (!habilitar) $("#asignarLaboratorio").attr('disabled',true);
 else $("#asignarLaboratorio").attr('disabled',false);
-	//if ($("#laboratorioLab option:selected").val() != null)
+	
 }
 
 function deshabilitarBotones(fechaEnvio){
@@ -340,7 +355,9 @@ function consultarOcupacionLaboratorio(idPlaca, idLaboratorio, estado, fechaEnvi
 	
 	var url="/laboratorioUni/consultarOcupacionLaboratorios?idPlaca="+idPlaca;
 	if(idLaboratorio != null) 
-	$('#laboratorioLab option[value='+idLaboratorio+']').attr('selected','selected');
+		$("#laboratorioLab").val(idLaboratorio);
+
+	//$('#laboratorioLab option[value='+idLaboratorio+']').attr('selected','selected');
 	$.ajax({
         type:  'GET',
         url:   url,
@@ -350,16 +367,51 @@ function consultarOcupacionLaboratorio(idPlaca, idLaboratorio, estado, fechaEnvi
 		$("#idPlacaLab").val(idPlaca);
 		$("#spanIdPlaca").text(idPlaca);
 	    $("#tablaLaboratorios tbody").html(respuesta);
-	   if (estado == "PLACAVISAVET_ENVIADA") deshabilitarBotones(fechaEnvio);
-	    else
+	    if ($("#laboratorioLab").val()!="") {
+	    	
+	    var nfilas=$("#tablaLaboratorios tbody tr").length;
+	  
+		for (var i=0;i<nfilas;i++){
+			var seleccionado="#laboratorio"+i;
+			
+			if ($(seleccionado).val() == $("#laboratorioLab").val()) {
+			$(seleccionado).attr('checked','checked');
+			
+			}
+		}
+	    }
+	    
+	    
+	   if (estado == "PLACAVISAVET_ENVIADA") {
+		   
+		   deshabilitarBotones(fechaEnvio);
+		   for (var i=0;i<nfilas;i++){
+				
+				$("#laboratorio"+i).attr('disabled',true);
+				
+			
+			}
+	   }
+	 /*   else
 	    habilitarBotonAsignarLaboratorio();
+	    */
 	});
 }
 
 function asignarLaboratoriodesdeModal(){
 	
-	var url="/laboratorioUni/asignarLaboratorio?idPlaca="+$("#idPlacaLab").val()+"&laboratorio="+$("#laboratorioLab option:selected").val();
+	//var url="/laboratorioUni/asignarLaboratorio?idPlaca="+$("#idPlacaLab").val()+"&laboratorio="+$("#laboratorioLab option:selected").val();
+	var nfilas=$("#tablaLaboratorios tbody tr").length;
+	for (var i=0;i<nfilas;i++){
+		var seleccionado="#laboratorio"+i;
+		
+		if ($(seleccionado).is(':checked')) $("#laboratorioLab").val($(seleccionado).val());
+	}
 	
+	
+	
+
+	var url="/laboratorioUni/asignarLaboratorio?idPlaca="+$("#idPlacaLab").val()+"&laboratorio="+$("#laboratorioLab").val();
 	
 	/*$.ajax({
         type:  'GET',
@@ -444,16 +496,23 @@ var respuesta=true;
 }
 function guardarReferencias(){
 	var nFilas = $("#tablaResultados .trGroupLotes").length;
-	
+	var numerico = /^[0-9]+$/;
 	var referenciaLotes="";
+	var enviar=true;
 	if (nFilas>0) {
 	 
 	 for (var i=0; i<nFilas;i++){
 		 var lote=$("#id"+i).val();
 		 var referencia=$("#referenciaLote"+i).val();
+		 if (numerico.test(referencia) == false){
+			$("#mensajeReferenciaLoteInteger"+i).show();
+			enviar=false;
+		 }
+		 else {		 
+		 $("#mensajeReferenciaLoteInteger"+i).hide();
 		 referenciaLotes+=lote+"_"+referencia+":";
-		 
+		 }
 	 }
 	}
-	if (referenciaLotes != "") window.location="/laboratorioUni/guardarReferenciaLotes?lotes="+referenciaLotes;
+	if (referenciaLotes != "" && enviar) window.location="/laboratorioUni/guardarReferenciaLotes?lotes="+referenciaLotes;
 }

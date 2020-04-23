@@ -50,8 +50,8 @@ public class LoteValidador implements Validator {
 			if (lote.getId() == null) {
 				errors.rejectValue("numLote", "campo.invalid", "Ya existe un lote con el mismo código");
 			} else {
-				LoteListadoBean loteBean = lotes.stream().filter(loteList -> lote.getId().equals(loteList.getId())).findAny().orElse(null);
-				if (loteBean == null) {
+				LoteListadoBean loteBean = lotes.stream().filter(loteList -> !lote.getId().equals(loteList.getId())).findAny().orElse(null);
+				if (loteBean != null) {
 					errors.rejectValue("numLote", "campo.invalid", "Ya existe un lote con el mismo código");
 				}
 			}

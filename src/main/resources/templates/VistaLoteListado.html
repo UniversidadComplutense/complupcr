@@ -65,7 +65,7 @@
 			</div>
 		</fieldset>
 		
-
+		<!-- ACCIONES -->
 		<div class="row justify-content-end mt-3">
 			<div class="col-1">
 				<a th:href="@{/centroSalud/lote/nuevo}" class="btn btn-secondary">Nuevo</a>				
@@ -73,6 +73,9 @@
 			<div class="col-1">
 				<button type="submit" class="btn btn-secondary">Buscar</button>
 			</div>
+			<div class="col-1">
+					<button type="button" onclick="resetForm('formBusqueda')" class="btn btn-secondary">Limpiar</button>
+				</div>
 		</div>	
 		
 		<!-- PAGINACION -->
@@ -162,8 +165,11 @@
 						<td class="p-1">
 							<!-- ACCIONES -->
 							<!-- Modificar -->
-							<a style="color:black" th:href="@{/centroSalud/lote/modificar(id=${lote.id})}" title="Modificar">
+							<a th:if="${lote.fechaEnvio == null}" style="color:black" th:href="@{/centroSalud/lote/modificar(id=${lote.id})}" title="Modificar">
 					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>
+					        <a th:if="${lote.fechaEnvio != null}" style="color:black" th:href="@{/centroSalud/lote/{id}(id=${lote.id})}" title="Consultar">
+					          	<i class="fa fa-eye" aria-hidden="true" style="font-size: 1.2em;"></i>
 					        </a>
 					        
 							<!-- Asignar laboratorio -->					        

@@ -9,10 +9,11 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
 import es.ucm.pcr.beans.MuestraListadoBean;
+import es.ucm.pcr.modelo.orm.Lote;
+import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.servicios.LoteServicio;
 import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.SesionServicio;
@@ -39,7 +40,7 @@ public class MuestraValidador implements Validator {
 		MuestraCentroBean muestra = (MuestraCentroBean) target;
 		
 		// valida el numero historial clinico, no se puede repetir por centro
-		validateNHC(muestra, errors);
+		//validateNHC(muestra, errors);
 		
 		// si se ha rellenado el lote valida que no sobrepase la capacidad del lote
 		validateLote(muestra, errors);
@@ -84,9 +85,10 @@ public class MuestraValidador implements Validator {
 	 */
 	private void validateLote(MuestraCentroBean muestra, Errors errors) {
 		if (muestra.getIdLote() != null) {
-			LoteCentroBean loteBean = loteServicio.findById(muestra.getIdLote());
+			Lote lote = loteServicio.findByIdLote(muestra.getIdLote());
 			
-			if (loteBean.getNumeroMuestras().intValue() == loteBean.getCapacidad().intValue()) {
+			Muestra m = muestra.getId() != null ? lote.getMuestras().stream().filter(ml -> muestra.getId().equals(ml.getId())).findAny().orElse(null) : null;
+			if (m == null && lote.getMuestras().size() == lote.getCapacidad()) {
 				errors.rejectValue("idLote", "campo.invalid", "El lote ya esta completo");
 			} 
 		}
@@ -150,8 +152,8 @@ public class MuestraValidador implements Validator {
 					errors.rejectValue("etiqueta", "campo.invalid", "Ya existe una muestra con la misma etiqueta");
 				}
 			} else {
-				MuestraListadoBean muestraBean = muestras.stream().filter(muestrasList -> muestra.getId().equals(muestrasList.getId())).findAny().orElse(null);
-				if (muestraBean == null) {
+				MuestraListadoBean muestraBean = muestras.stream().filter(muestrasList -> !muestra.getId().equals(muestrasList.getId())).findAny().orElse(null);
+				if (muestraBean != null) {
 					errors.rejectValue("etiqueta", "campo.invalid", "Ya existe una muestra con la misma etiqueta");
 				}
 			}
