@@ -198,7 +198,11 @@
 							     <i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;" title="Confirmar Recibido"></i>
 							    </a>
 							    <i th:if="${#strings.toString(unResultado.estado.Estado) != 'LOTE_ENVIADO_CENTRO_ANALISIS'}" class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;color:grey;" title="Confirmar Recibido"></i>
+							   <a  th:if="${#strings.toString(unResultado.estado.Estado) == 'LOTE_RECIBIDO_CENTRO_ANALISIS'}" href="#modalCancelarRecibido" data-toggle="modal" th:data-lote="${unResultado.numLote}" th:data-centro="${unResultado.centroProcedencia}" th:data-id="${unResultado.id}" th:onclick="|loadCancelarEnvio(this.getAttribute('data-id'),this.getAttribute('data-lote'),this.getAttribute('data-centro'))|">
 							    
+							    <i class="fa fa-undo" style="font-size: 1.2em;" title="Cancelar Recibido"></i>
+							    </a>
+							       <i th:unless="${#strings.toString(unResultado.estado.Estado) == 'LOTE_RECIBIDO_CENTRO_ANALISIS'}" class="fa fa-undo" style="font-size: 1.2em;color:grey;" title="Cancelar Recibido"></i>
 							   </td>
 								  
 					</tr>	
@@ -254,6 +258,60 @@
 			
 		
 <!--  	 fin  Recibido -->
+
+
+			<!--  cancelar Recibido -->
+			    	<div class="modal fade" id="modalCancelarRecibido" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">Cancelar lote recibido</h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	
+								          	<div id="tablaMuestras">
+												<table>
+													<thead class="thead-light">	
+									    				<tr>
+										      				<th>Número de Lote</th>
+															<th>Centro</th>
+															
+															
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td><span id="numeroLoteCancelar"></span></td>					
+															<td><span id="centroModalCancelar"></span></td>
+																
+																													
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    <input type="hidden" id="idCancelar" value=""></input>
+									    <button type="button" id="aceptarConfirmacion"  class="btn btn-secondary" data-dismiss="modal"  th:onclick="|cancelarLote()|">Aceptar</button>
+										<button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
+									
+									    						        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+		
+			
+			
+			
+		
+<!--  	 fin  cancelar -->
+
+
+
 			</div>
 			<div class="row justify-content-left mt-3">
 				<input id="procesarBoton" disabled th:if="${busquedaLotes.mostrarProcesar} and ${paginaLotes.getContent().size()>0}" type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" onclick="procesarLotes('L')"/>
