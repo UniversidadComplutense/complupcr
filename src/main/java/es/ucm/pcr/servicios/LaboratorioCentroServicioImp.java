@@ -278,6 +278,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				ElementoDocumentacionBean documentosPlaca = documentoServicio.obtenerDocumentosPlacaLaboratorio(id);
 				if (documentosPlaca != null && documentosPlaca.getDocumentos() != null && documentosPlaca.getDocumentos().size() >0) {
 					placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum()));
+					placa.get().setFechaListaAnalisis(new Date());
 					placaLaboratorioRepositorio.save(placa.get());
 					// No registramos en el log que las muestras de la placa están listas para ser analizadas porque lo hace Diana
 					// servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(id, new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_PENDIENTE_ANALIZAR));

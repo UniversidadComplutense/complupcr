@@ -28,6 +28,7 @@ public class PlacaLaboratorioCentroBean {
 	private String placasVisavetSeleccionadas;
 	private Integer idEquipo;
 	private boolean tieneDocumentos;
+	private Date fechaListaAnalisis;
 
 	
 	public Integer getId() {
@@ -124,6 +125,14 @@ public class PlacaLaboratorioCentroBean {
 
 	public void setTieneDocumentos(boolean tieneDocumentos) {
 		this.tieneDocumentos = tieneDocumentos;
+	}	
+
+	public Date getFechaListaAnalisis() {
+		return fechaListaAnalisis;
+	}
+
+	public void setFechaListaAnalisis(Date fechaListaAnalisis) {
+		this.fechaListaAnalisis = fechaListaAnalisis;
 	}
 
 	public static PlacaLaboratorioCentroBean modelToBean(PlacaLaboratorio placaLaboratorio) {
@@ -138,6 +147,7 @@ public class PlacaLaboratorioCentroBean {
 		bean.setBeanEstado(beanEstado);
 		bean.setNumeroMuestras(placaLaboratorio.getNumeromuestras());
 		bean.setFechaCreacion(placaLaboratorio.getFechaCreacion());
+		bean.setFechaListaAnalisis(placaLaboratorio.getFechaListaAnalisis());
 		
 		LaboratorioCentroBean laboratorioCentroBean = new LaboratorioCentroBean();	
 		laboratorioCentroBean.setId(String.valueOf((placaLaboratorio.getLaboratorioCentro().getId())));

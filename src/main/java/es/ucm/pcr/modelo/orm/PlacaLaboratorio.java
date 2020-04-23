@@ -40,6 +40,7 @@ public class PlacaLaboratorio implements java.io.Serializable {
 	private Usuario usuario; //un jefe coge la placa para asignar sus muestras a los analistas
 	private Set<Muestra> muestras = new HashSet<Muestra>(0);
 	private Equipo equipo;
+	private Date fechaListaAnalisis;
 	
 
 	public PlacaLaboratorio() {
@@ -166,6 +167,16 @@ public class PlacaLaboratorio implements java.io.Serializable {
 
 	public void setMuestras(Set<Muestra> muestras) {
 		this.muestras = muestras;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fechaListaAnalisis", length = 10)
+	public Date getFechaListaAnalisis() {
+		return fechaListaAnalisis;
+	}
+
+	public void setFechaListaAnalisis(Date fechaListaAnalisis) {
+		this.fechaListaAnalisis = fechaListaAnalisis;
 	}
 
 	@Override
