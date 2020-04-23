@@ -403,6 +403,14 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				}
 				placa.setPlacaVisavetPlacaLaboratorios(placaVisavetPlacaLaboratorios);
 				placa = placaLaboratorioRepositorio.save(placa);
+				
+				// Cambio de estado muestras
+				//guardo en el log
+				BeanEstado estado=new BeanEstado();
+			    estado.setEstado(Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS);
+			    estado.setTipoEstado(TipoEstado.EstadoMuestra);
+				servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(placa.getId(), estado);
+				
 				return PlacaLaboratorioCentroBean.modelToBean(placa);
 				
 				// TODO Registrar en LOG placaLaboratorio creada
@@ -876,7 +884,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		Sheet sheet = workbook.getSheet(elementoDocBean.getHoja());
 		Row row;
 		int rows = sheet.getLastRowNum();
-		for (int r = 0; r < rows; r++) {
+		for (int r = 0; r <= rows; r++) {
 			row = sheet.getRow(r);
 			if (row == null) {
 				break;

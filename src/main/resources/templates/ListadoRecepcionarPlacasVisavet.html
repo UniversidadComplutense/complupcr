@@ -14,7 +14,9 @@
 	<div class="row justify-content-center mt-1, titulo-menu">
 			<h5>Recepción de placas para PCR</h5>
 	</div>
-	
+	<div th:if="${mensaje != null}" class="alert alert-warning">
+		<span th:text="${mensaje}"></span>
+	</div>
 	<form action="#" th:action="@{/laboratorioCentro/recepcionPlacas}" method="post" th:object="${busquedaPlacaVisavetBean}" id="formBusqueda" role="form">
 		
 		<!-- CRITERIOS BUSQUEDA -->
@@ -145,13 +147,41 @@
 							<!-- FIN MODAL MUESTRAS -->	
 						</td>
 						<td>
-					        <a th:if="${placa.beanEstado.estado.codNum == 5}" style="color:black" th:href="@{/laboratorioCentro/recepcionPlacas/recepcionar(id=${placa.id})}">
+					        <a th:if="${placa.beanEstado.estado.codNum == 5}" style="color:black" data-toggle="modal" 
+					        			data-target="#modal-confirmarRecepcion" th:attr="data-target='#modal-confirmarRecepcion'+${placa.id}" href="#">
 					          	<i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;" title="Recepcionar placa"></i>
 					        </a>
 					        <a th:if="${placa.beanEstado.estado.codNum == 6}" style="color:grey" href="#">
-					          	<i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;"></i>
+					          	<i class="fa fa-cart-arrow-down" aria-hidden="true" style="font-size: 1.2em;" title="Placa recepcionada"></i>
 					        </a>
-						</td>						
+						</td>
+						
+						<!-- MODAL CONFIRMAR RECEPCIONAR PLACA -->							
+						<div class="modal fade" th:id="modal-confirmarRecepcion+${placa.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+							<div class="modal-dialog modal-md" role="document">
+						    	<div class="modal-content">
+						      		<div class="modal-header">
+						        		<div>	
+						        			<h5 class="modal-title" id="exampleModalLabel"><b><span th:text="'Placa VISAVET ' + ${placa.id}"></span></b></h5>
+						        		</div>
+						        		<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+						          			<span aria-hidden="true">&times;</span>
+						        		</button>
+						      		</div>
+						      		<div class="modal-body">	      										        
+							          	<div class="col-10 form-group">
+							          		<h6>¿Confirma que desea recepcionar la placa?</h6>	          		
+										</div>								        
+						      		</div>
+								    <div class="modal-footer">
+								    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+								    	<button type="button" class="btn btn-secondary" th:data-id="${placa.id}" onclick="confirmarRecepcionPlacaVisavetDesdeModal(this.getAttribute('data-id'));">Confirmar</button>					        
+									</div>
+						    	</div>
+						  	</div>
+						</div>
+						<!-- FIN MODAL CONFIRMAR RECEPCIONAR PLACA -->
+														
 					</tr>		
 				</tbody>
 			</table>
@@ -159,6 +189,7 @@
 				<span>No hay resultados para los criterios de búsqueda seleccionados</span>
 			</div>
 		</div>
+
 	</form>
 
 	</div>

@@ -242,7 +242,7 @@
 						<td colspan="2">							
 							<label>Analistas</label>
 							<ul th:each="analistaLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
-								<li><span th:text="${analistaLab.beanUsuario.nom}"></span>; 
+								<li><span th:text="${analistaLab.beanUsuario.nombreCompleto}"></span>; 
 									<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
 									<span th:text="${analistaLab.valoracion}"></span> 
 								</li>
@@ -251,7 +251,7 @@
 						<td colspan="2">							
 							<label>Voluntarios</label>
 							<ul th:each="voluntarioLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
-								<li><span th:text="${voluntarioLab.beanUsuario.nom}"></span>; 
+								<li><span th:text="${voluntarioLab.beanUsuario.nombreCompleto}"></span>; 
 									<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
 									<span th:text="${voluntarioLab.valoracion}"></span> 
 								</li>
@@ -260,7 +260,7 @@
 						<td colspan="2">							
 							<label>Otros voluntarios</label>
 							<ul th:each="voluntarioSinLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVolSinLabCentro}">							
-								<li><span th:text="${voluntarioSinLab.beanUsuario.nom}"></span>; 
+								<li><span th:text="${voluntarioSinLab.beanUsuario.nombreCompleto}"></span>; 
 									<!-- <span th:text="${voluntarioSinLab.fechaAsignacion}"></span>;  -->
 									<span th:text="${voluntarioSinLab.valoracion}"></span> 
 								</li>

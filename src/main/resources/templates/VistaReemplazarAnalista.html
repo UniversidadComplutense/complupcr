@@ -28,7 +28,7 @@
 							id="analistasLabSeleccionadoReemp" th:field="*{listaIdsAnalistasLabSeleccionados}"
 							title="Todos los analistas laboratorio">
 							<option th:each="var: *{beanListadoAnalistaLab}"
-								th:value="${var.id}" th:text="${var.nom}"></option>
+								th:value="${var.id}" th:text="${var.nombreCompleto}"></option>
 						</select>
 						<!-- <label class="text-warning" th:if="${#fields.hasErrors('listaIdsAnalistasLabSeleccionados')}" th:errors="*{listaIdsAnalistasLabSeleccionados}"></label>  -->
 					</div>															
@@ -40,7 +40,7 @@
 							id="analistasVolSeleccionadoReemp" th:field="*{listaIdsAnalistasVolSeleccionados}"
 							title="Todos los voluntarios laboratorio">
 							<option th:each="var: *{beanListadoAnalistaVol}"
-								th:value="${var.id}" th:text="${var.nom}"></option>
+								th:value="${var.id}" th:text="${var.nombreCompleto}"></option>
 						</select>
 					</div>
 					<div id="analistasOtrosVolReemplazar" class="form-group  col-4">
@@ -51,7 +51,7 @@
 							id="analistasVolSinLabCentroSeleccionadoReemp" th:field="*{listaIdsVolSinLabCentroSeleccionados}"
 							title="Todos los otros voluntarios">
 							<option th:each="var: *{beanListadoVoluntariosSinLaboratorioCentro}"
-								th:value="${var.id}" th:text="${var.nom}"></option>
+								th:value="${var.id}" th:text="${var.nombreCompleto}"></option>
 						</select>
 					</div>
 			

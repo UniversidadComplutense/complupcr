@@ -181,7 +181,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 			
 			//guardo en el log
 			BeanEstado estado=new BeanEstado();
-		    estado.setEstado(Estado.MUESTRA_ASIGNADA_LOTE);
+		    estado.setEstado(Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS);
 		    estado.setTipoEstado(TipoEstado.EstadoMuestra);
 			servicioLog.actualizarEstadoMuestraPorPlacaVisavet(placa.getId(), estado);
 		}
