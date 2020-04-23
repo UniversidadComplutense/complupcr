@@ -1,12 +1,14 @@
 package es.ucm.pcr.beans;
 
+import java.util.Date;
+
 public class DocumentoBean {
 
 	private Integer id;
 	private String nombreDocumento;
 	private String tipoDocumento;
 	private String tamanioDocumento;
-	private String fechaDocumento;
+	private Date fechaDocumento;
 	private byte[] fichero;
 	String descripcionUsuario;
 	Integer idUsuario;
@@ -44,11 +46,11 @@ public class DocumentoBean {
 		this.tamanioDocumento = tamanioDocumento;
 	}
 
-	public String getFechaDocumento() {
+	public Date getFechaDocumento() {
 		return fechaDocumento;
 	}
 
-	public void setFechaDocumento(String fechaDocumento) {
+	public void setFechaDocumento(Date fechaDocumento) {
 		this.fechaDocumento = fechaDocumento;
 	}
 

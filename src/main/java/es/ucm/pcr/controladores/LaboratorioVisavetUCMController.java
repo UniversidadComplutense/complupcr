@@ -148,6 +148,8 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				Utilidades.fechafinBuscador(busquedaLotes.getFechaFinEntrada()));
 				*/
 		busquedaLotes.setRolURL(rolURL);
+		busquedaLotes.setFechaFinEntrada(
+				Utilidades.fechafinBuscador(busquedaLotes.getFechaFinEntrada()));
 		paginaLotes = servicioLaboratorioUni.buscarLotes(busquedaLotes, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), ORDENACION));
 		//model.addAttribute("paginaLotes", paginaLotes);
 		vista.addObject("paginaLotes", paginaLotes);
@@ -623,6 +625,9 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			ModelAndView vista = new ModelAndView("VistaListadoPlacasVisavet");
 		if (busqueda == null) new BusquedaPlacasVisavetBean();
 			busqueda= this.rellenarBusquedaPlacas(busqueda);
+			busqueda.setFechaCreacionFin(
+					Utilidades.fechafinBuscador(busqueda.getFechaCreacionFin()));
+			
 			pagina = servicioLaboratorioUni.buscarPlacas(busqueda, pageable);
 			//model.addAttribute("paginaLotes", paginaLotes);
 			vista.addObject("pagina", pagina);
@@ -693,7 +698,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				
 				@RequestMapping(value = "/laboratorioUni/asignarPlaca", method = RequestMethod.GET)
 				
-				public String asignarPlacasGet(@RequestParam("idPlaca") int idPlaca,  Model model, HttpServletRequest request, HttpSession session) {
+				public String asignarPlacasGet(@RequestParam("idPlaca") int idPlaca, @ModelAttribute("lotePlacaVisavetBean") LotePlacaVisavetBean loteFormulario , Model model, HttpServletRequest request, HttpSession session) {
 				// grabar en el servicio la placa junto con el que tenga lote que venga del modelo
 					LotePlacaVisavetBean lotePlacaVisavetBean = (LotePlacaVisavetBean )session.getAttribute("lotePlacaVisavetBean");
 					List<LoteBeanPlacaVisavet> listaLotesDisponibles= new ArrayList<LoteBeanPlacaVisavet>();
@@ -701,6 +706,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 						for (LoteBeanPlacaVisavet lote:lotePlacaVisavetBean.getListaLotesDisponibles()) {
 				      	
 					      lote.setIdPlacaVisavet(idPlaca);
+					    
 					      BeanEstado estado=new BeanEstado();
 						  estado.setTipoEstado(TipoEstado.EstadoLote);
 						  estado.setEstado(Estado.LOTE_PROCESADO_CENTRO_ANALISIS);
@@ -711,6 +717,8 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 					lotePlacaVisavetBean.setListaLotesDisponibles(listaLotesDisponibles);
 					BeanPlacaVisavetUCM placaVisavet =new BeanPlacaVisavetUCM();
 					placaVisavet.setId(idPlaca);
+					placaVisavet.setNombrePlacaVisavet(loteFormulario.getPlaca().getNombrePlacaVisavet());
+					placaVisavet.setTamano(loteFormulario.getPlaca().getTamano());
 					placaVisavet.setListaLotes(lotePlacaVisavetBean.getListaLotesDisponibles());
 					BeanEstado estado=new BeanEstado();
 					estado.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);

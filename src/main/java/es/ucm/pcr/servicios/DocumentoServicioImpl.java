@@ -62,6 +62,7 @@ public class DocumentoServicioImpl implements DocumentoServicio {
 			Usuario usuario = d.getUsuario();
 			docBean.setDescripcionUsuario(usuario.getNombre() + " " + usuario.getApellido1() + (usuario.getApellido2() != null ? usuario.getApellido2() : ""));
 			docBean.setIdUsuario(d.getUsuario().getId());
+			docBean.setFechaDocumento(d.getFechaDocumento());
 			documentoBeanList.add(docBean);
 		}
 		return documentoBeanList;
@@ -81,6 +82,7 @@ public class DocumentoServicioImpl implements DocumentoServicio {
 			Usuario usuario = d.getUsuario();
 			docBean.setDescripcionUsuario(usuario.getNombre() + " " + usuario.getApellido1() + (usuario.getApellido2() != null ? usuario.getApellido2() : ""));
 			docBean.setIdUsuario(d.getUsuario().getId());
+			docBean.setFechaDocumento(d.getFechaDocumento());
 			documentoBeanList.add(docBean);
 		}
 		return documentoBeanList;

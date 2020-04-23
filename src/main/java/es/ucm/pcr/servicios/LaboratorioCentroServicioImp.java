@@ -419,6 +419,14 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				}
 				placa.setPlacaVisavetPlacaLaboratorios(placaVisavetPlacaLaboratorios);
 				placa = placaLaboratorioRepositorio.save(placa);
+				
+				// Cambio de estado muestras
+				//guardo en el log
+				BeanEstado estado=new BeanEstado();
+			    estado.setEstado(Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS);
+			    estado.setTipoEstado(TipoEstado.EstadoMuestra);
+				servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(placa.getId(), estado);
+				
 				return PlacaLaboratorioCentroBean.modelToBean(placa);
 				
 				// TODO Registrar en LOG placaLaboratorio creada

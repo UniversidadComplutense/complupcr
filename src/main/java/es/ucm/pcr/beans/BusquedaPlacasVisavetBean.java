@@ -17,6 +17,8 @@ private Integer codNumEstadoSeleccionado;
 private List<BeanLaboratorioCentro> listaLaboratorioCentro;
 private Integer idLaboratorioCentro;
 private Integer idLaboratorioVisavet;
+private String nombrePlacaVisavet;
+
 public Integer getIdPlaca() {
 	return idPlaca;
 }
@@ -77,6 +79,12 @@ public Integer getIdLaboratorioVisavet() {
 }
 public void setIdLaboratorioVisavet(Integer idLaboratorioVisavet) {
 	this.idLaboratorioVisavet = idLaboratorioVisavet;
+}
+public String getNombrePlacaVisavet() {
+	return nombrePlacaVisavet;
+}
+public void setNombrePlacaVisavet(String nombrePlacaVisavet) {
+	this.nombrePlacaVisavet = nombrePlacaVisavet;
 }
 
 
