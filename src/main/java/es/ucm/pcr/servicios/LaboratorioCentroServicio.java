@@ -106,5 +106,6 @@ public interface LaboratorioCentroServicio {
 	public boolean esRellenable(PlacaLaboratorioCentroBean placaLaboratorioCentroBean, Integer capacidadNuevaPlaca) throws Exception;
 
     public List<BeanEquipo> listaEquiposLaboratorioCentro(LaboratorioCentro laboratorioCentro) throws Exception;
+	public boolean haySubidoAlgunDocumentoPorParteDelLaboratorio(Integer id) throws Exception;
 
 }	

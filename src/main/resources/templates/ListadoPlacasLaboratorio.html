@@ -14,7 +14,9 @@
 	<div class="row justify-content-center mt-1, titulo-menu">
 			<h5>Gestión de placas responsable PCR</h5>
 	</div>
-	
+	<div th:if="${mensaje != null}" class="alert alert-warning">
+		<span th:text="${mensaje}"></span>
+	</div>
 	<form action="#" th:action="@{/laboratorioCentro/gestionPlacas}" method="post" th:object="${busquedaPlacaLaboratorioBean}" id="formBusqueda" role="form">
 		
 		<!-- CRITERIOS BUSQUEDA -->
@@ -143,8 +145,41 @@
 							<!-- FIN MODAL MUESTRAS -->	
 						</td>
 						<td>
-					        <a style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
-					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;" title="Editar placa"></i>
+					        <a th:if="${placa.beanEstado.estado.codNum != 4}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
+					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.1em;" title="Editar placa"></i>
+					        </a>
+					        <a th:if="${placa.beanEstado.estado.codNum == 4}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
+					          	<i class="fa fa-eye" aria-hidden="true" style="font-size: 1.1em;" title="Consultar placa"></i>
+					        </a>
+					        <a th:if="${placa.beanEstado.estado.codNum == 1}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
+					          	<i class="fa fa-object-group" aria-hidden="true" style="font-size: 1.1em;" title="Rellenar placa"></i>
+					        </a>
+					        <a th:if="${placa.beanEstado.estado.codNum != 1}" style="color:grey" href="#">
+					          	<i class="fa fa-object-group" aria-hidden="true" style="font-size: 1.1em;" title="Rellenar placa"></i>
+					        </a>
+					        <a th:if="${placa.beanEstado.estado.codNum == 1 && placa.placasVisavet != null && #lists.size(placa.placasVisavet)!=0}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
+					          	<i class="fa fa-dashboard" aria-hidden="true" style="font-size: 1.1em;" title="Asignar equipo PCR"></i>
+					        </a>
+					        <a th:if="${placa.beanEstado.estado.codNum != 1 || placa.placasVisavet == null || #lists.size(placa.placasVisavet)==0}" style="color:grey" href="#">
+					          	<i class="fa fa-dashboard" aria-hidden="true" style="font-size: 1.1em;" title="Asignar equipo PCR"></i>
+					        </a>					        
+					        <a th:if="${placa.beanEstado.estado.codNum == 2}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
+					          	<i class="fa fa-hourglass-end" aria-hidden="true" style="font-size: 1.1em;" title="Finalizado PCR"></i>
+					        </a>
+					        <a th:if="${placa.beanEstado.estado.codNum != 2}" style="color:grey" href="#">
+					          	<i class="fa fa-hourglass-end" aria-hidden="true" style="font-size: 1.1em;" title="Finalizado PCR"></i>
+					        </a>					        
+					        <a th:if="${placa.beanEstado.estado.codNum == 3}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
+					          	<i class="fa fa-upload" aria-hidden="true" style="font-size: 1.1em;" title="Asignar resultados"></i>
+					        </a>
+					        <a th:if="${placa.beanEstado.estado.codNum != 3}" style="color:grey" href="#">
+					          	<i class="fa fa-upload" aria-hidden="true" style="font-size: 1.1em;" title="Asignar resultados"></i>
+					        </a>
+					        <a th:if="${placa.beanEstado.estado.codNum == 3 && placa.tieneDocumentos}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
+					          	<i class="fa fa-line-chart" aria-hidden="true" style="font-size: 1.1em;" title="Lista para analizar"></i>
+					        </a>
+					        <a th:if="${placa.beanEstado.estado.codNum != 3 || !placa.tieneDocumentos}" style="color:grey" href="#">
+					          	<i class="fa fa-line-chart" aria-hidden="true" style="font-size: 1.1em;" title="Lista para analizar"></i>
 					        </a>
 						</td>						
 					</tr>		

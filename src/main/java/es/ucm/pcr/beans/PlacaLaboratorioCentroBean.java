@@ -27,6 +27,7 @@ public class PlacaLaboratorioCentroBean {
 	private List<PlacaLaboratorioVisavetBean> placasVisavetParaCombinar;
 	private String placasVisavetSeleccionadas;
 	private Integer idEquipo;
+	private boolean tieneDocumentos;
 
 	
 	public Integer getId() {
@@ -117,6 +118,14 @@ public class PlacaLaboratorioCentroBean {
 		this.idEquipo = idEquipo;
 	}
 
+	public boolean isTieneDocumentos() {
+		return tieneDocumentos;
+	}
+
+	public void setTieneDocumentos(boolean tieneDocumentos) {
+		this.tieneDocumentos = tieneDocumentos;
+	}
+
 	public static PlacaLaboratorioCentroBean modelToBean(PlacaLaboratorio placaLaboratorio) {
 
 		PlacaLaboratorioCentroBean bean = new PlacaLaboratorioCentroBean();
@@ -199,6 +208,12 @@ public class PlacaLaboratorioCentroBean {
 		List<DocumentoBean> documentos = new ArrayList<DocumentoBean>();
 		// TODO rellenar Documentos
 		bean.setDocumentos(documentos);
+		
+		if (placaLaboratorio.getDocumentos()!= null && !placaLaboratorio.getDocumentos().isEmpty()) {
+			bean.setTieneDocumentos(true);
+		} else {
+			bean.setTieneDocumentos(false);
+		}
 
 		return bean;
 
