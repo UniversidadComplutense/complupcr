@@ -135,7 +135,7 @@ public class LoteServicioImpl implements LoteServicio {
 		Lote lote = findByIdLote(loteBean.getId());
 		if (lote != null) {
 			
-			// si actualizamos el lote a envidado ademas rellenamos la fecha de envio
+			// si actualizamos el lote ha enviado ademas rellenamos la fecha de envio
 			if (estadoActualizar.getEstado().getCodNum() == Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum()) {
 				lote.setEstadoLote(new EstadoLote(Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum()));
 				lote.setFechaEnvio(new Date());
