@@ -407,6 +407,21 @@ public class LabCentroControlador {
 	}
 	
 	
+	@RequestMapping(value="/gestionPlacas/finalizaPCR", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
+	public ModelAndView finalPCRplacaDesdeModalGET(@RequestParam(value = "id", required = true) Integer id, RedirectAttributes redirectAttributes)  throws Exception {
+		
+		if (laboratorioCentroServicio.finalizarPCR(id)){
+			redirectAttributes.addFlashAttribute("mensaje", "La placa " + id + " ha finalizado correctamente la prueba PCR.");
+		} else {
+			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible dar por finalizada la prueba PCR en la placa " + id + ".");
+		}
+		
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas", true));
+		return respuesta;
+	}
+		
+	
 	@RequestMapping(value="/gestionPlacas/asignarEquipo", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
 	public ModelAndView asignarEquipoPCRPOST(@ModelAttribute("placa") PlacaLaboratorioCentroBean placa, RedirectAttributes redirectAttributes) throws Exception {
@@ -419,7 +434,8 @@ public class LabCentroControlador {
 		
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placa.getId(), true));
 		return respuesta;
-	}
+	}	
+	
 	
 	@RequestMapping(value="/gestionPlacas/asignaEquipo", method=RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
@@ -436,6 +452,8 @@ public class LabCentroControlador {
 		return respuesta;
 	}
 	
+	
+	
 	@RequestMapping(value="/gestionPlacas/resultados", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
 	public ModelAndView placaListaParaAnalizarPOST(@ModelAttribute("placa") PlacaLaboratorioCentroBean placa, RedirectAttributes redirectAttributes) throws Exception {
@@ -449,6 +467,22 @@ public class LabCentroControlador {
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas/modificar?id=" + placa.getId(), true));
 		return respuesta;
 	}
+	
+	
+	@RequestMapping(value="/gestionPlacas/resultado", method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
+	public ModelAndView placaListaParaAnalizarDesdeModalGET(@RequestParam(value = "id", required = true) Integer id, RedirectAttributes redirectAttributes)  throws Exception {
+		
+		if (laboratorioCentroServicio.placaListaParaAnalizar(id)) {
+			redirectAttributes.addFlashAttribute("mensaje", "La placa " + id + " está lista para ser analizada.");
+		} else {
+			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible que la placa " + id + " pase a estar lista para analizar.\nRevise que tiene documentación adjunta asociada a los resultados PCR.");
+		}
+		
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/gestionPlacas", true));
+		return respuesta;
+	}
+	
 	
 	@RequestMapping(value="/gestionPlacas/rellenar", method=RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
