@@ -197,7 +197,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 
 		// Si no se ha seleccionado el estado de la placa en la búsqueda, buscamos por los estados: PLACA_INICIADA ó PLACA_PREPARADA_PARA_PCR
 		// ó PLACA_FINALIZADA_PCR ó PLACA_LISTA_PARA_ANALISIS
-		if (criteriosBusqueda.getIdEstadoPlaca() == 0) {
+		if (criteriosBusqueda.getIdEstadoPlaca() == null || criteriosBusqueda.getIdEstadoPlaca() == 0) {
 			criteriosBusqueda.setEstadosBusqueda(Arrays.asList(Estado.PLACA_INICIADA.getCodNum(), Estado.PLACA_PREPARADA_PARA_PCR.getCodNum(), 
 																Estado.PLACA_FINALIZADA_PCR.getCodNum(), Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum()));
 		} else {
@@ -278,6 +278,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				ElementoDocumentacionBean documentosPlaca = documentoServicio.obtenerDocumentosPlacaLaboratorio(id);
 				if (documentosPlaca != null && documentosPlaca.getDocumentos() != null && documentosPlaca.getDocumentos().size() >0) {
 					placa.get().setEstadoPlacaLaboratorio(new EstadoPlacaLaboratorio(Estado.PLACA_LISTA_PARA_ANALISIS.getCodNum()));
+					placa.get().setFechaListaAnalisis(new Date());
 					placaLaboratorioRepositorio.save(placa.get());
 					// No registramos en el log que las muestras de la placa están listas para ser analizadas porque lo hace Diana
 					// servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(id, new BeanEstado(TipoEstado.EstadoMuestra, Estado.MUESTRA_PENDIENTE_ANALIZAR));
@@ -288,7 +289,23 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			}			
 		}
 		return false;
-
+	}
+	
+	// JAVI
+	@Override
+	@Transactional
+	public boolean haySubidoAlgunDocumentoPorParteDelLaboratorio(Integer id) throws Exception {
+		
+		Optional<PlacaLaboratorio> placa = placaLaboratorioRepositorio.findById(id);
+		if (placa.isPresent()) {
+			if (placa.get().getEstadoPlacaLaboratorio().getId() == Estado.PLACA_FINALIZADA_PCR.getCodNum()) {
+				ElementoDocumentacionBean documentosPlaca = documentoServicio.obtenerDocumentosPlacaLaboratorio(id);
+				if (documentosPlaca != null && documentosPlaca.getDocumentos() != null && documentosPlaca.getDocumentos().size() >0) {		
+					return true;
+				}
+			}			
+		}
+		return false;
 	}
 	
 	// JAVI

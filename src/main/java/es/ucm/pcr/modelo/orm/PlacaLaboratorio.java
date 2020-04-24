@@ -189,6 +189,7 @@ public class PlacaLaboratorio implements java.io.Serializable {
 	public void setMuestras(Set<Muestra> muestras) {
 		this.muestras = muestras;
 	}
+	
 
 	@Override
 	public String toString() {

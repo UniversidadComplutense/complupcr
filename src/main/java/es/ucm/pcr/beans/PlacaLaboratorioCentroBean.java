@@ -27,6 +27,8 @@ public class PlacaLaboratorioCentroBean {
 	private List<PlacaLaboratorioVisavetBean> placasVisavetParaCombinar;
 	private String placasVisavetSeleccionadas;
 	private Integer idEquipo;
+	private boolean tieneDocumentos;
+	private Date fechaListaAnalisis;
 
 	
 	public Integer getId() {
@@ -117,6 +119,22 @@ public class PlacaLaboratorioCentroBean {
 		this.idEquipo = idEquipo;
 	}
 
+	public boolean isTieneDocumentos() {
+		return tieneDocumentos;
+	}
+
+	public void setTieneDocumentos(boolean tieneDocumentos) {
+		this.tieneDocumentos = tieneDocumentos;
+	}	
+
+	public Date getFechaListaAnalisis() {
+		return fechaListaAnalisis;
+	}
+
+	public void setFechaListaAnalisis(Date fechaListaAnalisis) {
+		this.fechaListaAnalisis = fechaListaAnalisis;
+	}
+
 	public static PlacaLaboratorioCentroBean modelToBean(PlacaLaboratorio placaLaboratorio) {
 
 		PlacaLaboratorioCentroBean bean = new PlacaLaboratorioCentroBean();
@@ -129,6 +147,7 @@ public class PlacaLaboratorioCentroBean {
 		bean.setBeanEstado(beanEstado);
 		bean.setNumeroMuestras(placaLaboratorio.getNumeromuestras());
 		bean.setFechaCreacion(placaLaboratorio.getFechaCreacion());
+		bean.setFechaListaAnalisis(placaLaboratorio.getFechaListaAnalisis());
 		
 		LaboratorioCentroBean laboratorioCentroBean = new LaboratorioCentroBean();	
 		laboratorioCentroBean.setId(String.valueOf((placaLaboratorio.getLaboratorioCentro().getId())));
@@ -199,6 +218,12 @@ public class PlacaLaboratorioCentroBean {
 		List<DocumentoBean> documentos = new ArrayList<DocumentoBean>();
 		// TODO rellenar Documentos
 		bean.setDocumentos(documentos);
+		
+		if (placaLaboratorio.getDocumentos()!= null && !placaLaboratorio.getDocumentos().isEmpty()) {
+			bean.setTieneDocumentos(true);
+		} else {
+			bean.setTieneDocumentos(false);
+		}
 
 		return bean;
 
