@@ -14,9 +14,7 @@ public class BeanBusquedaMuestraAnalisis {
 	private String nhcPaciente;
 	
 	private String etiquetaMuestra;
-	private String refInternaMuestra;
-	private Date fechaEnvioMuestraIni;
-	private Date fechaEnvioMuestraFin;
+	private String refInternaMuestra;	
 	private Date fechaResultadoMuestraIni;
 	private Date fechaResultadoMuestraFin;
 	
@@ -27,6 +25,9 @@ public class BeanBusquedaMuestraAnalisis {
 	
 	private Integer idPlacaLaboratorio;
 	private Integer idJefePlaca; //será el jefe que ha cogido la placa bajo su responsabilidad
+	
+	private Date fechaReclamadaPlacaIni;
+	private Date fechaReclamadaPlacaFin;
 	
 		
 	public BeanBusquedaMuestraAnalisis() {
@@ -74,18 +75,7 @@ public class BeanBusquedaMuestraAnalisis {
 	public void setRefInternaMuestra(String refInternaMuestra) {
 		this.refInternaMuestra = refInternaMuestra;
 	}
-	public Date getFechaEnvioMuestraIni() {
-		return fechaEnvioMuestraIni;
-	}
-	public void setFechaEnvioMuestraIni(Date fechaEnvioMuestraIni) {
-		this.fechaEnvioMuestraIni = fechaEnvioMuestraIni;
-	}
-	public Date getFechaEnvioMuestraFin() {
-		return fechaEnvioMuestraFin;
-	}
-	public void setFechaEnvioMuestraFin(Date fechaEnvioMuestraFin) {
-		this.fechaEnvioMuestraFin = fechaEnvioMuestraFin;
-	}
+	
 	public Date getFechaResultadoMuestraIni() {
 		return fechaResultadoMuestraIni;
 	}
@@ -134,7 +124,18 @@ public class BeanBusquedaMuestraAnalisis {
 	public void setIdJefePlaca(Integer idJefePlaca) {
 		this.idJefePlaca = idJefePlaca;
 	}	
-
+	public Date getFechaReclamadaPlacaIni() {
+		return fechaReclamadaPlacaIni;
+	}
+	public void setFechaReclamadaPlacaIni(Date fechaReclamadaPlacaIni) {
+		this.fechaReclamadaPlacaIni = fechaReclamadaPlacaIni;
+	}
+	public Date getFechaReclamadaPlacaFin() {
+		return fechaReclamadaPlacaFin;
+	}
+	public void setFechaReclamadaPlacaFin(Date fechaReclamadaPlacaFin) {
+		this.fechaReclamadaPlacaFin = fechaReclamadaPlacaFin;
+	}
 	public String getCriterioNombre() {
 		return StringUtils.isBlank(nombrePaciente) ? null : "%" + nombrePaciente + "%";
 	}	

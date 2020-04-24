@@ -22,7 +22,7 @@ public class LoteCentroBean {
 	private boolean tieneMuestras;
 	private Integer numeroMuestras;
 	private Date fechaRecibido;
-	private Integer referenciaInternaLote;
+	private String referenciaInternaLote;
 	private String errorReferenciaInternaLote;
 	public LoteCentroBean() {
 		super();	
@@ -121,11 +121,11 @@ public class LoteCentroBean {
 	public void setFechaRecibido(Date fechaRecibido) {
 		this.fechaRecibido = fechaRecibido;
 	}
-	public Integer getReferenciaInternaLote() {
+	public String getReferenciaInternaLote() {
 		return referenciaInternaLote;
 	}
-	public void setReferenciaInternaLote(Integer referenciaInternaLote) {
-		this.referenciaInternaLote = referenciaInternaLote;
+	public void setReferenciaInternaLote(String i) {
+		this.referenciaInternaLote = i;
 	}
 	
 	
@@ -142,6 +142,8 @@ public class LoteCentroBean {
 		lote.setId(loteBean.getId());
 		lote.setNumeroLote(loteBean.getNumLote());
 		lote.setCentro(new Centro(loteBean.getIdCentro()));		
+		lote.setFechaEnvio(loteBean.getFechaEnvio());
+		lote.setFechaRecibido(loteBean.getFechaRecibido());
 		if (loteBean.getEstado() != null) {
 			lote.setEstadoLote(new EstadoLote(loteBean.getEstado().getEstado().getCodNum()));
 		}
@@ -151,6 +153,9 @@ public class LoteCentroBean {
 			lote.setLaboratorioVisavet(new LaboratorioVisavet(loteBean.getIdLaboratorio()));
 		}
 		lote.setReferenciaInternaLote(loteBean.getReferenciaInternaLote());
+		
+
+		
 		return lote;
 	}
 	

@@ -156,6 +156,14 @@ function loadCancelarEnvio(id, numLote, centroProcedencia){
 	$("#centroModalCancelar").html(centroProcedencia);
 	$("#idCancelar").val(id);
 }
+
+
+function loadCancelarEnvioPlaca(id, laboratorio){
+	
+	$("#idPlacaCancelar").html(id);
+	$("#laboratorioCancelar").html(laboratorio);
+	$("#idCancelar").val(id);
+}
 function cambiarEstadoaEnviada(id, laboratorio){
 	
 	$("#idPlacaConfirmar").html(id);
@@ -189,6 +197,15 @@ function cancelarLote(){
 	url =  '/laboratorioUni/cancelarReciboLote?id='+id;
 	window.location=url;
 }
+function cancelarPlaca(){
+	var url = "";
+	//var urlAbs = getAbsolutePath();
+	
+	var id=$("#idCancelar").val();
+	url =  '/laboratorioUni/cancelarEnvioPlaca?id='+id;
+	window.location=url;
+}
+
 
 function consultarMuestras(lote,centroProcedencia,id){
 	var url = "";
@@ -519,14 +536,15 @@ function guardarReferencias(){
 	 for (var i=0; i<nFilas;i++){
 		 var lote=$("#id"+i).val();
 		 var referencia=$("#referenciaLote"+i).val();
-		 if (numerico.test(referencia) == false){
+		/* if (numerico.test(referencia) == false){
 			$("#mensajeReferenciaLoteInteger"+i).show();
 			enviar=false;
 		 }
 		 else {		 
 		 $("#mensajeReferenciaLoteInteger"+i).hide();
+		 */
 		 referenciaLotes+=lote+"_"+referencia+":";
-		 }
+		 //}
 	 }
 	}
 	if (referenciaLotes != "" && enviar) window.location="/laboratorioUni/guardarReferenciaLotes?lotes="+referenciaLotes;

@@ -32,7 +32,7 @@
 				    <tr>
 				      <!-- <th scope="col"><input class="form-check-input, justify-content-center" type="checkbox" value="" id="" disabled></th> -->
 				      <th scope="col">Identificador</th>
-				      <th scope="col">Laboratorio</th>
+				      <!-- <th scope="col">Laboratorio</th> -->
 				      <th scope="col">Fecha asignación</th>
 				      <th scope="col">Nº de muestras</th>
 				      <th scope="col">Muestras</th>	
@@ -45,7 +45,7 @@
 				      	<input class="form-check-input, justify-content-center" type="checkbox" th:field="*{listaIdsPlacasSeleccionadosParaDevolver}" name="certificates" th:value="${placaAsignada.id}"/>
 				      </td> -->
 				      <td><span th:text="${placaAsignada.id}"></span></td>
-				      <td><span th:text="${placaAsignada.laboratorioCentro.nombre}"></span></td>
+				      <!-- <td><span th:text="${placaAsignada.laboratorioCentro.nombre}"></span></td> -->
 				      <td><span th:text="${#dates.format(placaAsignada.fechaAsignacionAAnalistaLogado, 'dd/MM/yyyy')}"></span></td>				     
 				      <td><span th:text="${#lists.size(placaAsignada.muestras)}"></span></td>
 				      <td>
@@ -176,7 +176,7 @@
 				    <tr>
 				      <!-- <th scope="col"><input class="form-check-input, justify-content-center" type="checkbox" value="" id="" disabled></th> -->
 				      <th scope="col">Identificador</th>
-				      <th scope="col">Laboratorio</th>
+				      <!-- <th scope="col">Laboratorio</th> -->
 				      <th scope="col">Fecha asignación</th>
 				      <th scope="col">Nº de muestras</th>
 				      <th scope="col">Muestras</th>	
@@ -189,7 +189,7 @@
 				      	<input class="form-check-input, justify-content-center" type="checkbox" th:field="*{listaIdsPlacasSeleccionadosParaDevolver}" name="certificates" th:value="${placaAsignada.id}"/>
 				      </td> -->
 				      <td><span th:text="${placaAsignadaYaRevisada.id}"></span></td>
-				      <td><span th:text="${placaAsignadaYaRevisada.laboratorioCentro.nombre}"></span></td>
+				      <!-- <td><span th:text="${placaAsignadaYaRevisada.laboratorioCentro.nombre}"></span></td> -->
 				      <td><span th:text="${#dates.format(placaAsignadaYaRevisada.fechaAsignacionAAnalistaLogado, 'dd/MM/yyyy')}"></span></td>				     
 				      <td><span th:text="${#lists.size(placaAsignadaYaRevisada.muestras)}"></span></td>
 				      <td>

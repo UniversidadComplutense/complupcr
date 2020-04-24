@@ -38,7 +38,7 @@ public class Lote implements java.io.Serializable {
 	private Date fechaEnvio;
 	private Date fechaRecibido;
 	private int capacidad;
-	private Integer referenciaInternaLote;
+	private String referenciaInternaLote;
 	private LaboratorioVisavet laboratorioVisavet;
 	private Set<Muestra> muestras = new HashSet<Muestra>(0);
 
@@ -159,11 +159,11 @@ public class Lote implements java.io.Serializable {
 		this.capacidad = capacidad;
 	}
 	@Column(name = "referenciaInternaLote", nullable = false)
-	public Integer getReferenciaInternaLote() {
+	public String getReferenciaInternaLote() {
 		return referenciaInternaLote;
 	}
 
-	public void setReferenciaInternaLote(Integer referenciaInternaLote) {
+	public void setReferenciaInternaLote(String referenciaInternaLote) {
 		this.referenciaInternaLote = referenciaInternaLote;
 	}
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lote")

@@ -261,6 +261,14 @@
 					          <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size: 1.2em;"></i>					         
 					         </a>
 					       <i class="fa fa-file-excel-o" th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" aria-hidden="true" style="font-size: 1.2em;color:grey;"></i>	    
+                  
+                          <a  th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ENVIADA'}" href="#modalCancelarEnvio" data-toggle="modal" th:data-id="${unResultado.id}" th:data-laboratorio="${unResultado.laboratorioCentro.nombre}"  th:onclick="|loadCancelarEnvioPlaca(this.getAttribute('data-id'),this.getAttribute('data-laboratorio'))|">
+							    
+							    <i class="fa fa-undo" style="font-size: 1.2em;" title="Cancelar Envio"></i>
+							    </a>
+							       <i th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ENVIADA'}" class="fa fa-undo" style="font-size: 1.2em;color:grey;" title="Cancelar Envio"></i>
+                  
+                  
                     </td>		  
 					</tr>	
 				</tbody>		
@@ -325,6 +333,61 @@
 			
 		
 <!--  	 fin  Recibido -->
+
+<!--  cancelar Recibido -->
+			    	<div class="modal fade" id="modalCancelarEnvio" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">Cancelar envio placa</h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	
+								          	<div id="tablaMuestras">
+												<table>
+													<thead class="thead-light">	
+									    				<tr>
+										      				<th>Identificador de Placa</th>
+															<th>Laboratorio</th>
+															
+															
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td><span id="idPlacaCancelar"></span></td>					
+															<td><span id="laboratorioCancelar"></span></td>
+																
+																													
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    <input type="hidden" id="idCancelar" value=""></input>
+									    <button type="button" id="aceptarConfirmacion"  class="btn btn-secondary" data-dismiss="modal"  th:onclick="|cancelarPlaca()|">Aceptar</button>
+										<button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
+									
+									    						        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+		
+			
+			
+			
+		
+<!--  	 fin  cancelar -->
+
+
+
+
+
 	<!-- consultar Muestras -->
 <div id="modalConsultarMuestras" class="modal fade" role="dialog" aria-labelledby="exampleModalLabel">
    <div id="ventanaConfirmRecibido" class="modal-dialog modal-xl" role="document">

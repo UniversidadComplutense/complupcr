@@ -109,10 +109,16 @@ public class LoteServicioImpl implements LoteServicio {
 		Lote lote = null;
 		
 		lote = LoteCentroBean.beanToModel(loteBean);
-		
+		Optional<Lote> lotebbdd= loteRepositorio.findById(loteBean.getId());
+		if (lotebbdd.isPresent()) {
+			lote.setMuestras(lotebbdd.get().getMuestras());
+			
+		}
 		lote = loteRepositorio.save(lote);
 		return LoteCentroBean.modelToBean(lote);
 	}
+	
+	
 	
 	@Override
 	@Transactional
@@ -130,7 +136,7 @@ public class LoteServicioImpl implements LoteServicio {
 		Lote lote = findByIdLote(loteBean.getId());
 		if (lote != null) {
 			
-			// si actualizamos el lote a envidado ademas rellenamos la fecha de envio
+			// si actualizamos el lote ha enviado ademas rellenamos la fecha de envio
 			if (estadoActualizar.getEstado().getCodNum() == Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum()) {
 				lote.setEstadoLote(new EstadoLote(Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum()));
 				lote.setFechaEnvio(new Date());
@@ -201,7 +207,7 @@ public class LoteServicioImpl implements LoteServicio {
 		return new LoteBeanPlacaVisavet();
 	}
 	@Override
-	public List<LoteListadoBean> findLoteByReferenciaExterna(Integer referenciaExterna){
+	public List<LoteListadoBean> findLoteByReferenciaExterna(String referenciaExterna){
 		List<Lote> lotes = loteRepositorio.findByReferenciaExterna(referenciaExterna);
         List<LoteListadoBean> listLotesBean = new ArrayList();
 		

@@ -85,6 +85,9 @@ public interface LaboratorioVisavetServicio {
 	// JAVI
 	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio) throws Exception;
 	
+	// JAVI
+		public boolean anularRecepcionarPlaca(Integer id) throws Exception;
+	
 	/**
 	 * Buscar laboratorio visavet por nombre
 	 * 
@@ -92,6 +95,8 @@ public interface LaboratorioVisavetServicio {
 	 * @return Optional<LaboratorioVisavet>
 	 */
 	public Optional<LaboratorioVisavet> findByNombre(String nombre);
+
+	
 	
 	
 }

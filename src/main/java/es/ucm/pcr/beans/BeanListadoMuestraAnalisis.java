@@ -22,6 +22,7 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 	private boolean notificado;
 	
 	private BeanAnalisis beanAnalisis; //proceso de analizar la muestra (asignación de analistas a las muestras por parte del jefe de servicio y su resolucion)  F6y F7
+	private Date fechaReclamadaPlaca; //fecha en que el jefe reclamó la placa (se la asignó)
 	private String resultado; //valoracion final de la muestra despues de analizarla los analistas o dar su veredicto el jefe de servicio
 	private Date fechaResultado; //fecha en la que se asignó un resultado final a la muestra
 	private Boolean esCerrable = false; //por defecto la muestra no se puede cerrar hasta que el jefe dé su veredicto o los analistas estén deacuerdo
@@ -59,6 +60,14 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 	}
 
 
+	public Date getFechaReclamadaPlaca() {
+		return fechaReclamadaPlaca;
+	}
+
+	public void setFechaReclamadaPlaca(Date fechaReclamadaPlaca) {
+		this.fechaReclamadaPlaca = fechaReclamadaPlaca;
+	}
+
 	public String getResultado() {
 		return resultado;
 	}
@@ -95,8 +104,8 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		bean.setEtiquetaMuestra(muestra.getEtiqueta());
 		bean.setRefInternaMuestra(muestra.getRefInternaVisavet());
 		//bean.setFechaEntrada(muestra.getFechaEntrada());
-		bean.setFechaEnvioMuestraIni(muestra.getFechaEnvio());
-		bean.setFechaResultadoMuestraIni(muestra.getFechaResultado());
+		//bean.setFechaEnvioMuestraIni(muestra.getFechaEnvio());
+		//bean.setFechaResultadoMuestraIni(muestra.getFechaResultado());
 		//bean.setCodNumLote(muestra.getLote() != null ? muestra.getLote().getNumeroLote() : "");
 		bean.setNotificado(muestra.getFechaNotificacion() != null);
 		
@@ -118,6 +127,8 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 			PlacaLaboratorio placaLab = placaVisPlacaLab.getPlacaLaboratorio();
 			if(placaLab!=null) {// && placaLab.getUsuario().getId().equals(obj)) {
 				bean.setIdPlacaLaboratorio(placaLab.getId()); //aqui solo se mostrarán muestras que ya esten en una placa de laboratorio
+				//bean.setFechaReclamadaPlacaIni(placaLab.getFechaAsignadaJefe());
+				bean.setFechaReclamadaPlaca(placaLab.getFechaAsignadaJefe());
 				if(placaLab.getUsuario()!=null)
 					bean.setIdJefePlaca(placaLab.getUsuario().getId()); //todas las muestras que mostremos en esta vista serán aquellas cuya placa se haya asignado el jefe
 			}
@@ -202,8 +213,8 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 		bean.setEtiquetaMuestra(muestra.getEtiqueta());
 		bean.setRefInternaMuestra(muestra.getRefInternaVisavet());
 		//bean.setFechaEntrada(muestra.getFechaEntrada());
-		bean.setFechaEnvioMuestraIni(muestra.getFechaEnvio());
-		bean.setFechaResultadoMuestraIni(muestra.getFechaResultado());
+		//bean.setFechaEnvioMuestraIni(muestra.getFechaEnvio());
+		//bean.setFechaResultadoMuestraIni(muestra.getFechaResultado());
 		//bean.setCodNumLote(muestra.getLote() != null ? muestra.getLote().getNumeroLote() : "");
 		bean.setNotificado(muestra.getFechaNotificacion() != null);
 				
@@ -224,6 +235,8 @@ public class BeanListadoMuestraAnalisis extends BeanBusquedaMuestraAnalisis {
 			PlacaLaboratorio placaLab = placaVisPlacaLab.getPlacaLaboratorio();
 			if(placaLab!=null) {// && placaLab.getUsuario().getId().equals(obj)) {
 				bean.setIdPlacaLaboratorio(placaLab.getId()); //aqui solo se mostrarán muestras que ya esten en una placa de laboratorio
+				//bean.setFechaReclamadaPlacaIni(placaLab.getFechaAsignadaJefe());
+				bean.setFechaReclamadaPlaca(placaLab.getFechaAsignadaJefe());
 				if(placaLab.getUsuario()!=null)
 					bean.setIdJefePlaca(placaLab.getUsuario().getId()); //todas las muestras que mostremos en esta vista serán aquellas cuya placa se haya asignado el jefe
 			}

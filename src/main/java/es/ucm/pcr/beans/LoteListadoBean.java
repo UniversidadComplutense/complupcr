@@ -23,7 +23,7 @@ public class LoteListadoBean {
 	
 	private CentroBean centroBean;
 	private BeanEstado beanEstado;
-	private Integer referenciaInternaLote;
+	private String referenciaInternaLote;
 	
 	public Integer getId() {
 		return id;
@@ -111,11 +111,11 @@ public class LoteListadoBean {
 	}
 
 
-	public Integer getReferenciaInternaLote() {
+	public String getReferenciaInternaLote() {
 		return referenciaInternaLote;
 	}
 
-	public void setReferenciaInternaLote(Integer referenciaInternaLote) {
+	public void setReferenciaInternaLote(String referenciaInternaLote) {
 		this.referenciaInternaLote = referenciaInternaLote;
 	}
 
