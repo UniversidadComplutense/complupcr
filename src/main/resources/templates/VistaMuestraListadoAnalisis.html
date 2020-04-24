@@ -45,13 +45,13 @@
 					<label >Etiqueta</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.etiquetaMuestra}"  th:value="${beanBusquedaMuestra.etiquetaMuestra}" maxlength="100"/>
 				</div>	
-				<div class="col-3 form-group">
-					<label >Fecha envío</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaEnvioMuestraIni}"  th:value="${beanBusquedaMuestra.fechaEnvioMuestraIni}"/>
+				<div class="col-3">
+					<label >Fecha resultado</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaResultadoMuestraIni}"  th:value="${beanBusquedaMuestra.fechaResultadoMuestraIni}"/>
 				</div>
-				<div class="col-3 form-group">
+				<div class="col-3">
 					<label >a</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaEnvioMuestraFin}"  th:value="${beanBusquedaMuestra.fechaEnvioMuestraFin}"/>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaResultadoMuestraFin}"  th:value="${beanBusquedaMuestra.fechaResultadoMuestraFin}"/>
 				</div>			
 				<div class="col-3 form-group">
 					<label >Resultado</label>
@@ -68,14 +68,14 @@
 				<div class="col-3">
 					<label >Ref. interna</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.refInternaMuestra}"  th:value="${beanBusquedaMuestra.refInternaMuestra}" maxlength="100"/>
-				</div>	
-				<div class="col-3">
-					<label >Fecha resultado</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaResultadoMuestraIni}"  th:value="${beanBusquedaMuestra.fechaResultadoMuestraIni}"/>
 				</div>
-				<div class="col-3">
+				<div class="col-3 form-group">
+					<label >Fecha placa reclamada</label>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaReclamadaPlacaIni}"  th:value="${beanBusquedaMuestra.fechaReclamadaPlacaIni}"/>
+				</div>
+				<div class="col-3 form-group">
 					<label >a</label>
-				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaResultadoMuestraFin}"  th:value="${beanBusquedaMuestra.fechaResultadoMuestraFin}"/>
+				 	<input  type="date" class="form-control form-control-sm" th:field="${beanBusquedaMuestra.fechaReclamadaPlacaFin}"  th:value="${beanBusquedaMuestra.fechaReclamadaPlacaFin}"/>
 				</div>
 				<div class="col-3 form-group">
 					<label >Placa laboratorio</label>					
@@ -163,9 +163,9 @@
 	      				<!-- <th scope="col">Nombre</th>
 						<th scope="col">NHC</th> -->
 						<th scope="col">Etiqueta</th>
-						<th scope="col">Ref. interna</th>
+						<th scope="col">Ref. interna</th>						
+						<th scope="col">Fecha placa reclamada</th>
 						<th scope="col">Placa</th>
-						<th scope="col">Fecha envío</th>
 						<th scope="col">Fecha resultado</th>
 						<th scope="col">Resultado</th>
 						<!-- <th scope="col">Estado</th>	 -->						
@@ -205,15 +205,15 @@
 						</td>
 						<td>
 							<span th:text="${muestra.refInternaMuestra}"></span>							
+						</td>						
+						<td>						
+							<span th:text="${#dates.format(muestra.fechaReclamadaPlaca, 'dd/MM/yyyy')}"></span>
 						</td>
 						<td>
 							<span th:text="${muestra.idPlacaLaboratorio}"></span>							
-						</td>
-						<td>						
-							<span th:text="${#dates.format(muestra.fechaEnvioMuestraIni, 'dd/MM/yyyy')}"></span>
 						</td>						
 						<td>
-							<span th:text="${#dates.format(muestra.fechaResultadoMuestraIni, 'dd/MM/yyyy')}"></span>
+							<span th:text="${#dates.format(muestra.fechaResultado, 'dd/MM/yyyy')}"></span>
 						</td>
 						<td>
 							<span th:text="${muestra.resultado}"></span>
@@ -242,27 +242,27 @@
 						<td colspan="2">							
 							<label>Analistas</label>
 							<ul th:each="analistaLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasLab}">							
-								<li><span th:text="${analistaLab.beanUsuario.nombreCompleto}"></span>; 
+								<li><span th:text="${analistaLab.beanUsuario.nombreCompleto}"></span> 
 									<!-- <span th:text="${analistaLab.fechaAsignacion}"></span>;  -->
-									<span th:text="${analistaLab.valoracion}"></span> 
+									<br><span th:text="${analistaLab.valoracion}"></span> 
 								</li>
 							</ul>						
 						</td>
 						<td colspan="2">							
 							<label>Voluntarios</label>
 							<ul th:each="voluntarioLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVol}">							
-								<li><span th:text="${voluntarioLab.beanUsuario.nombreCompleto}"></span>; 
+								<li><span th:text="${voluntarioLab.beanUsuario.nombreCompleto}"></span> 
 									<!-- <span th:text="${voluntarioLab.fechaAsignacion}"></span>;  -->
-									<span th:text="${voluntarioLab.valoracion}"></span> 
+									<br><span th:text="${voluntarioLab.valoracion}"></span> 
 								</li>
 							</ul>						
 						</td>
 						<td colspan="2">							
 							<label>Otros voluntarios</label>
 							<ul th:each="voluntarioSinLab : ${muestra.beanAnalisis.beanListaAsignaciones.listaAnalistasVolSinLabCentro}">							
-								<li><span th:text="${voluntarioSinLab.beanUsuario.nombreCompleto}"></span>; 
+								<li><span th:text="${voluntarioSinLab.beanUsuario.nombreCompleto}"></span> 
 									<!-- <span th:text="${voluntarioSinLab.fechaAsignacion}"></span>;  -->
-									<span th:text="${voluntarioSinLab.valoracion}"></span> 
+									<br><span th:text="${voluntarioSinLab.valoracion}"></span> 
 								</li>
 							</ul>						
 						</td>
