@@ -486,11 +486,17 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			for(Muestra m: cjtoMuestrasPlacaLaboratorio) {
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_PENDIENTE_ANALIZAR.getCodNum()));
 				muestraRepositorio.save(m);
+				/*
 				//guardamos en el log el cambio de estado de la muestra
 				BeanEstado estadoMuestra = new BeanEstado();
 				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
 				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
-			}			
+				*/
+			}
+			//guardamos en el log el cambio de estado de las muestras a raiz del cambio de estado de la placa de laboratorio
+			BeanEstado estadoMuestra = new BeanEstado();
+			estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, Estado.MUESTRA_PENDIENTE_ANALIZAR.getCodNum());
+			servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(idPlaca, estadoMuestra);
 		}else if(accion.equals("devolver")) {
 			//desasocia la placa del usuario y le quita la fecha de asignacion, le cambia el estado de la placa a PLACA_LISTA_PARA_ANALISIS (estado anterior) y ponemos a las muestras su estado anterior MUESTRA_ENVIADA_CENTRO_ANALISIS
 			placa.setUsuario(null);
@@ -506,11 +512,17 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			for(Muestra m: cjtoMuestrasPlacaLaboratorio) {
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS.getCodNum()));
 				muestraRepositorio.save(m);
+				/*
 				//guardamos en el log el cambio de estado de la muestra
 				BeanEstado estadoMuestra = new BeanEstado();
 				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
 				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
-			}	
+				*/
+			}
+			//guardamos en el log el cambio de estado de las muestras a raiz del cambio de estado de la placa de laboratorio
+			BeanEstado estadoMuestra = new BeanEstado();
+			estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, Estado.MUESTRA_ENVIADA_CENTRO_ANALISIS.getCodNum());
+			servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(idPlaca, estadoMuestra);
 		}
 		placa = placaLaboratorioRepositorio.save(placa);
 		//TODO guardamos en el log el cambio de estado de la placa (no tenemos tabla de log de placas)
@@ -636,11 +648,17 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				muestra.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum()));
 				muestra.setNumerodeAnalistasAsignados(numerodeAnalistasAsignadosMuestra);
 				muestraRepositorio.save(muestra);
+				/*
 				//guardamos en el log el cambio de estado de la muestra
 				BeanEstado estadoMuestra = new BeanEstado();
 				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, muestra.getEstadoMuestra().getId());
-				servicioLog.actualizarEstadoMuestra(muestra.getId(), estadoMuestra);				
+				servicioLog.actualizarEstadoMuestra(muestra.getId(), estadoMuestra);
+				*/				
 			}
+			//guardamos en el log el cambio de estado de las muestras a raiz de asignar la placa de laboratorio
+			BeanEstado estadoMuestra = new BeanEstado();
+			estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, Estado.MUESTRA_ASIGNADA_ANALISTA.getCodNum());
+			servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(formBeanGuardarAsignacionPlaca.getIdPlaca(), estadoMuestra);
 		}
 		else {
 			//si no se ha marcado ningun nuevo analista no hacemos nada
@@ -818,6 +836,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 		
 		Integer idUsuarioLogado = sesionServicio.getUsuario().getId(); 
 		Date fechaActual = new Date();
+		Boolean resultadoDefinitivo = false;
 		// por cada muestra de la placa
 		HashMap<Integer, String> resultados = obtenerResultadosExcel(bean);
 		//for (Muestra m : placa.getMuestras()) {
@@ -846,11 +865,14 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				m.setFechaResultado(fechaActual);				
 				//cambiamos el estado de la muestra a resuelta y la guardamos							
 				m.setEstadoMuestra(new EstadoMuestra(Estado.MUESTRA_RESUELTA.getCodNum()));				
-				muestraRepositorio.save(m);
+				muestraRepositorio.save(m);	
+				resultadoDefinitivo= true;
+				/*
 				//anotamos en el log el cambio de estado de la muestra				
 				BeanEstado estadoMuestra = new BeanEstado();
 				estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, m.getEstadoMuestra().getId());
 				servicioLog.actualizarEstadoMuestra(m.getId(), estadoMuestra);
+				*/								
 				//Envio de notificacion al pacientes si tiene activada la notificacion automatica
 				//recupero el paciente de la muestra
 				Paciente paciente = m.getPaciente();
@@ -861,7 +883,14 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				
 			}
 			
-		}			
+		}
+		if(resultadoDefinitivo==true) {
+			//anotamos en el log el cambio de estado de las muestras de la placa que se ha resuelto con el ultimo analista				
+			BeanEstado estadoMuestra = new BeanEstado();
+			estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, Estado.MUESTRA_RESUELTA.getCodNum());
+			servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(idPlaca, estadoMuestra);
+		}
+		
 	}
 	
 	
