@@ -216,6 +216,8 @@ public class LabCentroControlador {
 		return vista;
 	}
 	
+	
+	
 	@RequestMapping(value = "/recepcionPlacas/recepciona", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
 	public ModelAndView recepcionarPlacaVisavetDesdeModalGET(@RequestParam(value = "id", required = true) Integer id, RedirectAttributes redirectAttributes)  throws Exception {
@@ -224,6 +226,20 @@ public class LabCentroControlador {
 			redirectAttributes.addFlashAttribute("mensaje", "La placa " + id + " se ha recepcionado correctamente.");
 		} else {
 			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible recepcionar la placa " +  id + ".");
+		}				
+		
+		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/recepcionPlacas", true));
+		return respuesta;
+	}
+	
+	@RequestMapping(value = "/recepcionPlacas/anulaRecepcion", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('RESPONSABLEPCR','ADMIN')")
+	public ModelAndView anulaRecepcionarPlacaVisavetDesdeModalGET(@RequestParam(value = "id", required = true) Integer id, RedirectAttributes redirectAttributes)  throws Exception {
+
+		if (laboratorioVisavetServicio.anularRecepcionarPlaca(id)) {
+			redirectAttributes.addFlashAttribute("mensaje", "Se ha anulado la recepción de la placa " + id + ".");
+		} else {
+			redirectAttributes.addFlashAttribute("mensaje", "No ha sido posible anular la recepción de la placa " +  id + ".");
 		}				
 		
 		ModelAndView respuesta = new ModelAndView(new RedirectView("/laboratorioCentro/recepcionPlacas", true));

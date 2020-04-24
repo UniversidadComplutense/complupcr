@@ -125,6 +125,10 @@ function confirmarFinalizadoPCRDesdeModal(idPlaca){
 	window.location=url;
 }
 
+function confirmarAnularRecepcionPlacaVisavetDesdeModal(idPlaca){
+	var url="/laboratorioCentro/recepcionPlacas/anulaRecepcion?id=" + idPlaca;
+	window.location=url;
+}
 
 
 
