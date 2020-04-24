@@ -112,6 +112,7 @@ public class LoteServicioImpl implements LoteServicio {
 		Optional<Lote> lotebbdd= loteRepositorio.findById(loteBean.getId());
 		if (lotebbdd.isPresent()) {
 			lote.setMuestras(lotebbdd.get().getMuestras());
+			
 		}
 		lote = loteRepositorio.save(lote);
 		return LoteCentroBean.modelToBean(lote);
