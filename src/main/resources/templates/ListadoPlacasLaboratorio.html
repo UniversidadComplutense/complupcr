@@ -179,13 +179,70 @@
 							<!-- FIN ASIGNAR EQUIPO PCR -->
 							
 							
+							<!-- MODAL CONFIRMAR PLACA LISTA PARA ANALIZAR -->							
+							<div class="modal fade" th:id="modal-listaParaAnalizar+${placa.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-md" role="document">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<div>	
+							        			<h5 class="modal-title" id="exampleModalLabel"><b><span th:text="'Placa ' + ${placa.id}"></span></b></h5>
+							        		</div>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">	      										        
+								          	<div class="col-12 form-group">
+								          		<h6>¿Confirma que la placa pase a estar lista para analizar?</h6>	          		
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal" th:data-id="${placa.id}" onclick="confirmarListaParaAnalizarDesdeModal(this.getAttribute('data-id'));">Confirmar</button>						        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+							<!-- FIN MODAL CONFIRMAR PLACA LISTA PARA ANALIZAR -->
+							
+							
+							<!-- MODAL CONFIRMAR FINALIZADO PCR -->							
+							<div class="modal fade" th:id="modal-confirmarFinalizadoPCR+${placa.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-md" role="document">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<div>	
+							        			<h5 class="modal-title" id="exampleModalLabel"><b><span th:text="'Placa ' + ${placa.id}"></span></b></h5>
+							        		</div>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">	      										        
+								          	<div class="col-12 form-group">
+								          		<h6>¿Confirma que la placa ha finalizado el PCR?</h6>	          		
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal" th:data-id="${placa.id}" onclick="confirmarFinalizadoPCRDesdeModal(this.getAttribute('data-id'));">Confirmar</button>						        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+							<!-- FIN MODAL CONFIRMAR FINALIZADO PCR -->
+							
+							
 						</td>
 						<td>
-					        <a th:if="${placa.beanEstado.estado.codNum != 4}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
+					        <a th:if="${placa.beanEstado.estado.codNum != 4 && placa.beanEstado.estado.codNum != 5}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
 					          	<i class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;" title="Editar placa"></i>
 					        </a>
-					        <a th:if="${placa.beanEstado.estado.codNum == 4}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
+					        <a th:if="${placa.beanEstado.estado.codNum == 4 || placa.beanEstado.estado.codNum == 5}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
 					          	<i class="fa fa-eye" aria-hidden="true" style="font-size: 1.2em;" title="Consultar placa"></i>
+					        </a>
+					        <a style="color:black" th:href="@{'/documento/placaLaboratorio?id=' + ${placa.id} + '&url=6'}">
+					          	<i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;" title="Ver documentación"></i>
 					        </a>
 					        <a th:if="${placa.beanEstado.estado.codNum == 1}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
 					          	<i class="fa fa-object-group" aria-hidden="true" style="font-size: 1.2em;" title="Rellenar placa"></i>
@@ -200,19 +257,21 @@
 					        <a th:if="${placa.beanEstado.estado.codNum != 1 || placa.placasVisavet == null || #lists.size(placa.placasVisavet)==0}" style="color:grey" href="#">
 					          	<i class="fa fa-dashboard" aria-hidden="true" style="font-size: 1.2em;" title="Asignar equipo PCR"></i>
 					        </a>					        
-					        <a th:if="${placa.beanEstado.estado.codNum == 2}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
+					        <a th:if="${placa.beanEstado.estado.codNum == 2}" style="color:black" data-toggle="modal" data-target="modal-confirmarFinalizadoPCR" 
+					        			th:attr="data-target='#modal-confirmarFinalizadoPCR'+${placa.id}" href="#">
 					          	<i class="fa fa-hourglass-end" aria-hidden="true" style="font-size: 1.2em;" title="Finalizado PCR"></i>
 					        </a>
 					        <a th:if="${placa.beanEstado.estado.codNum != 2}" style="color:grey" href="#">
 					          	<i class="fa fa-hourglass-end" aria-hidden="true" style="font-size: 1.2em;" title="Finalizado PCR"></i>
 					        </a>					        
-					        <a th:if="${placa.beanEstado.estado.codNum == 3}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
-					          	<i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;" title="Asignar resultados"></i>
+					        <a th:if="${placa.beanEstado.estado.codNum == 3}" style="color:black" th:href="@{'/documento/placaLaboratorio?id=' + ${placa.id} + '&url=6'}">
+					          	<i class="fa fa-file-text" aria-hidden="true" style="font-size: 1.2em;" title="Asignar resultados"></i>
 					        </a>
 					        <a th:if="${placa.beanEstado.estado.codNum != 3}" style="color:grey" href="#">
-					          	<i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;" title="Asignar resultados"></i>
+					          	<i class="fa fa-file-text" aria-hidden="true" style="font-size: 1.2em;" title="Asignar resultados"></i>
 					        </a>
-					        <a th:if="${placa.beanEstado.estado.codNum == 3 && placa.tieneDocumentos}" style="color:black" th:href="@{/laboratorioCentro/gestionPlacas/modificar(id=${placa.id})}">
+					        <a th:if="${placa.beanEstado.estado.codNum == 3 && placa.tieneDocumentos}" style="color:black" 
+					        			data-toggle="modal" data-target="modal-listaParaAnalizar" th:attr="data-target='#modal-listaParaAnalizar'+${placa.id}" href="#">
 					          	<i class="fa fa-line-chart" aria-hidden="true" style="font-size: 1.2em;" title="Lista para analizar"></i>
 					        </a>
 					        <a th:if="${placa.beanEstado.estado.codNum != 3 || !placa.tieneDocumentos}" style="color:grey" href="#">

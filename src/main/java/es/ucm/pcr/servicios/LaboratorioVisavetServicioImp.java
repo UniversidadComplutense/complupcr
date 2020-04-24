@@ -175,7 +175,27 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 		}
 		return false;
 	}
+	
+	
+	// JAVI para anular la recepción de una placa Visavet
+	@Override
+	@Transactional
+	public boolean anularRecepcionarPlaca(Integer id) throws Exception {				
+		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(id);
+		if (placa.isPresent()) {
+			if (placa.get().getEstadoPlacaVisavet().getId() == Estado.PLACAVISAVET_RECIBIDA.getCodNum()) {
+				placa.get().setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_ENVIADA.getCodNum()));
+				placa.get().setFechaRecepcionLaboratorioCentro(null);
+				placaVisavetRepositorio.save(placa.get());
+				
+				// TODO Registrar en LOG placaVisavet anulada recepción 
+				return true;
+			}			
+		}
+		return false;
+	}
 
+	
 	// JAVI para saber las placas Visavet combinadas en una placa de laboratorio
 	@Override
 	public List<PlacaLaboratorioVisavetBean> buscarPlacasPorIdPlacaLaboratorio(Integer idPlacaLaboratorio) throws Exception {
