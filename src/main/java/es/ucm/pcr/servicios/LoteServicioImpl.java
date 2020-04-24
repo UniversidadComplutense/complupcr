@@ -109,10 +109,15 @@ public class LoteServicioImpl implements LoteServicio {
 		Lote lote = null;
 		
 		lote = LoteCentroBean.beanToModel(loteBean);
-		
+		Optional<Lote> lotebbdd= loteRepositorio.findById(loteBean.getId());
+		if (lotebbdd.isPresent()) {
+			lote.setMuestras(lotebbdd.get().getMuestras());
+		}
 		lote = loteRepositorio.save(lote);
 		return LoteCentroBean.modelToBean(lote);
 	}
+	
+	
 	
 	@Override
 	@Transactional
@@ -201,7 +206,7 @@ public class LoteServicioImpl implements LoteServicio {
 		return new LoteBeanPlacaVisavet();
 	}
 	@Override
-	public List<LoteListadoBean> findLoteByReferenciaExterna(Integer referenciaExterna){
+	public List<LoteListadoBean> findLoteByReferenciaExterna(String referenciaExterna){
 		List<Lote> lotes = loteRepositorio.findByReferenciaExterna(referenciaExterna);
         List<LoteListadoBean> listLotesBean = new ArrayList();
 		

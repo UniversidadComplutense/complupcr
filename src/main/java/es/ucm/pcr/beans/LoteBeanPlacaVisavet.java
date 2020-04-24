@@ -31,7 +31,7 @@ public class LoteBeanPlacaVisavet{
 	private String test;
 	private Integer idPlacaVisavet; 
 	private String nombrePlaca;
-	private Integer referenciaInternaLote;
+	private String referenciaInternaLote;
 	private String errorReferenciaLote;
 	//private BeanPlacaVisavetUCM beanPlacaVisavetUCM;
 	public Integer getId() {
@@ -110,10 +110,10 @@ public class LoteBeanPlacaVisavet{
 		this.centroBean = centroBean;
 	}
 	
-public Integer getReferenciaInternaLote() {
+public String getReferenciaInternaLote() {
 		return referenciaInternaLote;
 	}
-	public void setReferenciaInternaLote(Integer referenciaInternaLote) {
+	public void setReferenciaInternaLote(String referenciaInternaLote) {
 		this.referenciaInternaLote = referenciaInternaLote;
 	}
 	/*	public BeanPlacaVisavetUCM getBeanPlacaVisavetUCM() {

@@ -232,7 +232,7 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				LoteCentroBean beanLote;
 				if (unLote.length > 1 && unLote[0] !="") {
  				beanLote = loteServicio.findById(Integer.parseInt(unLote[0]));
- 				beanLote.setReferenciaInternaLote(Integer.parseInt(unLote[1]));
+ 				beanLote.setReferenciaInternaLote(unLote[1]);
  				List<LoteListadoBean> listaLote=loteServicio.findLoteByReferenciaExterna(beanLote.getReferenciaInternaLote());
  				if (listaLote == null || listaLote.size() == 0)
  				   loteServicio.guardarLote(beanLote);
@@ -443,6 +443,48 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 				
 				    return vista;	*/
 	}
+	
+	@RequestMapping(value = "/laboratorioUni/cancelarEnvioPlaca", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN','RECEPCIONLABORATORIO','TECNICOLABORATORIO')")
+	public String cancelarEnvioPlaca(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session) throws Exception {
+	// llamar al servicio lotes y cambiar el estado de id a Recibido
+		// para probar
+		
+		ModelAndView vista = new ModelAndView("VistaListadoPlacasVisavet");
+		BeanPlacaVisavetUCM beanPlaca = servicioLaboratorioUni.buscarPlacaById(id);
+		
+		BeanEstado estado= new BeanEstado();
+		estado.setTipoEstado(TipoEstado.EstadoPlacaLaboratorioVisavet);
+		estado.setEstado(Estado.PLACAVISAVET_ASIGNADA);
+		beanPlaca.setEstado(estado);
+		
+		/*		beanLote.setEstado(estado);
+		System.out.println(beanLote.getIdCentro());
+		
+			List<LoteBeanPlacaVisavet> list=new ArrayList();
+					for (int i = 0; i<20; i++) {
+						list.add(getBean(i));
+						if (list.get(i).getId().equals(0)) {
+							// cambiamos estado
+							
+							list.get(i).setEstado(estado);
+						}
+						//para que tenga mas de dos lotes 
+						if (list.get(i).getId().equals(3)) {
+							// cambiamos estado
+							BeanEstado estado= new BeanEstado();
+							estado.setTipoEstado(TipoEstado.EstadoLote);
+							estado.setEstado(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS);
+							list.get(i).setEstado(estado);
+						}
+					}	
+				*/	
+		servicioLaboratorioUni.guardarPlacaConLaboratorio(beanPlaca, beanPlaca.getLaboratorioCentro().getId());
+		//LoteCentroBean lote = loteServicio.guardarLotePlavaVisavet(beanLote,estado);
+		return "redirect:/laboratorioUni/buscarPlacas";
+				
+	}
+	
 	@RequestMapping(value = "/laboratorioUni/confirmarEnviadaPlaca", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO')")
 	public String confirmarEnviadaPlaca(@RequestParam("id") Integer id,Model model, HttpServletRequest request, HttpSession session) throws Exception {
