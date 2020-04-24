@@ -74,7 +74,7 @@
 				<div class="col-4 m-0 form-group">
 					<label>Documento</label>
 					<div class="custom-file">
-					    <input type="file" onchange="validarFichero(this)" required class="custom-file-input form-control-sm" th:field="*{file}"  th:value="*{file}" accept=".pdf, .doc, .docx, .jpg, .jpeg, .png">
+					    <input type="file" onchange="validarFichero(this)" required class="custom-file-input form-control-sm" th:field="*{file}"  th:value="*{file}" accept=".xlsx, .xls">
 					    <label class="custom-file-label" for="file">Seleccionar fichero</label>
 					    <label class="alert alert-danger" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></label>
 					    <label id="labelError" class="text-warning d-none"></label>
