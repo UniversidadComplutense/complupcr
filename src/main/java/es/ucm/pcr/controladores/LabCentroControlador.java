@@ -111,8 +111,7 @@ public class LabCentroControlador {
 		session.setAttribute("paginaActual", currentPage);
 		
 		BusquedaRecepcionPlacasVisavetBean criteriosBusqueda = new BusquedaRecepcionPlacasVisavetBean();		
-		// Inicializamos búsqueda con estado 'PLACAVISAVET_ENVIADA' y laboratorio al que pertenece el usuario
-		criteriosBusqueda.setIdEstadoPlaca(BeanEstado.Estado.PLACAVISAVET_ENVIADA.getCodNum());
+		criteriosBusqueda.setIdEstadoPlaca(0);
 		criteriosBusqueda.setIdLaboratorioCentro(sesionServicio.getLaboratorioCentro().getId());
 		session.setAttribute("beanBusquedaRecepcion", criteriosBusqueda);
 		
