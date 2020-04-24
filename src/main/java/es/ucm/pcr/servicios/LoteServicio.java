@@ -42,7 +42,7 @@ public interface LoteServicio {
 	
 	 * @return
 	 */
-	public List<LoteListadoBean> findLoteByReferenciaExterna(Integer referenciaExterna);
+	public List<LoteListadoBean> findLoteByReferenciaExterna(String referenciaExterna);
 	
 	
 	

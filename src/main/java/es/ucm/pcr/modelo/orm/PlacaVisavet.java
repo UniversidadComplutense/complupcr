@@ -105,7 +105,7 @@ public class PlacaVisavet implements java.io.Serializable {
 		this.laboratorioVisavet = laboratorioVisavet;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idLaboratorioCentro", nullable = true)
 	public LaboratorioCentro getLaboratorioCentro() {
 		return this.laboratorioCentro;

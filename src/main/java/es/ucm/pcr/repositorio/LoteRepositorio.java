@@ -64,6 +64,6 @@ public interface LoteRepositorio extends PagingAndSortingRepository<Lote, Intege
 	@Query("SELECT lote FROM Lote lote "
 			+ "WHERE  "
 			+ "(:referenciaInterna is null or lote.referenciaInternaLote = :referenciaInterna)")	
-	public List<Lote> findByReferenciaExterna(@Param("referenciaInterna") Integer referenciaInterna);
+	public List<Lote> findByReferenciaExterna(@Param("referenciaInterna") String referenciaInterna);
 	
 }

@@ -272,7 +272,7 @@ public class BeanEstado {
 		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_PREPARADA_PARA_PCR));
 		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_FINALIZADA_PCR));
 		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_LISTA_PARA_ANALISIS));
-		//estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_ASIGNADA_PARA_ANALISIS));		
+		estadosPlacaLabCentro.add(new BeanEstado(TipoEstado.EstadoPlacaLabCentro, Estado.PLACA_ASIGNADA_PARA_ANALISIS));		
 		return estadosPlacaLabCentro;
 	}
 	

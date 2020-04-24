@@ -108,13 +108,29 @@ function confirmarRecepcionPlacaVisavetDesdeModal(idPlaca){
 	window.location=url;
 }
 
-function asignarEquipoPCRDesdeModal(idPlaca){
-	
+function asignarEquipoPCRDesdeModal(idPlaca){	
 	var selectorEquipos = $("*").find("[data-idPlaca='" + idPlaca + "']"); 
 	var idEquipo = selectorEquipos.val();
 	var url="/laboratorioCentro/gestionPlacas/asignaEquipo?id=" + idPlaca + "&idEquipo=" + idEquipo;
 	window.location=url;
 }
+
+function confirmarListaParaAnalizarDesdeModal(idPlaca){
+	var url="/laboratorioCentro/gestionPlacas/resultado?id=" + idPlaca;
+	window.location=url;
+}
+
+function confirmarFinalizadoPCRDesdeModal(idPlaca){
+	var url="/laboratorioCentro/gestionPlacas/finalizaPCR?id=" + idPlaca;
+	window.location=url;
+}
+
+function confirmarAnularRecepcionPlacaVisavetDesdeModal(idPlaca){
+	var url="/laboratorioCentro/recepcionPlacas/anulaRecepcion?id=" + idPlaca;
+	window.location=url;
+}
+
+
 
 
 

@@ -187,7 +187,7 @@ public class CicloMuestrasServiciosTests {
 			lcb.setNumeroMuestras(0);
 			lcb.setNumLote("lote1");
 			lcb.setTieneMuestras(false);
-			lcb.setReferenciaInternaLote(1);
+			lcb.setReferenciaInternaLote("1");
 			lcb = loteServicio.guardar(lcb);
 
 			// Asignamos las muestras al lote.
