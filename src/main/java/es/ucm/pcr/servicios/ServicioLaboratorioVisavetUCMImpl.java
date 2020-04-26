@@ -317,9 +317,12 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	public void guardarReferenciasMuestraPlaca(ElementoDocumentacionBean bean) throws Exception {
 		Integer idPlaca = bean.getId();
 		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(idPlaca);
-		if (placa.isPresent()) {
+		// la placa no está almacenando las muestras, hay que ir al lote
+		if (placa.isPresent()) {			
 			HashMap<String, String> resultados = obtenerReferenciasExcel(bean);
-			for (Muestra m : placa.get().getMuestras()) {
+			for (Lote l:placa.get().getLotes())
+				for (Muestra m : l.getMuestras()) {
+			//for (Muestra m : placa.get().getMuestras()) {
 				String referenciaMuestra = resultados.get(m.getEtiqueta());
 				m.setRefInternaVisavet(referenciaMuestra);
 				muestraRepositorio.save(m);
@@ -343,7 +346,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		Sheet sheet = workbook.getSheet(bean.getHoja());
 		Row row;
 		int rows = sheet.getLastRowNum();
-		for (int r = 0; r < rows; r++) {
+		for (int r = 0; r <= rows; r++) {
 			row = sheet.getRow(r);
 			if (row == null) {
 				break;
