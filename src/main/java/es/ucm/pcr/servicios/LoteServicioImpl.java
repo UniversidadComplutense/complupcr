@@ -140,7 +140,7 @@ public class LoteServicioImpl implements LoteServicio {
 			if (estadoActualizar.getEstado().getCodNum() == Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum()) {
 				lote.setEstadoLote(new EstadoLote(Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum()));
 				lote.setFechaEnvio(new Date());
-
+				lote.setFechaRecibido(null);
 				// se actualiza el estado y la fecha de cada muestra del lote
 				if (!CollectionUtils.isEmpty(lote.getMuestras())) {
 					for (Muestra m : lote.getMuestras()) {

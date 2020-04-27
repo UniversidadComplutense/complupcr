@@ -112,13 +112,14 @@
 			 <thead class="thead-light">
 				<tr>
 				    
-					<th class="p-1" scope="col" width="20%">#Placa</th>
-					<th class="p-1" scope="col" width="20%">Nombre</th>
-					<th class="p-1" scope="col" width="20%">F. Creación</th>
-					<th class="p-1" scope="col" width="20%">#Lotes</th>
-					<th class="p-1" scope="col" width="10%">Nº Muestras</th>
-				    <th class="p-1" scope="col" width="20%">Estado</th>
-				    <th class="p-1" scope="col" width="10%">Acciones</th>
+				
+				    <th class="p-1" scope="col">#Placa</th>
+					<th class="p-1" scope="col">Nombre</th>
+					<th class="p-1" scope="col">F. Creación</th>
+					<th class="p-1" scope="col">#Lotes</th>
+					<th class="p-1" scope="col">Nº Muestras</th>
+				    <th class="p-1" scope="col" >Estado</th>
+				    <th class="p-1" scope="col" >Acciones</th>
 				</tr>
 				</thead>
 				<tbody>	
@@ -267,7 +268,11 @@
 							    <i class="fa fa-undo" style="font-size: 1.2em;" title="Cancelar Envio"></i>
 							    </a>
 							       <i th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ENVIADA'}" class="fa fa-undo" style="font-size: 1.2em;color:grey;" title="Cancelar Envio"></i>
-                  
+                               <a  th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" href="#" th:data-href="@{/laboratorioUni/eliminarPlaca(id=${unResultado.id})}" title="Eliminar Placa" data-toggle="modal" data-target="#confirm-borrar">
+								<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
+								</a>
+								<i th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;color:grey" title="Eliminar Placa"></i>
+							
                   
                     </td>		  
 					</tr>	
@@ -495,11 +500,38 @@
    </div>
 						
 	</div> 	
-		<!-- Fin asignarLaboratorio -->	
 	
+		<!-- Fin asignarLaboratorio -->	
+	<!-- Modal confirmación borrado -->
+	<div class="modal fade" id="confirm-borrar" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmación</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>¿Está seguro que quiere eliminar la placa?</p>
+					<p>Los lotes asociados a la placa pasarán al estado "Recibido centro Análisis"</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancelar</button>
+					<a class="btn btn-danger btn-borrar">Borrar</a>
+				</div>
+			</div>
+		</div>
+	</div>
 <object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 <object th:include="fragmentos :: scripts" th:remove="tag"></object>
-
+<script type="text/javascript">
+	$('#confirm-borrar').on('show.bs.modal', function(e) {
+	    $(this).find('.btn-borrar').attr('href', $(e.relatedTarget).data('href'));
+	});  
+</script>
 
 	
 </body>

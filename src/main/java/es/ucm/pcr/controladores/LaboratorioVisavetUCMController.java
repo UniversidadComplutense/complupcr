@@ -598,11 +598,13 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			vista.addObject("lotePlacaVisavetBean",lotePlacaVisavetBean);
 			vista.addObject("botonAltaNoMostrar", this.isLotesConPlacas(listaLotes));
 		if (url.equals("P")) {
+			
 			vista.addObject("urlVolver",URLBUSCARPLACAS);
 		}
 		else vista.addObject("urlVolver", URLBUSCARLOTES);
 			//vista.addObject("listaLotes",listaLotes);
 			// los mostramos en la vista
+		vista.addObject("paginaAtras",url);
 			return vista;
 		}
 		@ResponseBody
@@ -816,16 +818,57 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 					estado.setEstado(Estado.PLACAVISAVET_INICIADA);
 					placaVisavet.setEstado(estado);
 					placaVisavet.setFechaCreacion(new Date());
+					
 					// al guardar no estoy metiendo lotes
 					placaVisavet = servicioLaboratorioUni.guardarConLote(placaVisavet);
 					
 					lotePlacaVisavetBean.setPlaca(placaVisavet);
+					System.out.println(lotePlacaVisavetBean.getPlaca().getTamano());
 					//vista.addObject("lotePlacaVisavetBean",lotePlacaVisavetBean);
 					model.addAttribute("lotePlacaVisavetBean",lotePlacaVisavetBean);
 					return "VistaLotesPlacasVisavet :: trGroup";
 				
 					
 				}
+				
+				@RequestMapping(value = "/laboratorioUni/quitarLotePlaca", method = RequestMethod.GET)
+
+				public String quitarLotePlaca(@RequestParam("id") int idLote,  @RequestParam("url") String url, Model model, HttpServletRequest request, HttpSession session) {
+					
+					BeanPlacaVisavetUCM placaVisavet =servicioLaboratorioUni.eliminarLotedePlaca(idLote);
+					String lotes="";
+					if (placaVisavet.getListaLotes()!= null && placaVisavet.getListaLotes().size()>0) {
+					for (LoteBeanPlacaVisavet lote:placaVisavet.getListaLotes()) {
+						lotes+=lote.getId()+":";
+					}
+					
+					return "redirect:/laboratorioUni/procesarLotes?lotes="+lotes+"&url="+url;
+					}
+					else {// tenemos que borrar la placa
+						servicioLaboratorioUni.eliminarPlaca(placaVisavet.getId());
+						return "redirect:/laboratorioUni/buscarPlacas";
+					}
+				}
+				
+			   @RequestMapping(value = "/laboratorioUni/eliminarPlaca", method = RequestMethod.GET)
+
+				public String eliminarPlaca(@RequestParam("id") int idPlaca,  Model model, HttpServletRequest request, HttpSession session) {
+					
+					servicioLaboratorioUni.eliminarPlacayLotes(idPlaca);
+					/*String lotes="";
+					servicioLaboratorioUni.
+					for (LoteBeanPlacaVisavet lote:placaVisavet.getListaLotes()) {
+						BeanPlacaVisavetUCM placaVisavet =servicioLaboratorioUni.eliminarLotedePlaca(idLote);
+						lotes+=lote.getId()+":";
+					}
+					
+					
+					else {// tenemos que borrar la placa
+						servicioLaboratorioUni.eliminarPlaca(placaVisavet.getId());
+						*/return "redirect:/laboratorioUni/buscarPlacas";
+					//}
+				}
+				
 		private Integer calcularPlacasVisavetEspera(BeanLaboratorioCentro laboratorio,@PageableDefault(page = 0, value = 50000000) Pageable pageable)	{
 			Integer suma=0;
 			BusquedaPlacasVisavetBean busqueda= new BusquedaPlacasVisavetBean();

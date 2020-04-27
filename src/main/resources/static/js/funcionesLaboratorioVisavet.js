@@ -1,5 +1,4 @@
 
-
 function eliminaFilas()
 {
 //OBTIENE EL NÚMERO DE FILAS DE LA TABLA
@@ -314,7 +313,9 @@ function altaNuevaPlaca(){
 	}).done(function(respuesta) {
 		$("#botonAlta").attr('disabled',true);
 	   $("#criteriosBusqueda").show();
-		$("#numPlacaSpan").html(respuesta);
+	   $("#capaBotonAsignar").show();
+		//$("#numPlacaSpan").html(respuesta);
+	   $("#numPlacaSpan").val(respuesta);
 		
 	});
 
@@ -338,7 +339,9 @@ function asignarPlaca(){
 		$("#error").show();
 	}
 	else {
-	url="/laboratorioUni/asignarPlaca?idPlaca="+$("#numPlacaSpan").text();
+		if ($("#nombrePlacaVisavet").val().trim() =="") $("#errorNombrePlaca").show();
+		else{
+	url="/laboratorioUni/asignarPlaca?idPlaca="+$("#numPlacaSpan").val();
 	sBody=$('#formularioPrueba').serialize();
 	
 	$.ajax({
@@ -355,6 +358,7 @@ function asignarPlaca(){
 	    $("#grabaryFinalizar").attr("disabled", false);
 		
 	});
+		}
 	}
 }
 function habilitarBotonAsignarLaboratorio(idLaboratorio){

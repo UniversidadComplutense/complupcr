@@ -33,30 +33,31 @@
 			<fieldset id="criteriosBusqueda" style="display:none" class="form-group border p-2">
 		    <legend class="w-auto font-weight-bold m-0" >Asignación de referencias a muestras</legend>
 			 <div class="row col-12 form-group" id="error" style="display:none;"><label class="col-xs-2" style="font-weight:bold;color:red;">El tamaño de la placa es menor al número de muestras</label></div>
+			 <div class="row col-12 form-group" id="errorNombrePlaca" style="display:none;"><label class="col-xs-2" style="font-weight:bold;color:red;">El nombre de la placa esta vacío</label></div>
+			
 			 <div class="row col-12 form-group" id="capaErrorRef" style="display:none;"><label class="col-xs-2" style="font-weight:bold;color:red;">Alguna Referencia Interna esta vacía</label></div>
 			 
 			  <div class="row">
 				<div class="col-3 form-group">
-				<label class="col-xs-2">Placa número:&nbsp;</label><label class="col-xs-2"><span style="font-weight:bold;" id="numPlacaSpan"/></label>
-				
+				<label class="col-xs-2">Placa número:</label><label class="col-xs-2">
+				<!--  <span style="font-weight:bold;" id="numPlacaSpan"/></label>-->
+				<input type="text" disabled id="numPlacaSpan" ></input>
 				</div>
 				<div class="col-3 form-group">
-				<label class="col-xs-2">Nombre de la placa:&nbsp;</label><label class="col-xs-2"><input type="text" th:field="*{placa.nombrePlacaVisavet}" ></input></label>
+				<label class="col-xs-2">Nombre de la placa:</label><label class="col-xs-2"><input type="text" id="nombrePlacaVisavet" th:field="*{placa.nombrePlacaVisavet}" ></input></label>
 				</div>
 				<div class="col-2 form-group">
 				<label class="col-xs-2">Tamaño: </label>
 				
-						<label class="col-xs-2">
-							 <select class="form-control form-control-sm" id="tamano" th:field="*{placa.tamano}">
+						
+							 <select class=" col-5 form-control form-control-sm" id="tamano" th:field="*{placa.tamano}">
 					              <option th:each="var: ${lotePlacaVisavetBean.listaTamanosDisponibles}"
 									th:value="${var}" th:text="${var}"
 									th:select="${lotePlacaVisavetBean.placa.tamano}">Tamaño</option>
 				           </select>
-						</label>
+					
 			    </div>
-			    <div class="col-3 form-group">
-			     <button type="button" th:onClick="|asignarPlaca(); return false|"  class="btn btn-secondary">Asignar</button>
-			   </div>
+			  
 			   </div>
 			 <!--   <div class="row form-group">
 			    <table class="col-6 table">
@@ -86,7 +87,9 @@
 			   
 
 		</fieldset>
-		
+		  <div id="capaBotonAsignar" style="display:none;" class="row justify-content-end mt-2">
+			     <button type="button" th:onClick="|asignarPlaca(); return false|"  class="btn btn-secondary">Asignar</button>
+			   </div>
 		</form>
 		<div class="row"><label class="col-xs-2">Nº Total de muestras:  </label>&nbsp;<span th:text="${lotePlacaVisavetBean.totalMuestras}" id="totalMuestras" style="font-weight:bold;"></span>        
 		</div>
@@ -107,12 +110,14 @@
 				<thead class="thead-light">
 				
 				<tr>
-				    <th class="p-1" width="15%">#Placa</th>
-				    <th class="p-1" width="15%">Nombre Placa</th>
-					<th class="p-1" width="15%">#Lote</th>
+				    <th class="p-1" width="8%">#Placa</th>
+				    <th class="p-1" width="12%">Nombre Placa</th>
+				    <th class="p-1" width="7%">Tamaño</th>
+					<th class="p-1" width="14%">#Lote</th>
 					<th class="p-1" width="15%">Ref. interna lote</th>
 					<th class="p-1" width="20%">Centro</th>
 					<th class="p-1" width="15%">Nº de muestras</th>
+					<th class="p-1" width="10%">Acciones</th>
 				</tr>
 				</thead>
 				 </table>
@@ -120,17 +125,20 @@
 				<tbody>
 				
 				<tr id="trGroup"  style="border: none;" th:fragment="trGroup" th:each="unResultado,count : ${lotePlacaVisavetBean.placa.listaLotes}">
-				 <td colspan="6" style="border-bottom: 1px solid #dee2e6;">  
+				 <td colspan="8" style="border-bottom: 1px solid #dee2e6;">  
 					   
 					    <table  class="col-xs-12 tablaMuestrasPlacas"  style="border: none;" width="100%" id="tablaMuestras">
 				    <tbody>
 				    <tr class="trGroupLotes" style="border: none;">
-					           <td width="15%">
+					           <td width="8%">
 					          <input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].idPlacaVisavet}"/>
 								<span th:text="${unResultado.idPlacaVisavet}"></span>
 								</td>
-								<td width="15%">
+								<td width="12%">
 									<span th:text="${unResultado.nombrePlaca}"></span>
+								</td>
+								<td width="5%">
+									<span th:text="${unResultado.tamanoPlaca}"></span>
 								</td>
 								<td width="15%">
 								<input type="hidden" th:id="l+${count.index}" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].id}"/>
@@ -150,10 +158,17 @@
 								</a>
 								<span th:text="${#lists.size(unResultado.listaMuestras)}"></span>
 								</td>
+								  <td width="10%">
+								
+                              <a  th:if="${#strings.toString(unResultado.idPlacaVisavet) != null}" href="#" th:data-href="@{/laboratorioUni/quitarLotePlaca(id=${unResultado.id},url=${paginaAtras})}" title="Borrar" data-toggle="modal" data-target="#confirm-borrar">
+								<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
+								</a>
+								<i th:unless="${#strings.toString(unResultado.idPlacaVisavet) !=null}" class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;color:grey"></i>
+								</td>
 							
 				</tr>
 				<tr th:id="muestra+${unResultado.id}" style="display:none; border:0px;">
-				<td colspan="6">  
+				<td colspan="7">  
 					<table  class="col-xs-12 border-tableMuestras">
 					<thead class="thead-light"><tr><th class="p-1" scope="col" style="color:#6c757d;">Tipo Muestra</th><th class="p-1" scope="col" style="color:#6c757d;">Etiqueta</th><th class="p-1" scope="col" style="color:#6c757d;">Referencia Interna</th></tr></thead>
 					<tbody>
@@ -213,14 +228,34 @@
 
 <object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
 <object th:include="fragmentos :: scripts" th:remove="tag"></object>
-<!--  contenedor de todo -->
-	<!--  
-	<script th:src="@{/js/util.js}" src="static/js/util.js"
-		type="text/javascript"></script>
-	<script th:src="@{/js/funcionesLotes.js}"
-		src="static/js/funcionesLotes.js" type="text/javascript"></script>
-	<object th:include="fragmentos :: scriptsBootstrap" th:remove="tag"></object>
-	-->
-	
+<!-- Modal confirmación borrado -->
+	<div class="modal fade" id="confirm-borrar" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmación</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>¿Está seguro que quiere eliminar el lote de la placa?</p>
+					<p>Si la placa contiene un sólo lote, se eliminará también esta.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancelar</button>
+					<a class="btn btn-danger btn-borrar">Borrar</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	$('#confirm-borrar').on('show.bs.modal', function(e) {
+	    $(this).find('.btn-borrar').attr('href', $(e.relatedTarget).data('href'));
+	});  
+</script>
 </body>
+	 
 </html>
