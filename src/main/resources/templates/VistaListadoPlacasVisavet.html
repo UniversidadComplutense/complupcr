@@ -324,9 +324,9 @@
 							      		</div>
 									    <div class="modal-footer">
 									    <input type="hidden" id="idConfirmar" value=""></input>
-									    <button type="button" id="aceptarConfirmacion"  class="btn btn-secondary" data-dismiss="modal"  th:onclick="|confirmarPlacaEnviada()|">Aceptar</button>
-										<button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
-									
+									    <button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
+							     		<button type="button" id="aceptarConfirmacion"  class="btn btn-success btn-secondary" data-dismiss="modal"  th:onclick="|confirmarPlacaEnviada()|">Aceptar</button>
+										
 									    						        
 										</div>
 							    	</div>
@@ -374,10 +374,10 @@
 							      		</div>
 									    <div class="modal-footer">
 									    <input type="hidden" id="idCancelar" value=""></input>
-									    <button type="button" id="aceptarConfirmacion"  class="btn btn-secondary" data-dismiss="modal"  th:onclick="|cancelarPlaca()|">Aceptar</button>
-										<button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
+									    <button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
 									
-									    						        
+									    <button type="button" id="aceptarConfirmacion"  class="btn btn-danger btn-borrar" data-dismiss="modal"  th:onclick="|cancelarPlaca()|">Aceptar</button>
+																        
 										</div>
 							    	</div>
 							  	</div>
@@ -491,8 +491,9 @@
 			  </div>	
 			<div class="modal-footer">
 			<input type="hidden" id="idPlacaLab" value=""></input>	
-			<button type="button" id="asignarLaboratorio" class="btn btn-secondary" onClick="asignarLaboratoriodesdeModal();">Asignar Laboratorio</button>
 			<button type="button" id="cerrarConfirmacion" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+			<button type="button" id="asignarLaboratorio" class="btn btn-success  btn-secondary" onClick="asignarLaboratoriodesdeModal();">Asignar Laboratorio</button>
+			
 			</div>
 			</form>
          </div>
