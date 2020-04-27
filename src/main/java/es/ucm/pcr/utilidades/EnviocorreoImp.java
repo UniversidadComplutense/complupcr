@@ -177,7 +177,12 @@ public class EnviocorreoImp implements Enviocorreo {
 		}
 
 		mailSender.setHost("ucsmtp.ucm.es");
-		mailSender.send(msg);
+		
+		try {
+		 mailSender.send(msg);		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

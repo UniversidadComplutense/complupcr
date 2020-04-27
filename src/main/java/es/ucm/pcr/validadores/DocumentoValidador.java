@@ -247,7 +247,7 @@ public class DocumentoValidador implements Validator {
 				String cellValue;
 				List<String> listaMuestrasExcel = new ArrayList<String>();
 				List<String> listaMuestrasVisavet = new ArrayList<String>();
-				for (int r = 0; r < rows; r++) {
+				for (int r = 0; r <= rows; r++) {
 					row = sheet.getRow(r);
 					if (row == null) {
 						break;

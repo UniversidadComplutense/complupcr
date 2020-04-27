@@ -100,6 +100,9 @@ public class LoteServicioImpl implements LoteServicio {
 			lote.setEstadoLote(new EstadoLote(Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum()));
 		}
 		
+		if (lote.getReferenciaInternaLote()==null)
+			lote.setReferenciaInternaLote("");
+		
 		lote = loteRepositorio.save(lote);
 		return LoteCentroBean.modelToBean(lote);
 	}
@@ -114,6 +117,8 @@ public class LoteServicioImpl implements LoteServicio {
 			lote.setMuestras(lotebbdd.get().getMuestras());
 			
 		}
+		if (lote.getReferenciaInternaLote()==null)
+			lote.setReferenciaInternaLote("");
 		lote = loteRepositorio.save(lote);
 		return LoteCentroBean.modelToBean(lote);
 	}

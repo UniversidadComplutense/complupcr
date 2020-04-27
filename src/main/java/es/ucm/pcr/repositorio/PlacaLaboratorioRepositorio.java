@@ -86,7 +86,7 @@ public interface PlacaLaboratorioRepositorio extends JpaRepository<PlacaLaborato
 			+ "(:#{#params.idAnalistaMuestras} is null or usuario.id = :#{#params.idAnalistaMuestras}) and "			
 			+ "(:#{#params.idLaboratorioCentro} is null or placa.laboratorioCentro.id = :#{#params.idLaboratorioCentro})) and "
 			+ "((:#{#params.valoracion} is null and usuariomuestra.valoracion is null) or "
-			+ "(:#{#params.valoracion} is not null and usuariomuestra.valoracion is not null)) order by usuariomuestra.fechaAsignacion asc")						
+			+ "(:#{#params.valoracion} is not null and usuariomuestra.valoracion is not null)) order by placa.fechaAsignadaJefe asc")						
 	public Page<PlacaLaboratorio> findByParamsValoradasAndNotValoradas(@Param("params") BusquedaPlacaLaboratorioAnalistaBean params,
 			Pageable pageable);
 	
