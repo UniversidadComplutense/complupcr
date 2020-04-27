@@ -74,7 +74,8 @@ public class DocumentoControlador {
 				//	{ URL_VOLVER_PLACA_VISAVET_DESDE, "/centroSalud/lote/list" },
 					{ URL_VOLVER_PLACA_VISAVET_DESDE, "/laboratorioUni/buscarPlacas" },
 					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_ASIGNAR_RESULTADOS_PCR, "/laboratorioCentro/gestionPlacas/modificar?id=" },
-					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_LISTADO_PLACAS, "/laboratorioCentro/gestionPlacas" }})
+					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_LISTADO_PLACAS, "/laboratorioCentro/gestionPlacas" },
+					{ URL_VOLVER_LOG, "/gestor/log/list" }})
 			.collect(Collectors.toMap(d -> (Integer) d[0], d -> (String) d[1]));
 		
 	public static final Integer URL_VOLVER_MUESTRA_DESDE_MUESTRAS = 1;
@@ -83,6 +84,7 @@ public class DocumentoControlador {
 	public static final Integer URL_VOLVER_PLACA_VISAVET_DESDE = 4;
 	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE_ASIGNAR_RESULTADOS_PCR = 5;
 	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE_LISTADO_PLACAS = 6;
+	public static final Integer URL_VOLVER_LOG = 7;
 	
 
 	@InitBinder("elementoDoc")
@@ -93,7 +95,7 @@ public class DocumentoControlador {
 
 	// TODO - REVISION ROL
 
-	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD', 'JEFESERVICIO', 'ANALISTALABORATORIO', 'VOLUNTARIO')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD', 'JEFESERVICIO', 'ANALISTALABORATORIO', 'VOLUNTARIO', 'AUDITOR')")
 	@RequestMapping(value = "/muestra", method = RequestMethod.GET)
 	public ModelAndView documentosMuestra(HttpSession session, 
 			@RequestParam(value = "id", required = true) Integer id,
@@ -107,7 +109,7 @@ public class DocumentoControlador {
 		return vista;
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO')")
+	@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO', 'AUDITOR')")
 	@RequestMapping(value = "/placaVisavet", method = RequestMethod.GET)
 	public ModelAndView documentosPlaceVisavet(HttpSession session,
 			@RequestParam(value = "id", required = true) Integer id,
@@ -121,7 +123,7 @@ public class DocumentoControlador {
 		return vista;
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN','RESPONSABLEPCR', 'JEFESERVICIO', 'ANALISTALABORATORIO', 'VOLUNTARIO')")
+	@PreAuthorize("hasAnyRole('ADMIN','RESPONSABLEPCR', 'JEFESERVICIO', 'ANALISTALABORATORIO', 'VOLUNTARIO', 'AUDITOR')")
 	@RequestMapping(value = "/placaLaboratorio", method = RequestMethod.GET)
 	public ModelAndView documentosPlacaLaboratorio(HttpSession session,
 			@RequestParam(value = "id", required = true) Integer id,
@@ -144,7 +146,7 @@ public class DocumentoControlador {
 	}
 
 	@RequestMapping(value = "/descargar", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD', 'TECNICOLABORATORIO', 'RESPONSABLEPCR', 'JEFESERVICIO', 'ANALISTALABORATORIO', 'VOLUNTARIO')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD', 'TECNICOLABORATORIO', 'RESPONSABLEPCR', 'JEFESERVICIO', 'ANALISTALABORATORIO', 'VOLUNTARIO', 'AUDITOR')")
 	public void downloadFile(@RequestParam(value = "id", required = true) Integer id, HttpServletResponse response)
 			throws Exception {
 		byte[] file = null;
@@ -174,7 +176,7 @@ public class DocumentoControlador {
 	}
 
 	@RequestMapping(value = "/guardar", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD', 'TECNICOLABORATORIO', 'RESPONSABLEPCR', 'JEFESERVICIO', 'ANALISTALABORATORIO', 'VOLUNTARIO')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD', 'TECNICOLABORATORIO', 'RESPONSABLEPCR', 'JEFESERVICIO', 'ANALISTALABORATORIO', 'VOLUNTARIO', 'AUDITOR')")
 	public ModelAndView guardar(@Valid @ModelAttribute("beanDocumento") ElementoDocumentacionBean bean,
 			BindingResult result, RedirectAttributes redirectAttributes) throws Exception {
 
@@ -190,7 +192,7 @@ public class DocumentoControlador {
 	}
 
 	@RequestMapping(value = "/borrar", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD', 'TECNICOLABORATORIO', 'RESPONSABLEPCR', 'JEFESERVICIO', 'ANALISTALABORATORIO', 'VOLUNTARIO')")
+	@PreAuthorize("hasAnyRole('ADMIN','CENTROSALUD', 'TECNICOLABORATORIO', 'RESPONSABLEPCR', 'JEFESERVICIO', 'ANALISTALABORATORIO', 'VOLUNTARIO', 'AUDITOR')")
 	public ModelAndView borrar(HttpSession session, @RequestParam(value = "idDoc", required = true) Integer idDoc,
 			@RequestParam(value = "id", required = true) Integer id,
 			@RequestParam(value = "tipoElemento", required = true) Integer tipoElemento,

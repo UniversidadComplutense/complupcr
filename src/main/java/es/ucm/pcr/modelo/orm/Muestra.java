@@ -51,6 +51,7 @@ public class Muestra implements java.io.Serializable {
 	private Set<Documento> documentos = new HashSet<Documento>(0);
 	private Paciente paciente;
 	private Integer numerodeAnalistasAsignados;
+	private Set<LogMuestras> logMuestra = new HashSet<LogMuestras>();
 
 	public Muestra() {
 	}
@@ -271,6 +272,15 @@ public class Muestra implements java.io.Serializable {
 
 	public void setNumerodeAnalistasAsignados(Integer numerodeAnalistasAsignados) {
 		this.numerodeAnalistasAsignados = numerodeAnalistasAsignados;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "muestra")
+	public Set<LogMuestras> getLogMuestra() {
+		return this.logMuestra;
+	}
+
+	public void setLogMuestra(Set<LogMuestras> logMuestra) {
+		this.logMuestra = logMuestra;
 	}
 
 	@Override
