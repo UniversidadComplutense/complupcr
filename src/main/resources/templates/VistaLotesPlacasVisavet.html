@@ -210,12 +210,16 @@
 			<input type="hidden" th:field="${lotePlacaVisavetBean.accion}" id="accion" />
 			</div>
 				<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">	&nbsp;</div>
-		<div class="row">
+		<div class="row justify-content-left mt-2">
+		<div class="col-1">
 		<button type="button" id="grabar" th:disabled="${!botonAltaNoMostrar}"  th:onClick="|seleccionAccion('grabar'); return false|"  class="btn btn-secondary">Grabar</button>&nbsp;
+		</div>
+		<div class="col-2">
 		<button type="button"  th:disabled="${!botonAltaNoMostrar}" id="grabaryFinalizar" th:onClick="|seleccionAccion('grabaryFinalizar'); return false|"  class="btn btn-secondary">Grabar y Finalizar</button>&nbsp;
-		
+		</div>
+		<div class="col-1">
 		<button type="button" id="volver" th:data-url="${urlVolver}" th:onClick="|redirigir(this.getAttribute('data-url')); return false|"  class="btn btn-secondary">Volver</button>&nbsp;
-	
+	     </div>
 		</div>	
 		 <!--  capa de resultados -->
 		</form>

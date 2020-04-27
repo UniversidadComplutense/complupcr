@@ -115,7 +115,7 @@
 					<th  class="p-1" scope="col">F.Entrada</th>
 					<th  class="p-1" scope="col">#Muestras</th>
 					<th  class="p-1" scope="col">Referencia Interna</th>
-					<th  class="p-1" scope="col">Test</th>
+					
 					<th  class="p-1" scope="col">Estado</th>
 			      	<th  class="p-1" scope="col">Acciones</th>
 				</tr>
@@ -191,7 +191,7 @@
 								
 				               	<label style="color:red;" th:id="mensajeError+${count.index}" th:if="${#strings.toString(unResultado.errorReferenciaLote) != ''}" th:text="${unResultado.errorReferenciaLote}"></label>
 				             </td>
-								<td><span>Covid19</span></td>
+								
 								<td><span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
 								</td>
 								<td>
@@ -245,9 +245,9 @@
 							      		</div>
 									    <div class="modal-footer">
 									    <input type="hidden" id="id" value=""></input>
-									    <button type="button" id="aceptarConfirmacion"  class="btn btn-secondary" data-dismiss="modal"  th:onclick="|confirmarLote()|">Aceptar</button>
+									   
 										<button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
-									
+									 <button type="button" id="aceptarConfirmacion"  class="btn btn-success btn-enviar" data-dismiss="modal"  th:onclick="|confirmarLote()|">Aceptar</button>
 									    						        
 										</div>
 							    	</div>
@@ -296,8 +296,9 @@
 							      		</div>
 									    <div class="modal-footer">
 									    <input type="hidden" id="idCancelar" value=""></input>
-									    <button type="button" id="aceptarConfirmacion"  class="btn btn-secondary" data-dismiss="modal"  th:onclick="|cancelarLote()|">Aceptar</button>
-										<button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
+									    	<button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
+									    <button type="button" id="aceptarConfirmacion"  class="btn btn-danger btn-borrar" data-dismiss="modal"  th:onclick="|cancelarLote()|">Aceptar</button>
+									
 									
 									    						        
 										</div>
@@ -315,10 +316,12 @@
 
 			</div>
 			<div class="row justify-content-left mt-3">
+			<div class="col-3"> 
 				<input id="procesarBoton" disabled th:if="${busquedaLotes.mostrarProcesar} and ${paginaLotes.getContent().size()>0}" type="button" class="btn btn-secondary"  value="Procesar lotes seleccionados" onclick="procesarLotes('L')"/>
-		 &nbsp;
+		</div> 
+		<div class="col-3"> 
 		 <button type="button" id="guardarRef" th:if="${busquedaLotes.mostrarGuardarRef} and ${paginaLotes.getContent().size()>0}"  class="btn btn-secondary" th:onClick="guardarReferencias();">Guardar Referencias</button>
-		
+		</div> 
 		</div> <!--  capa de resultados -->
 		<!-- <div th:include="fragmentos :: paginador(${busquedaLotes.urlPaginada},${paginaLotes},${busquedaLotes.orden},${busquedaLotes.sentidoOrden},'0')"></div>
 		-->
