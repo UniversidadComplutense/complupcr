@@ -120,23 +120,8 @@ public class ServicioLogImpl implements ServicioLog {
 		
 		Page<LogMuestras> muestrasPage = logMuestrasRepositorio.findByParams(params, pageable); 
 		
-		LogMuestraListadoBean logMuestra = new LogMuestraListadoBean();
 		for (LogMuestras l : muestrasPage.getContent()) {
-			logMuestra = new LogMuestraListadoBean();
-			logMuestra.setId(l.getId());
-			logMuestra.setDescLote(l.getLote() != null ? l.getLote().getNumeroLote() : "");
-			logMuestra.setDescPlacaVisavet(l.getPlacaVisavet() != null ? l.getPlacaVisavet().getId().toString() : "");
-			logMuestra.setDescPlacaLaboratorio(l.getPlacaLaboratorio() != null ? String.valueOf(l.getPlacaLaboratorio().getId()) : "");
-			logMuestra.setDescCentroSalud(l.getMuestra().getCentro().getNombre());
-			logMuestra.setDescMuestra(l.getMuestra().getEtiqueta());
-			Paciente paciente = l.getMuestra().getPaciente();
-			logMuestra.setDescPaciente(MuestraListadoBean.nombreCompletoPaciente(paciente));
-			logMuestra.setNhcPaciente(paciente != null ? paciente.getNhc() : "");
-			logMuestra.setDescEstadoMuestra(l.getEstadoMuestra().getDescripcion());
-			logMuestra.setFechaCambio(l.getFechaCambio());
-			Usuario usuario = l.getAutorCambio();
-			logMuestra.setNombreAutorCambio(usuario.getNombre() + " " + usuario.getApellido1() + (usuario.getApellido2() != null ? usuario.getApellido2() : ""));
-			listMuestrasBean.add(logMuestra);
+			listMuestrasBean.add(LogMuestraListadoBean.modelToBean(l));
 		}
 		
 		Page<LogMuestraListadoBean> listMuestrasBeanPage = new PageImpl<>(listMuestrasBean, pageable, muestrasPage.getTotalElements());

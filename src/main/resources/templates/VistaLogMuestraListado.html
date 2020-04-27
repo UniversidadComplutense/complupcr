@@ -20,31 +20,54 @@
 		<fieldset id="datosBusquedaLog" class="form-group border p-2 m-1">
 			<legend class="w-auto font-weight-bold m-0">Datos muestra</legend>
 			<div class="row">
-				<div class="col-4 m-0 form-group">
+				<div class="col-3 m-0 form-group">
 					<label >Etiqueta</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="*{etiquetaMuestra}"  th:value="*{etiquetaMuestra}" maxlength="100"/>
 				 	<label class="text-warning" th:if="${#fields.hasErrors('etiquetaMuestra')}" th:errors="*{etiquetaMuestra}"></label>
 				</div>
 				
-				<div class="col-4 m-0 form-group">
+				<div class="col-3 m-0 form-group">
+					<label >Ref interna</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{refInternaVisavetMuestra}"  th:value="*{refInternaVisavetMuestra}" maxlength="100"/>
+				</div>
+				
+				<div class="col-3 m-0 form-group">
 					<label >NHC</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="*{nhcPaciente}"  th:value="*{nhcPaciente}" maxlength="45"/>
 				 	<label class="text-warning" th:if="${#fields.hasErrors('nhcPaciente')}" th:errors="*{nhcPaciente}"></label>
+				</div>			
+			</div>	
+			<div class="row">
+				<div class="col-3 m-0 form-group">
+					<label >Código lote</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{codNumLote}"  th:value="*{codNumLote}" maxlength="100"/>				 	
 				</div>
-			
-				<!-- <div class="col-3 m-0 form-group">
-					<label>Lote</label>				 	
-				 	<select class="form-control form-control-sm" th:field="*{idLote}"  th:value="*{idLote}">
-				 		<option value="">Seleccione</option>
-				 		<option th:each="var: ${listaLotes}"
-									th:value="${var.id}" th:text="${var.numLote}"
-									th:select="*{idLote}"></option>
-				 	</select> 				 	
-					</div>			-->	
-			</div>			
+				
+				<div class="col-3 m-0 form-group">
+					<label >Ref interna lote</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{referenciaInternaLote}"  th:value="*{referenciaInternaLote}" maxlength="100"/>
+				</div>						
+			</div>	
+			<div class="row">
+				<div class="col-3 m-0 form-group">
+					<label >Código placa Visavet</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{idPlacaVisavet}"  th:value="*{idPlacaVisavet}" maxlength="100" pattern="[0-9]+" onkeyup="this.value=this.value.replace(/[^\d]/,'')"/>				 	
+				</div>
+				
+				<div class="col-3 m-0 form-group">
+					<label >Nombre placa Visavet</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{nombrePlacaVisavet}"  th:value="*{nombrePlacaVisavet}" maxlength="45"/>
+				</div>						
+			</div>	
+			<div class="row">
+				<div class="col-3 m-0 form-group">
+					<label >Código placa laboratorio</label>
+				 	<input  type="text" class="form-control form-control-sm" th:field="*{idPlacaLaboratorio}"  th:value="*{idPlacaLaboratorio}" maxlength="100" pattern="[0-9]+" onkeyup="this.value=this.value.replace(/[^\d]/,'')"/>
+				</div>										
+			</div>	
 		</fieldset>
 		
-
+		<!-- ACCIONES -->
 		<div class="row justify-content-end mt-3">
 			<div class="col-1">
 				<button type="submit" class="btn btn-secondary">Buscar</button>
@@ -62,30 +85,115 @@
 			<table class="table">
 				<thead class="thead-light">	
 	    			<tr>
-	    				<th scope="col" width="14%">Etiqueta muestra</th>
-	    				<th scope="col" width="20%">Centro salud</th>
-	      				<th scope="col" width="20%">Paciente</th>
-	      				<th scope="col" width="8%">NHC</th>	      				
-						<th scope="col" width="12%">Estado</th>
-						<th scope="col" width="10%">Lote</th>
-						<th scope="col" width="10%">Placa visavet</th>
-						<th scope="col" width="10%">Placa laboratorio</th>
-						<th scope="col" width="10%">Autor</th>	
-						<th scope="col" width="16%">Fecha</th>										
+	    				<th class="p-1" scope="col" width="14%">Etiqueta muestra</th>
+	    				<th class="p-1" scope="col" width="14%">Ref interna</th>
+	      				<th class="p-1" scope="col" width="8%">NHC</th>	      				
+						<th class="p-1" scope="col" width="10%">Lote</th>
+						<th class="p-1" scope="col" width="10%">Ref interna lote</th>
+						<th class="p-1" scope="col" width="10%">Código placa Visavet</th>
+						<th class="p-1" scope="col" width="10%">Placa Visavet</th>
+						<th class="p-1" scope="col" width="10%">Placa laboratorio</th>
+						<th class="p-1" scope="col" width="7%">Acciones</th>							
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:if="${listadoLogMuestras != null}" th:each="log : ${listadoLogMuestras}">
-						<td><span th:text="${log.descMuestra}"></span></td>
-						<td><span th:text="${log.descCentroSalud}"></span></td>
-						<td><span th:text="${log.descPaciente}"></span></td>
-						<td><span th:text="${log.nhcPaciente}"></span></td>
-						<td><span th:text="${log.descEstadoMuestra}"></span></td>
-						<td><span th:text="${log.descLote}"></span></td>
-						<td><span th:text="${log.descPlacaVisavet}"></span></td>
-						<td><span th:text="${log.descPlacaLaboratorio}"></span></td>
-						<td><span th:text="${log.nombreAutorCambio}"></span></td>
-						<td><span th:text="${#dates.format(log.fechaCambio, 'dd/MM/yyyy HH:mm:ss')}"></span></td>															
+					<tr th:if="${listadoMuestras != null}" th:each="log : ${listadoMuestras}">
+						<td class="p-1"><span th:text="${log.descMuestra}"></span></td>
+						<td class="p-1"><span th:text="${log.descRefInternaMuestra}"></span></td>
+						<td class="p-1"><span th:text="${log.nhcPaciente}"></span></td>
+						<td class="p-1"><span th:text="${log.descLote}"></span></td>
+						<td class="p-1"><span th:text="${log.descRefInternaLote}"></span></td>
+						<td class="p-1"><span th:text="${log.idPlacaVisavet}"></span></td>
+						<td class="p-1"><span th:text="${log.descPlacaVisavet}"></span></td>
+						<td class="p-1"><span th:text="${log.idPlacaLaboratorio}"></span></td>
+						<td class="p-1">
+							<!-- ACCIONES -->
+							<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${log.id}" style="cursor: pointer;" title="Consultar">
+					          	<i class="fa fa-eye" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a>
+					        
+					        <a th:if="${log.idPlacaVisavet == null && log.idPlacaLaboratorio == null}" style="color:grey;cursor: pointer;" title="Documentos">
+						       <i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;"></i>
+						    </a>
+					        
+					        <a th:if="${log.idPlacaVisavet != null && log.idPlacaLaboratorio == null}" style="color:black;cursor: pointer;" th:href="@{/documento/placaVisavet(id=${log.idPlacaVisavet}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_LOG})}" title="Documentos">
+						       <i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;"></i>
+						    </a>
+					        <a th:if="${log.idPlacaLaboratorio != null}" style="color:black;cursor: pointer;" th:href="@{/documento/placaLaboratorio(id=${log.idPlacaLaboratorio}, url=${T(es.ucm.pcr.controladores.DocumentoControlador).URL_VOLVER_LOG})}" title="Documentos">
+						       <i class="fa fa-upload" aria-hidden="true" style="font-size: 1.2em;"></i>
+						    </a>
+						     
+					        
+					        <!-- MODAL MUESTRA Y ESTADOS -->							
+							<div class="modal fade" th:id="modal-warning+${log.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-lg" role="document">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title font-weight-bold" id="exampleModalLabel">Muestra</h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">			
+							      			<div class="row">
+												<div class="col-6 m-1 form-group">
+													<b>Centro salud </b>[[${log.descCentroSalud}]]</span>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-5 m-1 form-group">
+													<b>Nombre paciente </b>[[${log.descPaciente}]]</span>
+												</div>
+												<div class="col-5 m-1 form-group">
+													<b>NHC </b>[[${log.nhcPaciente}]]</span>
+												</div>
+											</div>	
+											<div class="row">
+												<div class="col-5 m-1 form-group">
+													<b>Lote </b>[[${log.descLote}]]</span>
+												</div>
+												<div class="col-3 m-1 form-group">
+													<b>Placa Visavet </b>[[${log.idPlacaVisavet}]]</span>
+												</div>
+												<div class="col-3 m-1 form-group">
+													<b>Placa laboratorio </b>[[${log.idPlacaLaboratorio}]]</span>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-3 m-1 form-group">
+													<b>Resultado </b>[[${log.descResultado}]]</span>
+												</div>												
+											</div>
+							      		
+							      			<br>				        
+								        	<!-- Muestras del lote -->
+								          	<div id="tablaMuestras" class="tableFixHead">
+												<table>
+													<thead class="thead-light">	
+									    				<tr>
+										      				<th class="p-1" width="33%">Estado</th>
+															<th class="p-1" width="33%">Autor</th>
+															<th class="p-1" width="33%">Fecha</th>															
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${log.logsMuestra != null}" th:each="l : ${log.logsMuestra}">
+															<td class="p-1"><span th:text="${l.descEstadoMuestra}"></span></td>					
+															<td class="p-1"><span th:text="${l.nombreAutorCambio}"></span></td>
+															<td class="p-1"><span th:text="${#dates.format(l.fechaCambio, 'dd/MM/yyyy HH:mm:ss')}"></span></td>																														
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>							        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+							<!-- FIN MODAL MUESTRAS -->	
+					    </td>												
 					</tr>		
 				</tbody>
 			</table>

@@ -6,11 +6,15 @@ public class LogMuestraBusquedaBean {
 
 	private Integer idMuestra;
 	private String etiquetaMuestra;
+	private String refInternaVisavetMuestra;
 	private String nhcPaciente;
 	private Integer idCentro;
 	private Integer idLote;
+	private String codNumLote;
+	private String referenciaInternaLote;
 	private Integer idPlacaLaboratorio;
 	private Integer idPlacaVisavet;
+	private String nombrePlacaVisavet;
 
 	public LogMuestraBusquedaBean() {
 	}
@@ -77,4 +81,60 @@ public class LogMuestraBusquedaBean {
 		this.idPlacaVisavet = idPlacaVisavet;
 	}
 
+	public String getRefInternaVisavetMuestra() {
+		return refInternaVisavetMuestra;
+	}
+
+	public void setRefInternaVisavetMuestra(String refInternaVisavetMuestra) {
+		this.refInternaVisavetMuestra = refInternaVisavetMuestra;
+	}
+
+	public String getCodNumLote() {
+		return codNumLote;
+	}
+
+	public void setCodNumLote(String codNumLote) {
+		this.codNumLote = codNumLote;
+	}
+
+	public String getReferenciaInternaLote() {
+		return referenciaInternaLote;
+	}
+
+	public void setReferenciaInternaLote(String referenciaInternaLote) {
+		this.referenciaInternaLote = referenciaInternaLote;
+	}
+
+	public String getNombrePlacaVisavet() {
+		return nombrePlacaVisavet;
+	}
+
+	public void setNombrePlacaVisavet(String nombrePlacaVisavet) {
+		this.nombrePlacaVisavet = nombrePlacaVisavet;
+	}
+	
+	public String getCriterioNHC() {
+		return StringUtils.isBlank(nhcPaciente) ? null : "%" + nhcPaciente + "%";
+	}
+	
+	public String getCriterioEtiqueta() {
+		return StringUtils.isBlank(etiquetaMuestra) ? null : "%" + etiquetaMuestra + "%";
+	}
+	
+	public String getCriterioRefInternaMuestra() {
+		return StringUtils.isBlank(refInternaVisavetMuestra) ? null : "%" + refInternaVisavetMuestra + "%";
+	}
+	
+	public String getCriterioRefInternaLote() {
+		return StringUtils.isBlank(referenciaInternaLote) ? null : "%" + referenciaInternaLote + "%";
+	}
+	
+	public String getCriterioNombrePlacaVisavet() {
+		return StringUtils.isBlank(nombrePlacaVisavet) ? null : "%" + nombrePlacaVisavet + "%";
+	}
+	
+	public String getCriterioCodNumLote() {
+		return StringUtils.isBlank(codNumLote) ? null : "%" + codNumLote + "%";
+	}
+	
 }

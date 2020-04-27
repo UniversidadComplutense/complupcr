@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import es.ucm.pcr.beans.BeanBusquedaMuestraAnalisis;
+import es.ucm.pcr.beans.LogMuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.modelo.orm.Muestra;
 import es.ucm.pcr.modelo.orm.PlacaLaboratorio;
@@ -96,7 +97,26 @@ public interface MuestraRepositorio extends PagingAndSortingRepository<Muestra, 
 			+ "(:#{#params.idJefePlaca} is null or usuarioPlacaLaboratorioMuestra.id = :#{#params.idJefePlaca}) and "			
 			+ "(:#{#params.estaNotificada} is null or (:#{#params.estaNotificada} = TRUE and muestra.fechaNotificacion is not null) or (:#{#params.estaNotificada} = FALSE and muestra.fechaNotificacion is null)) ")
 	public Page<Muestra> findByParams(@Param("params") BeanBusquedaMuestraAnalisis params,
-			Pageable pageable);	
+			Pageable pageable);
+	
+	
+	@Query("SELECT distinct muestra FROM Muestra muestra "
+			+ "JOIN muestra.paciente pacienteMuestra "
+			+ "LEFT JOIN muestra.lote loteMuestra "	
+			+ "LEFT JOIN loteMuestra.placaVisavet placaVisavetMuestra "	
+			+ "LEFT JOIN placaVisavetMuestra.placaVisavetPlacaLaboratorios placaVisavetPlacaLaboratorioMuestra "
+			+ "LEFT JOIN placaVisavetPlacaLaboratorioMuestra.placaLaboratorio placaLaboratorioMuestra "	
+			+ "WHERE 1=1 and "
+			+ "(:#{#params.criterioNHC} is null or pacienteMuestra.nhc like :#{#params.criterioNHC}) and "
+			+ "(:#{#params.criterioEtiqueta} is null or muestra.etiqueta like :#{#params.criterioEtiqueta}) and "
+			+ "(:#{#params.criterioRefInternaMuestra} is null or muestra.refInternaVisavet like :#{#params.criterioRefInternaMuestra}) and "
+			+ "(:#{#params.criterioCodNumLote} is null or loteMuestra.numeroLote like :#{#params.criterioCodNumLote}) and "
+			+ "(:#{#params.criterioRefInternaLote} is null or loteMuestra.referenciaInternaLote like :#{#params.criterioRefInternaLote}) and "
+			+ "(:#{#params.idPlacaVisavet} is null or placaVisavetMuestra.id = :#{#params.idPlacaVisavet}) and "
+			+ "(:#{#params.criterioNombrePlacaVisavet} is null or placaVisavetMuestra.nombrePlacaVisavet like :#{#params.criterioNombrePlacaVisavet}) and "
+			+ "(:#{#params.idPlacaLaboratorio} is null or placaLaboratorioMuestra.id = :#{#params.idPlacaLaboratorio}) ")
+	public Page<Muestra> findByParams(@Param("params") LogMuestraBusquedaBean params,
+			Pageable pageable);
 	
 	
 	Optional<Muestra> findById(Integer id);

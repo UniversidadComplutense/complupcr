@@ -1,6 +1,5 @@
 package es.ucm.pcr.controladores;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,10 +24,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import es.ucm.pcr.beans.LogMuestraBusquedaBean;
 import es.ucm.pcr.beans.LogMuestraListadoBean;
-import es.ucm.pcr.beans.LoteBusquedaBean;
-import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.PaginadorBean;
 import es.ucm.pcr.servicios.LoteServicio;
+import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.ServicioLog;
 import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.utilidades.Utilidades;
@@ -44,7 +42,8 @@ public class LogMuestraControlador {
 	// TODO - LOTE - MUESTRAS
 	// TODO - LOTE - ACCION, ORDENACION, PAGINACION
 	
-	public static final Sort ORDENACION = Sort.by(Direction.ASC, "muestra.id", "fechaCambio");
+	//public static final Sort ORDENACION = Sort.by(Direction.ASC, "muestra.id", "fechaCambio");
+	public static final Sort ORDENACION = Sort.by(Direction.ASC, "etiqueta");
 	
 	@Autowired
 	private SesionServicio sesionServicio;
@@ -56,17 +55,15 @@ public class LogMuestraControlador {
 	private ServicioLog servicioLog;
 	
 	@Autowired
+	private MuestraServicio muestraServicio;
+	
+	@Autowired
 	private LogMuestraValidador logValidadorMuestra;
 	
 	@InitBinder("beanBusqueda")
 	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder, HttpSession session)
 			throws Exception {
 		binder.setValidator(logValidadorMuestra);
-	}
-	
-	@ModelAttribute("listaLotes")
-	public List<LoteListadoBean> lotes() {
-		return loteServicio.findLoteByParam(new LoteBusquedaBean(sesionServicio.getCentro().getId()));
 	}
 	
 	@RequestMapping(value="/log", method=RequestMethod.GET)
@@ -115,10 +112,10 @@ public class LogMuestraControlador {
 	private void buscarMuestras(LogMuestraBusquedaBean beanBusqueda, ModelAndView vista, HttpSession session) {
 		Integer currentPage = (Integer)session.getAttribute("paginaActual");
 		
-		Page<LogMuestraListadoBean> muestrasPage = servicioLog.findLogMuestraByParam(beanBusqueda,
+		Page<LogMuestraListadoBean> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda,
 				PageRequest.of(currentPage-1, Utilidades.NUMERO_PAGINACION, ORDENACION));
 		vista.addObject("beanBusqueda", beanBusqueda);
-		vista.addObject("listadoLogMuestras", muestrasPage.getContent());
+		vista.addObject("listadoMuestras", muestrasPage.getContent());
 		
 		PaginadorBean paginadorBean = new PaginadorBean(muestrasPage.getTotalPages(), currentPage, muestrasPage.getTotalElements(), "/gestor/log/list");		
 		vista.addObject("paginadorBean", paginadorBean);

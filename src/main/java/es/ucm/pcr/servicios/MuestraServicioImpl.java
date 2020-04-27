@@ -22,6 +22,8 @@ import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.BeanResultado;
+import es.ucm.pcr.beans.LogMuestraBusquedaBean;
+import es.ucm.pcr.beans.LogMuestraListadoBean;
 import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
 import es.ucm.pcr.beans.MuestraCentroBean;
@@ -105,6 +107,20 @@ public class MuestraServicioImpl implements MuestraServicio {
 		return pageMuestras;
 	}
 	
+	@Override
+	public Page<LogMuestraListadoBean> findMuestraByParam(LogMuestraBusquedaBean params, Pageable pageable) {		
+		List<LogMuestraListadoBean> listMuestrasBean = new ArrayList<LogMuestraListadoBean>();
+		
+		Page<Muestra> muestrasPage = muestraRepositorio.findByParams(params, pageable); 
+		
+		for (Muestra m : muestrasPage.getContent()) {
+			listMuestrasBean.add(LogMuestraListadoBean.modelMuestraToBean(m));
+		}
+		
+		Page<LogMuestraListadoBean> pageMuestras = new PageImpl<>(listMuestrasBean, pageable, muestrasPage.getTotalElements());
+		
+		return pageMuestras;
+	}
 	
 	@Override
 	public BeanListadoMuestraAnalisis buscarMuestra(Integer id) {

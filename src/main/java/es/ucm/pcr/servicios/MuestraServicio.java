@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import es.ucm.pcr.beans.BeanBusquedaMuestraAnalisis;
 import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
+import es.ucm.pcr.beans.LogMuestraBusquedaBean;
+import es.ucm.pcr.beans.LogMuestraListadoBean;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraBusquedaBean;
@@ -31,9 +33,6 @@ public interface MuestraServicio {
 	 */
 	public List<MuestraListadoBean> findMuestraByParam(MuestraBusquedaBean params);
 	
-	
-	
-	
 	/**
 	 * Recupera todos las muestras en funcion de los parametros de busqueda
 	 * @param params
@@ -41,6 +40,14 @@ public interface MuestraServicio {
 	 * @return
 	 */
 	public Page<BeanListadoMuestraAnalisis> findMuestraByParam(BeanBusquedaMuestraAnalisis params, Pageable pageable);
+	
+	/**
+	 * Recupera todas las muestras en funcion de los parametros de busqueda
+	 * @param params
+	 * @param pageable
+	 * @return
+	 */
+	public Page<LogMuestraListadoBean> findMuestraByParam(LogMuestraBusquedaBean params, Pageable pageable);
 	
 	/**
 	 * Busca muestra por id
