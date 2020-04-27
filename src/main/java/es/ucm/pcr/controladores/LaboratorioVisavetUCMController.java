@@ -951,13 +951,14 @@ private  BusquedaLotesBean rellenarBusquedaLotes(BusquedaLotesBean busquedaLotes
 			} else {
 				System.out.println("El nombre de la hoja es: " + bean.getHoja());
 				System.out.println("El nombre de la columna es: " + bean.getColumna());
-				// guardamos el documento excel asociandolo a la placa
-				documentoServicio.guardar(bean);
+				
 				// guardamos las valoraciones de las muestras que ha puesto el analista en el
 				// excel y si es el ultimo analista de los numAnalistas globales de la
 				// aplicacion
 				// entonces guardamos el resultado definitivo
 				servicioLaboratorioUni.guardarReferenciasMuestraPlaca(bean);
+				// guardamos el documento excel asociandolo a la placa
+				documentoServicio.guardar(bean);
 			}
 
 			redirectAttributes.addFlashAttribute("mensaje", "Resultado guardado correctamente");

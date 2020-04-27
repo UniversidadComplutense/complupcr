@@ -241,6 +241,7 @@ public class LoteControlador {
 		} else {
 			// guardar lote
 			beanLote.setIdCentro(sesionServicio.getCentro().getId());
+			beanLote.setReferenciaInternaLote("");
 			loteServicio.guardar(beanLote);
 			
 			redirectAttributes.addFlashAttribute("mensaje", ACCIONES_MENSAJE.get(ACCION_GUARDAR_LOTE));

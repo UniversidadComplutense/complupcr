@@ -66,7 +66,10 @@ public class LogMuestraControlador {
 	
 	@ModelAttribute("listaLotes")
 	public List<LoteListadoBean> lotes() {
-		return loteServicio.findLoteByParam(new LoteBusquedaBean(sesionServicio.getCentro().getId()));
+		if (sesionServicio.getCentro()!=null)
+		 return loteServicio.findLoteByParam(new LoteBusquedaBean(sesionServicio.getCentro().getId()));
+		else 
+			return loteServicio.findLoteByParam(new LoteBusquedaBean());
 	}
 	
 	@RequestMapping(value="/log", method=RequestMethod.GET)

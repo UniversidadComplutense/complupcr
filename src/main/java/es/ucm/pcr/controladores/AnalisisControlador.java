@@ -903,11 +903,12 @@ public class AnalisisControlador {
 			} else {
 				log.info("El nombre de la hoja es: " + bean.getHoja());
 				log.info("El nombre de la columna es: " + bean.getColumna());
-				//guardamos el documento excel asociandolo a la placa 
-				documentoServicio.guardar(bean);
+				
 				//guardamos las valoraciones de las muestras que ha puesto el analista en el excel y si es el ultimo analista de los numAnalistas globales de la aplicacion
 				//entonces guardamos el resultado definitivo
 				laboratorioCentroServicio.guardarResultadosPlacaLaboratorio(bean, numAnalistas);
+				//guardamos el documento excel asociandolo a la placa 
+				documentoServicio.guardar(bean);
 			}
 
 			redirectAttributes.addFlashAttribute("mensaje", "Resultado guardado correctamente");			
