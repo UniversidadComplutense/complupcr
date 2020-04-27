@@ -32,4 +32,7 @@ public interface ServicioLaboratorioVisavetUCM {
 	public List<BeanLaboratorioVisavet> findAll();
 	
 	public void guardarReferenciasMuestraPlaca(ElementoDocumentacionBean bean)throws Exception ;
+	public BeanPlacaVisavetUCM eliminarLotedePlaca(int idLote);
+	public void eliminarPlaca(int idPlaca);
+	public void eliminarPlacayLotes(int idPlaca);
 }

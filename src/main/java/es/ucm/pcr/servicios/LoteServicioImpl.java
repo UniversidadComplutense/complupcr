@@ -100,6 +100,9 @@ public class LoteServicioImpl implements LoteServicio {
 			lote.setEstadoLote(new EstadoLote(Estado.LOTE_ASIGNADO_CENTRO_ANALISIS.getCodNum()));
 		}
 		
+		if (lote.getReferenciaInternaLote()==null)
+			lote.setReferenciaInternaLote("");
+		
 		lote = loteRepositorio.save(lote);
 		return LoteCentroBean.modelToBean(lote);
 	}
@@ -112,7 +115,10 @@ public class LoteServicioImpl implements LoteServicio {
 		Optional<Lote> lotebbdd= loteRepositorio.findById(loteBean.getId());
 		if (lotebbdd.isPresent()) {
 			lote.setMuestras(lotebbdd.get().getMuestras());
+			
 		}
+		if (lote.getReferenciaInternaLote()==null)
+			lote.setReferenciaInternaLote("");
 		lote = loteRepositorio.save(lote);
 		return LoteCentroBean.modelToBean(lote);
 	}
@@ -135,11 +141,11 @@ public class LoteServicioImpl implements LoteServicio {
 		Lote lote = findByIdLote(loteBean.getId());
 		if (lote != null) {
 			
-			// si actualizamos el lote a envidado ademas rellenamos la fecha de envio
+			// si actualizamos el lote ha enviado ademas rellenamos la fecha de envio
 			if (estadoActualizar.getEstado().getCodNum() == Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum()) {
 				lote.setEstadoLote(new EstadoLote(Estado.LOTE_ENVIADO_CENTRO_ANALISIS.getCodNum()));
 				lote.setFechaEnvio(new Date());
-
+				lote.setFechaRecibido(null);
 				// se actualiza el estado y la fecha de cada muestra del lote
 				if (!CollectionUtils.isEmpty(lote.getMuestras())) {
 					for (Muestra m : lote.getMuestras()) {

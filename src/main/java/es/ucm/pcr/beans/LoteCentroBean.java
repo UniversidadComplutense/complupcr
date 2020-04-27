@@ -142,6 +142,8 @@ public class LoteCentroBean {
 		lote.setId(loteBean.getId());
 		lote.setNumeroLote(loteBean.getNumLote());
 		lote.setCentro(new Centro(loteBean.getIdCentro()));		
+		lote.setFechaEnvio(loteBean.getFechaEnvio());
+		lote.setFechaRecibido(loteBean.getFechaRecibido());
 		if (loteBean.getEstado() != null) {
 			lote.setEstadoLote(new EstadoLote(loteBean.getEstado().getEstado().getCodNum()));
 		}

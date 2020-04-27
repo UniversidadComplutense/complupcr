@@ -32,6 +32,7 @@ import es.ucm.pcr.beans.BusquedaPlacasVisavetBean;
 import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteBusquedaBean;
+import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.LoteListadoBean;
 import es.ucm.pcr.beans.MuestraBeanLaboratorioVisavet;
 import es.ucm.pcr.beans.MuestraListadoBean;
@@ -199,7 +200,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		if (beanPlacaVisavetUCM.getId() == null) {
 			placa.setFechaCreacion(new Date());
 			placa.setEstadoPlacaVisavet(new EstadoPlacaVisavet(Estado.PLACAVISAVET_INICIADA.getCodNum()));
-			
+			placa.setNumeromuestras(Integer.parseInt(beanPlacaVisavetUCM.getTamano()));
 		}
 		else {
 			Optional<PlacaVisavet> placaOpt=placaVisavetRepositorio.findById(beanPlacaVisavetUCM.getId());
@@ -236,7 +237,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 			//	Lote l=LoteBeanPlacaVisavet.beanToModel(loteB);
 				lbbdd.setPlacaVisavet(placa);
 				lbbdd.setEstadoLote(new EstadoLote(loteB.getEstado().getEstado().getCodNum()));
-				numeroMuestras+=lbbdd.getMuestras().size();
+			//	numeroMuestras+=lbbdd.getMuestras().size();
 				lbbdd=loteRepositorio.save(lbbdd);
 				listaLotes.add(lbbdd);
 			}
@@ -244,13 +245,60 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 			if (placaOpt.isPresent()) {
 				placa=placaOpt.get();
 				placa.setLotes(listaLotes);
-				placa.setNumeromuestras(numeroMuestras);
+				//placa.setNumeromuestras(numeroMuestras);
 				placa = placaVisavetRepositorio.save(placa);
 			}
 		}
 		return BeanPlacaVisavetUCM.modelToBean(placa);
 
 	}
+	@Transactional
+	public BeanPlacaVisavetUCM eliminarLotedePlaca(int idLote) {
+		int idPlaca = 0;
+		
+		
+		Optional<Lote> loteOptional=loteRepositorio.findById(idLote);
+		if (loteOptional.isPresent()) {
+			idPlaca=loteOptional.get().getPlacaVisavet().getId();
+			loteOptional.get().setPlacaVisavet(null);
+			
+			loteOptional.get().setFechaRecibido(new Date());
+			loteOptional.get().setEstadoLote(new EstadoLote(Estado.LOTE_RECIBIDO_CENTRO_ANALISIS.getCodNum()));
+		
+			loteRepositorio.save(loteOptional.get());
+		}
+		// quitamos el lote
+		// busco la placa
+		BeanPlacaVisavetUCM placa = this.buscarPlacaById(idPlaca); 
+		List<LoteBeanPlacaVisavet> listaLotes= new ArrayList();
+	  for (LoteBeanPlacaVisavet lote: placa.getListaLotes()) {
+		  if (lote.getId()!= idLote)
+			  listaLotes.add(lote);
+	  }
+	  placa.setListaLotes(listaLotes);
+	
+		return this.guardarConLote(placa);
+
+	}
+	@Transactional
+	public void eliminarPlaca(int idPlaca) {
+		placaVisavetRepositorio.deleteById(idPlaca);
+	}
+	
+	@Transactional
+	public void eliminarPlacayLotes(int idPlaca) {
+		Optional<PlacaVisavet> placaOpt=placaVisavetRepositorio.findById(idPlaca);
+		if (placaOpt.isPresent()) {
+			PlacaVisavet placa=placaOpt.get();
+			for (Lote lote: placa.getLotes()) {
+				this.eliminarLotedePlaca(lote.getId());
+			}
+		this.eliminarPlaca(idPlaca);
+		}
+		
+		
+	}
+	
 	
 	@Transactional
 	public BeanPlacaVisavetUCM buscarPlacaById(Integer id) {
@@ -317,9 +365,12 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 	public void guardarReferenciasMuestraPlaca(ElementoDocumentacionBean bean) throws Exception {
 		Integer idPlaca = bean.getId();
 		Optional<PlacaVisavet> placa = placaVisavetRepositorio.findById(idPlaca);
-		if (placa.isPresent()) {
+		// la placa no está almacenando las muestras, hay que ir al lote
+		if (placa.isPresent()) {			
 			HashMap<String, String> resultados = obtenerReferenciasExcel(bean);
-			for (Muestra m : placa.get().getMuestras()) {
+			for (Lote l:placa.get().getLotes())
+				for (Muestra m : l.getMuestras()) {
+			//for (Muestra m : placa.get().getMuestras()) {
 				String referenciaMuestra = resultados.get(m.getEtiqueta());
 				m.setRefInternaVisavet(referenciaMuestra);
 				muestraRepositorio.save(m);
@@ -343,7 +394,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		Sheet sheet = workbook.getSheet(bean.getHoja());
 		Row row;
 		int rows = sheet.getLastRowNum();
-		for (int r = 0; r < rows; r++) {
+		for (int r = 0; r <= rows; r++) {
 			row = sheet.getRow(r);
 			if (row == null) {
 				break;

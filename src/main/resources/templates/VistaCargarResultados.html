@@ -51,28 +51,33 @@
 			</br>
 			<div class="row">
 				<div class="col-3 m-0 form-group">
-					<label>
-						Hoja 															
+					<label>															
+						Hoja de Resultados															
 					</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="*{hoja}"  th:value="*{hoja}" required maxlength="45"/>
+				 	<input type="text" class="form-control form-control-sm" th:field="*{hoja}"  th:value="*{hoja}" required maxlength="45" placeholder='Nombre hoja (e.g "Hoja1")'/>
 				 	<label class="alert alert-danger" th:if="${#fields.hasErrors('hoja')}" th:errors="*{hoja}"></label>
 				</div>
 				<div class="col-3 m-0 form-group">
-					<label>
-						Título columna 															
+					<label>														
+						Título columna Resultado 																														
 					</label>
-				 	<input type="text" class="form-control form-control-sm" th:field="*{columna}"  th:value="*{columna}" required maxlength="45"/>
+				 	<input type="text" class="form-control form-control-sm" th:field="*{columna}"  th:value="*{columna}" required maxlength="45" placeholder='Nombre columna (e.g "Resultado")'>
 				 	<label class="alert alert-danger" th:if="${#fields.hasErrors('columna')}" th:errors="*{columna}"></label>
 				</div>														
 				<div class="col-4 m-0 form-group">
-					<label>Documento</label>
+					<label>Excel Resultadosde Análisis</label>
 					<div class="custom-file">
-					    <input type="file" onchange="validarFichero(this)" required class="custom-file-input form-control-sm" th:field="*{file}"  th:value="*{file}" accept=".pdf, .doc, .docx, .jpg, .jpeg, .png">
+					    <input type="file" onchange="validarFichero(this)" required class="custom-file-input form-control-sm" th:field="*{file}"  th:value="*{file}" accept=".xlsx, .xls">
 					    <label class="custom-file-label" for="file">Seleccionar fichero</label>
 					    <label class="alert alert-danger" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></label>
 					    <label id="labelError" class="text-warning d-none"></label>
 					</div>
 				</div>					
+			</div>
+			<div class="row">
+				<div class="col-12 m-0 form-group">
+				 	<label class="alert alert-danger" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></label>
+				</div>
 			</div>
 		</fieldset>
 		

@@ -245,7 +245,7 @@
 				<button th:id="btnAsignarEquipo" data-toggle="modal" data-target="#modal-asignarEquipo" type="button" th:disabled="${placa.placasVisavet == null || #lists.size(placa.placasVisavet)==0}" class="btn btn-secondary">Asignar equipo PCR</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 2}" class="col-3 justify-content-begin mt-3">
-				<button th:id="btnFinalizarPCR" data-toggle="modal" data-target="#modal-confirmarFinalizadoPCR" type="button" th:disabled="${nueva}" class="btn btn-secondary">Dar por finalizado PCR</button>			
+				<button th:id="btnFinalizarPCR" data-toggle="modal" data-target="#modal-confirmarFinalizadoPCR" type="button" th:disabled="${nueva}" class="btn btn-secondary">Listo para hacer PCR</button>			
 			</div>
 			<div th:if="${!nueva && placa.beanEstado.estado.codNum == 3}" class="col-3 justify-content-begin mt-3">
 				<button type="button" th:onclick="'window.location.href = \'' + @{/documento/placaLaboratorio?id=} + ${placa.id} + '&url=5' + '\''" th:disabled="${nueva}" class="btn btn-secondary">Asignar resultados PCR</button>			

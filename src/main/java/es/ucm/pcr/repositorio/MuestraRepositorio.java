@@ -86,15 +86,15 @@ public interface MuestraRepositorio extends PagingAndSortingRepository<Muestra, 
 			+ "(:#{#params.criterioNHC} is null or pacienteMuestra.nhc like :#{#params.criterioNHC}) and "
 			+ "(:#{#params.criterioCorreo} is null or pacienteMuestra.email like :#{#params.criterioCorreo}) and "
 			+ "(:#{#params.criterioEtiqueta} is null or muestra.etiqueta like :#{#params.criterioEtiqueta}) and "
-			+ "(:#{#params.criterioRefInterna} is null or muestra.refInternaVisavet like :#{#params.criterioRefInterna}) and "
-			+ "(:#{#params.fechaEnvioMuestraIni} is null or muestra.fechaEnvio >= :#{#params.fechaEnvioMuestraIni}) and "
-			+ "(:#{#params.fechaEnvioMuestraFin} is null or muestra.fechaEnvio <= :#{#params.fechaEnvioMuestraFin}) and "
+			+ "(:#{#params.criterioRefInterna} is null or muestra.refInternaVisavet like :#{#params.criterioRefInterna}) and "			
 			+ "(:#{#params.fechaResultadoMuestraIni} is null or muestra.fechaResultado >= :#{#params.fechaResultadoMuestraIni}) and "
 			+ "(:#{#params.fechaResultadoMuestraFin} is null or muestra.fechaResultado <= :#{#params.fechaResultadoMuestraFin}) and "
 			+ "(:#{#params.estadoMuestra} is null or :#{#params.estadoMuestra} ='' or muestra.resultado = :#{#params.estadoMuestra}) and "
 			+ "(:#{#params.idEstado} is null or estadoMuestra.id = :#{#params.idEstado}) and "
 			+ "(:#{#params.idPlacaLaboratorio} is null or placaLaboratorioMuestra.id = :#{#params.idPlacaLaboratorio}) and "			
-			+ "(:#{#params.idJefePlaca} is null or usuarioPlacaLaboratorioMuestra.id = :#{#params.idJefePlaca}) and "			
+			+ "(:#{#params.idJefePlaca} is null or usuarioPlacaLaboratorioMuestra.id = :#{#params.idJefePlaca}) and "
+			+ "(:#{#params.fechaReclamadaPlacaIni} is null or placaLaboratorioMuestra.fechaAsignadaJefe >= :#{#params.fechaReclamadaPlacaIni}) and "
+			+ "(:#{#params.fechaReclamadaPlacaFin} is null or placaLaboratorioMuestra.fechaAsignadaJefe <= :#{#params.fechaReclamadaPlacaFin}) and "
 			+ "(:#{#params.estaNotificada} is null or (:#{#params.estaNotificada} = TRUE and muestra.fechaNotificacion is not null) or (:#{#params.estaNotificada} = FALSE and muestra.fechaNotificacion is null)) ")
 	public Page<Muestra> findByParams(@Param("params") BeanBusquedaMuestraAnalisis params,
 			Pageable pageable);

@@ -74,6 +74,7 @@ public class DocumentoControlador {
 				//	{ URL_VOLVER_PLACA_VISAVET_DESDE, "/centroSalud/lote/list" },
 					{ URL_VOLVER_PLACA_VISAVET_DESDE, "/laboratorioUni/buscarPlacas" },
 					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_ASIGNAR_RESULTADOS_PCR, "/laboratorioCentro/gestionPlacas/modificar?id=" },
+					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_LISTADO_PLACAS, "/laboratorioCentro/gestionPlacas" },
 					{ URL_VOLVER_LOG, "/gestor/log/list" }})
 			.collect(Collectors.toMap(d -> (Integer) d[0], d -> (String) d[1]));
 		
@@ -82,7 +83,8 @@ public class DocumentoControlador {
 	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE_REVISARPLACAS_ANALISTA = 3;
 	public static final Integer URL_VOLVER_PLACA_VISAVET_DESDE = 4;
 	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE_ASIGNAR_RESULTADOS_PCR = 5;
-	public static final Integer URL_VOLVER_LOG = 6;
+	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE_LISTADO_PLACAS = 6;
+	public static final Integer URL_VOLVER_LOG = 7;
 	
 
 	@InitBinder("elementoDoc")

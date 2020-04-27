@@ -523,9 +523,9 @@ public class AnalisisControlador {
 			BeanBusquedaMuestraAnalisis beanBusqueda = (BeanBusquedaMuestraAnalisis) session.getAttribute("beanBusqueda");
 			beanBusqueda = beanBusqueda != null ? beanBusqueda : new BeanBusquedaMuestraAnalisis();
 			//solo mostraremos al jefe las muestras de placas que ha cogido bajo su responsabilidad, (que solo podran ser del centro del jefe, ya que solo le hemos dejado coger placas de su centro)
-			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)	
-			beanBusqueda.setFechaEnvioMuestraFin(
-					Utilidades.fechafinBuscador(beanBusqueda.getFechaEnvioMuestraFin()));
+			beanBusqueda.setIdJefePlaca(sesionServicio.getUsuario().getId()); //id del usuario logado (el jefe)
+			beanBusqueda.setFechaReclamadaPlacaFin(
+					Utilidades.fechafinBuscador(beanBusqueda.getFechaReclamadaPlacaFin()));
 			beanBusqueda.setFechaResultadoMuestraFin(
 					Utilidades.fechafinBuscador(beanBusqueda.getFechaResultadoMuestraFin()));
 			Page<BeanListadoMuestraAnalisis> muestrasPage = muestraServicio.findMuestraByParam(beanBusqueda, 
@@ -903,11 +903,12 @@ public class AnalisisControlador {
 			} else {
 				log.info("El nombre de la hoja es: " + bean.getHoja());
 				log.info("El nombre de la columna es: " + bean.getColumna());
-				//guardamos el documento excel asociandolo a la placa 
-				documentoServicio.guardar(bean);
+				
 				//guardamos las valoraciones de las muestras que ha puesto el analista en el excel y si es el ultimo analista de los numAnalistas globales de la aplicacion
 				//entonces guardamos el resultado definitivo
 				laboratorioCentroServicio.guardarResultadosPlacaLaboratorio(bean, numAnalistas);
+				//guardamos el documento excel asociandolo a la placa 
+				documentoServicio.guardar(bean);
 			}
 
 			redirectAttributes.addFlashAttribute("mensaje", "Resultado guardado correctamente");			

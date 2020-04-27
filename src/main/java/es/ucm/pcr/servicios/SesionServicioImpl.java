@@ -138,7 +138,7 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Gestión de placas PCR", "/laboratorioCentro/gestionPlacas/list", null);
 			menuSecundario.add(opcionSecundaria);
-			opcionSecundaria = new MenuBean("Nueva placa", "laboratorioCentro/gestionPlacas/nueva", null);
+			opcionSecundaria = new MenuBean("Nueva placa", "/laboratorioCentro/gestionPlacas/nueva", null);
 			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Responsable PCR", "", menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
