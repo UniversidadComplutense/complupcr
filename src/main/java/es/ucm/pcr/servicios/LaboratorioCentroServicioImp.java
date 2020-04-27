@@ -32,6 +32,8 @@ import es.ucm.pcr.beans.BeanEstado;
 import es.ucm.pcr.beans.BeanEstado.Estado;
 import es.ucm.pcr.beans.BeanEstado.TipoEstado;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
+import es.ucm.pcr.beans.BeanResultado;
+import es.ucm.pcr.beans.BeanResultadoCarga;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
@@ -828,8 +830,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 	@Override
 	@Transactional
 	//metodo que recibe el ElementoDocumentacionBean (excel con valoraciones) y carga las valoraciones que ha metido el analista en todas las muestras de la placa 
-	public void guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas)throws Exception {
+	public List<BeanResultadoCarga>  guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas)throws Exception {
 		//buscamos todas los registros usuarioMuestra de las muestras de la placa
+		List<BeanResultadoCarga> carga=new ArrayList<BeanResultadoCarga>();
 		Integer idPlaca = bean.getId(); //aqui solo puede llegar el id de una placa del analista logado que tenga sus muestras sin valorar
 		PlacaLaboratorio placa = placaLaboratorioRepositorio.getOne(idPlaca);
 		
@@ -867,6 +870,9 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 				usumu.setValoracion(valoracionExcelParaMuestra);
 				usumu.setFechaValoracion(fechaActual);
 				UsuarioMuestra usumuGuardado = usuarioMuestraRepositorio.save(usumu);
+				carga.add(new BeanResultadoCarga(m.getRefInternaVisavet(),valoracionExcelParaMuestra));
+				 
+				
 			}
 			else {
 				log.error("No se ha encontrado el registro de usuario muestra para asignarle la valoracion del analista");
@@ -907,7 +913,7 @@ public class LaboratorioCentroServicioImp implements LaboratorioCentroServicio{
 			estadoMuestra.asignarTipoEstadoYCodNum(TipoEstado.EstadoMuestra, Estado.MUESTRA_RESUELTA.getCodNum());
 			servicioLog.actualizarEstadoMuestraPorPlacaLaboratorio(idPlaca, estadoMuestra);
 		}
-		
+		return carga;
 	}
 	
 	

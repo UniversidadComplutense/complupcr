@@ -54,6 +54,7 @@ import es.ucm.pcr.beans.BeanListaAsignaciones;
 import es.ucm.pcr.beans.BeanListadoMuestraAnalisis;
 import es.ucm.pcr.beans.BeanResultado;
 import es.ucm.pcr.beans.BeanResultado.ResultadoMuestra;
+import es.ucm.pcr.beans.BeanResultadoCarga;
 import es.ucm.pcr.beans.BeanRolUsuario;
 import es.ucm.pcr.beans.BeanRolUsuario.RolUsuario;
 import es.ucm.pcr.beans.BeanUsuario;
@@ -895,7 +896,8 @@ public class AnalisisControlador {
 		@RequestMapping(value = "/guardarResultadosPlacaLaboratorio", method = RequestMethod.POST)
 		@PreAuthorize("hasAnyRole('ADMIN','ANALISTALABORATORIO', 'VOLUNTARIO')")
 		public ModelAndView guardarResultadosPlacaLaboratorio(@Valid @ModelAttribute("elementoDoc") ElementoDocumentacionBean bean,
-				BindingResult result, RedirectAttributes redirectAttributes) throws Exception {			
+				BindingResult result, RedirectAttributes redirectAttributes) throws Exception {		
+			List<BeanResultadoCarga> carga=null;
 			if (result.hasErrors()) {
 				ModelAndView vista = new ModelAndView("VistaCargarResultados");
 				vista.addObject("elementoDoc", bean);
@@ -906,12 +908,13 @@ public class AnalisisControlador {
 				
 				//guardamos las valoraciones de las muestras que ha puesto el analista en el excel y si es el ultimo analista de los numAnalistas globales de la aplicacion
 				//entonces guardamos el resultado definitivo
-				laboratorioCentroServicio.guardarResultadosPlacaLaboratorio(bean, numAnalistas);
+			 carga=laboratorioCentroServicio.guardarResultadosPlacaLaboratorio(bean, numAnalistas);
 				//guardamos el documento excel asociandolo a la placa 
 				documentoServicio.guardar(bean);
 			}
 
-			redirectAttributes.addFlashAttribute("mensaje", "Resultado guardado correctamente");			
+			redirectAttributes.addFlashAttribute("mensaje", "Resultado guardado correctamente. Puede consultar la carga realizada aqui ");
+			redirectAttributes.addFlashAttribute("carga", carga );
 			return new ModelAndView(new RedirectView("/analisis/cargaResultados/placaLaboratorio/?id=" + bean.getId() + "&url=" + bean.getCodiUrl(), true));
 		}
 		
