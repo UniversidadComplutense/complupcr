@@ -119,7 +119,7 @@ public class EnviocorreoImp implements Enviocorreo {
 		try {
 
 			MimeMessageHelper helper = new MimeMessageHelper(msg, true, "UTF-8");
-			helper = new MimeMessageHelper(msg, true);
+			//helper = new MimeMessageHelper(msg, true);
 			helper.setFrom("no-reply@ucm.es");
 			if (destinatarios == null) {
 				helper.setTo(to);
