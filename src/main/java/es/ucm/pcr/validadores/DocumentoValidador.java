@@ -2,6 +2,7 @@ package es.ucm.pcr.validadores;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -86,38 +87,115 @@ public class DocumentoValidador implements Validator {
 				int cols = 0;
 				Integer colResultado = null;
 				String cellValue;
+				String cellValueResultado;
+				String cellValueReferencia;
 				List<String> listaMuestrasExcel = new ArrayList<String>();
 				List<String> listaMuestrasLaboratorio = new ArrayList<String>();
+				List<String> listaResultados = new ArrayList<String>(Arrays.asList("POSITIVO", "NEGATIVO", "CI NEG O BAJO","DUDOSO"));
+				List<String> listaMuestrasExcelResultado = new ArrayList<String>();
+				// Validar muestras placa
+				Optional<PlacaLaboratorio> placaLaboratorio = placaLaboratorioRepositorio
+						.findById(elementoDocBean.getId());
+				if (placaLaboratorio.isPresent()) {
+					// Set<Muestra> muestras = placaLaboratorio.get().getMuestras(); //modificado
+					// Diana- Las muestras se obtienen a traves de la placa visavet y el lote
+
+					// obtencion de las muestras de la placa a través de sus placas visavet y los
+					// lotes
+					Set<Muestra> muestras = new HashSet<Muestra>();
+					Set<PlacaVisavet> placasVisavetDeLaPlacaLaboratorio = new HashSet<PlacaVisavet>();
+					for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio : placaLaboratorio.get()
+							.getPlacaVisavetPlacaLaboratorios()) {
+						placasVisavetDeLaPlacaLaboratorio.add(placaVisavetPlacaLaboratorio.getPlacaVisavet());
+					}
+					for (PlacaVisavet placaVisavet : placasVisavetDeLaPlacaLaboratorio) {
+						// Recuperamos las muestras de la placa Visavet desde el lote
+						Set<Muestra> muestrasVisavet = new HashSet<Muestra>();
+						Set<Lote> lotes = placaVisavet.getLotes();
+						for (Lote lote : lotes) {
+							muestrasVisavet.addAll(lote.getMuestras());
+							muestras.addAll(muestrasVisavet);
+						}
+					}
+					// fin obtencion cjto de muestras
+
+					for (Muestra muestra : muestras) {
+						listaMuestrasLaboratorio.add(muestra.getRefInternaVisavet());
+					}
+				}
 				for (int r = 0; r <= rows; r++) {
 					row = sheet.getRow(r);
 					if (row == null) {
 						break;
 					} else {
 						cols = row.getLastCellNum();
-						for (int c = 0; c < cols; c++) {
+						if (r == 0) {
+							for (int c = 0; c < cols; c++) {
 
-							cellValue = row.getCell(c) == null ? ""
-									: (row.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
-											? row.getCell(c).getStringCellValue()
-											: (row.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
-													? "" + row.getCell(c).getNumericCellValue()
-													: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
-															? "" + row.getCell(c).getBooleanCellValue()
-															: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
+								cellValue = row.getCell(c) == null ? ""
+										: (row.getCell(c).getCellType() == Cell.CELL_TYPE_STRING)
+												? row.getCell(c).getStringCellValue()
+												: (row.getCell(c).getCellType() == Cell.CELL_TYPE_NUMERIC)
+														? "" + row.getCell(c).getNumericCellValue()
+														: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+																? "" + row.getCell(c).getBooleanCellValue()
+																: (row.getCell(c).getCellType() == Cell.CELL_TYPE_BLANK)
+																		? "BLANK"
+																		: (row.getCell(c)
+																				.getCellType() == Cell.CELL_TYPE_FORMULA)
+																						? "FORMULA"
+																						: (row.getCell(c)
+																								.getCellType() == Cell.CELL_TYPE_ERROR)
+																										? "ERROR"
+																										: "";
+								if (cellValue.compareTo(elementoDocBean.getColumna()) == 0) {
+									colResultado = c;
+								}
+							}
+						} else if (r > 0 && colResultado != null) {
+
+							cellValueResultado = row.getCell(colResultado) == null ? ""
+									: (row.getCell(colResultado).getCellType() == Cell.CELL_TYPE_STRING)
+											? row.getCell(colResultado).getStringCellValue()
+											: (row.getCell(colResultado).getCellType() == Cell.CELL_TYPE_NUMERIC)
+													? "" + row.getCell(colResultado).getNumericCellValue()
+													: (row.getCell(colResultado)
+															.getCellType() == Cell.CELL_TYPE_BOOLEAN) ? ""
+																	+ row.getCell(colResultado).getBooleanCellValue()
+																	: (row.getCell(colResultado)
+																			.getCellType() == Cell.CELL_TYPE_BLANK)
+																					? "BLANK"
+																					: (row.getCell(colResultado)
+																							.getCellType() == Cell.CELL_TYPE_FORMULA)
+																									? "FORMULA"
+																									: (row.getCell(
+																											colResultado)
+																											.getCellType() == Cell.CELL_TYPE_ERROR)
+																													? "ERROR"
+																													: "";
+
+							cellValueReferencia = row.getCell(0) == null ? ""
+									: (row.getCell(0).getCellType() == Cell.CELL_TYPE_STRING)
+											? row.getCell(0).getStringCellValue()
+											: (row.getCell(0).getCellType() == Cell.CELL_TYPE_NUMERIC)
+													? "" + row.getCell(0).getNumericCellValue()
+													: (row.getCell(0).getCellType() == Cell.CELL_TYPE_BOOLEAN)
+															? "" + row.getCell(0).getBooleanCellValue()
+															: (row.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK)
 																	? "BLANK"
-																	: (row.getCell(c)
+																	: (row.getCell(0)
 																			.getCellType() == Cell.CELL_TYPE_FORMULA)
 																					? "FORMULA"
-																					: (row.getCell(c)
+																					: (row.getCell(0)
 																							.getCellType() == Cell.CELL_TYPE_ERROR)
 																									? "ERROR"
 																									: "";
-							if (r == 0 && cellValue.compareTo(elementoDocBean.getColumna()) == 0) {
-								colResultado = c;
+
+							listaMuestrasExcel.add(cellValueReferencia);
+							if(listaMuestrasLaboratorio.contains(cellValueReferencia)&& !listaResultados.contains(cellValueResultado.toUpperCase())) {
+								listaMuestrasExcelResultado.add(cellValueReferencia);
 							}
-							if (r > 0 && c == 0) {
-								listaMuestrasExcel.add(cellValue);
-							}
+
 						}
 						// Validar nombre coluna
 						if (r == 1 && colResultado == null) {
@@ -127,37 +205,16 @@ public class DocumentoValidador implements Validator {
 					}
 				}
 
-				// Validar muestras placa
-				Optional<PlacaLaboratorio> placaLaboratorio = placaLaboratorioRepositorio
-						.findById(elementoDocBean.getId());
-				if (placaLaboratorio.isPresent()) {
-					//Set<Muestra> muestras = placaLaboratorio.get().getMuestras(); //modificado Diana- Las muestras se obtienen a traves de la placa visavet y el lote
-					
-					//obtencion de las muestras de la placa a través de sus placas visavet y los lotes
-					Set<Muestra> muestras = new HashSet<Muestra>(); 	
-					Set<PlacaVisavet> placasVisavetDeLaPlacaLaboratorio = new HashSet<PlacaVisavet>();		
-					for (PlacaVisavetPlacaLaboratorio placaVisavetPlacaLaboratorio: placaLaboratorio.get().getPlacaVisavetPlacaLaboratorios()) {
-						placasVisavetDeLaPlacaLaboratorio.add(placaVisavetPlacaLaboratorio.getPlacaVisavet());
-					}		
-					for (PlacaVisavet placaVisavet: placasVisavetDeLaPlacaLaboratorio) {			
-						// Recuperamos las muestras de la placa Visavet desde el lote
-						Set<Muestra> muestrasVisavet = new HashSet<Muestra>();
-						Set<Lote> lotes = placaVisavet.getLotes();
-						for (Lote lote : lotes) {
-							muestrasVisavet.addAll(lote.getMuestras());
-							muestras.addAll(muestrasVisavet);
-						}
-					}
-					//fin obtencion cjto de muestras					
-					
-					
-					for (Muestra muestra : muestras) {
-						listaMuestrasLaboratorio.add(muestra.getRefInternaVisavet());
-					}
-				}
-				if (!listaMuestrasExcel.containsAll(listaMuestrasLaboratorio)) {
+				
+				if (!listaMuestrasExcel.isEmpty()&&!listaMuestrasExcel.containsAll(listaMuestrasLaboratorio)) {
+					listaMuestrasLaboratorio.removeAll(listaMuestrasExcel);
 					errors.rejectValue("file", "campo.invalid",
-							"Las muestras de la excel no coinciden con las de la placa, revise los datos subidos");
+							"Las muestras de la excel no coinciden con las de la placa, revise los datos subidos. Muestras de la placa que no estan en el fichero: "
+									+ listaMuestrasLaboratorio.toString());
+				}
+				if (!listaMuestrasExcelResultado.isEmpty()) {
+					errors.rejectValue("file", "campo.invalid",
+							"El resultado para las muestras: "+ listaMuestrasExcelResultado.toString()+" No es valido, debe ser uno de estos: "+listaResultados.toString());
 				}
 
 			}
@@ -239,30 +296,31 @@ public class DocumentoValidador implements Validator {
 				Optional<PlacaVisavet> placaVisavet = placaVisavetRepositorio.findById(elementoDocBean.getId());
 
 				if (placaVisavet.isPresent()) {
-					//Set<Muestra> muestras = placaVisavet.get().getMuestras(); //modificado Diana- Las muestras se obtienen a traves de los lotes de la placa visavet
-					
-					//obtencion de las muestras de la placa visavet a través de lotes
-					Set<Muestra> muestras = new HashSet<Muestra>(); 
-								
+					// Set<Muestra> muestras = placaVisavet.get().getMuestras(); //modificado Diana-
+					// Las muestras se obtienen a traves de los lotes de la placa visavet
+
+					// obtencion de las muestras de la placa visavet a través de lotes
+					Set<Muestra> muestras = new HashSet<Muestra>();
+
 					// Recuperamos las muestras de la placa Visavet desde el lote
 					Set<Muestra> muestrasVisavet = new HashSet<Muestra>();
 					Set<Lote> lotes = placaVisavet.get().getLotes();
 					for (Lote lote : lotes) {
 						muestrasVisavet.addAll(lote.getMuestras());
 						muestras.addAll(muestrasVisavet);
-					}					
-					//fin obtencion cjto de muestras					
-										
-					
+					}
+					// fin obtencion cjto de muestras
+
 					for (Muestra muestra : muestras) {
 						listaMuestrasVisavet.add(muestra.getEtiqueta());
 					}
 				}
-				if (!listaMuestrasExcel.containsAll(listaMuestrasVisavet)) {
+				if (!listaMuestrasExcel.isEmpty()&&!listaMuestrasExcel.containsAll(listaMuestrasVisavet)) {
+					listaMuestrasVisavet.removeAll(listaMuestrasExcel);
 					errors.rejectValue("file", "campo.invalid",
-							"Las muestras de la excel no coinciden con las de la placa, revise los datos subidos");
+							"Las muestras de la excel no coinciden con las de la placa, revise los datos subidos. Muestras de la placa que no estan en el fichero: "
+									+ listaMuestrasVisavet.toString());
 				}
-
 			}
 		} catch (Exception e) {
 			errors.rejectValue("file", "campo.invalid", "El fichero de resultado no es un fichero valido");

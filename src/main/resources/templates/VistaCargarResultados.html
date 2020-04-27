@@ -69,10 +69,15 @@
 					<div class="custom-file">
 					    <input type="file" onchange="validarFichero(this)" required class="custom-file-input form-control-sm" th:field="*{file}"  th:value="*{file}" accept=".xlsx, .xls">
 					    <label class="custom-file-label" for="file">Seleccionar fichero</label>
-					    <label class="alert alert-danger" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></label>
+<!-- 					    <label class="alert alert-danger" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></label> -->
 					    <label id="labelError" class="text-warning d-none"></label>
 					</div>
 				</div>					
+			</div>
+			<div class="row">
+				<div class="col-12 m-0 form-group">
+				 	<label class="alert alert-danger" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></label>
+				</div>
 			</div>
 		</fieldset>
 		
