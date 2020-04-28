@@ -106,31 +106,30 @@
 <!--	<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">  class="row formPnl1"	-->
 		<div id="capaResultados" class="row justify-content-center mt-3"
 			  th:unless="${(paginaLotes == null)}">
-		 	<table class="col-xs-12 table" th:id="tablaResultados" >
+		 	<table class="col-xs-12 table tableScroll" th:id="tablaResultados" >
 			 <thead class="thead-light">
 				<tr>
-				    <th  class="p-1" scope="col"></th>
-					<th  class="p-1" scope="col">#Lotes</th>
-					<th  class="p-1" scope="col">Centro</th>
-					<th  class="p-1" scope="col">F.Entrada</th>
-					<th  class="p-1" scope="col">#Muestras</th>
-					<th  class="p-1" scope="col">Referencia Interna</th>
-					
-					<th  class="p-1" scope="col">Estado</th>
-			      	<th  class="p-1" scope="col">Acciones</th>
+				    <th  width="3%" scope="col"></th>
+					<th  width="15%"  scope="col">#Lotes</th>
+					<th  width="18%"  scope="col">Centro</th>
+					<th  width="13%"  scope="col">F.Entrada</th>
+					<th  width="12%" scope="col">#Muestras</th>
+					<th  width="17%"  scope="col">Referencia Interna</th>
+					<th  width="15%"  scope="col">Estado</th>
+			      	<th  width="17%" scope="col">Acciones</th>
 				</tr>
 				</thead>
 				
 						
 			 	<tr id="trGroup+${count.index}"  th:each="unResultado,count : ${paginaLotes.getContent()}" class="trGroupLotes">
 					
-				    <td>
+				    <td width="2%">
 						<input th:if="${busquedaLotes.mostrarProcesar}" type="checkbox" name="seleccionado" th:disabled="${#strings.toString(unResultado.estado.Estado) != 'LOTE_RECIBIDO_CENTRO_ANALISIS'}" th:id="seleccionado+${count.index}" th:value="${unResultado.id}" onClick="habilitarBotonProcesar();"/>
 					</td>
-					<td><span th:text="${unResultado.numLote}"></span></td>
-                    <td><span th:text="${unResultado.centroProcedencia}"></span></td>
-                    <td><span th:text="${#dates.format(unResultado.fechaEntrada, 'dd/MM/yyyy')}"></span></td>
-                    <td><a data-toggle="modal" data-target="#modalConsultarMuestras" th:attr="data-target='#modalConsultarMuestras'+${unResultado.id}" style="cursor: pointer;" title="Ver muestras">                                                 
+					<td width="8%" ><span th:text="${unResultado.numLote}"></span></td>
+                    <td width="18%"><span th:text="${unResultado.centroProcedencia}"></span></td>
+                    <td width="17%"><span th:text="${#dates.format(unResultado.fechaEntrada, 'dd/MM/yyyy')}"></span></td>
+                    <td width="8%"><a data-toggle="modal" data-target="#modalConsultarMuestras" th:attr="data-target='#modalConsultarMuestras'+${unResultado.id}" style="cursor: pointer;" title="Ver muestras">                                                 
                     <i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i> <span th:text="${#lists.size(unResultado.listaMuestras)}"></span>
                        </a>
                      
@@ -180,21 +179,21 @@
 		  
                            <!-- fin modal -->
 								</td>
-								<td>
+								<td width="13%" >
 								<input type="hidden"  th:id="id+${count.index}" th:value="${unResultado.id}"/>
 				                 	<input type="hidden" th:id="referenciaLoteBbdd+${count.index}" th:value="${unResultado.referenciaInternaLote}"></input>
-								<input type="text" th:id="referenciaLote+${count.index}" th:disabled="${#strings.toString(unResultado.estado.Estado) != 'LOTE_RECIBIDO_CENTRO_ANALISIS'}" th:value="${unResultado.referenciaInternaLote}"></input>
+								<input type="text" class="form-control form-control-sm" th:id="referenciaLote+${count.index}" th:disabled="${#strings.toString(unResultado.estado.Estado) != 'LOTE_RECIBIDO_CENTRO_ANALISIS'}" th:value="${unResultado.referenciaInternaLote}"></input>
 										<label style="color:red;display:none;" th:id="mensajeReferenciaLote+${count.index}" >La referencia interna del lote no puede estar vacía</label>
 								<label style="color:red;display:none;" th:id="mensajeReferenciaLoteGuardar+${count.index}" >Debe pulsar el botón "Guardar Referencias"</label>
 								
 								<label style="color:red;display:none;" th:id="mensajeReferenciaLoteInteger+${count.index}" >La referencia interna debe ser numérica</label>
 								
-				               	<label style="color:red;" th:id="mensajeError+${count.index}" th:if="${#strings.toString(unResultado.errorReferenciaLote) != ''}" th:text="${unResultado.errorReferenciaLote}"></label>
+				               	<label style="color:red;" th:id="mensajeError+${count.index}" th:if="${unResultado.errorReferenciaLote != null or #strings.toString(unResultado.errorReferenciaLote) != ''}" th:text="${unResultado.errorReferenciaLote}"></label>
 				             </td>
 								
-								<td><span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
+								<td  width="20%" ><span th:text="${#strings.toString(unResultado.estado.Estado.descripcion)}"></span>
 								</td>
-								<td>
+								<td >
 							     <a  th:if="${#strings.toString(unResultado.estado.Estado) == 'LOTE_ENVIADO_CENTRO_ANALISIS'}" href="#modalConfirmRecibido" data-toggle="modal" th:data-lote="${unResultado.numLote}" th:data-centro="${unResultado.centroProcedencia}" th:data-id="${unResultado.id}" th:onclick="|loadConfirmarEnvio(this.getAttribute('data-id'),this.getAttribute('data-lote'),this.getAttribute('data-centro'))|">
 							     <i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 1.2em;" title="Confirmar Recibido"></i>
 							    </a>
