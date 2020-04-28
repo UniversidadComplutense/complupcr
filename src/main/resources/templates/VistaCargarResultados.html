@@ -24,7 +24,48 @@
 		</div>
 		<div th:if="${mensaje !=null}" class="alert alert-success alert-dismissible fade show m-1 mt-2" role="alert">
 			<label th:text="${mensaje}"></label>
+			<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'" style="cursor: pointer;" title="Ver carga">
+								<i class="fa fa-table" aria-hidden="true" style="font-size: 1.2em;"></i>
+							</a>
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			
+							
+							<!-- MODAL MUESTRAS DE PLACA ASIGNADA-->							
+							<div class="modal fade" th:id="modal-warning" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+								<div class="modal-dialog modal-xl" role="document">
+							    	<div class="modal-content">
+							      		<div class="modal-header">
+							        		<h5 class="modal-title" id="exampleModalLabel">Carga - <b><span th:text="*{descripcion}"/></b> con <span th:text="${#lists.size(carga)}"/> muestras</h5>
+							        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          			<span aria-hidden="true">&times;</span>
+							        		</button>
+							      		</div>
+							      		<div class="modal-body">							        
+								        	<!-- Muestras de la placa -->
+								          	<div id="tablaMuestras" class="tableFixHead">
+												<table>
+													<thead class="thead-light">	
+									    				<tr>
+															<th>Etiqueta</th>
+															<th>Valoracion</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:if="${carga != null}" th:each="muestra : ${carga}">												
+															<td><span th:text="${muestra.muestra}"></span></td>					
+															<td><span th:text="${muestra.resultado}"></span></td>
+														</tr>		
+													</tbody>
+												</table>
+											</div>								        
+							      		</div>
+									    <div class="modal-footer">
+									    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>							        
+										</div>
+							    	</div>
+							  	</div>
+							</div>
+							<!-- FIN MODAL MUESTRAS DE PLACA ASIGNADA-->
 		</div>	
 		
 		<fieldset id="datos" class="form-group border p-2 m-1">
@@ -69,7 +110,7 @@
 					<div class="custom-file">
 					    <input type="file" onchange="validarFichero(this)" required class="custom-file-input form-control-sm" th:field="*{file}"  th:value="*{file}" accept=".xlsx, .xls">
 					    <label class="custom-file-label" for="file">Seleccionar fichero</label>
-					    <label class="alert alert-danger" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></label>
+<!-- 					    <label class="alert alert-danger" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></label> -->
 					    <label id="labelError" class="text-warning d-none"></label>
 					</div>
 				</div>					

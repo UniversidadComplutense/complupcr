@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import es.ucm.pcr.beans.BeanElemento;
 import es.ucm.pcr.beans.BeanEquipo;
 import es.ucm.pcr.beans.BeanLaboratorioCentro;
+import es.ucm.pcr.beans.BeanResultado;
+import es.ucm.pcr.beans.BeanResultadoCarga;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioAnalistaBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioBean;
 import es.ucm.pcr.beans.BusquedaPlacaLaboratorioJefeBean;
@@ -96,7 +98,7 @@ public interface LaboratorioCentroServicio {
 	
 	//public Page<PlacaLaboratorioCentroBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
 	public Page<PlacaLaboratorioCentroAsignacionesAnalistaBean> buscarPlacas(BusquedaPlacaLaboratorioAnalistaBean criteriosBusqueda, Pageable pageable);
-	public void guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas)throws Exception ;
+	public List<BeanResultadoCarga>  guardarResultadosPlacaLaboratorio(ElementoDocumentacionBean bean, Integer numAnalistas)throws Exception ;
 
 	public BeanLaboratorioCentro buscarLaboratorioById(Integer id);
 	public boolean placaListaParaAnalizar(Integer id) throws Exception;

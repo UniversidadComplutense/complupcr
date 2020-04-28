@@ -73,6 +73,7 @@ public class DocumentoControlador {
 					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_REVISARPLACAS_ANALISTA, "/analisis/listarPlacasAnalista" },
 				//	{ URL_VOLVER_PLACA_VISAVET_DESDE, "/centroSalud/lote/list" },
 					{ URL_VOLVER_PLACA_VISAVET_DESDE, "/laboratorioUni/buscarPlacas" },
+					{ URL_VOLVER_RECEPCION_PLACAS, "/laboratorioCentro/recepcionPlacas/list" },
 					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_ASIGNAR_RESULTADOS_PCR, "/laboratorioCentro/gestionPlacas/modificar?id=" },
 					{ URL_VOLVER_PLACA_LABORATORIO_DESDE_LISTADO_PLACAS, "/laboratorioCentro/gestionPlacas" },
 					{ URL_VOLVER_LOG, "/gestor/log/list" }})
@@ -85,6 +86,8 @@ public class DocumentoControlador {
 	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE_ASIGNAR_RESULTADOS_PCR = 5;
 	public static final Integer URL_VOLVER_PLACA_LABORATORIO_DESDE_LISTADO_PLACAS = 6;
 	public static final Integer URL_VOLVER_LOG = 7;
+	public static final Integer URL_VOLVER_RECEPCION_PLACAS = 8;
+	
 	
 
 	@InitBinder("elementoDoc")

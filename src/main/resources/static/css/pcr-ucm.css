@@ -95,3 +95,12 @@ fieldset legend {
 .filaVerde{
 	background:#A0FFD7;
 }
+
+.tableScroll thead, .tableScroll tbody { display: block; }
+.tableScroll tbody {
+    height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+     text-align:left;
+}
+

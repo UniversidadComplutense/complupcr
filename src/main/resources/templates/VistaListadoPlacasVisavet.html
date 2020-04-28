@@ -242,10 +242,10 @@
 					</td>
 					<td nowrap="nowrap">	
 					
-						<a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}"  th:data-id="${unResultado.id}" onclick="procesarLotesDesdePlacas(this.getAttribute('data-id'),'P')">
+						<a th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA' or #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_INICIADA'}"  th:data-id="${unResultado.id}" onclick="procesarLotesDesdePlacas(this.getAttribute('data-id'),'P')">
 						     <i class="fa fa-edit" title="Modificar placa" aria-hidden="true" style="font-size: 1.2em;"></i>
 						</a>
-						<i title="Modificar placa" th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;color:grey;"></i>
+						<i title="Modificar placa" th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA' or #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_INICIADA'}" class="fa fa-edit" aria-hidden="true" style="font-size: 1.2em;color:grey;"></i>
 						<a  th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_FINALIZADA' or  #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ASIGNADA' or  #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ENVIADA'}" data-toggle="modal"  data-target="#modalLaboratorio"   th:attr="data-target='#modalLaboratorio'" th:data-id="${unResultado.id}" th:data-laboratorio="${unResultado.idLaboratorioCentro}" th:data-estado="${unResultado.estado.Estado}" th:data-fecha="${unResultado.fechaEnviadaLaboratorio}" th:onClick="|consultarOcupacionLaboratorio(this.getAttribute('data-id'), this.getAttribute('data-laboratorio'), this.getAttribute('data-estado'), this.getAttribute('data-fecha'));|">
                           <i class="fa fa-flask" aria-hidden="true" title="Asignar laboratorio" style="font-size: 1.2em;"></i>
 						</a>
@@ -268,10 +268,10 @@
 							    <i class="fa fa-undo" style="font-size: 1.2em;" title="Cancelar Envio"></i>
 							    </a>
 							       <i th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_ENVIADA'}" class="fa fa-undo" style="font-size: 1.2em;color:grey;" title="Cancelar Envio"></i>
-                               <a  th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" href="#" th:data-href="@{/laboratorioUni/eliminarPlaca(id=${unResultado.id})}" title="Eliminar Placa" data-toggle="modal" data-target="#confirm-borrar">
+                               <a  th:if="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA' or #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_INICIADA'}" href="#" th:data-href="@{/laboratorioUni/eliminarPlaca(id=${unResultado.id})}" title="Eliminar Placa" data-toggle="modal" data-target="#confirm-borrar">
 								<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
 								</a>
-								<i th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA'}" class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;color:grey" title="Eliminar Placa"></i>
+								<i th:unless="${#strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_PREPARADA' or #strings.toString(unResultado.estado.Estado) == 'PLACAVISAVET_INICIADA'}" class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;color:grey" title="Eliminar Placa"></i>
 							
                   
                     </td>		  
@@ -324,9 +324,9 @@
 							      		</div>
 									    <div class="modal-footer">
 									    <input type="hidden" id="idConfirmar" value=""></input>
-									    <button type="button" id="aceptarConfirmacion"  class="btn btn-secondary" data-dismiss="modal"  th:onclick="|confirmarPlacaEnviada()|">Aceptar</button>
-										<button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
-									
+									    <button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
+							     		<button type="button" id="aceptarConfirmacion"  class="btn btn-success btn-secondary" data-dismiss="modal"  th:onclick="|confirmarPlacaEnviada()|">Aceptar</button>
+										
 									    						        
 										</div>
 							    	</div>
@@ -374,10 +374,10 @@
 							      		</div>
 									    <div class="modal-footer">
 									    <input type="hidden" id="idCancelar" value=""></input>
-									    <button type="button" id="aceptarConfirmacion"  class="btn btn-secondary" data-dismiss="modal"  th:onclick="|cancelarPlaca()|">Aceptar</button>
-										<button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
+									    <button type="button" id="cerrarConfirmacion"  class="btn btn-secondary"  data-dismiss="modal">Cerrar</button>
 									
-									    						        
+									    <button type="button" id="aceptarConfirmacion"  class="btn btn-danger btn-borrar" data-dismiss="modal"  th:onclick="|cancelarPlaca()|">Aceptar</button>
+																        
 										</div>
 							    	</div>
 							  	</div>
@@ -491,8 +491,9 @@
 			  </div>	
 			<div class="modal-footer">
 			<input type="hidden" id="idPlacaLab" value=""></input>	
-			<button type="button" id="asignarLaboratorio" class="btn btn-secondary" onClick="asignarLaboratoriodesdeModal();">Asignar Laboratorio</button>
 			<button type="button" id="cerrarConfirmacion" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+			<button type="button" id="asignarLaboratorio" class="btn btn-success  btn-secondary" onClick="asignarLaboratoriodesdeModal();">Asignar Laboratorio</button>
+			
 			</div>
 			</form>
          </div>
