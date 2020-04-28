@@ -64,8 +64,33 @@
 					<label >Código placa laboratorio</label>
 				 	<input  type="text" class="form-control form-control-sm" th:field="*{idPlacaLaboratorio}"  th:value="*{idPlacaLaboratorio}" maxlength="100" pattern="[0-9]+" onkeyup="this.value=this.value.replace(/[^\d]/,'')"/>
 				</div>										
-			</div>	
+			</div>				
 		</fieldset>
+		<fieldset class="form-group border p-2 m-1">
+			<legend class="w-auto font-weight-bold m-0">Leyenda de resultados</legend>
+			<div class="row justify-content-start">
+				<div class="col-2 form-group">
+					<i class="fa fa-ambulance" style="color:black" aria-hidden="true" title="Pendiente"></i>
+					<span>Pendiente</span>	
+				</div>
+				<div class="col-2 form-group">
+					<i class="fa fa-ambulance" style="color:red" aria-hidden="true" title="Positivo"></i>
+					<span>Positivo</span>
+				</div>
+				<div class="col-2 form-group">
+					<i class="fa fa-ambulance" style="color:green" aria-hidden="true" title="Negativo"></i>
+					<span>Negativo</span>
+				</div>
+				<div class="col-2 form-group">
+					<i class="fa fa-ambulance" style="color:grey" aria-hidden="true" title="Débil"></i>
+					<span>Débil</span>
+				</div>
+				<div class="col-2 form-group">
+					<i class="fa fa-ambulance" style="color:orange" aria-hidden="true" title="Repetir"></i>
+					<span>Repetir</span>
+				</div>	
+			</div>		
+			</fieldset>
 		
 		<!-- ACCIONES -->
 		<div class="row justify-content-end mt-3">
@@ -85,6 +110,7 @@
 			<table class="table">
 				<thead class="thead-light">	
 	    			<tr>
+						<th class="p-1" scope="col" width="3%"></th>							    			
 	    				<th class="p-1" scope="col" width="14%">Etiqueta muestra</th>
 	    				<th class="p-1" scope="col" width="14%">Ref interna</th>
 	      				<th class="p-1" scope="col" width="8%">NHC</th>	      				
@@ -98,6 +124,26 @@
 				</thead>
 				<tbody>
 					<tr th:if="${listadoMuestras != null}" th:each="log : ${listadoMuestras}">
+						<td class="p-1">
+							<th:block th:switch="${log.descResultado}">
+								<!-- TODO - INCLUIR EL RESTO DE LITERALES DEPENDIENTO DEL TIPO PARA EL QUE SEA LA DOCUMENTACION -->
+								<div th:case="${T(es.ucm.pcr.beans.BeanResultado.ResultadoMuestra).RESULTADO_MUESTRA_PENDIENTE.descripcion}">
+							         <i class="fa fa-ambulance" style="color:black" aria-hidden="true" title="Pendiente"></i>
+							    </div>
+							    <div th:case="${T(es.ucm.pcr.beans.BeanResultado.ResultadoMuestra).RESULTADO_MUESTRA_POSITIVO.descripcion}">
+							         <i class="fa fa-ambulance" style="color:red" aria-hidden="true" title="Positivo"></i>
+							    </div>
+							    <div th:case="${T(es.ucm.pcr.beans.BeanResultado.ResultadoMuestra).RESULTADO_MUESTRA_NEGATIVO.descripcion}">
+							         <i class="fa fa-ambulance" style="color:green" aria-hidden="true" title="Negativo"></i>
+							    </div>	
+							    <div th:case="${T(es.ucm.pcr.beans.BeanResultado.ResultadoMuestra).RESULTADO_MUESTRA_DEBIL.descripcion}">
+							         <i class="fa fa-ambulance" style="color:grey" aria-hidden="true" title="Débil"></i>
+							    </div>	
+							    <div th:case="${T(es.ucm.pcr.beans.BeanResultado.ResultadoMuestra).RESULTADO_MUESTRA_REPETIR.descripcion}">
+							         <i class="fa fa-ambulance" style="color:orange" aria-hidden="true" title="Repetir"></i>
+							    </div>							      					     
+							 </th:block>													
+						</td>
 						<td class="p-1"><span th:text="${log.descMuestra}"></span></td>
 						<td class="p-1"><span th:text="${log.descRefInternaMuestra}"></span></td>
 						<td class="p-1"><span th:text="${log.nhcPaciente}"></span></td>
