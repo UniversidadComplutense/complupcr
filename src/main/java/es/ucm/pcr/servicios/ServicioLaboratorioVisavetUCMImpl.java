@@ -290,7 +290,8 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 		Optional<PlacaVisavet> placaOpt=placaVisavetRepositorio.findById(idPlaca);
 		if (placaOpt.isPresent()) {
 			PlacaVisavet placa=placaOpt.get();
-			for (Lote lote: placa.getLotes()) {
+			HashSet<Lote> lotes=new HashSet<Lote> (placa.getLotes());
+			for (Lote lote: lotes) {
 				this.eliminarLotedePlaca(lote.getId());
 			}
 		this.eliminarPlaca(idPlaca);
