@@ -90,4 +90,12 @@ public class MuestraListadoBean extends MuestraBusquedaBean {
 		return nombreCompleto;
 	}
 
+	@Override
+	public String toString() {
+		return "MuestraListadoBean [id=" + id + ", etiqueta="+getEtiquetaMuestra()+", codNumLote=" + codNumLote + ", notificado=" + notificado
+				+ ", fechaEntrada=" + fechaEntrada + "]";
+	}
+	
+	
+
 }

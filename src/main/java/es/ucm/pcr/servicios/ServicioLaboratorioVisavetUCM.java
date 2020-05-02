@@ -15,6 +15,7 @@ import es.ucm.pcr.beans.ElementoDocumentacionBean;
 import es.ucm.pcr.beans.LoteBeanPlacaVisavet;
 import es.ucm.pcr.beans.LoteCentroBean;
 import es.ucm.pcr.beans.PlacaLaboratorioVisavetBean;
+import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCMImpl.AnalisisExcelMuestras;
 @Service
 public interface ServicioLaboratorioVisavetUCM {
 	public Page<LoteBeanPlacaVisavet> buscarLotes(BusquedaLotesBean busquedaLotes, Pageable pageable);
@@ -35,4 +36,6 @@ public interface ServicioLaboratorioVisavetUCM {
 	public BeanPlacaVisavetUCM eliminarLotedePlaca(int idLote);
 	public void eliminarPlaca(int idPlaca);
 	public void eliminarPlacayLotes(int idPlaca);
+	public void procesarExcel(ElementoDocumentacionBean edb, Integer idCentro, Integer tamanoPlaca) throws Exception;
+	public AnalisisExcelMuestras verificarExcel(ElementoDocumentacionBean edb, Integer tamanoPlaca) throws Exception;
 }

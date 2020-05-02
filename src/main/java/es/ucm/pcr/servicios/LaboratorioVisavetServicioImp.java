@@ -214,5 +214,5 @@ public class LaboratorioVisavetServicioImp implements LaboratorioVisavetServicio
 	public Optional<LaboratorioVisavet> findByNombre(String nombre) {
 		return laboratorioVisavetRepositorio.findByNombre(nombre);
 	}
-
+	
 }

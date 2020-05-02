@@ -190,4 +190,18 @@ public class MuestraBusquedaBean {
 	public String getCriterioRefInterna() {
 		return StringUtils.isBlank(refInternaMuestra) ? null : "%" + refInternaMuestra + "%";
 	}
+
+	@Override
+	public String toString() {
+		return "MuestraBusquedaBean [nombrePaciente=" + nombrePaciente + ", primerApellido=" + primerApellido
+				+ ", segundoApellido=" + segundoApellido + ", emailPaciente=" + emailPaciente + ", nhcPaciente="
+				+ nhcPaciente + ", etiquetaMuestra=" + etiquetaMuestra + ", refInternaMuestra=" + refInternaMuestra
+				+ ", fechaEnvioMuestraIni=" + fechaEnvioMuestraIni + ", fechaEnvioMuestraFin=" + fechaEnvioMuestraFin
+				+ ", fechaResultadoMuestraIni=" + fechaResultadoMuestraIni + ", fechaResultadoMuestraFin="
+				+ fechaResultadoMuestraFin + ", idCentro=" + idCentro + ", tipoMuestra=" + tipoMuestra
+				+ ", estadoMuestra=" + estadoMuestra + ", idEstado=" + idEstado + ", estadoResueltaNoticado="
+				+ estadoResueltaNoticado + ", estaNotificada=" + estaNotificada + "]";
+	}
+	
+	
 }

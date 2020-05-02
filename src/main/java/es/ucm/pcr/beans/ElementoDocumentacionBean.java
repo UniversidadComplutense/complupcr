@@ -19,6 +19,52 @@ public class ElementoDocumentacionBean {
 	private String hoja; //en la carga de resultados del analista (excel) identificamos la hoja y la columna del excel del analista
 	private String columna;
 	private String columnaRef;
+	private String columnaPlaca;
+	private String columnaCliente;
+	private String columnaRemitente;
+	private String columnaLote;
+	private String columnaTipoMuestra;
+	
+	public String getColumnaTipoMuestra() {
+		return columnaTipoMuestra;
+	}
+
+	public void setColumnaTipoMuestra(String columnaTipoMuestra) {
+		this.columnaTipoMuestra = columnaTipoMuestra;
+	}
+
+	public String getColumnaPlaca() {
+		return columnaPlaca;
+	}
+
+	public void setColumnaPlaca(String columnaPlaca) {
+		this.columnaPlaca = columnaPlaca;
+	}
+
+	public String getColumnaCliente() {
+		return columnaCliente;
+	}
+
+	public void setColumnaCliente(String columnaCliente) {
+		this.columnaCliente = columnaCliente;
+	}
+
+	public String getColumnaRemitente() {
+		return columnaRemitente;
+	}
+
+	public void setColumnaRemitente(String columnaRemitente) {
+		this.columnaRemitente = columnaRemitente;
+	}
+
+	public String getColumnaLote() {
+		return columnaLote;
+	}
+
+	public void setColumnaLote(String columnaLote) {
+		this.columnaLote = columnaLote;
+	}
+
 	private String tipo; //el tipo sera "RES" si es un excel de resultados
 	private Integer codiUrl;
 	private String urlVolver;

@@ -422,4 +422,10 @@ public class UsuarioServicioImp implements UsuarioServicio {
 		
 		return usuariosBeanPage;
 	}
+	
+	public static void main(String[] args) {
+		BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+	System.err.println(passwordEncoder.encode("PWD"));	
+	
+	}
 }

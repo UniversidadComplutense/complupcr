@@ -10,4 +10,6 @@ public interface CentroRepositorio extends JpaRepository<Centro, Integer>{
 
 	Optional<Centro> findByCodCentro(String codCentro);
 
+	Optional<Centro> findByNombre(String remitente);
+
 }

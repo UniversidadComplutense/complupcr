@@ -247,6 +247,7 @@ public class MuestraCentroBean implements java.io.Serializable {
 		muestra.setEtiqueta(muestraBean.getEtiqueta());
 		muestra.setTipoMuestra(muestraBean.getTipoMuestra());
 		muestra.setFechaEntrada(muestraBean.getFechaEntrada());
+		muestra.setRefInternaVisavet(muestraBean.getRefInterna());
 		
 		if (muestraBean.getEstado() != null) {
 			muestra.setEstadoMuestra(new EstadoMuestra(muestraBean.getEstado().getEstado().getCodNum()));

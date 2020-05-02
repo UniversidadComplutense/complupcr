@@ -186,4 +186,15 @@ public static PlacaVisavet beanToModel(BeanPlacaVisavetUCM bean) {
 	return placaVisavet;
 
 }
+@Override
+public String toString() {
+	return "BeanPlacaVisavetUCM [listaLotes=" + listaLotes + ", id=" + id + ", tamano=" + tamano + ", fechaCreacion="
+			+ fechaCreacion + ", fechaAsignadaLaboratorio=" + fechaAsignadaLaboratorio + ", fechaEnviadaLaboratorio="
+			+ fechaEnviadaLaboratorio + ", estado=" + estado + ", idLaboratorioCentro=" + idLaboratorioCentro
+			+ ", laboratorioCentro=" + laboratorioCentro + ", listaMuestras=" + listaMuestras + ", nombrePlacaVisavet="
+			+ nombrePlacaVisavet + "]";
+}
+
+
+
 }

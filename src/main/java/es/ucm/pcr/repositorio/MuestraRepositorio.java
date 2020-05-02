@@ -123,4 +123,5 @@ public interface MuestraRepositorio extends PagingAndSortingRepository<Muestra, 
 	
 	Optional<Muestra> findByRefInternaVisavet(String refInternaVisavet);
 	
+	Optional<Muestra> findByEtiqueta(String etiqueta);
 }

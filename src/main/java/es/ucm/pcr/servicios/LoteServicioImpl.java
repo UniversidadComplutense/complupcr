@@ -63,6 +63,7 @@ public class LoteServicioImpl implements LoteServicio {
 	}
 	
 	@Override
+	@Transactional
 	public List<LoteListadoBean> findLoteByParam(LoteBusquedaBean params) {
 		List<LoteListadoBean> listLotesBean = new ArrayList<LoteListadoBean>();
 		

@@ -98,6 +98,13 @@ public class MuestraBeanLaboratorioVisavet{
 	    return muestraT;
 		//
 		}
+	@Override
+	public String toString() {
+		return "MuestraBeanLaboratorioVisavet [id=" + id + ", etiqueta=" + etiqueta + ", tipoMuestra=" + tipoMuestra
+				+ ", descripcionMuestra=" + descripcionMuestra + ", fecha=" + fecha + ", referenciaInterna="
+				+ referenciaInterna + ", estado=" + estado + ", centro=" + centro + ", beanAnalisis=" + beanAnalisis
+				+ "]";
+	}
 	
 	
 }
