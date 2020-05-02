@@ -1,44 +1,65 @@
-Lanza la BD
+
+Intructions to create a development environment
+=====
+
+Launch the DB
+
 	docker run -e MYSQL_ROOT_PASSWORD=mypassword -e MYSQL_DATABASE=covid19 -e MYSQL_USER=dbuser -e MYSQL_PASSWORD=dbpassword -p 3306:3306 -d mysql:5.7.28 --max-allowed-packet=67108864
 
+Once launched, create the quartz schemas
 
-Once launched the docker and before launching for the first time the app
 	mysql -uroot --password=mypassword -h 127.0.0.1 covid19 < src/main/resources/quartz.sql
 
-Once launched the app
+Then, launch the appplication
+
+	java -jar -Dspring.profiles.active=desarrollolocal target/covid19.jar
+	
+To initiate users and structures, launch
+
 	mysql -uroot --password=mypassword -f -h 127.0.0.1 covid19 < src/main/resources/sample.sql
 
+The application is available from  https://localhost:8443/acceso
 
-java -jar -Dspring.profiles.active=desarrollolocal target/covid19.jar
-
-https://localhost:8443/acceso
-
-Para configurar eclipse:
+To setup eclipse:
 
 1. run as  sobre "es.ucm.pcrPcrCovid19Application"
-2. En el diálogo de configuración de la ejecución, ir a pestaña arguments y Definir el parámetro de la VM con "-Dspring.profiles.active=desarrollolocal"
+2. In the configuration dialog to execute the file, go to the *arguments* tab and define the following VM parameter "-Dspring.profiles.active=desarrollolocal"
 
-Para recrear la BD
+To let eclipse recreate the database, in file application-desarrollolocal.properties, uncomment this line. You should comment it for production environments
 
-En application-desarrollolocal.properties, descomentar esta línea
-#spring.jpa.hibernate.ddl-auto=create-drop
+	spring.jpa.hibernate.ddl-auto=update
 
-Usuarios definidos (todos con contraseña "PWD")
+Defined users, all passwords are *PWD*
 
--responsable de centro de salud: centrosalud@ucm.es
--recepción en laboratorio: recepcionvisavet@ucm.es
--técnico de laboratorio: tecnicovisavet@ucm.es
--recepción PCR: recepcionpcr@ucm.es
--responsable PCR: responsablepcr@ucm.es
--jefe de servicio: jefeservicio@ucm.es
--analista1: analista1@ucm.es
--analista2: analista2@ucm.es
--auditor: auditor@ucm.es
--voluntario: voluntario@ucm.es
+-health center responsible: centrosalud@ucm.es
+-reception lab person: recepcionvisavet@ucm.es
+-reception lab technician: tecnicovisavet@ucm.es
+-PCR reception person: recepcionpcr@ucm.es
+-PCR lab technician: responsablepcr@ucm.es
+-PCR analysis chief: jefeservicio@ucm.es
+-analyst #1 : analista1@ucm.es
+-analyst #2: analista2@ucm.es
+-audit person: auditor@ucm.es
+-volunteer: voluntario@ucm.es
 -admin: admin@ucm.es
--gestor: gestor@ucm.es
+-manager: gestor@ucm.es
 
+How it works
+====
 
-Sobre hojas excel:
-- es importante que todo dato en la hoja excel sea una cadena. Si se escribe un número, se importará como número y no será reconocido
-
+The expected flow is:
+1. health center: creates a batch of samples
+2. health center: creates samples and attach them to batches
+3. health center: when ready, the batch is delevered to the reception lab
+4. reception lab: the batch reception is confirmed
+5. reception lab: the batches are processed and transferred to trays. Several batches can be added to the same tray.
+6. reception lab: when trays are ready, they are delivered to the PCR lab together with necessary documents to validate the tray
+7. pcr lab: confirms the reception of trays 
+8. pcr lab: prepare new trays for the PCR
+9. pcr lab: performs pcr and uploads raw PCR data to the system
+10. pcr lab: labels the tray as ready to analysis
+11. analysis: the chief reclaims the available tray
+12. analysis: the chief assigns analysists to the ray
+13. analysis: the analysts connect and downloads PCR raw data. Also an excel template to fill in with results.
+14. analysis: the analysts upload the results. Results are uploaded and notified to the patient or the health center
+15. health center: checks the batches of the samples and the results. Alternatively, submits an email to the patients
