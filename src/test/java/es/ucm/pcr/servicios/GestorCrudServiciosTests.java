@@ -13,9 +13,11 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import es.ucm.pcr.config.security.UserDetailsTestConfig;
 import es.ucm.pcr.modelo.orm.Centro;
 import es.ucm.pcr.modelo.orm.Equipo;
 import es.ucm.pcr.modelo.orm.LaboratorioCentro;
@@ -24,7 +26,8 @@ import es.ucm.pcr.modelo.orm.Rol;
 import es.ucm.pcr.modelo.orm.Usuario;
 
 @ActiveProfiles(profiles = "test")
-@SpringBootTest
+@SpringBootTest(classes = UserDetailsTestConfig.class)
+@AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
 public class GestorCrudServiciosTests {
 

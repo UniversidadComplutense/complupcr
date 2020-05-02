@@ -313,7 +313,7 @@ public class CicloMuestrasServiciosConExcelTests {
 
 	private void verificaMuestra(List<MuestraListadoBean> muestras, String verificaEtiquetaMuestra,
 			String verificaRefMuestra) {
-		MuestraBusquedaBean params;
+		MuestraBusquedaBean params; 
 		assertTrue(muestras.size()==1, 
 				"Debería haber 1 muestra de etiqueta "+verificaEtiquetaMuestra+" y hay "+muestras.size());
 		assertTrue(muestras.get(0).getRefInternaMuestra().equals(verificaRefMuestra), 
