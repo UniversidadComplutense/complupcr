@@ -78,3 +78,19 @@ The expected flow is:
 13. analysis: the analysts connect and downloads PCR raw data. Also an excel template to fill in with results.
 14. analysis: the analysts upload the results. Results are uploaded and notified to the patient or the health center
 15. health center: checks the batches of the samples and the results. Alternatively, submits an email to the patients
+
+Credits
+=====
+Pedro Marrasan
+...
+Jose Luis Ayala
+Jose Luis Vazquez Poletti
+Jorge J. Gómez Sanz
+
+Special acknowledgements for the assistance
+=====
+Jose Manuel Bautista
+Javier Revenga
+Sergio Dominguez
+Bruno
+
