@@ -76,7 +76,7 @@ public class PcrCovid19ApplicationTests {
 			//Login correcto --> Debe hacer una redirección a la página raiz
 			MockHttpServletRequestBuilder loginBien = post("http://localhost/acceso")
 					.param("email", "centrosalud@ucm.es")
-					.param("password","mypassword");
+					.param("password","PWD");
 			this.mockMvc.perform(loginBien)
 				//.andDo(print())
 				.andExpect(status().is3xxRedirection())
