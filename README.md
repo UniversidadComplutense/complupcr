@@ -14,16 +14,16 @@ Then, launch the appplication
 
 	java -jar -Dspring.profiles.active=desarrollolocal target/covid19.jar
 	
+Alternatively, run from eclipse:
+
+1. run as  sobre "es.ucm.pcrPcrCovid19Application"
+2. In the configuration dialog to execute the file, go to the *arguments* tab and define the following VM parameter "-Dspring.profiles.active=desarrollolocal"
+
 To initiate users and structures, launch
 
 	mysql -uroot --password=mypassword -f -h 127.0.0.1 covid19 < src/main/resources/sample.sql
 
 The application is available from  https://localhost:8443/acceso
-
-To setup eclipse:
-
-1. run as  sobre "es.ucm.pcrPcrCovid19Application"
-2. In the configuration dialog to execute the file, go to the *arguments* tab and define the following VM parameter "-Dspring.profiles.active=desarrollolocal"
 
 To let eclipse recreate the database, in file application-desarrollolocal.properties, uncomment this line. You should comment it for production environments
 
