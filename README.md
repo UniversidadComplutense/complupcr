@@ -81,16 +81,24 @@ The expected flow is:
 
 Credits
 =====
-Pedro Marrasant
-...
-Jose Luis Ayala
-Jose Luis Vazquez Poletti
-Jorge J. Gómez Sanz
+The current code contains code from:
 
-Special acknowledgements for the assistance
+-Pedro Marrasant
+-...
+-Jorge J. Gómez Sanz
+
+The specification was possible with the help of:
+-Jose Manuel Bautista
+-Javier Revenga
+-Sergio Dominguez
+-Bruno
+-Jose Luis Ayala
+-Jorge J. Gómez Sanz
+
+Deployment and integration systems defined by:
+-Jose Luis Vazquez Poletti
+-Miguel Angel
+
+License
 =====
-Jose Manuel Bautista
-Javier Revenga
-Sergio Dominguez
-Bruno
-
+GPLv3
