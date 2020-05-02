@@ -287,13 +287,11 @@ public class CicloMuestrasServiciosConExcelTests {
 					MuestraBusquedaBean params=new MuestraBusquedaBean();		
 					List<MuestraListadoBean> muestras = muestraServicio.findMuestraByParam(params);
 					
-					params=new MuestraBusquedaBean();
-					params.setRefInternaMuestra("V20/00067");
-					muestras = muestraServicio.findMuestraByParam(params);
-																
+
 					verificaMuestra(muestras, "20081900", "V20/00067");
 					verificaMuestra(muestras, "204360", "V20/00004");
 					verificaMuestra(muestras, "206116", "V20/00025");
+										
 					
 					// no se duplican entradas 
 					resultado=servicioVisavet.verificarExcel(edb,96);
@@ -313,7 +311,10 @@ public class CicloMuestrasServiciosConExcelTests {
 
 	private void verificaMuestra(List<MuestraListadoBean> muestras, String verificaEtiquetaMuestra,
 			String verificaRefMuestra) {
-		MuestraBusquedaBean params; 
+		MuestraBusquedaBean params;
+		params=new MuestraBusquedaBean();
+		params.setEtiquetaMuestra(verificaEtiquetaMuestra);
+		muestras = muestraServicio.findMuestraByParam(params);
 		assertTrue(muestras.size()==1, 
 				"Debería haber 1 muestra de etiqueta "+verificaEtiquetaMuestra+" y hay "+muestras.size());
 		assertTrue(muestras.get(0).getRefInternaMuestra().equals(verificaRefMuestra), 
