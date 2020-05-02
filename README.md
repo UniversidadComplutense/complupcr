@@ -16,7 +16,7 @@ Then, launch the appplication
 	
 Alternatively, run from eclipse:
 
-1. run as  sobre "es.ucm.pcrPcrCovid19Application"
+1. **run as** the file "es.ucm.pcrPcrCovid19Application"
 2. In the configuration dialog to execute the file, go to the *arguments* tab and define the following VM parameter "-Dspring.profiles.active=desarrollolocal"
 
 To initiate users and structures, launch
