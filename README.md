@@ -81,7 +81,7 @@ The expected flow is:
 
 Credits
 =====
-Pedro Marrasan
+Pedro Marrasant
 ...
 Jose Luis Ayala
 Jose Luis Vazquez Poletti
