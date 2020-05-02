@@ -30,7 +30,6 @@ To let eclipse recreate the database, in file application-desarrollolocal.proper
 	spring.jpa.hibernate.ddl-auto=update
 
 Defined users, all passwords are **PWD**:
-
 1.health center responsible: centrosalud@ucm.es
 2.reception lab person: recepcionvisavet@ucm.es
 3.reception lab technician: tecnicovisavet@ucm.es
