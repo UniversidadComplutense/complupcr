@@ -29,20 +29,20 @@ To let eclipse recreate the database, in file application-desarrollolocal.proper
 
 	spring.jpa.hibernate.ddl-auto=update
 
-Defined users, all passwords are *PWD*
+Defined users, all passwords are *PWD*:
 
--health center responsible: centrosalud@ucm.es
--reception lab person: recepcionvisavet@ucm.es
--reception lab technician: tecnicovisavet@ucm.es
--PCR reception person: recepcionpcr@ucm.es
--PCR lab technician: responsablepcr@ucm.es
--PCR analysis chief: jefeservicio@ucm.es
--analyst #1 : analista1@ucm.es
--analyst #2: analista2@ucm.es
--audit person: auditor@ucm.es
--volunteer: voluntario@ucm.es
--admin: admin@ucm.es
--manager: gestor@ucm.es
+1.health center responsible: centrosalud@ucm.es
+2.reception lab person: recepcionvisavet@ucm.es
+3.reception lab technician: tecnicovisavet@ucm.es
+4.PCR reception person: recepcionpcr@ucm.es
+5.PCR lab technician: responsablepcr@ucm.es
+6.PCR analysis chief: jefeservicio@ucm.es
+7.analyst #1 : analista1@ucm.es
+8.analyst #2: analista2@ucm.es
+9.audit person: auditor@ucm.es
+10.volunteer: voluntario@ucm.es
+11.admin: admin@ucm.es
+12.manager: gestor@ucm.es
 
 How it works
 ====
