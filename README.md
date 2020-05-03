@@ -10,7 +10,21 @@ Maven (at least 3.0)
 Intructions to create a development environment
 =====
 
-S1. Launch the DB
+First of all. Ensure your mysql is stopped. In linux, you can
+
+	sudo service mysql stop
+
+Then, build the app. It requires launching private dockers that will interfere with 3306 port.
+
+	mvn package
+
+Once, built, you can proceed with the standard launch. You should this kind of built at least once. If you want to remove this kind of burden, you can switch off tests
+
+	mvn package -DskipTests=true
+
+With the application ready, you can proceed to either reuse your DB (then you need to set the password in application-desarrollolocal.properties) or use the setup offered here.
+
+S1. Launch the DB to create a clean environment (you can ensure this with "telnet localhost 3306" and see if there is anything connected to that port).
 
 	docker run -e MYSQL_ROOT_PASSWORD=mypassword -e MYSQL_DATABASE=covid19 -e MYSQL_USER=dbuser -e MYSQL_PASSWORD=dbpassword -p 3306:3306 -d mysql:5.7.28 --max-allowed-packet=67108864
 
@@ -18,26 +32,20 @@ S2. Once launched, create the quartz schemas
 
 	mysql -uroot --password=mypassword -h 127.0.0.1 covid19 < src/main/resources/quartz.sql
 
-S3. Build the application
-
-	mvn package
-	
-Then, launch the appplication once. The first time it will create database structures. It will have no users predefined. Go to the next step to have a minimal configuration:
+S3. Then, launch the appplication once. The first time it will create database structures. It will have no users predefined. Go to the next step to have a minimal configuration:
 
 	java -jar -Dspring.profiles.active=desarrollolocal target/covid19.jar
-	
-For development, you can run from eclipse directly
-
-1. **run as** the file "es.ucm.pcrPcrCovid19Application"
-2. In the configuration dialog to execute the file, go to the *arguments* tab and define the following VM parameter "-Dspring.profiles.active=desarrollolocal"
 
 S4. To initiate users and structures, stop the application, then execute
 
 	mysql -uroot --password=mypassword -f -h 127.0.0.1 covid19 < src/main/resources/sample.sql
 
-S5. And then launch the application again
+S5. And then launch the application again. The application is available from  https://localhost:8443/acceso
 
-The application is available from  https://localhost:8443/acceso
+For development, you can run from eclipse directly with these steps:
+
+1. **run as** the file "es.ucm.pcrPcrCovid19Application"
+2. In the configuration dialog to execute the file, go to the *arguments* tab and define the following VM parameter "-Dspring.profiles.active=desarrollolocal"
 
 To let eclipse recreate the database, in file application-desarrollolocal.properties, uncomment this line. You should comment it for production environments
 
