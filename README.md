@@ -125,15 +125,23 @@ Credits
 The current code contains code from:
 
 -Pedro Marrasant
+
 -...
+
 -Jorge J. Gómez Sanz
 
 The specification was possible with the help of:
+
 -Jose Manuel Bautista
+
 -Javier Revenga
+
 -Sergio Dominguez
+
 -Bruno
+
 -Jose Luis Ayala
+
 -Jorge J. Gómez Sanz
 
 Deployment and integration systems defined by:
