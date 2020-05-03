@@ -1,3 +1,8 @@
+Requirements
+===========
+Java 11 (it works with openjdk)
+Docker
+Maven (at least 3.0)
 
 Intructions to create a development environment
 =====
@@ -10,6 +15,10 @@ Once launched, create the quartz schemas
 
 	mysql -uroot --password=mypassword -h 127.0.0.1 covid19 < src/main/resources/quartz.sql
 
+Build the application
+
+	mvn package
+	
 Then, launch the appplication
 
 	java -jar -Dspring.profiles.active=desarrollolocal target/covid19.jar
