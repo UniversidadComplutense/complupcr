@@ -51,6 +51,13 @@ To let eclipse recreate the database, in file application-desarrollolocal.proper
 
 	spring.jpa.hibernate.ddl-auto=update
 
+Installing on an AWS instance
+===
+Please, follow the instructions from 
+https://github.com/UniversidadComplutense/complupcr/blob/integracion/AWS-README.md
+
+
+
 Defined users
 ===
 All passwords are **PWD**. 
