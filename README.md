@@ -1,7 +1,10 @@
 Requirements
-===========
+==
+
 Java 11 (it works with openjdk)
+
 Docker
+
 Maven (at least 3.0)
 
 Intructions to create a development environment
