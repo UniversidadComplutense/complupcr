@@ -145,7 +145,9 @@ The specification was possible with the help of:
 -Jorge J. Gómez Sanz
 
 Deployment and integration systems defined by:
+
 -Jose Luis Vazquez Poletti
+
 -Miguel Angel
 
 License
