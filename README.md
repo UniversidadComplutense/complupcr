@@ -101,6 +101,25 @@ The expected flow is:
 14. analysis: the analysts upload the results. Results are uploaded and notified to the patient or the health center
 15. health center: checks the batches of the samples and the results. Alternatively, submits an email to the patients
 
+Trouble shooting
+===
+You get errors such as: 
+
+	[INFO]
+	[INFO] Results:
+	[INFO]
+	[ERROR] Errors:
+	[ERROR]   PcrCovid19ApplicationTests.contextLoads » IllegalState Failed to load Applicat...
+	[ERROR]   PcrCovid19ApplicationTests.paginaInicio » IllegalState Failed to load Applicat...
+	[ERROR]   PcrCovid19ApplicationTests.paginaInicioLogin » IllegalState Failed to load App...
+	[ERROR]   CicloMuestrasServiciosConExcelTests.ce
+
+Ensure a mysql is launched in 3306 port to which you can connect with the user root and password "mypassword". This should work
+
+	mysql -uroot --password=mypassword -f -h 127.0.0.1 covid19
+	
+If you cannot run docker, you should check the user has permission to launch dockers
+
 Credits
 =====
 The current code contains code from:
