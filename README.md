@@ -10,30 +10,32 @@ Maven (at least 3.0)
 Intructions to create a development environment
 =====
 
-Launch the DB
+S1. Launch the DB
 
 	docker run -e MYSQL_ROOT_PASSWORD=mypassword -e MYSQL_DATABASE=covid19 -e MYSQL_USER=dbuser -e MYSQL_PASSWORD=dbpassword -p 3306:3306 -d mysql:5.7.28 --max-allowed-packet=67108864
 
-Once launched, create the quartz schemas
+S2. Once launched, create the quartz schemas
 
 	mysql -uroot --password=mypassword -h 127.0.0.1 covid19 < src/main/resources/quartz.sql
 
-Build the application
+S3. Build the application
 
 	mvn package
 	
-Then, launch the appplication
+Then, launch the appplication once. The first time it will create database structures. It will have no users predefined. Go to the next step to have a minimal configuration:
 
 	java -jar -Dspring.profiles.active=desarrollolocal target/covid19.jar
 	
-Alternatively, run from eclipse:
+For development, you can run from eclipse directly
 
 1. **run as** the file "es.ucm.pcrPcrCovid19Application"
 2. In the configuration dialog to execute the file, go to the *arguments* tab and define the following VM parameter "-Dspring.profiles.active=desarrollolocal"
 
-To initiate users and structures, launch
+S4. To initiate users and structures, stop the application, then execute
 
 	mysql -uroot --password=mypassword -f -h 127.0.0.1 covid19 < src/main/resources/sample.sql
+
+S5. And then launch the application again
 
 The application is available from  https://localhost:8443/acceso
 
