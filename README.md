@@ -131,11 +131,13 @@ Credits
 =====
 The current code contains code from:
 
--Pedro Marrasant
-
--...
-
 -Jorge J. Gómez Sanz
+-Pedro Marrasan
+-Sara García
+-Fernando de las Heras
+-Yolanda Roldan
+-Javier García
+-Diana Jiménez
 
 The specification was possible with the help of:
 
