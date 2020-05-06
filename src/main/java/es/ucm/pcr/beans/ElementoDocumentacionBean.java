@@ -24,6 +24,7 @@ public class ElementoDocumentacionBean {
 	private String columnaRemitente;
 	private String columnaLote;
 	private String columnaTipoMuestra;
+	private Integer tamanio;
 	
 	public String getColumnaTipoMuestra() {
 		return columnaTipoMuestra;
@@ -164,6 +165,20 @@ public class ElementoDocumentacionBean {
 
 	public void setUrlVolver(String urlVolver) {
 		this.urlVolver = urlVolver;
+	}
+
+	/**
+	 * @return the tamanio
+	 */
+	public Integer getTamanio() {
+		return tamanio;
+	}
+
+	/**
+	 * @param tamanio the tamanio to set
+	 */
+	public void setTamanio(Integer tamanio) {
+		this.tamanio = tamanio;
 	}
 
 }

@@ -127,6 +127,8 @@ public class SesionServicioImpl implements SesionServicio {
 			menuSecundario.add(opcionSecundaria);
 			opcionSecundaria = new MenuBean("Gestionar placas", "/laboratorioUni/buscarPlacas/list", null);
 			menuSecundario.add(opcionSecundaria);
+			opcionSecundaria = new MenuBean("Carga sin datos previos del Centro de Salud", "/laboratorioUni/cargaSinDatosPrevios", null);
+			menuSecundario.add(opcionSecundaria);
 			opcionPrincipal = new MenuBean("Tecnico laboratorio", null, menuSecundario);
 			menuPrincipal.add(opcionPrincipal);
 		}

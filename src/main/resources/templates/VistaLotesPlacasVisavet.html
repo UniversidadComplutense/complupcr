@@ -176,8 +176,7 @@
 					
 								<td>
 								<input type="hidden" th:field="${lotePlacaVisavetBean.placa.listaLotes[__${count.index}__].listaMuestras[__${countM.index}__].id}"/>
-								<span th:if="${#strings.toString(unaMuestra.tipoMuestra)=='N'}">Nariz</span>
-								<span th:if="${#strings.toString(unaMuestra.tipoMuestra)=='B'}">Boca</span>
+								<span th:text="${T(es.ucm.pcr.beans.MuestraBean).traducirTipoMuestra(unaMuestra.tipoMuestra)}"></span>		
 							
 								</td>
 								<td>

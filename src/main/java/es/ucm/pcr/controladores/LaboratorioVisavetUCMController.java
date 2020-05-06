@@ -58,6 +58,7 @@ import es.ucm.pcr.servicios.LaboratorioVisavetServicio;
 import es.ucm.pcr.servicios.LoteServicio;
 import es.ucm.pcr.servicios.MuestraServicio;
 import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
+import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCMImpl.AnalisisExcelMuestras;
 import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.utilidades.Utilidades;
 import es.ucm.pcr.validadores.DocumentoValidador;
@@ -759,6 +760,58 @@ public class LaboratorioVisavetUCMController {
 		redirectAttributes.addFlashAttribute("mensaje", "Resultado guardado correctamente");
 		return new ModelAndView(new RedirectView(
 				"/laboratorioUni/cargaReferencias?id=" + bean.getId() + "&url=" + bean.getCodiUrl(), true));
+	}
+
+	// subida referencias
+	@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO')")
+	@RequestMapping(value = "/laboratorioUni/cargaSinDatosPrevios", method = RequestMethod.GET)
+	public ModelAndView cargarSinDatosPrevios(HttpSession session) throws Exception {
+		ModelAndView vista = new ModelAndView("VistaCargarSinDatosPrevios");
+
+		// buscamos los documentos de la placa que sean de tipo RES (excel de
+		// resultados)
+		ElementoDocumentacionBean elementoDoc = documentoServicio
+				.obtenerDocumentosUsuarioConTipo(sesionServicio.getUsuario().getId(), "SDP");
+		elementoDoc.setColumnaCliente("Cliente");
+		elementoDoc.setColumnaRemitente("Remitente");
+		elementoDoc.setColumnaPlaca("Nº placa");
+		elementoDoc.setColumnaLote("Nº entrada");
+		elementoDoc.setColumnaRef("Ref. muestra");
+		elementoDoc.setColumna("Ref. externa");
+		elementoDoc.setColumnaTipoMuestra("Tipo muestra");
+
+		vista.addObject("elementoDoc", elementoDoc);
+		return vista;
+	}
+
+	@RequestMapping(value = "/laboratorioUni/guardarSinDatosPrevios", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('ADMIN','TECNICOLABORATORIO')")
+	public ModelAndView guardarSinDatosPrevios(@Valid @ModelAttribute("elementoDoc") ElementoDocumentacionBean bean,
+			BindingResult result, RedirectAttributes redirectAttributes) throws Exception {
+		AnalisisExcelMuestras analisisExcelMuestras = null;
+		if (result.hasErrors()) {
+			ModelAndView vista = new ModelAndView("VistaCargarSinDatosPrevios");
+			try {
+				analisisExcelMuestras = servicioLaboratorioUni.verificarExcel(bean, bean.getTamanio());
+			} catch (Exception e) {
+			}
+			vista.addObject("elementoDoc", bean);
+			vista.addObject("filasError",
+					analisisExcelMuestras != null ? analisisExcelMuestras.getFilasIncompletas() : null);
+			return vista;
+		} else {
+			System.out.println("El nombre de la hoja es: " + bean.getHoja());
+
+			// incorpora todas las entradas como si hubieran sido enviadas por
+			// un centro de salud = remitente de cada placa
+			servicioLaboratorioUni.procesarExcel(bean, sesionServicio.getLaboratorioVisavet().getId(),
+					bean.getTamanio());
+			// guardamos el documento excel
+			documentoServicio.guardar(bean);
+		}
+
+		redirectAttributes.addFlashAttribute("mensaje", "Carga realizada correctamente");
+		return new ModelAndView(new RedirectView("/laboratorioUni/cargaSinDatosPrevios", true));
 	}
 
 }

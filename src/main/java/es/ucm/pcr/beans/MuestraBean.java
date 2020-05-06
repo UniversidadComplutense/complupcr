@@ -81,6 +81,18 @@ public class MuestraBean{
 		this.resultado = resultado;
 	}
 	
+	public static String traducirTipoMuestra(String tipoMuestra) {
+		switch (tipoMuestra.toUpperCase()) {
+		case "MC":return "Medio de Cultivo";
+		case "OT": return "Otros";
+		case "N": return "Hisopo nasofaríngeo";
+		case "E": return "Esputo";
+		case "NB": return "Hisopo Nasofaríngeo y Orofaríngeo";
+		case "B": return "Hisopo Orofaríngeo";		
+		}
+		return "Desconocido";
+	}
+	
 	
 	
 	

@@ -728,13 +728,15 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 									}
 								}
 						}
+					}else {
+						throw new Exception("El fichero no es correcto. Falta alguna de las columnas: 'Cliente', 'Remitente', 'Nº placa', 'Nº entrada', 'Ref. muestra', 'Ref. externa' ó 'Tipo muestra'");
 					}
 			}
 		}
 		return resultado;
 	}
 
-	class AnalisisExcelMuestras {
+	public class AnalisisExcelMuestras {
 		Hashtable<String,List<String>> lotesMuestras=new Hashtable<String,List<String>>();
 		Hashtable<String,String> muestraTipo=new  Hashtable<String,String>();
 

@@ -148,19 +148,23 @@
 								        	
 								          	<div id="tablaMuestras" >
 												<table>
-													<thead class="thead-light">	
+													<!--thead class="thead-light">	
 									    				<tr>
 										      				<th>Etiqueta</th>
 															<th>Tipo Muestra</th>
 															<th>Referencia Interna</th>
 															
 														</tr>
-													</thead>
+													</thead-->
 													<tbody>
+														<tr>
+										      				<th>Etiqueta</th>
+															<th>Tipo Muestra</th>
+															<th>Referencia Interna</th>														
+														</tr>
 														<tr th:if="${unResultado.listaMuestras != null}" th:each="muestra : ${unResultado.listaMuestras}">
 															<td><span th:text="${muestra.etiqueta}"></span></td>					
-															<td><span th:if="${#strings.toString(muestra.tipoMuestra)=='N'}">Nariz</span>
-															<span th:if="${#strings.toString(muestra.tipoMuestra)=='B'}">Boca</span>
+															<td><span th:text="${T(es.ucm.pcr.beans.MuestraBean).traducirTipoMuestra(muestra.tipoMuestra)}"></span>		
 															</td>
 															<td><span th:text="${muestra.referenciaInterna}"></span></td>		
 																													

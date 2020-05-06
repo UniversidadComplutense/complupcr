@@ -1,6 +1,5 @@
 package es.ucm.pcr.validadores;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,6 +25,9 @@ import es.ucm.pcr.modelo.orm.PlacaVisavet;
 import es.ucm.pcr.modelo.orm.PlacaVisavetPlacaLaboratorio;
 import es.ucm.pcr.repositorio.PlacaLaboratorioRepositorio;
 import es.ucm.pcr.repositorio.PlacaVisavetRepositorio;
+import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCM;
+import es.ucm.pcr.servicios.ServicioLaboratorioVisavetUCMImpl.AnalisisExcelMuestras;
+import es.ucm.pcr.servicios.SesionServicio;
 import es.ucm.pcr.utilidades.Utilidades;
 
 @Component
@@ -36,6 +38,12 @@ public class DocumentoValidador implements Validator {
 
 	@Autowired
 	PlacaVisavetRepositorio placaVisavetRepositorio;
+
+	@Autowired
+	ServicioLaboratorioVisavetUCM servicioVisavet;
+
+	@Autowired
+	SesionServicio sesionServicio;
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -53,6 +61,9 @@ public class DocumentoValidador implements Validator {
 		}
 		if (elementoDocBean.getTipo().compareTo("REF") == 0) {
 			validarExcelReferenciasLaboratorio(elementoDocBean, errors);
+		}
+		if (elementoDocBean.getTipo().compareTo("SDP") == 0) {
+			validarExcelSinDatosPrevios(elementoDocBean, errors);
 		}
 	}
 
@@ -91,7 +102,8 @@ public class DocumentoValidador implements Validator {
 				String cellValueReferencia;
 				List<String> listaMuestrasExcel = new ArrayList<String>();
 				List<String> listaMuestrasLaboratorio = new ArrayList<String>();
-				List<String> listaResultados = new ArrayList<String>(Arrays.asList("POSITIVO", "NEGATIVO", "CI NEG O BAJO","DUDOSO"));
+				List<String> listaResultados = new ArrayList<String>(
+						Arrays.asList("POSITIVO", "NEGATIVO", "CI NEG O BAJO", "DUDOSO"));
 				List<String> listaMuestrasExcelResultado = new ArrayList<String>();
 				// Validar muestras placa
 				Optional<PlacaLaboratorio> placaLaboratorio = placaLaboratorioRepositorio
@@ -192,7 +204,8 @@ public class DocumentoValidador implements Validator {
 																									: "";
 
 							listaMuestrasExcel.add(cellValueReferencia);
-							if(listaMuestrasLaboratorio.contains(cellValueReferencia)&& !listaResultados.contains(cellValueResultado.toUpperCase())) {
+							if (listaMuestrasLaboratorio.contains(cellValueReferencia)
+									&& !listaResultados.contains(cellValueResultado.toUpperCase())) {
 								listaMuestrasExcelResultado.add(cellValueReferencia);
 							}
 
@@ -205,8 +218,7 @@ public class DocumentoValidador implements Validator {
 					}
 				}
 
-				
-				if (!listaMuestrasExcel.isEmpty()&&!listaMuestrasExcel.containsAll(listaMuestrasLaboratorio)) {
+				if (!listaMuestrasExcel.isEmpty() && !listaMuestrasExcel.containsAll(listaMuestrasLaboratorio)) {
 					listaMuestrasLaboratorio.removeAll(listaMuestrasExcel);
 					errors.rejectValue("file", "campo.invalid",
 							"Las muestras de la excel no coinciden con las de la placa, revise los datos subidos. Muestras de la placa que no estan en el fichero: "
@@ -214,7 +226,8 @@ public class DocumentoValidador implements Validator {
 				}
 				if (!listaMuestrasExcelResultado.isEmpty()) {
 					errors.rejectValue("file", "campo.invalid",
-							"El resultado para las muestras: "+ listaMuestrasExcelResultado.toString()+" No es valido, debe ser uno de estos: "+listaResultados.toString());
+							"El resultado para las muestras: " + listaMuestrasExcelResultado.toString()
+									+ " No es valido, debe ser uno de estos: " + listaResultados.toString());
 				}
 
 			}
@@ -315,7 +328,7 @@ public class DocumentoValidador implements Validator {
 						listaMuestrasVisavet.add(muestra.getEtiqueta());
 					}
 				}
-				if (!listaMuestrasExcel.isEmpty()&&!listaMuestrasExcel.containsAll(listaMuestrasVisavet)) {
+				if (!listaMuestrasExcel.isEmpty() && !listaMuestrasExcel.containsAll(listaMuestrasVisavet)) {
 					listaMuestrasVisavet.removeAll(listaMuestrasExcel);
 					errors.rejectValue("file", "campo.invalid",
 							"Las muestras de la excel no coinciden con las de la placa, revise los datos subidos. Muestras de la placa que no estan en el fichero: "
@@ -327,5 +340,17 @@ public class DocumentoValidador implements Validator {
 
 		}
 
+	}
+
+	private void validarExcelSinDatosPrevios(ElementoDocumentacionBean elementoDocBean, Errors errors) {
+		AnalisisExcelMuestras analisisExcelMuestras = null;
+		try {
+			analisisExcelMuestras = servicioVisavet.verificarExcel(elementoDocBean, elementoDocBean.getTamanio());
+		} catch (Exception e) {
+			errors.rejectValue("file", "campo.invalid", e.getMessage());
+		}
+		if (analisisExcelMuestras != null && !analisisExcelMuestras.getFilasIncompletas().isEmpty()) {
+			errors.rejectValue("file", "campo.invalid", "El fichero contiene filas erroneas no es un fichero valido: ");
+		}
 	}
 }

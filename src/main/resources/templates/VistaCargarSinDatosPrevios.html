@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PCR-COVID19 - CARGA DE RESULTADOS</title>
+<object th:include="fragmentos :: fragmentoHead" th:remove="tag"></object>
+</head>
+<body>
+
+	<object th:replace="fragmentos :: header-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: navbar-responsive" th:remove="tag"></object>
+	<div class="container">
+
+		<form action="#" th:action="@{/laboratorioUni/guardarSinDatosPrevios}"
+			method="post" enctype="multipart/form-data"
+			th:object="${elementoDoc}" id="formGuardar" role="form">
+			<input type="hidden" th:field="*{tipo}" th:value="*{tipo}" /> <input
+				type="hidden" th:field="*{tipoElemento}" th:value="*{tipoElemento}" />
+			<input type="hidden" th:field="*{id}" th:value="*{id}" /> <input
+				type="hidden" th:field="*{columna}" th:value="*{columna}" /> <input
+				type="hidden" th:field="*{columnaRef}" th:value="*{columnaRef}" />
+			<input type="hidden" th:field="*{columnaPlaca}"
+				th:value="*{columnaPlaca}" /> <input type="hidden"
+				th:field="*{columnaCliente}" th:value="*{columnaCliente}" /> <input
+				type="hidden" th:field="*{columnaRemitente}"
+				th:value="*{columnaRemitente}" /> <input type="hidden"
+				th:field="*{columnaLote}" th:value="*{columnaLote}" /> <input
+				type="hidden" th:field="*{columnaTipoMuestra}"
+				th:value="*{columnaTipoMuestra}" />
+
+			<!-- MENSAJES AVISO -->
+			<div th:if="${mensaje !=null}"
+				class="alert alert-success alert-dismissible fade show m-1 mt-2"
+				role="alert">
+				<label th:text="${mensaje}"></label>
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<fieldset id="datos" class="form-group border p-2 m-1">
+				<legend class="w-auto font-weight-bold m-0">Carga sin datos
+					previos del Centro de Salud</legend>
+				<div class="row">
+					<div class="col-3 m-0 form-group">
+						<label> Laboratorio </th:block>
+						</label> <input type="text" disabled class="form-control form-control-sm"
+							th:field="*{descripcion}" th:value="*{descripcion}" required
+							maxlength="45" />
+					</div>
+				</div>
+				</br>
+				<div class="row">
+					<div class="col-12 m-0 form-group">
+						<label class="alert alert-danger"
+							th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></label>
+							<table class="table alert alert-danger">
+					<tbody>
+						<tr th:if="${filasError != null}" th:each="fila : ${filasError}">
+							<td><span th:text="${fila}"></span></td>
+						</tr>
+					</tbody>
+				</table>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-4 m-0 form-group">
+						<label> Nombre hoja </label> <input type="text"
+							class="form-control form-control-sm" th:field="*{hoja}"
+							th:value="*{hoja}" required maxlength="45"
+							placeholder='Nombre hoja (e.g "Hoja1")' /> <label
+							class="alert alert-danger" th:if="${#fields.hasErrors('hoja')}"
+							th:errors="*{hoja}"></label>
+					</div>
+					<div class="col-4 form-group">
+						<label>Tamaño de la placa</label> <select th:id="capacidadPlaca"
+							class="form-control form-control-sm" th:field="*{tamanio}"
+							th:value="*{tamanio}" required>
+							<option value="">Seleccione</option>
+							<option value="20">20</option>
+							<option value="96">96</option>
+						</select>
+					</div>
+					<div class="col-4 m-0 form-group">
+						<label>Documento</label>
+						<div class="custom-file">
+							<input type="file" onchange="validarFichero(this)" required
+								class="custom-file-input form-control-sm" th:field="*{file}"
+								th:value="*{file}" accept=".xlsx, .xls"> <label
+								class="custom-file-label" for="file">Seleccionar fichero</label>
+
+							<label id="labelError" class="text-warning d-none"></label>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+
+			<!-- BOTONES -->
+			<div class="row justify-content-end mt-2">
+				<div class="col-2">
+					<button type="submit" id="submitButton" class="btn btn-secondary">Subir
+						documento</button>
+				</div>
+			</div>
+
+			<!-- RESULTADO -->
+			<div class="row justify-content-center mt-3">
+				<table class="table">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col" style="width: 50%">Nombre</th>
+							<th scope="col" style="width: 10%">Tamaño</th>
+							<th scope="col" style="width: 25%">Usuario</th>
+							<th scope="col" style="width: 10%">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:if="*{documentos != null}" th:each="doc : *{documentos}">
+							<td><span th:text="${doc.nombreDocumento}"></span></td>
+							<td><span th:text="${doc.tamanioDocumento}"></span></td>
+							<td><span th:text="${doc.descripcionUsuario}"></span></td>
+							<td>
+								<!-- ACCIONES --> <a style="color: black; cursor: pointer;"
+								th:href="@{/documento/descargar(id=${doc.id})}"
+								title="Descargar"> <i class="fa fa-download"
+									aria-hidden="true" style="font-size: 1.2em;"></i>
+							</a> <!-- <a style="color:black;cursor: pointer;" th:href="@{/documento/borrar(idDoc=${doc.id}, id=*{id}, tipoElemento=*{tipoElemento}, url=*{codiUrl})}" title="Borrar">
+					          	<i class="fa fa-eraser" aria-hidden="true" style="font-size: 1.2em;"></i>
+					        </a> -->
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+
+	</div>
+	<object th:replace="fragmentos :: footer-responsive" th:remove="tag"></object>
+	<object th:replace="fragmentos :: scripts" th:remove="tag"></object>
+
+	<script type="text/javascript">    	
+	    $('.alert').on('closed.bs.alert', function () {
+		    $('#alertInfo').removeClass('d-none');
+	    });	
+
+	 	// Add the following code if you want the name of the file appear on select
+	    $(".custom-file-input").on("change", function() {
+	      var fileName = $(this).val().split("\\").pop();
+	      $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+	    });
+
+	 	// validacion tamanio fichero
+	    function validarFichero(file) {
+		    if (file.files[0].size > 5242880) {
+				$('#labelError').text("No se puede subir un documento de más de 5MB");
+				$('#labelError').removeClass('d-none');
+				$('#submitButton').prop('disabled', true);
+				return false;
+			} else {
+				$('#labelError').addClass('d-none');
+				$('#submitButton').prop('disabled', false);
+			}
+	    }
+	    
+    </script>
+</body>
+</html>

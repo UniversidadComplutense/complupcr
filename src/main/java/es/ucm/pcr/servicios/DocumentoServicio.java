@@ -82,5 +82,14 @@ public interface DocumentoServicio {
 	 * @return
 	 */
 	public List<DocumentoBean> findDocumentosPlacaLaboratorioYPlacasVisavet(DocumentoBusquedaBean params);
+	
+	
+	/**
+	 * Elemento y documentos subidos por el usuario que son de un tipo
+	 * @param idUsuario
+	 * @param tipo
+	 * @return
+	 */
+	public ElementoDocumentacionBean obtenerDocumentosUsuarioConTipo(Integer idUsuario, String tipo); 
 
 }
