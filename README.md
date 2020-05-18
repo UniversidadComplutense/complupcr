@@ -34,7 +34,7 @@ S2. Once launched, create the quartz schemas
 
 S3. Then, launch the appplication once. The first time it will create database structures. It will have no users predefined. Go to the next step to have a minimal configuration:
 
-	java -jar -Dspring.profiles.active=desarrollolocal target/covid19.jar
+	java -jar -Dspring.profiles.active=desarrollolocal target/complupcr.jar
 
 S4. To initiate users and structures, stop the application, then execute
 

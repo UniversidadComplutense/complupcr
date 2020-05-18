@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>es.ucm.pcr</groupId>
-	<artifactId>covid19</artifactId>
+	<artifactId>complupcr</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>pcr-covid19</name>
+	<name>CompluPCR</name>
 	<description>Sistema de gestión, seguimiento y notificación de pruebas diagnósticas Covid-19</description>
 
 	<properties>
@@ -144,7 +144,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<finalName>covid19</finalName>
+		<finalName>complupcr</finalName>
 	</build>
 
 </project>
