@@ -248,7 +248,7 @@ public class CicloMuestrasServiciosConExcelTests {
 							new HashSet<String>(resultado.getMuestraCliente().values()).size());
 					assertTrue(new HashSet<String>(resultado.getLoteRemitente().values()).size()==1, "debería haber 1 remitente y hay "+
 							new HashSet<String>(resultado.getLoteRemitente().values()).size());
-					assertTrue(resultado.getFilasIncompletas().size()==19, "debería haber 19 filas mal importadas y hay "+
+					assertTrue(resultado.getFilasIncompletas().size()==21, "debería haber 21 filas mal importadas y hay "+
 							resultado.getFilasIncompletas().size());
 					System.out.println("Filas incompletas identificadas en excel:");
 					for (String fila:resultado.getFilasIncompletas()) {

@@ -631,22 +631,27 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 					colRemitente!=null &&colCliente!=null && 
 					colPlaca!=null && colLote!=null & colTipoMuestra!=null) {
 
-						cellValueMuestra = extractValue(colMuestra, row);
-						cellValueReferencia = extractValue(colReferencia, row);
-						cellValueRemitente= extractValue(colRemitente, row);
-						cellValueCliente= extractValue(colCliente, row);
-						cellValuePlaca= extractValue(colPlaca, row);
-						cellValueLote= extractValue(colLote, row);
-						cellValueTipoMuestra= extractValue(colTipoMuestra, row);
+						cellValueMuestra = extractValue(colMuestra, row).trim();
+						cellValueReferencia = extractValue(colReferencia, row).trim();
+						cellValueRemitente= extractValue(colRemitente, row).trim();
+						cellValueCliente= extractValue(colCliente, row).trim();
+						cellValuePlaca= extractValue(colPlaca, row).trim();
+						cellValueLote= extractValue(colLote, row).trim();
+						cellValueTipoMuestra= extractValue(colTipoMuestra, row).trim();
 
-						if (cellValueReferencia.equals("") ||
-								cellValuePlaca.equals("") ||
+						if (	cellValuePlaca.equals("") ||
 								cellValueReferencia.equals("") ||
 								cellValueLote.equals("")||
 								cellValueRemitente.equals("") ||
 								cellValueTipoMuestra.equals("")||
 								cellValueMuestra.equals("")) {
-							String fila="fila:"+r+" muestra="+cellValueMuestra+
+							cellValueReferencia=cellValueReferencia.equals("")?"[Vacio]":cellValueReferencia;
+							cellValuePlaca=cellValuePlaca.equals("")?"[Vacio]":cellValuePlaca;
+							cellValueLote=cellValueLote.equals("")?"[Vacio]":cellValueLote;
+							cellValueRemitente=cellValueRemitente.equals("")?"[Vacio]":cellValueRemitente;
+							cellValueTipoMuestra=cellValueTipoMuestra.equals("")?"[Vacio]":cellValueTipoMuestra;
+							cellValueMuestra=cellValueMuestra.equals("")?"[Vacio]":cellValueMuestra;
+							String fila="fila:"+(r+1)+" muestra="+cellValueMuestra+
 									", placa="+cellValuePlaca+
 									", referencia="+cellValueReferencia+
 									", lote="+cellValueLote+
@@ -656,7 +661,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 						} else {
 							Optional<Centro> centro = centroRepositorio.findByNombre(cellValueRemitente);
 							if (!centro.isPresent()) {
-								String fila="fila:"+r+" muestra="+cellValueMuestra+
+								String fila="fila:"+(r+1)+" muestra="+cellValueMuestra+
 										", placa="+cellValuePlaca+
 										", referencia="+cellValueReferencia+
 										", lote="+cellValueLote+
@@ -670,7 +675,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 										cellValueTipoMuestra.toLowerCase().equals("esputo") ||
 										cellValueTipoMuestra.toLowerCase().equals("hisopo nasofaríngeo y orofaríngeo") ||
 										cellValueTipoMuestra.toLowerCase().equals("hisopo orofaríngeo"))) {
-									String fila="fila:"+r+" muestra="+cellValueMuestra+
+									String fila="fila:"+(r+1)+" muestra="+cellValueMuestra+
 											", placa="+cellValuePlaca+
 											", referencia="+cellValueReferencia+
 											", lote="+cellValueLote+
@@ -684,7 +689,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 									params.setRefInternaMuestra(cellValueReferencia);
 									List<MuestraListadoBean> res = muestraServicio.findMuestraByParam(params);
 									if (!res.isEmpty()) {
-										String fila="fila:"+r+" muestra="+cellValueMuestra+
+										String fila="fila:"+(r+1)+" muestra="+cellValueMuestra+
 												", placa="+cellValuePlaca+
 												", referencia="+cellValueReferencia+ "[Ref duplicada]"+
 												", lote="+cellValueLote+
@@ -697,7 +702,7 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 										params.setIdCentro(centro.get().getId());
 										res = muestraServicio.findMuestraByParam(params);
 										if (!res.isEmpty()) {
-											String fila="fila:"+r+" muestra="+cellValueMuestra+ "[ya existe esa etiqueta en este centro]"+
+											String fila="fila:"+(r+1)+" muestra="+cellValueMuestra+ "[ya existe esa etiqueta en este centro]"+
 													", placa="+cellValuePlaca+
 													", referencia="+cellValueReferencia+ 
 													", lote="+cellValueLote+
@@ -705,24 +710,53 @@ public class ServicioLaboratorioVisavetUCMImpl implements ServicioLaboratorioVis
 													", tipo="+cellValueTipoMuestra;
 											filasIncompletas.add(fila);
 										} else {
-											if (resultado.muestrasPorPlaca(cellValuePlaca).size()>tamanoPlaca){
-												String fila="fila:"+r+" muestra="+cellValueMuestra+ "[ya existe esa etiqueta en este centro]"+
-														", placa="+cellValuePlaca+ "[tamano maximo de placa "+tamanoPlaca+" excedido]"+
+											if (muestraCliente.containsKey(cellValueMuestra)) {
+												String fila="fila:"+(r+1)+" muestra="+cellValueMuestra+ "[esta etiqueta ya apareció en fila anterior]"+
+														", placa="+cellValuePlaca+
 														", referencia="+cellValueReferencia+ 
 														", lote="+cellValueLote+
 														", centro emisor="+cellValueRemitente+
 														", tipo="+cellValueTipoMuestra;
 												filasIncompletas.add(fila);
-											} else {
-												muestraYRefVisavet.put(cellValueMuestra, cellValueReferencia);
-												if (!lotesMuestras.containsKey(cellValueLote))
-													lotesMuestras.put(cellValueLote, new ArrayList<String>());
-												lotesMuestras.get(cellValueLote).add(cellValueMuestra);											
-												lotesPlaca.put(cellValueLote, cellValuePlaca);
-												loteRemitente.put(cellValueLote,cellValueRemitente);
-												muestraCliente.put(cellValueMuestra,cellValueCliente);
-												muestraTipo.put(cellValueMuestra, cellValueTipoMuestra);
-											}
+											} else  if (muestraYRefVisavet.values().contains(cellValueReferencia)) {
+												String fila="fila:"+(r+1)+" muestra="+cellValueMuestra+
+														", placa="+cellValuePlaca+
+														", referencia="+cellValueReferencia+ "[esta referencia ya apareció en fila anterior]"+
+														", lote="+cellValueLote+
+														", centro emisor="+cellValueRemitente+
+														", tipo="+cellValueTipoMuestra;
+												filasIncompletas.add(fila);												
+											}											
+											else
+												if (resultado.muestrasPorPlaca(cellValuePlaca).size()>tamanoPlaca){
+													String fila="fila:"+(r+1)+" muestra="+cellValueMuestra+ "[ya existe esa etiqueta en este centro]"+
+															", placa="+cellValuePlaca+ "[tamano maximo de placa "+tamanoPlaca+" excedido]"+
+															", referencia="+cellValueReferencia+ 
+															", lote="+cellValueLote+
+															", centro emisor="+cellValueRemitente+
+															", tipo="+cellValueTipoMuestra;
+													filasIncompletas.add(fila);
+												} else {
+													if (lotesPlaca.containsKey(cellValueLote) && !lotesPlaca.get(cellValueLote).equalsIgnoreCase(cellValuePlaca)) {
+														// lote dividido entre placas
+														String fila="fila:"+(r+1)+" muestra="+cellValueMuestra+ 
+																", placa="+cellValuePlaca+ 
+																", referencia="+cellValueReferencia+ 
+																", lote="+cellValueLote+"[ Lote dividido entre placas " +cellValuePlaca+" y "+lotesPlaca.get(cellValueLote)+"]"+
+																", centro emisor="+cellValueRemitente+
+																", tipo="+cellValueTipoMuestra;
+														filasIncompletas.add(fila);
+													}
+													muestraYRefVisavet.put(cellValueMuestra, cellValueReferencia);
+													if (!lotesMuestras.containsKey(cellValueLote))
+														lotesMuestras.put(cellValueLote, new ArrayList<String>());
+													lotesMuestras.get(cellValueLote).add(cellValueMuestra);			
+
+													lotesPlaca.put(cellValueLote, cellValuePlaca);
+													loteRemitente.put(cellValueLote,cellValueRemitente);
+													muestraCliente.put(cellValueMuestra,cellValueCliente);
+													muestraTipo.put(cellValueMuestra, cellValueTipoMuestra);
+												}
 
 										}
 									}

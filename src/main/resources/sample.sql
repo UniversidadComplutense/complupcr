@@ -60,6 +60,9 @@ INSERT INTO rol VALUES
 --
 INSERT INTO centro (id, nombre, codCentro, telefono, email, direccion) VALUES 
 	(1,'Centro de salud test1','TEST1','123456789','centroSaludTest1@salud.es','Dirección test1');
+
+INSERT INTO centro (id, nombre, codCentro, telefono, email, direccion) VALUES 
+	(2,'Instituto de Salud Carlos III','ISCIII','12346789','iscii@salud.es','Dirección test1');
 	
 --
 -- Dumping data for table `laboratorioVisavet`
