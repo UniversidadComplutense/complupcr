@@ -6,6 +6,8 @@ https://www.youtube.com/watch?v=nsmSHowSyy0&feature=youtu.be
 
 This software enables the combination of a network of laboratories as well as the remote work of analysts to accelerate the production of PCR test results. The software allows to create sample gathering and submission centers to get the basic data of what will be delivered to a sample reception centre. From there, the sample will be processed to perform RNA extraction. The prepared samples will be sent to PCR labs where the test is performed. Raw data is uploaded to servers where analysis access to determine if it is a positive or a negative. 
 
+![COVID19-Lab](https://www.ucm.es/onehealth/file/labs/?ver)
+
 Requirements
 ==
 
