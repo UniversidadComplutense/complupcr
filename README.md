@@ -8,6 +8,8 @@ This software enables the combination of a network of laboratories as well as th
 
 ![COVID19-Lab](https://www.ucm.es/onehealth/file/labs/?ver)
 
+The current proof-of-concept network includes labs from the Veterinary Faculty, the VISAVET centre of the Veterinary Faculty, the Biology Faculty, the SALUVET Innovam the Antimicrobial Resistance Unit y Molecular Basis of Adaptation labs.
+
 If you want to help the initiative, follow the link
 
 [<img src="https://www.ucm.es/data/cont/media/portada/noticias/3-2020-04-29-donaciones%20covid%20ucm%20azul.JPG">](https://www.ucm.es/apoyo-investigacion/file/cabecera-donaciones/?ver)
