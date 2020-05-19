@@ -162,6 +162,10 @@ The current code contains code from:
 
 -Diana Jiménez
 
+-Aaron San Frutos
+
+-Teresa Sanz
+
 
 The specification was possible with the help of:
 
