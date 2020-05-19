@@ -164,11 +164,11 @@ The specification was possible with the help of:
 
 -Jose Manuel Bautista
 
--Javier Revenga
+-Javier Regidor
 
 -Sergio Dominguez
 
--Bruno
+-Bruno González
 
 -Jose Luis Ayala
 
