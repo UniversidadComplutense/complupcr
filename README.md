@@ -13,7 +13,7 @@ The current proof-of-concept network includes labs from the Veterinary Faculty, 
 
 If you want to help the initiative, follow the link
 
-[<img src="https://www.ucm.es/data/cont/media/portada/noticias/3-2020-04-29-donaciones%20covid%20ucm%20azul.JPG">](https://www.ucm.es/apoyo-investigacion/file/cabecera-donaciones/?ver)
+[<img src="https://www.ucm.es/data/cont/media/portada/noticias/3-2020-04-29-donaciones%20covid%20ucm%20azul.JPG">](https://www.ucm.es/apoyo-investigacion/donaciones-covid-19)
 
 Requirements
 ==
