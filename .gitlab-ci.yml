@@ -10,7 +10,6 @@ test:
     - jdk11
   only:
     - integracion
-    - produccion
   script:
     - echo "Testing PCR-Covid19"
     - mvn test  
@@ -21,14 +20,13 @@ package:
     - jdk11
   only:
     - integracion
-    - produccion
   dependencies:
     - test
   artifacts:
     paths:
-      - target/covid19.jar
+      - target/complupcr.jar
   script:
-    - echo "Construyendo proyecto covid19"
+    - echo "Construyendo proyecto complupcr"
     - mvn -Dmaven.test.skip=true package -U 
 integracion1:
   stage: integracion
@@ -39,12 +37,10 @@ integracion1:
   dependencies:
     - package
   script:
-    - echo 'Desplegando covid19 en servidor de integración'
-    - scp target/covid19.jar ades@$SERVIDOR_INT_COVID19_1:/home/ades
-    - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo rm -f /opt/covid19/covid19.old.jar'
-    - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo mv /opt/covid19/covid19.jar /opt/covid19/covid19.old.jar'
-    - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo cp /home/ades/covid19.jar /opt/covid19/'
-    - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo systemctl restart covid19'
+    - echo 'Desplegando complupcr en servidor de integración 1'
+    - scp target/complupcr.jar complupcr@$SERVIDOR_INT_JDK11_1:/home/complupcr
+    - ssh complupcr@$SERVIDOR_INT_JDK11_1 'sudo cp /home/complupcr/complupcr.jar /opt/covid19/'
+    - ssh complupcr@$SERVIDOR_INT_JDK11_1 'sudo systemctl restart complupcr'
   when: manual
 logIntegracion1:
   stage: logintegracion
@@ -56,5 +52,5 @@ logIntegracion1:
     - integracion1
   script:
     - echo 'Visualizando log servidor integración 1'
-    - ssh ades@$SERVIDOR_INT_COVID19_1 'sudo tail -n 500 /opt/covid19/logs/covid19.log'
+    - ssh complupcr@$SERVIDOR_INT_JDK11_1 'sudo tail -n 500 /opt/covid19/logs/covid19.log'
   when: manual 
