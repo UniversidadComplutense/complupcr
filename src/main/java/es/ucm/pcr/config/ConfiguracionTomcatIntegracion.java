@@ -58,7 +58,7 @@ public class ConfiguracionTomcatIntegracion {
 				connector.setScheme("https");
 				connector.setSecure(true);
 				connector.setURIEncoding("UTF-8");		
-				connector.setProxyPort(443); // el de F5
+				connector.setProxyPort(8443); // el de F5
 				connector.setProperty ("disableUploadTimeout", "false");
 				connector.setProperty("connectionUploadTimeout", "120000");
 		        connector.setProperty("relaxedQueryChars", "|{}[]@\"áéíóú.?&=\\' ");  				

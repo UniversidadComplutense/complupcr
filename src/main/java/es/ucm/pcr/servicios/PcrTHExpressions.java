@@ -22,9 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package es.ucm.pcr.servicios;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import es.ucm.pcr.beans.MenuBean;
@@ -40,6 +42,9 @@ public class PcrTHExpressions {
 	
 	@Autowired
 	SesionServicio sesionServicio;
+	
+	@Autowired
+	Environment env;
 	
 	/**
 	 * Método que devuelve el eMail del usuario para ponerlo en el pie de página.
@@ -102,6 +107,15 @@ public class PcrTHExpressions {
 	public List<MenuBean> getMenu() {
 		List<MenuBean> menu = sesionServicio.getMenu();
 		return menu;
+	}
+	
+	/**
+	 * Método que devuelve si el profile es produccion
+	 * 
+	 * @return Boolean
+	 */
+	public Boolean esProduccion() {
+		return Arrays.asList(env.getActiveProfiles()).contains("produccion");
 	}
 	
 	

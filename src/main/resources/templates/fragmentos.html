@@ -50,7 +50,9 @@
 			<div class="col ">
 				<span class="align-middle logo-covid">CompluPCR</span>
 			</div>
-			<div class="col"></div>
+			<div class="col">
+				<span class="align-middle logo-covid" th:if="${!@pcrTHExpressions.esProduccion()}">Entorno de pruebas</span>
+			</div>
 			<div class="col align-items-right">
 				<img src="static/img/logo_ucm.png" th:src="@{/img/logo_ucm.png}"
 					class="float-right img-fluid" />

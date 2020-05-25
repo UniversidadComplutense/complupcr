@@ -284,13 +284,13 @@ public class CicloMuestrasServiciosConExcelTests {
 					busqueda.setIdLaboratorioVisavet(labo.getId());
 					Page<BeanPlacaVisavetUCM> resultadoPlacas = servicioVisavet.buscarPlacas(busqueda, 
 							PageRequest.of(0, Utilidades.NUMERO_PAGINACION));					
-					assertTrue(resultadoPlacas.getContent().size()==3, "Debería haber 3 placas y hay "+resultadoPlacas.getContent().size());
+					assertTrue(resultadoPlacas.getContent().size()>=3, "Debería haber 3 o más placas y hay "+resultadoPlacas.getContent().size());
 					
 					BusquedaLotesBean busquedaLotes=new BusquedaLotesBean();
 					busquedaLotes.setIdLaboratorio(""+labo.getId());
 					Page<LoteBeanPlacaVisavet> resultadoLotes = servicioVisavet.buscarLotes(busquedaLotes,  
 							PageRequest.of(0, Utilidades.NUMERO_PAGINACION));					
-					assertTrue(resultadoLotes.getContent().size()==3, "Debería haber 3 lotes y hay "+resultadoLotes.getContent().size());
+					assertTrue(resultadoLotes.getContent().size()>=3, "Debería haber 3 o más lotes y hay "+resultadoLotes.getContent().size());
 					
 					busquedaLotes.setNumLote("20200323-4");
 					resultadoLotes = servicioVisavet.buscarLotes(busquedaLotes,  
