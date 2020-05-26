@@ -41,7 +41,6 @@ integracion1:
     - scp target/complupcr.jar complupcr@$SERVIDOR_INT_JDK11_1:/home/complupcr
     - ssh complupcr@$SERVIDOR_INT_JDK11_1 'sudo cp /home/complupcr/complupcr.jar /opt/covid19/'
     - ssh complupcr@$SERVIDOR_INT_JDK11_1 'sudo systemctl restart complupcr'
-  when: manual
 logIntegracion1:
   stage: logintegracion
   tags:
