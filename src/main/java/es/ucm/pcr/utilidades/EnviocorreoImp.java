@@ -109,9 +109,9 @@ public class EnviocorreoImp implements Enviocorreo {
 
 		// System.out.println("aquí estamos enviando el email a: " +
 		// beanCorreo.getPara());
-		EnviocorreoImp correoresguardosc = new EnviocorreoImp();
+		
 		System.out.println("ENVIO CORRREO DE PRUEBAS-enviarCorreoGenericoConAdjuntos");
-		correoresguardosc.send(beanCorreo.getPara(), beanCorreo.getAsunto(), beanCorreo.getTexto(),
+		send(beanCorreo.getPara(), beanCorreo.getAsunto(), beanCorreo.getTexto(),
 				beanCorreo.getListaAdjuntos(), beanCorreo.getCabecera(), beanCorreo.getPie(),
 				beanCorreo.getConvocatoria());
 
@@ -207,7 +207,7 @@ public class EnviocorreoImp implements Enviocorreo {
 		}
 
 	}
-
+	
 	@Override
 	public SimpleMailMessage constructResetTokenEmail(String contextPath, String token, Usuario user) {
 		String url = contextPath + "/modificarContrasena?id=" + user.getId() + "&token=" + token;
