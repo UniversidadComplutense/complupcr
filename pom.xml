@@ -19,7 +19,7 @@
 		<java.version>11</java.version>
 		<javax.mail.version>1.4.7</javax.mail.version>
 
-		<net.sf.jasperreports.version>6.2.0</net.sf.jasperreports.version>
+		<net.sf.jasperreports.version>7.0.4</net.sf.jasperreports.version>
 
 	</properties>
 
